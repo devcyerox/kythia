@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.1
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -16,7 +16,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        let user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        let user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -33,7 +33,7 @@ module.exports = {
             .setDescription(
                 await t(interaction, 'economy_cash_cash_balance', {
                     username: interaction.user.username,
-                    cash: user.cash,
+                    cash: user.kythiaCoin,
                 })
             )
             // .setTimestamp()

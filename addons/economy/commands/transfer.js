@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.1
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -24,8 +24,8 @@ module.exports = {
             const target = interaction.options.getUser('target');
             const amount = interaction.options.getInteger('amount');
 
-            const giver = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
-            const receiver = await User.getCache({ userId: target.id, guildId: interaction.guild.id });
+            const giver = await KythiaUser.getCache({ userId: interaction.user.id });
+            const receiver = await KythiaUser.getCache({ userId: target.id });
 
             if (!giver) {
                 const embed = new EmbedBuilder()

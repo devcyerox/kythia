@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.1
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -26,7 +26,7 @@ module.exports = {
             ),
     async execute(interaction) {
         await interaction.deferReply();
-        let user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        let user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -39,7 +39,7 @@ module.exports = {
         const bet = interaction.options.getInteger('bet');
         const side = interaction.options.getString('side').toLowerCase();
 
-        if (user.cash < bet) {
+        if (user.kythiaCoin < bet) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(await t(interaction, 'economy_coinflip_coinflip_not_enough_cash'))
@@ -52,8 +52,8 @@ module.exports = {
         const flip = Math.random() < 0.5 ? 'heads' : 'tails';
 
         if (side === flip) {
-            user.cash += bet;
-            user.changed('cash', true);
+            user.kythiaCoin += bet;
+            user.changed('kythiaCoin', true);
             await user.saveAndUpdateCache('userId');
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -68,8 +68,8 @@ module.exports = {
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else {
-            user.cash -= bet;
-            user.changed('cash', true);
+            user.kythiaCoin -= bet;
+            user.changed('kythiaCoin', true);
             await user.saveAndUpdateCache('userId');
             const embed = new EmbedBuilder()
                 .setColor('Red')

@@ -11,11 +11,10 @@ const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class Inventory extends KythiaModel {
-    static CACHE_KEYS = [['userId', 'guildId']];
+    static CACHE_KEYS = [['userId']];
     static init(sequelize) {
         super.init(
             {
-                guildId: { type: DataTypes.STRING, allowNull: false },
                 userId: { type: DataTypes.STRING, allowNull: false },
                 itemName: { type: DataTypes.STRING, allowNull: false },
             },

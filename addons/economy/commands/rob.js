@@ -7,9 +7,8 @@
  */
 const { embedFooter } = require('@utils/discord');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const Inventory = require('@coreModels/Inventory');
-const ServerSetting = require('@coreModels/ServerSetting');
 const { checkCooldown } = require('@utils/time');
 const { t } = require('@utils/translator');
 
@@ -34,7 +33,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        const user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -45,7 +44,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const target = await User.getCache({ userId: targetUser.id, guildId: interaction.guild.id });
+        const target = await KythiaUser.getCache({ userId: targetUser.id });
         if (!target) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -56,8 +55,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const serverSetting = await ServerSetting.getCache({ guildId: interaction.guild.id });
-        const cooldown = checkCooldown(user.lastRob, serverSetting.robCooldown);
+        const cooldown = checkCooldown(user.lastRob, 3600);
 
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
@@ -90,7 +88,7 @@ module.exports = {
 
         if (success) {
             // Successful rob
-            if (target.cash < robAmount) {
+            if (target.kythiaCoin < robAmount) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(await t(interaction, 'economy_rob_rob_target_not_enough_money'))
@@ -100,11 +98,11 @@ module.exports = {
                 return interaction.editReply({ embeds: [embed] });
             }
 
-            user.cash += robAmount;
-            target.cash -= robAmount;
+            user.kythiaCoin += robAmount;
+            target.kythiaCoin -= robAmount;
             user.lastRob = new Date();
-            user.changed('cash', true);
-            target.changed('cash', true);
+            user.changed('kythiaCoin', true);
+            target.changed('kythiaCoin', true);
             await user.saveAndUpdateCache('userId');
             await target.saveAndUpdateCache('userId');
 
@@ -135,7 +133,7 @@ module.exports = {
             await targetUser.send({ embeds: [embedToTarget] });
         } else {
             // Failed rob, pay the target
-            if (user.cash < robAmount) {
+            if (user.kythiaCoin < robAmount) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(await t(interaction, 'economy_rob_rob_user_not_enough_money_fail'))
@@ -146,18 +144,18 @@ module.exports = {
             }
             let penalty = robAmount;
             if (poison) {
-                penalty = user.cash;
-                user.cash -= penalty;
-                target.cash += penalty;
+                penalty = user.kythiaCoin;
+                user.kythiaCoin -= penalty;
+                target.kythiaCoin += penalty;
                 await poison.destroy(); // Destroy poison item after use
             } else {
-                user.cash -= robAmount;
-                target.cash += robAmount;
+                user.kythiaCoin -= robAmount;
+                target.kythiaCoin += robAmount;
             }
 
             user.lastRob = new Date();
-            user.changed('cash', true);
-            target.changed('cash', true);
+            user.changed('kythiaCoin', true);
+            target.changed('kythiaCoin', true);
             await user.saveAndUpdateCache('userId');
             await target.saveAndUpdateCache('userId');
 

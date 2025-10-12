@@ -6,10 +6,9 @@
  * @version 0.9.9-beta-rc.1
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const ServerSetting = require('@coreModels/ServerSetting');
 const { embedFooter } = require('@utils/discord');
 const { checkCooldown } = require('@utils/time');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { t } = require('@utils/translator');
 
 module.exports = {
@@ -18,7 +17,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        let user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        let user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -29,10 +28,8 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const serverSetting = await ServerSetting.getCache({ guildId: interaction.guild.id });
-
         // Cooldown check
-        const cooldown = checkCooldown(user.lastBeg, serverSetting.begCooldown);
+        const cooldown = checkCooldown(user.lastBeg, 300);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -45,9 +42,9 @@ module.exports = {
 
         // Randomize beg amount between 10 and 50
         const randomCash = Math.floor(Math.random() * 41) + 10;
-        user.cash += randomCash;
+        user.kythiaCoin += randomCash;
         user.lastBeg = Date.now();
-        user.changed('cash', true);
+        user.changed('kythiaCoin', true);
         user.changed('lastBeg', true);
         await user.saveAndUpdateCache('userId');
 

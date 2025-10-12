@@ -9,8 +9,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { embedFooter } = require('@utils/discord');
 const { checkCooldown } = require('@utils/time');
 const Inventory = require('@coreModels/Inventory');
-const User = require('@coreModels/User');
-const ServerSetting = require('@coreModels/ServerSetting');
+const KythiaUser = require('@coreModels/KythiaUser');
 const jobs = require('../helpers/jobs');
 const { t } = require('@utils/translator');
 
@@ -22,7 +21,7 @@ module.exports = {
         await interaction.deferReply();
         // const { t } = container || {}; // now always require from @utils/translator
 
-        const user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        const user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -33,11 +32,10 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const serverSetting = await ServerSetting.getCache({ guildId: interaction.guild.id });
         const userInventory = await Inventory.getAllCache({ where: { userId: user.userId } });
 
         // --- Cek Cooldown (tidak dipengaruhi item lagi) ---
-        const cooldown = checkCooldown(user.lastWork, serverSetting.workCooldown);
+        const cooldown = checkCooldown(user.lastWork, 3600);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
@@ -102,7 +100,7 @@ module.exports = {
         const careerBonus = Math.floor(baseEarning * (user.careerLevel || 0) * 0.05);
         const finalEarning = Math.floor(baseEarning * scenario.modifier) + careerBonus;
 
-        user.cash += finalEarning;
+        user.kythiaCoin += finalEarning;
         user.lastWork = new Date();
 
         // --- Sistem Level Up Karir ---

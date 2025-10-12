@@ -9,9 +9,8 @@
 const { embedFooter } = require('@utils/discord');
 const { checkCooldown } = require('@utils/time');
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const Inventory = require('@coreModels/Inventory');
-const ServerSetting = require('@coreModels/ServerSetting');
 const { t } = require('@utils/translator');
 
 module.exports = {
@@ -27,10 +26,8 @@ module.exports = {
         await interaction.deferReply();
 
         const targetUser = interaction.options.getUser('target');
-        const user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
-        const target = await User.getCache({ userId: targetUser.id, guildId: interaction.guild.id });
-
-        let serverSetting = await ServerSetting.getCache({ guildId: interaction.guild.id });
+        const user = await KythiaUser.getCache({ userId: interaction.user.id });
+        const target = await KythiaUser.getCache({ userId: targetUser.id });
 
         // Check if user exists
         if (!user) {
@@ -44,7 +41,7 @@ module.exports = {
         }
 
         // Cooldown check
-        const cooldown = checkCooldown(user.lastHack, serverSetting.hackCooldown);
+        const cooldown = checkCooldown(user.lastHack, 3600);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
@@ -114,7 +111,7 @@ module.exports = {
 
         await interaction.editReply({ embeds: [embed] });
 
-        const desktop = await Inventory.findOne({ where: { userId: user.userId, itemName: '🖥️ Desktop' } });
+        const desktop = await Inventory.findOne({ where: { userId: interaction.user.id, itemName: '🖥️ Desktop' } });
         let successChance = 1;
         if (desktop) {
             successChance = 1.5;

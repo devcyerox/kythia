@@ -7,7 +7,7 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -48,7 +48,7 @@ module.exports = {
     async execute(interaction, container) {
         const { t } = container || {};
         const bet = interaction.options.getInteger('bet');
-        const user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        const user = await KythiaUser.getCache({ userId: interaction.user.id });
 
         // No account
         if (!user) {
@@ -61,13 +61,13 @@ module.exports = {
         }
 
         // Not enough cash
-        if (user.cash < bet) {
+        if (user.kythiaCoin < bet) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
                     await t(interaction, 'economy_slots_slots_not_enough_cash', {
                         bet: bet.toLocaleString(),
-                        cash: user.cash.toLocaleString(),
+                        cash: user.kythiaCoin.toLocaleString(),
                     })
                 )
                 .setFooter(await embedFooter(interaction));
@@ -87,7 +87,7 @@ module.exports = {
         // Dramatic pause
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        user.cash -= bet; // Deduct bet immediately
+        user.kythiaCoin -= bet; // Deduct bet immediately
 
         const reels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
         const [r1, r2, r3] = reels;
@@ -127,7 +127,7 @@ module.exports = {
         }
 
         if (winnings > 0) {
-            user.cash += winnings;
+            user.kythiaCoin += winnings;
         }
 
         await user.saveAndUpdateCache();
@@ -164,7 +164,7 @@ module.exports = {
                 },
                 {
                     name: await t(interaction, 'economy_slots_slots_cash_field'),
-                    value: `💰 ${user.cash.toLocaleString()}`,
+                    value: `💰 ${user.kythiaCoin.toLocaleString()}`,
                     inline: true,
                 }
             )

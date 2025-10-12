@@ -6,9 +6,8 @@
  * @version 0.9.9-beta-rc.1
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { embedFooter } = require('@utils/discord');
-const ServerSetting = require('@coreModels/ServerSetting');
 const { checkCooldown } = require('@utils/time');
 const { t } = require('@utils/translator');
 
@@ -18,7 +17,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        let user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        let user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -29,8 +28,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const serverSetting = await ServerSetting.getCache({ guildId: interaction.guild.id });
-        const cooldown = checkCooldown(user.lastDaily, serverSetting.dailyCooldown);
+        const cooldown = checkCooldown(user.lastDaily, 86400);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
@@ -43,9 +41,9 @@ module.exports = {
 
         // Randomize the daily cash reward between 50 and 150
         const randomCash = Math.floor(Math.random() * 101) + 50;
-        user.cash += randomCash;
+        user.kythiaCoin += randomCash;
         user.lastDaily = Date.now();
-        user.changed('cash', true);
+        user.changed('kythiaCoin', true);
         user.changed('lastDaily', true);
         await user.saveAndUpdateCache('userId');
 

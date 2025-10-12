@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.1
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const KythiaUser = require('@coreModels/KythiaUser');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -29,7 +29,7 @@ module.exports = {
         const type = interaction.options.getString('type');
         let amount = interaction.options.getInteger('amount');
 
-        let user = await User.getCache({ userId: interaction.user.id, guildId: interaction.guild.id });
+        let user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -41,7 +41,7 @@ module.exports = {
         }
 
         if (type === 'all') {
-            amount = user.cash;
+            amount = user.kythiaCoin;
         } else if (type === 'partial') {
             if (amount === null) {
                 const embed = new EmbedBuilder()
@@ -64,7 +64,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        if (user.cash < amount) {
+        if (user.kythiaCoin < amount) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(await t(interaction, 'economy_deposit_deposit_not_enough_cash'))
@@ -84,9 +84,9 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        user.cash -= amount;
+        user.kythiaCoin -= amount;
         user.bank += amount;
-        user.changed('cash', true);
+        user.changed('kythiaCoin', true);
         user.changed('bank', true);
         await user.saveAndUpdateCache('userId');
 

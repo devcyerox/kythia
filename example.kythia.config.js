@@ -372,9 +372,4 @@ function loadKythiaConfig() {
     };
 }
 
-const initialConfig = loadKythiaConfig();
-
-global.kythia = initialConfig;
-
-module.exports = initialConfig;
-module.exports.loadKythiaConfig = loadKythiaConfig;
+module.exports = loadKythiaConfig();
