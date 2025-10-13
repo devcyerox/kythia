@@ -1,0 +1,29 @@
+const { DataTypes } = require('sequelize');
+const sequelize = require('@src/database/KythiaSequelize');
+const KythiaModel = require('@src/database/KythiaModel');
+
+class MarketPortfolio extends KythiaModel {
+    static init(sequelize) {
+        super.init(
+            {
+                portfolioId: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+                userId: { type: DataTypes.STRING, allowNull: false },
+                assetId: { type: DataTypes.STRING, allowNull: false },
+                quantity: { type: DataTypes.DOUBLE, allowNull: false },
+                avgBuyPrice: { type: DataTypes.DOUBLE, allowNull: false },
+            },
+            {
+                sequelize,
+                modelName: 'MarketPortfolio',
+                tableName: 'market_portfolios',
+                timestamps: false,
+
+                indexes: [{ fields: ['userId'] }, { fields: ['userId', 'assetId'], unique: true }],
+            }
+        );
+        return this;
+    }
+}
+
+MarketPortfolio.init(sequelize);
+module.exports = MarketPortfolio;
