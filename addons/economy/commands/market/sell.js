@@ -8,6 +8,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const KythiaUser = require('@coreModels/KythiaUser');
 const MarketPortfolio = require('../../database/models/MarketPortfolio');
+const MarketTransaction = require('../../database/models/MarketTransaction');
 const { getMarketData, ASSET_IDS } = require('../../helpers/market');
 const { t } = require('@utils/translator');
 const { embedFooter } = require('@utils/discord');
@@ -82,6 +83,14 @@ module.exports = {
             } else {
                 await holding.destroy();
             }
+
+            await MarketTransaction.create({
+                userId: interaction.user.id,
+                assetId: assetId,
+                type: 'sell',
+                quantity: sellQuantity,
+                price: currentPrice,
+            });
 
             // Add the sell value to user's KythiaCoin
             user.kythiaCoin += totalUsdReceived;

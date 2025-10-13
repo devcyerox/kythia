@@ -9,6 +9,7 @@
 const { getMarketData, ASSET_IDS, getChartBuffer } = require('../../helpers/market');
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const KythiaUser = require('@coreModels/KythiaUser');
+const MarketOrder = require('../../database/models/MarketOrder');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -42,7 +43,7 @@ module.exports = {
         let user = await KythiaUser.getCache({ userId: interaction.user.id });
         if (!user) {
             const embed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor(interaction.client.kythia.bot.color)
                 .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
@@ -65,13 +66,30 @@ module.exports = {
                     const emoji = getChangeEmoji(data.usd_24h_change);
 
                     embed = new EmbedBuilder()
-                        .setColor(kythia.bot.color)
-                        .setDescription(`## ${await t(interaction, 'economy_market_view_chart_title', { asset: assetId.toUpperCase() })}`)
+                        .setColor(interaction.client.kythia.bot.color)
+                        .setTitle(await t(interaction, 'economy_market_view_chart_title', { asset: assetId.toUpperCase() }))
                         .addFields(
-                            { name: await t(interaction, 'economy_market_view_price_label'), value: `$${data.usd.toLocaleString()}` },
-                            { name: await t(interaction, 'economy_market_view_24h_change_label'), value: `${emoji} ${percent}%` }
+                            { name: await t(interaction, 'economy_market_view_price_label'), value: `$${data.usd.toLocaleString()}`, inline: true },
+                            { name: await t(interaction, 'economy_market_view_24h_change_label'), value: `${emoji} ${percent}%`, inline: true },
+                            { name: await t(interaction, 'economy_market_view_market_cap_label'), value: `$${data.usd_market_cap.toLocaleString()}`, inline: true },
+                            { name: await t(interaction, 'economy_market_view_24h_vol_label'), value: `$${data.usd_24h_vol.toLocaleString()}`, inline: true },
                         )
                         .setFooter(await embedFooter(interaction));
+
+                    const openOrders = await MarketOrder.findAll({
+                        where: {
+                            userId: interaction.user.id,
+                            assetId: assetId,
+                            status: 'open',
+                        },
+                    });
+
+                    if (openOrders.length > 0) {
+                        const orderSummary = openOrders.map(order => {
+                            return `- **${order.side.toUpperCase()} ${order.quantity} ${order.assetId.toUpperCase()}** at $${order.price} (${order.type})`;
+                        }).join('\n');
+                        embed.addFields({ name: await t(interaction, 'economy_market_view_open_orders_label'), value: orderSummary });
+                    }
 
                     const chartBuffer = await getChartBuffer(assetId);
                     if (chartBuffer) {
@@ -101,7 +119,7 @@ module.exports = {
                 const prettyTable = formatMarketTable(assetRows);
 
                 embed = new EmbedBuilder()
-                    .setColor(kythia.bot.color)
+                    .setColor(interaction.client.kythia.bot.color)
                     .setDescription(`## ${await t(interaction, 'economy_market_view_all_title')}\n` + prettyTable)
                     .setFooter(await embedFooter(interaction));
             }
