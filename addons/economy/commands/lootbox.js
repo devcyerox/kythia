@@ -28,8 +28,8 @@ module.exports = {
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
-        // Check if lootbox feature is enabled in server settings
-        const cooldown = checkCooldown(user.lastLootbox, kythia.addons.economy.lootboxCooldown || 43200); // Default to 12 hours
+
+        const cooldown = checkCooldown(user.lastLootbox, kythia.addons.economy.lootboxCooldown || 43200);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -39,19 +39,19 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Randomize lootbox reward between 100 and 500
         const baseReward = Math.floor(Math.random() * 401) + 100;
-        
-        // Apply bank income bonus
+
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;
         const bankBonus = Math.floor(baseReward * (incomeBonusPercent / 100));
         const randomReward = baseReward + bankBonus;
-        
-        user.kythiaCoin += randomReward; 
+
+        user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(randomReward);
         user.lastLootbox = Date.now();
+
         user.changed('kythiaCoin', true);
         user.changed('lastLootbox', true);
+
         await user.saveAndUpdateCache('userId');
 
         const embed = new EmbedBuilder()

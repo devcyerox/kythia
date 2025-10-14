@@ -84,7 +84,6 @@ module.exports = {
         const totalUsdReceived = sellQuantity * currentPrice;
 
         try {
-            // Calculate new quantity
             const newQuantity = holding.quantity - sellQuantity;
             if (newQuantity > 0) {
                 holding.quantity = newQuantity;
@@ -101,8 +100,10 @@ module.exports = {
                 price: currentPrice,
             });
 
-            // Add the sell value to user's KythiaCoin
-            user.kythiaCoin += totalUsdReceived;
+            user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalUsdReceived);
+
+            user.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache();
 
             const pnl = (currentPrice - holding.avgBuyPrice) * sellQuantity;

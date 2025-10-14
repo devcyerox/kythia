@@ -65,7 +65,7 @@ module.exports = {
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
             }
-            // Calculate transfer fee based on giver's bank type
+
             const giverBank = BankManager.getBank(giver.bankType);
             const transferFeePercent = giverBank.transferFeePercent;
             const fee = Math.floor(amount * (transferFeePercent / 100));
@@ -79,7 +79,6 @@ module.exports = {
                 return interaction.editReply({ embeds: [embed] });
             }
 
-            // Prepare confirmation embed
             const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 
             const confirmEmbed = new EmbedBuilder()
@@ -113,12 +112,12 @@ module.exports = {
 
             collector.on('collect', async (i) => {
                 if (i.customId === 'confirm') {
-                    // Do the transfer
-                    giver.kythiaBank -= amount + fee;
-                    receiver.kythiaBank += amount;
+                    giver.kythiaBank = BigInt(giver.kythiaBank) - BigInt(amount + fee);
+                    receiver.kythiaBank = BigInt(receiver.kythiaBank) + BigInt(amount);
 
                     giver.changed('kythiaBank', true);
                     receiver.changed('kythiaBank', true);
+
                     await giver.saveAndUpdateCache('userId');
                     await receiver.saveAndUpdateCache('userId');
 
@@ -149,9 +148,7 @@ module.exports = {
                         .setFooter(await embedFooter(interaction));
                     try {
                         await target.send({ embeds: [targetEmbed] });
-                    } catch (e) {
-                        // ignore DM errors
-                    }
+                    } catch (e) {}
                 } else if (i.customId === 'cancel') {
                     const embed = new EmbedBuilder()
                         .setColor(kythia.bot.color)

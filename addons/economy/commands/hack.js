@@ -30,7 +30,6 @@ module.exports = {
         const user = await KythiaUser.getCache({ userId: interaction.user.id });
         const target = await KythiaUser.getCache({ userId: targetUser.id });
 
-        // Check if user exists
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -40,8 +39,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Cooldown check
-        const cooldown = checkCooldown(user.lastHack, kythia.addons.economy.hackCooldown || 7200); // Default to 2 hours
+        const cooldown = checkCooldown(user.lastHack, kythia.addons.economy.hackCooldown || 7200);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
@@ -51,7 +49,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Validate user and target
         if (!user || !target) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
@@ -61,7 +58,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Prevent self-hack
         if (targetUser.id === interaction.user.id) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
@@ -71,7 +67,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Target must have money in kythiaBank
         if (target.kythiaBank <= 0) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
@@ -81,7 +76,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // User must have enough money in kythiaBank to hack
         if (user.kythiaBank <= 20) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
@@ -91,7 +85,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Fake hack embed
         const embed = new EmbedBuilder()
             .setDescription(
                 await t(interaction, 'economy_hack_hack_in_progress', {
@@ -115,25 +108,25 @@ module.exports = {
             const hackResult = Math.random() < ((user.hackMastered || 10) / 100) * successChance ? 'success' : 'failure';
 
             if (hackResult === 'success') {
-                // Transfer all target's kythiaBank to user with rob success bonus
                 const userBank = BankManager.getBank(user.bankType);
                 const robSuccessBonusPercent = userBank.robSuccessBonusPercent;
                 const hackBonus = Math.floor(target.kythiaBank * (robSuccessBonusPercent / 100));
                 const totalHacked = target.kythiaBank + hackBonus;
 
-                user.kythiaBank += totalHacked;
+                user.kythiaBank = BigInt(user.kythiaBank) + BigInt(totalHacked);
                 if (user.hackMastered < 100) {
                     user.hackMastered = (user.hackMastered || 10) + 1;
                 }
-                target.kythiaBank = 0;
-                user.lastHack = Date.now(); // Set lastHack like @beg.js
+                target.kythiaBank = 0n;
+                user.lastHack = Date.now();
+
                 user.changed('kythiaBank', true);
-                user.changed('lastHack', true); // Mark lastHack as changed
+                user.changed('lastHack', true);
                 target.changed('kythiaBank', true);
+
                 await user.saveAndUpdateCache('userId');
                 await target.saveAndUpdateCache('userId');
 
-                // DM notification to the victim like rob.js
                 const embedToTarget = new EmbedBuilder()
                     .setColor('Red')
                     .setThumbnail(interaction.user.displayAvatarURL())
@@ -146,9 +139,7 @@ module.exports = {
                     .setFooter(await embedFooter(interaction));
                 try {
                     await targetUser.send({ embeds: [embedToTarget] });
-                } catch (err) {
-                    // Ignore DM errors
-                }
+                } catch (err) {}
 
                 const successEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
@@ -162,22 +153,22 @@ module.exports = {
 
                 await interaction.editReply({ embeds: [successEmbed] });
             } else {
-                // Penalty if failed with rob penalty multiplier
                 const userBank = BankManager.getBank(user.bankType || 'solara_mutual');
                 const robPenaltyMultiplier = userBank ? userBank.robPenaltyMultiplier : 1;
                 const basePenalty = Math.floor(Math.random() * 20) + 1;
                 const penalty = Math.floor(basePenalty * robPenaltyMultiplier);
 
                 if (user.kythiaBank >= penalty) {
-                    user.kythiaBank -= penalty;
-                    target.kythiaBank += penalty;
+                    user.kythiaBank = BigInt(user.kythiaBank) - BigInt(penalty);
+                    target.kythiaBank = BigInt(target.kythiaBank) + BigInt(penalty);
+
                     user.changed('kythiaBank', true);
                     target.changed('kythiaBank', true);
+
                     await user.saveAndUpdateCache('userId');
                     await target.saveAndUpdateCache('userId');
                 }
 
-                // Set lastHack even if failed
                 user.lastHack = Date.now();
                 user.changed('lastHack', true);
                 await user.saveAndUpdateCache('userId');

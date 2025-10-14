@@ -36,14 +36,16 @@ module.exports = {
                 return interaction.editReply({ embeds: [notFoundEmbed] });
             }
 
-            // Refund the assets/coins that were deducted prematurely
             if (order.side === 'buy') {
                 const user = await KythiaUser.getCache({ userId: interaction.user.id });
                 const totalCost = order.quantity * order.price;
-                user.kythiaCoin += totalCost;
+
+                user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalCost);
+
+                user.changed('kythiaCoin', true);
+
                 await user.saveAndUpdateCache();
             } else {
-                // sell
                 const portfolio = await MarketPortfolio.getCache({ userId: interaction.user.id, assetId: order.assetId });
                 if (portfolio) {
                     portfolio.quantity += order.quantity;
@@ -53,7 +55,7 @@ module.exports = {
                         userId: interaction.user.id,
                         assetId: order.assetId,
                         quantity: order.quantity,
-                        avgBuyPrice: 0, // This is tricky, we might not have the original avgBuyPrice. Setting to 0.
+                        avgBuyPrice: 0,
                     });
                 }
             }

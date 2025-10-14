@@ -28,7 +28,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const cooldown = checkCooldown(user.lastDaily, kythia.addons.economy.dailyCooldown || 86400); // Default to 24 hours
+        const cooldown = checkCooldown(user.lastDaily, kythia.addons.economy.dailyCooldown || 86400);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
@@ -38,19 +38,19 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Randomize the daily coin reward between 50 and 150
         const baseCoin = Math.floor(Math.random() * 101) + 50;
-        
-        // Apply bank income bonus
+
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;
         const bankBonus = Math.floor(baseCoin * (incomeBonusPercent / 100));
         const randomCoin = baseCoin + bankBonus;
-        
-        user.kythiaCoin += randomCoin;
+
+        user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(randomCoin);
         user.lastDaily = Date.now();
+
         user.changed('kythiaCoin', true);
         user.changed('lastDaily', true);
+
         await user.saveAndUpdateCache('userId');
 
         const embed = new EmbedBuilder()

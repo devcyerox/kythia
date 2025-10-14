@@ -71,7 +71,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Confirmation Embed & Buttons (like transfer.js)
         const confirmEmbed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL())
@@ -101,12 +100,12 @@ module.exports = {
 
         collector.on('collect', async (i) => {
             if (i.customId === 'confirm') {
-                // Update balances
-                giver.kythiaCoin -= amount;
-                receiver.kythiaCoin += amount;
+                giver.kythiaCoin = BigInt(giver.kythiaCoin) - BigInt(amount);
+                receiver.kythiaCoin = BigInt(receiver.kythiaCoin) + BigInt(amount);
 
                 giver.changed('kythiaCoin', true);
                 receiver.changed('kythiaCoin', true);
+
                 await giver.saveAndUpdateCache('userId');
                 await receiver.saveAndUpdateCache('userId');
 
@@ -122,7 +121,6 @@ module.exports = {
                     .setFooter(await embedFooter(interaction));
                 await i.update({ embeds: [successEmbed], components: [] });
 
-                // DM the receiver about the gift (optional, but like transfer.js DM the receiver)
                 const receiverEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
                     .setDescription(
@@ -136,9 +134,7 @@ module.exports = {
                 try {
                     const member = await interaction.client.users.fetch(target.id);
                     await member.send({ embeds: [receiverEmbed] });
-                } catch (e) {
-                    // ignore DM errors
-                }
+                } catch (e) {}
             } else if (i.customId === 'cancel') {
                 const cancelEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)

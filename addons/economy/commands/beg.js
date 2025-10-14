@@ -28,8 +28,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Cooldown check
-        const cooldown = checkCooldown(user.lastBeg, kythia.addons.economy.begCooldown || 3600); // Default to 1 hour
+        const cooldown = checkCooldown(user.lastBeg, kythia.addons.economy.begCooldown || 3600);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -39,19 +38,19 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Randomize beg amount between 10 and 50
         const baseCoin = Math.floor(Math.random() * 41) + 10;
-        
-        // Apply bank income bonus
+
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;
         const bankBonus = Math.floor(baseCoin * (incomeBonusPercent / 100));
         const randomCoin = baseCoin + bankBonus;
-        
-        user.kythiaCoin += randomCoin;
+
+        user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(randomCoin);
         user.lastBeg = Date.now();
+
         user.changed('kythiaCoin', true);
         user.changed('lastBeg', true);
+
         await user.saveAndUpdateCache('userId');
 
         const embed = new EmbedBuilder()

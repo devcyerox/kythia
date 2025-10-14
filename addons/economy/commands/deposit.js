@@ -80,10 +80,9 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Check max balance based on user's bank type
         const userBank = BankManager.getBank(user.bankType);
         const maxBalance = userBank.maxBalance;
-        
+
         if (user.kythiaBank + amount > maxBalance) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
@@ -93,11 +92,13 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        user.kythiaCoin -= amount;
-        user.kythiaBank += amount;
+        user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(amount);
+        user.kythiaBank = BigInt(user.kythiaBank) + BigInt(amount);
+
         user.changed('kythiaCoin', true);
         user.changed('kythiaBank', true);
-        await user.saveAndUpdateCache('userId');
+
+        await user.saveAndUpdateCache();
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)

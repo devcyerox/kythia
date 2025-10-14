@@ -50,8 +50,10 @@ module.exports = {
         const flip = Math.random() < 0.5 ? 'heads' : 'tails';
 
         if (side === flip) {
-            user.kythiaCoin += bet;
+            user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(bet);
+
             user.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache('userId');
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
@@ -65,8 +67,10 @@ module.exports = {
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else {
-            user.kythiaCoin -= bet;
+            user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(bet);
+
             user.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache('userId');
             const embed = new EmbedBuilder()
                 .setColor('Red')

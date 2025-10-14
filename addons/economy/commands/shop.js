@@ -25,14 +25,11 @@ const { t } = require('@utils/translator');
 
 const allItems = Object.values(shopData).flat();
 
-// Helper to safely format numbers
 function safeLocaleString(value, fallback = '0') {
     return typeof value === 'number' && isFinite(value) ? value.toLocaleString() : fallback;
 }
 
-// Returns a ContainerBuilder, like @about.js, with all child components/rows/add-ons INSIDE the container, not outside!
 async function generateShopContainer(interaction, user, category, page, pageItems, componentsBelow = []) {
-    // Compose contextual data
     let cashDisplay = '0';
     if (user && typeof user.kythiaCoin !== 'undefined' && user.kythiaCoin !== null) {
         cashDisplay = safeLocaleString(user.kythiaCoin, '0');
@@ -68,10 +65,8 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     );
     page = Math.max(1, Math.min(page, totalPages));
 
-    // Footer text
     const footerText = await t(interaction, 'economy_shop_footer', { page, totalPages });
 
-    // Compose container in the @about.js style; all children go in add*Components, nothing in root "components"
     const container = new ContainerBuilder()
         .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
         .addTextDisplayComponents(new TextDisplayBuilder().setContent(headerText))
@@ -80,7 +75,6 @@ async function generateShopContainer(interaction, user, category, page, pageItem
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addTextDisplayComponents(new TextDisplayBuilder().setContent(footerText ?? ''));
 
-    // If action/control rows exist, add them INSIDE this container (see @about.js .addActionRowComponents)
     if (componentsBelow && componentsBelow.length) {
         container
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
@@ -288,7 +282,10 @@ module.exports = {
                     });
                 }
 
-                user.kythiaCoin -= selectedItem.price;
+                user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(selectedItem.price);
+
+                user.changed('kythiaCoin', true);
+
                 await user.saveAndUpdateCache();
 
                 await Inventory.create({ userId: user.userId, itemName: itemNameWithEmoji });
@@ -311,7 +308,6 @@ module.exports = {
                 });
             }
 
-            // Re-build the shop container with up-to-date category/page and correct row controls inside the container (NOT in the root "components" array)
             let itemsToShow =
                 currentCategory === 'all'
                     ? allItems.filter((item) => item.buyable)

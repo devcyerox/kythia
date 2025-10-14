@@ -82,7 +82,7 @@ module.exports = {
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        user.kythiaCoin -= bet;
+        user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(bet);
 
         const reels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
         const [r1, r2, r3] = reels;
@@ -114,8 +114,10 @@ module.exports = {
         }
 
         if (winnings > 0) {
-            user.kythiaCoin += winnings;
+            user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(winnings);
         }
+
+        user.changed('kythiaCoin', true);
 
         await user.saveAndUpdateCache();
 

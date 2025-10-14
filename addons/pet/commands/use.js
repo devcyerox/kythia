@@ -13,7 +13,7 @@ const { embedFooter } = require('@utils/discord');
 const { checkCooldown } = require('@utils/time');
 const { t } = require('@utils/translator');
 const KythiaUser = require('@coreModels/KythiaUser');
-const { updatePetStatus } = require('../helpers/status'); // <--- Import status helper
+const { updatePetStatus } = require('../helpers/status');
 
 module.exports = {
     subcommand: true,
@@ -23,7 +23,6 @@ module.exports = {
 
         const userId = interaction.user.id;
 
-        // Ganti: gunakan KythiaUser dan UserPet langsung filter isDead false
         const kythiaUser = await KythiaUser.getCache({ userId });
         let userPet = await UserPet.getCache({
             where: { userId: userId, isDead: false },
@@ -38,7 +37,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Update pet status
         const { pet: updatedPet, justDied } = updatePetStatus(userPet);
         await updatedPet.saveAndUpdateCache();
 
@@ -55,7 +53,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Cooldown check (pakai updatedPet.lastUse)
         const cooldown = checkCooldown(updatedPet.lastUse, kythia.addons.pet.useCooldown || 14400);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
@@ -67,7 +64,6 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        // Bonus logic baru
         updatedPet.level += 1;
 
         let multiplier = 1;
@@ -79,17 +75,21 @@ module.exports = {
         let bonusValue = updatedPet.pet.bonusValue * multiplier;
         let bonusTypeDisplay = '';
 
-        // Gunakan KythiaUser coin/ruby, bukan cash/xp, dan bonusType baru
         if (updatedPet.pet.bonusType === 'coin') {
             kythiaUser.kythiaCoin = (BigInt(kythiaUser.kythiaCoin) || 0n) + BigInt(bonusValue);
             bonusTypeDisplay = 'KythiaCoin';
+
+            kythiaUser.changed('kythiaCoin', true);
         } else if (updatedPet.pet.bonusType === 'ruby') {
             kythiaUser.kythiaRuby = (BigInt(kythiaUser.kythiaRuby) || 0n) + BigInt(bonusValue);
             bonusTypeDisplay = 'KythiaRuby';
+
+            kythiaUser.changed('kythiaRuby', true);
         }
 
         updatedPet.lastUse = new Date();
         await updatedPet.saveAndUpdateCache();
+
         await kythiaUser.saveAndUpdateCache();
 
         const embed = new EmbedBuilder()

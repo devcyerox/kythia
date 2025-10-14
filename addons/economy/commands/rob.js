@@ -53,7 +53,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const cooldown = checkCooldown(user.lastRob, kythia.addons.economy.robCooldown || 10800); // Default to 3 hours
+        const cooldown = checkCooldown(user.lastRob, kythia.addons.economy.robCooldown || 10800);
 
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
@@ -70,33 +70,28 @@ module.exports = {
             poison = await Inventory.getCache({ userId: target.userId, itemName: '🧪 Poison' });
         }
 
-        // ==== EDITED LOGIC FOR BANK INFLUENCE ON SUCCESS CHANCE ====
         const userBank = BankManager.getBank(user.bankType);
         let success = false;
         if (guard) {
             success = false;
-            await guard.destroy(); // Destroy the guard item after use
+            await guard.destroy();
         } else if (poison) {
-            // Poison always remains 10%
             success = Math.random() < 0.1;
         } else {
-            // Use base + bank success chance for normal rob attempt
-            let baseSuccessChance = 0.3; // 30%
-            // Tambahkan bonus dari bank
-            const successBonus = userBank.robSuccessBonusPercent / 100; // misal 15% jadi 0.15
+            let baseSuccessChance = 0.3;
+
+            const successBonus = userBank.robSuccessBonusPercent / 100;
             baseSuccessChance += successBonus;
             success = Math.random() < baseSuccessChance;
         }
-        // ==== END OF EDITED LOGIC ====
 
         const baseRobAmount = Math.floor(Math.random() * 201) + 50;
-        // Apply bank rob success bonus
+
         const robSuccessBonusPercent = userBank.robSuccessBonusPercent;
         const robBonus = Math.floor(baseRobAmount * (robSuccessBonusPercent / 100));
         const robAmount = baseRobAmount + robBonus;
 
         if (success) {
-            // Successful rob
             if (target.kythiaCoin < robAmount) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
@@ -106,11 +101,13 @@ module.exports = {
                 return interaction.editReply({ embeds: [embed] });
             }
 
-            user.kythiaCoin += robAmount;
-            target.kythiaCoin -= robAmount;
+            user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(robAmount);
+            target.kythiaCoin = BigInt(target.kythiaCoin) - BigInt(robAmount);
             user.lastRob = new Date();
+
             user.changed('kythiaCoin', true);
             target.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache('userId');
             await target.saveAndUpdateCache('userId');
 
@@ -138,7 +135,6 @@ module.exports = {
                 .setFooter(await embedFooter(interaction));
             await targetUser.send({ embeds: [embedToTarget] });
         } else {
-            // Failed rob, pay the target with penalty multiplier
             const robPenaltyMultiplier = userBank ? userBank.robPenaltyMultiplier : 1;
             const basePenalty = Math.floor(robAmount * robPenaltyMultiplier);
 
@@ -153,17 +149,20 @@ module.exports = {
             let penalty = basePenalty;
             if (poison) {
                 penalty = user.kythiaCoin;
-                user.kythiaCoin -= penalty;
-                target.kythiaCoin += penalty;
-                await poison.destroy(); // Destroy poison item after use
+
+                user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(penalty);
+                target.kythiaCoin = BigInt(target.kythiaCoin) + BigInt(penalty);
+                await poison.destroy();
             } else {
-                user.kythiaCoin -= basePenalty;
-                target.kythiaCoin += basePenalty;
+                user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(basePenalty);
+                target.kythiaCoin = BigInt(target.kythiaCoin) + BigInt(basePenalty);
             }
 
             user.lastRob = new Date();
+
             user.changed('kythiaCoin', true);
             target.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache('userId');
             await target.saveAndUpdateCache('userId');
 

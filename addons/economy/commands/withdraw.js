@@ -34,7 +34,6 @@ module.exports = {
                 return interaction.editReply({ embeds: [embed] });
             }
 
-            // Calculate withdraw fee based on user's bank type
             const userBank = BankManager.getBank(user.bankType);
             const withdrawFeePercent = userBank.withdrawFeePercent;
             const fee = Math.floor(amount * (withdrawFeePercent / 100));
@@ -50,10 +49,12 @@ module.exports = {
                 return interaction.editReply({ embeds: [embed] });
             }
 
-            user.kythiaBank -= totalRequired;
-            user.kythiaCoin += amount;
+            user.kythiaBank = BigInt(user.kythiaBank) - BigInt(totalRequired);
+            user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(amount);
+
             user.changed('kythiaBank', true);
             user.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache('userId');
 
             const embed = new EmbedBuilder()

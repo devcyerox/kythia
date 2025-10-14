@@ -107,7 +107,10 @@ module.exports = {
                 price: currentPrice,
             });
 
-            user.kythiaCoin -= amountToSpend;
+            user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(amountToSpend);
+
+            user.changed('kythiaCoin', true);
+
             await user.saveAndUpdateCache();
 
             const successEmbed = new EmbedBuilder()

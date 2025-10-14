@@ -81,7 +81,10 @@ module.exports = {
                     price,
                 });
 
-                user.kythiaCoin -= totalCost;
+                user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(totalCost);
+
+                user.changed('kythiaCoin', true);
+
                 await user.saveAndUpdateCache();
 
                 const successEmbed = new EmbedBuilder()
@@ -92,7 +95,6 @@ module.exports = {
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [successEmbed] });
             } else {
-                // sell
                 const holding = await MarketPortfolio.getCache({
                     userId: interaction.user.id,
                     assetId: assetId,

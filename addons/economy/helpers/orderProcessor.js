@@ -41,7 +41,6 @@ async function processOrders() {
 
                 if (order.side === 'buy') {
                     const totalCost = order.quantity * order.price;
-                    // No need to check or deduct kythiaCoin here, as it was already deducted when the order was placed.
 
                     const portfolio = await MarketPortfolio.getCache({ userId: order.userId, assetId: order.assetId });
                     if (portfolio) {
@@ -68,10 +67,11 @@ async function processOrders() {
                         price: order.price,
                     });
                 } else {
-                    // sell
-                    // Assets were already deducted. We just need to give the user the coins.
                     const totalReceived = order.quantity * currentPrice;
-                    user.kythiaCoin += totalReceived;
+
+                    user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalReceived);
+
+                    user.changed('kythiaCoin', true);
 
                     order.status = 'filled';
                     await MarketTransaction.create({
@@ -82,6 +82,7 @@ async function processOrders() {
                         price: currentPrice,
                     });
                 }
+
                 await user.save();
                 await order.save();
             }

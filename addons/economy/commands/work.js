@@ -91,15 +91,14 @@ module.exports = {
 
         const baseEarning = Math.floor(Math.random() * (job.basePay[1] - job.basePay[0] + 1)) + job.basePay[0];
         const careerBonus = Math.floor(baseEarning * (user.careerLevel || 0) * 0.05);
-        
-        // Apply bank income bonus
+
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;
         const bankBonus = Math.floor(baseEarning * (incomeBonusPercent / 100));
-        
+
         const finalEarning = Math.floor(baseEarning * scenario.modifier) + careerBonus + bankBonus;
 
-        user.kythiaCoin += finalEarning;
+        user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(finalEarning);
         user.lastWork = new Date();
 
         let levelUpText = '';
@@ -107,6 +106,8 @@ module.exports = {
             user.careerLevel = (user.careerLevel || 0) + 1;
             levelUpText = `\n\n${await t(interaction, 'economy_work_work_levelup_text', { level: user.careerLevel })}`;
         }
+
+        user.changed('kythiaCoin', true);
 
         await user.saveAndUpdateCache();
 
