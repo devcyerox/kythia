@@ -75,6 +75,9 @@ function parseDuration(duration) {
  * @returns {{remaining:boolean,time?:string}} Remaining flag and friendly remaining time if active.
  */
 function checkCooldown(lastTime, cooldownInSeconds) {
+    if (kythia.settings.ownerSkipCooldown) {
+        return { remaining: false };
+    }
     const now = Date.now();
     if (lastTime && now - lastTime < cooldownInSeconds * 1000) {
         const timeLeftInSeconds = cooldownInSeconds - Math.floor((now - lastTime) / 1000);

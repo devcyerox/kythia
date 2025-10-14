@@ -362,6 +362,9 @@ function loadKythiaConfig() {
             cacheExpirationTime: 15 * 60 * 1000, // 15 minutes
             // automod punishment cooldown
             punishmentCooldown: 1 * 1000, // 1 second
+
+            // owner can skip all cooldown like in ecomony or pet
+            ownerSkipCooldown: true,
         },
         /** -------------------------------------------------------------------
          * X. EMOJIS

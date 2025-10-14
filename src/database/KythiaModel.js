@@ -17,6 +17,7 @@
  * -  Intelligent Routing: Core methods now act as routers, delegating to the active cache engine.
  * -  Consistent API: No changes needed in any other part of the application.
  * -  Tag-aware Sniper Invalidation for maximum precision on cache busting.
+ * -  Smart: On Redis disconnect, will auto-reconnect attempts after several (configurable) minutes
  */
 
 const jsonStringify = require('json-stable-stringify');
@@ -25,6 +26,29 @@ const { Model } = require('sequelize');
 const Redis = require('ioredis');
 
 const NEGATIVE_CACHE_PLACEHOLDER = '__KYTHIA_NEGATIVE_CACHE__';
+
+let lastRedisOpts = null;
+let reconnectTimeout = null;
+let lastAutoReconnectTs = 0;
+const RECONNECT_DELAY_MINUTES = 3;
+
+function safeStringify(obj) {
+    try {
+        return JSON.stringify(obj, (key, value) => (typeof value === 'bigint' ? value.toString() : value));
+    } catch (err) {
+        logger.error(`❌ [SAFE STRINGIFY] Failed: ${err.message}`);
+        return '{}';
+    }
+}
+
+function safeParse(str) {
+    try {
+        return JSON.parse(str);
+    } catch {
+        logger.warn('⚠️ [SAFE PARSE] Invalid JSON data, returning null');
+        return null;
+    }
+}
 
 class KythiaModel extends Model {
     static client;
@@ -45,7 +69,8 @@ class KythiaModel extends Model {
      * 🔌 Initializes the connection to the Redis server and sets up connection state listeners.
      * This method should be called once when the application starts. If no Redis options are provided,
      * the class will operate exclusively in in-memory cache mode. It implements an intelligent
-     * retry strategy to handle temporary connection issues.
+     * retry strategy to handle temporary connection issues. If connection fails permanently,
+     * it will attempt to reconnect after several minutes (smart auto-reconnect).
      * @param {string|Object} [redisOptions] - The Redis connection URL string or an ioredis options object.
      */
     static initialize(redisOptions) {
@@ -55,6 +80,7 @@ class KythiaModel extends Model {
             this.isRedisConnected = false;
             return;
         }
+        lastRedisOpts = redisOptions;
 
         const retryStrategy = (times) => {
             if (times > 5) {
@@ -77,16 +103,64 @@ class KythiaModel extends Model {
         );
         this.redis.connect().catch(() => {});
 
+        const smartAutoReconnect = () => {
+            if (this.isRedisConnected || this.redis?.status === 'ready') return;
+            const sinceLast = Date.now() - lastAutoReconnectTs;
+            if (sinceLast < RECONNECT_DELAY_MINUTES * 60 * 1000) return;
+            lastAutoReconnectTs = Date.now();
+            logger.warn(`🟢 [REDIS] Attempting auto-reconnect after ${RECONNECT_DELAY_MINUTES}min downtime...`);
+            try {
+                // Safely disconnect old instance if exists
+                if (this.redis && typeof this.redis.disconnect === "function") {
+                    this.redis.disconnect();
+                }
+                this.redis = null;
+                // Clear possible lingering redis object
+                setTimeout(() => {
+                    // Avoid race, check again
+                    if (!this.isRedisConnected) {
+                        this.initialize(lastRedisOpts);
+                    }
+                }, 1000); // Short delay to release internal resources before reconnect
+            } catch (e) {
+                logger.error("❌ [REDIS][SMART RECONNECT] Failed to re-initiate", e);
+            }
+        };
+
         this.redis.on('connect', () => {
-            logger.info('✅ [REDIS] Connection established. Switching to Redis Cache mode.');
+            // If previously down, announce recovery
+            if (!this.isRedisConnected) {
+                logger.info('✅ [REDIS] Connection established. Switching to Redis Cache mode.');
+            }
             this.isRedisConnected = true;
+            // Clear any auto-reconnect timers
+            if (reconnectTimeout) {
+                clearTimeout(reconnectTimeout);
+                reconnectTimeout = null;
+            }
         });
-        this.redis.on('error', () => {});
+
+        this.redis.on('error', (err) => {
+            // ioredis gives errors even when already "down", so keep quiet, only log occasionally
+            if (err && (err.code === "ECONNREFUSED" || err.message)) {
+                logger.warn(`🟠 [REDIS] Error: ${err.message}`);
+            }
+        });
+
         this.redis.on('close', () => {
+            // Only log first transition
             if (this.isRedisConnected) {
                 logger.error('❌ [REDIS] Connection closed. Falling back to In-Memory Cache mode.');
             }
             this.isRedisConnected = false;
+
+            // If not already scheduled, set up a reconnection after the interval.
+            if (!reconnectTimeout) {
+                reconnectTimeout = setTimeout(() => {
+                    reconnectTimeout = null;
+                    smartAutoReconnect();
+                }, RECONNECT_DELAY_MINUTES * 60 * 1000);
+            }
         });
 
         return this.redis;
@@ -192,9 +266,7 @@ class KythiaModel extends Model {
                 plainData = data.map((item) => (item && typeof item.toJSON === 'function' ? item.toJSON() : item));
             }
 
-            const replacer = (key, value) => (typeof value === 'bigint' ? value.toString() : value);
-
-            const valueToStore = plainData === null ? NEGATIVE_CACHE_PLACEHOLDER : JSON.stringify(plainData, replacer);
+            const valueToStore = plainData === null ? NEGATIVE_CACHE_PLACEHOLDER : safeStringify(plainData);
 
             const multi = this.redis.multi();
             multi.set(cacheKey, valueToStore, 'PX', ttl);
@@ -206,6 +278,15 @@ class KythiaModel extends Model {
         } catch (err) {
             logger.error(`❌ [REDIS SET] Failed for key ${cacheKey}. Falling back. Error:`, err.message);
             this.isRedisConnected = false;
+            if (!reconnectTimeout) {
+                reconnectTimeout = setTimeout(() => {
+                    reconnectTimeout = null;
+                    // Try to smart auto-reconnect after error
+                    if (typeof KythiaModel.initialize === "function") {
+                        KythiaModel.initialize(lastRedisOpts);
+                    }
+                }, RECONNECT_DELAY_MINUTES * 60 * 1000);
+            }
         }
     }
 
@@ -225,7 +306,8 @@ class KythiaModel extends Model {
             this.cacheStats.redisHits++;
             if (result === NEGATIVE_CACHE_PLACEHOLDER) return { hit: true, data: null };
 
-            const parsedData = JSON.parse(result);
+            // USE SAFE PARSE
+            const parsedData = safeParse(result);
 
             if (typeof parsedData !== 'object' || parsedData === null) {
                 return { hit: true, data: parsedData };
@@ -254,6 +336,14 @@ class KythiaModel extends Model {
         } catch (err) {
             logger.error(`❌ [REDIS GET] Failed for key ${cacheKey}. Falling back. Error:`, err.message);
             this.isRedisConnected = false;
+            if (!reconnectTimeout) {
+                reconnectTimeout = setTimeout(() => {
+                    reconnectTimeout = null;
+                    if (typeof KythiaModel.initialize === "function") {
+                        KythiaModel.initialize(lastRedisOpts);
+                    }
+                }, RECONNECT_DELAY_MINUTES * 60 * 1000);
+            }
             return { hit: false, data: undefined };
         }
     }
@@ -271,6 +361,14 @@ class KythiaModel extends Model {
         } catch (err) {
             logger.error(`❌ [REDIS DEL] Failed for key ${JSON.stringify(cacheKey)}. Bypassing. Error:`, err.message);
             this.isRedisConnected = false;
+            if (!reconnectTimeout) {
+                reconnectTimeout = setTimeout(() => {
+                    reconnectTimeout = null;
+                    if (typeof KythiaModel.initialize === "function") {
+                        KythiaModel.initialize(lastRedisOpts);
+                    }
+                }, RECONNECT_DELAY_MINUTES * 60 * 1000);
+            }
         }
     }
 
@@ -302,6 +400,14 @@ class KythiaModel extends Model {
         } catch (err) {
             logger.error(`❌ [SNIPER] Failed to invalidate tags. Error:`, err.message);
             this.isRedisConnected = false;
+            if (!reconnectTimeout) {
+                reconnectTimeout = setTimeout(() => {
+                    reconnectTimeout = null;
+                    if (typeof KythiaModel.initialize === "function") {
+                        KythiaModel.initialize(lastRedisOpts);
+                    }
+                }, RECONNECT_DELAY_MINUTES * 60 * 1000);
+            }
         }
     }
 
@@ -331,9 +437,7 @@ class KythiaModel extends Model {
                 plainData = data.map((item) => (item && typeof item.toJSON === 'function' ? item.toJSON() : item));
             }
 
-            const replacer = (key, value) => (typeof value === 'bigint' ? value.toString() : value);
-
-            const dataCopy = JSON.parse(JSON.stringify(plainData, replacer));
+            const dataCopy = plainData === null ? NEGATIVE_CACHE_PLACEHOLDER : safeStringify(plainData);
 
             this.localCache.set(cacheKey, { data: dataCopy, expires: Date.now() + ttl });
             this.localNegativeCache.delete(cacheKey);
