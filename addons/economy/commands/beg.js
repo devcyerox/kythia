@@ -31,7 +31,7 @@ module.exports = {
         const cooldown = checkCooldown(user.lastBeg, kythia.addons.economy.begCooldown || 3600, interaction);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor('Yellow')
                 .setDescription(await t(interaction, 'economy_beg_beg_cooldown', { time: cooldown.time }))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));

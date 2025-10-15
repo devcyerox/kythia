@@ -32,7 +32,7 @@ module.exports = {
         const cooldown = checkCooldown(user.lastLootbox, kythia.addons.economy.lootboxCooldown || 43200, interaction);
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor('Yellow')
                 .setDescription(await t(interaction, 'economy_lootbox_lootbox_cooldown', { time: cooldown.time }))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
