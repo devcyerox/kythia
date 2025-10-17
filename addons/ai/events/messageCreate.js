@@ -17,6 +17,7 @@ const logger = require('@utils/logger');
 const fs = require('fs').promises;
 const path = require('path');
 const { getAndUseNextAvailableToken } = require('../helpers/gemini');
+const { isOwner } = require('@utils/discord');
 
 const UserFact = require('../database/models/UserFact');
 
@@ -25,18 +26,28 @@ const CONTEXT_MESSAGES_TO_FETCH = kythia.addons.ai.getMessageHistoryLength;
 const conversationCache = new Map();
 
 /**
- * Filter AI response for unwanted tags like @everyone/@here
+ * Filter AI response for unwanted tags like @everyone/@here,
+ * but if the user isOwner (see discord.js) and kythia.addons.ai.ownerBypassFilter is true,
+ * always allow them.
  * @param {string} responseText
+ * @param {string} [userId]
  * @returns {object} { allowed: boolean, reason?: string }
  */
-function filterAiResponse(responseText) {
+function filterAiResponse(responseText, userId) {
+    // Owner bypass filter logic
+    if (
+        typeof userId !== "undefined" &&
+        kythia?.addons?.ai?.ownerBypassFilter &&
+        isOwner(userId)
+    ) {
+        return { allowed: true };
+    }
     if (/@everyone|@here/i.test(responseText)) {
         return {
             allowed: false,
             reason: 'ai_events_messageCreate_filter_everyone_here',
         };
     }
-
     return { allowed: true };
 }
 
@@ -295,7 +306,7 @@ async function sendSplitMessage(message, text) {
         let chunk = part.trim();
         if (chunk.length === 0) continue;
 
-        const filterResult = filterAiResponse(chunk);
+        const filterResult = filterAiResponse(chunk, message.author?.id);
         if (!filterResult.allowed) {
             await message.reply(await t(message, filterResult.reason || 'ai_events_messageCreate_filter_blocked'));
             return;
@@ -304,7 +315,7 @@ async function sendSplitMessage(message, text) {
         if (chunk.length > CHUNK_SIZE) {
             const subChunks = chunk.match(new RegExp(`.{1,${CHUNK_SIZE}}`, 'gs')) || [];
             for (const subChunk of subChunks) {
-                const filterResultSub = filterAiResponse(subChunk);
+                const filterResultSub = filterAiResponse(subChunk, message.author?.id);
                 if (!filterResultSub.allowed) {
                     await message.reply(await t(message, filterResultSub.reason || 'ai_events_messageCreate_filter_blocked'));
                     return;
@@ -732,7 +743,7 @@ module.exports = async (bot, message) => {
 
                         const finalReply = followUpResponse.text.trim();
 
-                        const filterResult = filterAiResponse(finalReply);
+                        const filterResult = filterAiResponse(finalReply, message.author?.id);
                         if (!filterResult.allowed) {
                             await message.reply(await t(message, filterResult.reason || 'ai_events_messageCreate_filter_blocked'));
                             return;
@@ -747,7 +758,7 @@ module.exports = async (bot, message) => {
                 } else {
                     const replyText = finalResponse.text.trim();
 
-                    const filterResult = filterAiResponse(replyText);
+                    const filterResult = filterAiResponse(replyText, message.author?.id);
                     if (!filterResult.allowed) {
                         await message.reply(await t(message, filterResult.reason || 'ai_events_messageCreate_filter_blocked'));
                         return;

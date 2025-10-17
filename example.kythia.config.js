@@ -170,6 +170,7 @@ function loadKythiaConfig() {
                 dailyGreeterPrompt: `
                     Make a warm greeting for the members.
                 `,
+                ownerBypassFilter: true,
             },
             checklist: {
                 active: true,

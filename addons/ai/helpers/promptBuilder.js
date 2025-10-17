@@ -30,7 +30,6 @@ const discordRulesPrompt = `
     Example: "This is the first part of my answer.[SPLIT]And this is the second part that will be sent as a separate message."
 5. NEVER generate a single answer longer than 2000 characters. Always use '[SPLIT]' if needed.
 6. DO NOT USE '[SPLIT]' if the message is not close to 2000 characters.
-7. YOU CANT USE TAG IN DISCORD, PREVENT TO USE <@userid> OR @everyone OR @here, YOU CANT, JUST SAY YOU CANT
 `;
 
 function buildSystemInstruction(context) {
