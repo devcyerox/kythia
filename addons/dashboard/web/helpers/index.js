@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.9-beta-rc.3
+ * @version 0.9.9-beta-rc.4
  */
 
 const { ApplicationCommandOptionType, ApplicationCommandType, PermissionsBitField } = require('discord.js');
@@ -15,7 +15,6 @@ const path = require('path');
 const fs = require('fs');
 const { ensureArray } = require('./settings');
 
-// Hybrid command loader for dashboard (supports both builder and hybrid style)
 function getOptionType(type) {
     switch (type) {
         case ApplicationCommandOptionType.String:
@@ -51,14 +50,11 @@ function clearRequireCache(filePath) {
         delete require.cache[require.resolve(filePath)];
     } catch (e) {}
 }
-// Function to parse changelog content (THE DEFINITIVE FIX)
+
 function parseChangelog(markdownContent) {
     const changelogs = [];
 
-    // REGEX BARU UNTUK SPLIT:
-    // Potong teksnya setiap kali nemu baris baru yang DIIKUTI OLEH pola header versi.
-    // Pola header versi = ### [spasi] versi [spasi] (tanggal)
-    const versions = markdownContent.split(/\n(?=###\s[\w.-]+\s+\(\d{4}-\d{2}-\d{2}\))/);
+    const versions = markdownContent.split(/\n(?=###\s(?:\[[^\]]+\]\([^)]+\)|[\w.-]+)\s*\((\d{4}-\d{2}-\d{2})\))/);
 
     const startIndex = versions[0].startsWith('###') ? 0 : 1;
 
@@ -67,17 +63,28 @@ function parseChangelog(markdownContent) {
         if (!block.trim()) continue;
 
         const lines = block.split('\n');
-        // Buang '### ' dari baris header
-        const headerLine = lines.shift().replace(/^###\s*/, '').trim();
 
-        // Regex ini bisa kita pakai lagi karena headerLine sudah bersih
-        const headerMatch = headerLine.match(/^([\w.-]+)\s+\((\d{4}-\d{2}-\d{2})\)$/);
+        const headerLine = lines
+            .shift()
+            .replace(/^###\s*/, '')
+            .trim();
 
-        if (headerMatch) {
-            const version = headerMatch[1];
-            const date = headerMatch[2];
+        let version, date;
+
+        let match = headerLine.match(/^\[([^\]]+)\]\([^)]+\)\s*\((\d{4}-\d{2}-\d{2})\)$/);
+        if (match) {
+            version = match[1];
+            date = match[2];
+        } else {
+            match = headerLine.match(/^([\w.-]+)\s*\((\d{4}-\d{2}-\d{2})\)$/);
+            if (match) {
+                version = match[1];
+                date = match[2];
+            }
+        }
+
+        if (version && date) {
             const contentMarkdown = lines.join('\n').trim();
-
             if (contentMarkdown) {
                 const contentHtml = marked.parse(contentMarkdown);
                 changelogs.push({
@@ -91,9 +98,6 @@ function parseChangelog(markdownContent) {
     return changelogs;
 }
 
-// =================================================================
-// UPDATED: buildCategoryMap (Mendukung Hybrid Commands)
-// =================================================================
 function buildCategoryMap() {
     const categoryMap = {};
     const rootAddonsDir = path.join(__dirname, '..', '..', '..');
@@ -109,30 +113,25 @@ function buildCategoryMap() {
                 const command = require(filePath);
                 let commandNames = [];
 
-                // 1. Cek untuk slashCommand
                 if (command.slashCommand) {
                     const name = command.slashCommand.name;
                     if (name) commandNames.push(name);
                 }
 
-                // 2. Cek untuk contextMenuCommand
                 if (command.contextMenuCommand) {
                     const name = command.contextMenuCommand.name;
                     if (name) commandNames.push(name);
                 }
 
-                // 3. Fallback untuk struktur lama (command.data)
                 if (command.data) {
                     const name = command.data.name;
                     if (name) commandNames.push(name);
                 }
 
-                // 4. Fallback untuk properti .name
                 if (typeof command.name === 'string') {
                     commandNames.push(command.name);
                 }
 
-                // Hapus duplikat dan daftarkan ke map
                 [...new Set(commandNames.filter(Boolean))].forEach((cmdName) => {
                     categoryMap[cmdName] = categoryName;
                 });
@@ -165,34 +164,25 @@ function buildCategoryMap() {
 
 const categoryMap = buildCategoryMap();
 
-// =================================================================
-// FINAL VERSION: getCommandsData (DENGAN LOGIKA DE-DUPLIKASI)
-// =================================================================
 async function getCommandsData(client) {
     const allCommands = [];
     const categories = new Set();
     let totalCommandCount = 0;
-    const processedCommands = new Set(); // Set untuk melacak command unik yang sudah diproses
+    const processedCommands = new Set();
 
     client.commands.forEach((command) => {
         if (command.ownerOnly === true) {
-            return; // Langsung skip ke command berikutnya
+            return;
         }
-        // 1. Proses Slash Command (baik dari `slashCommand` atau `data` untuk backward compatibility)
+
         const slashData = command.slashCommand || command.data;
         if (slashData) {
             const commandJSON = typeof slashData.toJSON === 'function' ? slashData.toJSON() : slashData;
 
-            // if (!commandJSON.name || !commandJSON.description) {
-            //   logger.warn(`⏩ Skipping command with missing name or description: ${commandJSON.name || 'N/A'}`);
-            //   return;
-            // }
+            const uniqueKey = `slash-${commandJSON.name}`;
 
-            const uniqueKey = `slash-${commandJSON.name}`; // Kunci unik untuk slash command
-
-            // Cek apakah command ini sudah diproses untuk menghindari duplikasi
             if (!processedCommands.has(uniqueKey)) {
-                processedCommands.add(uniqueKey); // Tandai sebagai sudah diproses
+                processedCommands.add(uniqueKey);
 
                 const categoryName = categoryMap[commandJSON.name] || 'uncategorized';
                 const parsedCommand = {
@@ -271,30 +261,23 @@ async function getCommandsData(client) {
             }
         }
 
-        // 2. Proses Context Menu Command
         if (command.contextMenuCommand) {
             const commandJSON =
                 typeof command.contextMenuCommand.toJSON === 'function' ? command.contextMenuCommand.toJSON() : command.contextMenuCommand;
-            const uniqueKey = `context-${commandJSON.name}`; // Kunci unik untuk context menu
+            const uniqueKey = `context-${commandJSON.name}`;
 
-            // Cek apakah command ini sudah diproses untuk menghindari duplikasi
             if (!processedCommands.has(uniqueKey)) {
-                processedCommands.add(uniqueKey); // Tandai sebagai sudah diproses
+                processedCommands.add(uniqueKey);
 
                 const categoryName = categoryMap[commandJSON.name] || 'uncategorized';
-                // --- LOGIKA DESKRIPSI PINTAR DIMULAI DI SINI ---
+
                 let description;
 
-                // Prioritas 1: Cari deskripsi khusus `contextMenuDescription`
                 if (command.contextMenuDescription) {
                     description = command.contextMenuDescription;
-                }
-                // Prioritas 2: "Colong" deskripsi dari slash command jika ada
-                else if (command.slashCommand && command.slashCommand.description) {
+                } else if (command.slashCommand && command.slashCommand.description) {
                     description = command.slashCommand.description;
-                }
-                // Prioritas 3: Fallback ke deskripsi generik
-                else {
+                } else {
                     if (commandJSON.type === ApplicationCommandType.Message) {
                         description = 'Right-click on a message to use this command.';
                     } else {
@@ -302,7 +285,6 @@ async function getCommandsData(client) {
                     }
                 }
 
-                // --- LOGIKA DESKRIPSI PINTAR SELESAI ---
                 const parsedCommand = {
                     name: commandJSON.name,
                     description: description,
@@ -315,7 +297,7 @@ async function getCommandsData(client) {
 
                 allCommands.push(parsedCommand);
                 categories.add(categoryName);
-                totalCommandCount += 1; // Context menu dihitung sebagai 1 command
+                totalCommandCount += 1;
             }
         }
     });
@@ -360,7 +342,6 @@ async function checkServerAccess(req, res, next) {
         }
         req.guild = guild;
 
-        // Defensive: always ensure req.settings is an object, never null
         let settings = await ServerSetting.getCache({ guildId: guild.id });
         if (!settings) {
             await ServerSetting.create({ guildId: guild.id, guildName: guild.name });
@@ -384,18 +365,15 @@ async function checkServerAccess(req, res, next) {
                 }
             }
         } else {
-            // Jika settings masih bermasalah setelah semua usaha,
-            // log errornya agar kamu tahu, dan set ke objek kosong agar EJS tidak crash.
             logger.error(`Failed to get a valid settings instance for guild ${guildId}`);
             settings = {};
         }
 
-        // Teruskan objeknya, baik yang sudah dinormalisasi maupun objek kosong jika gagal
         req.settings = settings;
         return next();
     } catch (error) {
         console.error('Error di middleware checkServerAccess:', error);
-        // Defensive: always pass settings as an object to avoid view errors
+
         return res.status(500).render('error', {
             title: 'Kesalahan Internal',
             message: 'Terjadi masalah saat memverifikasi akses server.',
@@ -409,7 +387,6 @@ async function checkServerAccess(req, res, next) {
 }
 
 function renderDash(res, viewName, opts = {}) {
-    // Default values
     const defaults = {
         user: res.req.user,
         guilds: res.locals.guilds,
@@ -422,16 +399,14 @@ function renderDash(res, viewName, opts = {}) {
         stats: undefined,
         logs: undefined,
     };
-    // Resolve pages directory and validate the view exists to avoid EJS include errors
+
     const viewsRoot = path.join(__dirname, '..', 'views');
     const pagesDir = path.join(viewsRoot, 'pages');
     const candidate = typeof viewName === 'string' ? path.join(pagesDir, `${viewName}.ejs`) : null;
     const viewExists = candidate ? fs.existsSync(candidate) : false;
 
-    // If the page doesn't exist, nullify viewName so layout can show fallback message
     const safeViewName = viewExists ? viewName : null;
 
-    // Gabungkan, opts bisa override defaults
     const renderData = { ...defaults, ...opts, viewName: safeViewName, viewExists };
     res.render('layouts/dashMain', renderData);
 }

@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.9-beta-rc.3
+ * @version 0.9.9-beta-rc.4
  */
 const InventoryAdventure = require('../database/models/InventoryAdventure');
 const User = require('../database/models/UserAdventure');
