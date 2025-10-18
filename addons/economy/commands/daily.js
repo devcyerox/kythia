@@ -38,7 +38,10 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const baseCoin = Math.floor(Math.random() * 101) + 50;
+        const avgDaily = 3677 / 30;
+        const minDaily = avgDaily * 0.9;
+        const maxDaily = avgDaily * 1.1;
+        const baseCoin = Math.floor(Math.random() * (maxDaily - minDaily + 1)) + Math.floor(minDaily);
 
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;

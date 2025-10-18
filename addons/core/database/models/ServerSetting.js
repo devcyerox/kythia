@@ -35,9 +35,9 @@ class ServerSetting extends KythiaModel {
                 // FEATURE ON/OFF
                 antiInviteOn: { type: DataTypes.BOOLEAN, defaultValue: false },
                 antiLinkOn: { type: DataTypes.BOOLEAN, defaultValue: false },
-                antiSpamOn: { type: DataTypes.BOOLEAN, defaultValue: true },
-                antiBadwordOn: { type: DataTypes.BOOLEAN, defaultValue: true },
-                antiMentionOn: { type: DataTypes.BOOLEAN, defaultValue: true },
+                antiSpamOn: { type: DataTypes.BOOLEAN, defaultValue: false },
+                antiBadwordOn: { type: DataTypes.BOOLEAN, defaultValue: false },
+                antiMentionOn: { type: DataTypes.BOOLEAN, defaultValue: false },
                 serverStatsOn: { type: DataTypes.BOOLEAN, defaultValue: false },
 
                 adventureOn: { type: DataTypes.BOOLEAN, defaultValue: false },

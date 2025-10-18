@@ -1,3 +1,11 @@
+/**
+ * @namespace: addons/pet/register.js
+ * @type: Module
+ * @copyright © 2025 kenndeclouv
+ * @assistant chaa & graa
+ * @version 0.9.9-beta-rc.3
+ */
+
 module.exports = {
     async initialize(bot) {
         bot.addDbReadyHook((sequelize) => {

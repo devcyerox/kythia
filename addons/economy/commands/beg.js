@@ -38,7 +38,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const baseCoin = Math.floor(Math.random() * 41) + 10;
+        const baseCoin = Math.floor(Math.random() * 21) + 5;
 
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;

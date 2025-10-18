@@ -20,6 +20,7 @@ const symbols = {
     '⭐': { weight: 4, payout: { two: 5, three: 50 } },
     '💎': { weight: 2, payout: { two: 10, three: 100 } },
     '💰': { weight: 1, payout: { two: 20, three: 250 } },
+    '🌸': { weight: 0.5, payout: { two: 40, three: 550 } },
 };
 
 function getRandomSymbol() {

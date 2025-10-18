@@ -914,7 +914,6 @@ async function handleLyrics(interaction, player) {
         return interaction.editReply({ embeds: [embed] });
     }
 
-    // --- Ambil info artis, judul, album, durasi ---
     let artist, titleForSearch, album, durationSec;
     const separators = ['-', '–', '|'];
     let potentialSplit = null;
@@ -955,33 +954,49 @@ async function handleLyrics(interaction, player) {
     }
     if (!album) album = '';
 
-    // --- Query LRCLIB API ---
     let lyrics = null;
     let usedLrclib = false;
     let usedAI = false;
+    let foundRecord = null;
 
     try {
-        // Compose query params
-        const params = new URLSearchParams({
-            track_name: titleForSearch,
-            artist_name: artist,
-            album_name: album,
-            duration: durationSec,
-        });
+        // Compose query params according to /api/search spec
+        const params = new URLSearchParams();
+        // At least one of track_name or q must be present
+        if (titleForSearch) {
+            params.set('track_name', titleForSearch);
+        } else if (originalTitle) {
+            params.set('q', originalTitle);
+        }
+
+        if (artist) params.set('artist_name', artist);
+        if (album) params.set('album_name', album);
 
         // User-Agent for LRCLIB etiquette
         const headers = {
             'User-Agent': 'KythiaBot v0.9.8-beta (https://github.com/kenndeclouv/kythia)',
         };
 
-        // Try /api/get first (will try external sources if not found in cache)
-        const lrclibUrl = `https://lrclib.net/api/get?${params.toString()}`;
+        const lrclibUrl = `https://lrclib.net/api/search?${params.toString()}`;
         const response = await fetch(lrclibUrl, { headers });
         if (response.status === 200) {
-            const data = await response.json();
-            if (data && (data.plainLyrics || data.syncedLyrics)) {
-                lyrics = data.plainLyrics || data.syncedLyrics;
-                usedLrclib = true;
+            const list = await response.json();
+            // Find best match: try to match both artist and title, fallback to the first record
+            if (Array.isArray(list) && list.length > 0) {
+                foundRecord = list.find(record => {
+                    // Very basic match
+                    return (
+                        record.trackName &&
+                        record.artistName &&
+                        record.trackName.toLowerCase().includes(titleForSearch.toLowerCase()) &&
+                        record.artistName.toLowerCase().includes(artist.toLowerCase())
+                    );
+                }) || list[0];
+
+                if (foundRecord && (foundRecord.plainLyrics || foundRecord.syncedLyrics)) {
+                    lyrics = foundRecord.plainLyrics || foundRecord.syncedLyrics;
+                    usedLrclib = true;
+                }
             }
         }
     } catch (e) {
@@ -1026,10 +1041,17 @@ async function handleLyrics(interaction, player) {
         footer = await embedFooter(interaction);
     }
 
+    // Determine what to show as title/artist for returned lyric record
+    let embedArtist = artist, embedTitle = titleForSearch;
+    if (foundRecord) {
+        embedArtist = foundRecord.artistName || embedArtist;
+        embedTitle = foundRecord.trackName || embedTitle;
+    }
+
     // Build embed
     const embed = new EmbedBuilder()
         .setColor(kythia?.bot?.color || 'Blue')
-        .setTitle(`${artist} - ${titleForSearch}`)
+        .setTitle(`${embedArtist} - ${embedTitle}`)
         .setURL(track.info.uri)
         .setThumbnail(track.info.artworkUrl ?? track.info.image)
         .setDescription(trimmedLyrics)
@@ -1037,6 +1059,7 @@ async function handleLyrics(interaction, player) {
 
     return interaction.editReply({ embeds: [embed] });
 }
+
 async function handlePlaylist(interaction, player) {
     await interaction.deferReply();
     const s = interaction.options.getSubcommand();
@@ -1061,12 +1084,12 @@ async function _handlePlaylistSave(interaction, player) {
     const playlistCount = await Playlist.countWithCache({ where: { userId } });
     let isPremium = await checkIsPremium(userId);
 
-    if (!isOwner(interaction.user.id) && playlistCount >= kythia.music.playlistLimit && !isPremium) {
+    if (!isOwner(interaction.user.id) && playlistCount >= kythia.addons.music.playlistLimit && !isPremium) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
             .setDescription(
-                await t(interaction, 'music_helpers_handlers_music_playlist_save_limit', { count: kythia.music.playlistLimit })
+                await t(interaction, 'music_helpers_handlers_music_playlist_save_limit', { count: kythia.addons.music.playlistLimit })
             );
         return interaction.editReply({ embeds: [embed] });
     }
@@ -1727,14 +1750,14 @@ async function _handlePlaylistImport(interaction) {
         // Check playlist limit
         const playlistCount = await Playlist.countWithCache({ userId: userId });
         const isPremium = await checkIsPremium(userId);
-        if (!isOwner(userId) && playlistCount >= kythia.music.playlistLimit && !isPremium) {
+        if (!isOwner(userId) && playlistCount >= kythia.addons.music.playlistLimit && !isPremium) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
                     `${await t(interaction, 'music_helpers_handlers_music_playlist_save_limit_title')}\n${await t(
                         interaction,
                         'music_helpers_handlers_music_playlist_save_limit',
-                        { count: kythia.music.playlistLimit }
+                        { count: kythia.addons.music.playlistLimit }
                     )}`
                 );
             return interaction.editReply({ embeds: [embed] });
@@ -1897,11 +1920,11 @@ async function _importFromSpotify(interaction, url) {
         // Cek limit playlist (hanya jika membuat playlist baru)
         const playlistCount = await Playlist.countWithCache({ userId: userId });
         const isPremium = await checkIsPremium(userId);
-        if (!isOwner(userId) && playlistCount >= kythia.music.playlistLimit && !isPremium) {
+        if (!isOwner(userId) && playlistCount >= kythia.addons.music.playlistLimit && !isPremium) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    await t(interaction, 'music_helpers_handlers_music_playlist_save_limit', { count: kythia.music.playlistLimit })
+                    await t(interaction, 'music_helpers_handlers_music_playlist_save_limit', { count: kythia.addons.music.playlistLimit })
                 );
             return interaction.editReply({ embeds: [embed] });
         }

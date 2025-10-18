@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/core/events/guildMemberUpdate.js
+ * @namespace: addons/core/events/guildRoleUpdate.js
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

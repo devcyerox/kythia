@@ -39,7 +39,10 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         }
 
-        const baseReward = Math.floor(Math.random() * 401) + 100;
+        const avgHourly = 5677 / 160;
+        const minHourly = avgHourly * 0.9;
+        const maxHourly = avgHourly * 1.1;
+        const baseReward = Math.floor(Math.random() * (maxHourly - minHourly + 1)) + Math.floor(minHourly);
 
         const userBank = BankManager.getBank(user.bankType);
         const incomeBonusPercent = userBank.incomeBonusPercent;

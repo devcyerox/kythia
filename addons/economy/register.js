@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/ai/register.js
+ * @namespace: addons/economy/register.js
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

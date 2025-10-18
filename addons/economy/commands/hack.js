@@ -117,7 +117,7 @@ module.exports = {
                 if (user.hackMastered < 100) {
                     user.hackMastered = (user.hackMastered || 10) + 1;
                 }
-                target.kythiaBank = 0n;
+                target.kythiaBank = 0;
                 user.lastHack = Date.now();
 
                 user.changed('kythiaBank', true);

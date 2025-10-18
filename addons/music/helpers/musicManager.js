@@ -167,6 +167,7 @@ async function initializeMusicManager(bot) {
         player._autoplayReference = null;
         player.playedTrackIdentifiers = new Set();
         player.buttonCollector = null;
+        player._247 = false;
     });
 
     // Poru node events
@@ -605,13 +606,52 @@ async function initializeMusicManager(bot) {
     /**
      * 🔄 Handles when the queue ends, including autoplay logic.
      * This event now FOCUSES on handling what happens after the queue is truly empty.
+     *
+     * Before continuing to the next track, check if there are any users besides the bot in the voice channel.
+     * If no one else is present (except bot), stop (unless player.247 is enabled).
      */
     client.poru.on('queueEnd', async (player) => {
         const channel = client.channels.cache.get(player.textChannel);
 
-        // Edit Now Playing to ended container (no track, just ended)
-        // await shutdownPlayerUI(player, player._autoplayReference, client, channel);
+        // --- CHECK FOR ACTIVE USERS IN THE VOICE CHANNEL ---
+        let shouldContinue = true;
+        try {
+            // Fetch the voice channel
+            const voiceChannel = client.channels.cache.get(player.voiceChannel);
+            if (voiceChannel && !player._247) { // "247" mode will force continue
+                // Count members excluding the bot itself
+                const nonBotMembers = voiceChannel.members.filter(
+                    m => !m.user.bot || (m.id === client.user.id) // count the bot only if it's this bot instance (should always be)
+                );
+                // Remove this bot from the count so we only check for other users
+                const realUsers = voiceChannel.members.filter(m => !m.user.bot);
 
+                if (realUsers.size === 0) {
+                    shouldContinue = false;
+                }
+            }
+        } catch (err) {
+            logger.error('❌ Error checking voice channel members:', err);
+        }
+
+        // If no non-bot user and no 24/7 mode, destroy and return
+        if (!shouldContinue) {
+            if (channel) {
+                channel.send({
+                    embeds: [
+                        new EmbedBuilder().setColor('Orange').setDescription(
+                            await t(channel, 'music_helpers_musicManager_manager_no_listener') // You may need to add this translation key
+                        )
+                    ]
+                });
+            }
+            if (player && !player.destroyed) {
+                player.destroy();
+            }
+            return;
+        }
+
+        // --- Proceed as before ---
         // Stop and dispose any button collector
         if (player.buttonCollector) {
             try {
