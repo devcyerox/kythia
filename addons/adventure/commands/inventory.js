@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.4
  */
 const InventoryAdventure = require('../database/models/InventoryAdventure');
-const User = require('../database/models/UserAdventure');
+const UserAdventure = require('../database/models/UserAdventure');
 const { embedFooter } = require('@utils/discord');
 const { EmbedBuilder } = require('discord.js');
 const { t } = require('@utils/translator');
@@ -26,7 +26,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
         const userId = interaction.user.id;
-        const user = await User.getCache({ userId: userId });
+        const user = await UserAdventure.getCache({ userId: userId });
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor('Red')

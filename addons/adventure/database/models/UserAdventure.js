@@ -18,6 +18,7 @@ class UserAdventure extends KythiaModel {
                 level: { type: DataTypes.INTEGER, defaultValue: 1 },
                 xp: { type: DataTypes.INTEGER, defaultValue: 0 },
                 hp: { type: DataTypes.INTEGER, defaultValue: 100 },
+                maxHp: { type: DataTypes.INTEGER, defaultValue: 100 },
                 gold: { type: DataTypes.INTEGER, defaultValue: 50 },
                 strength: { type: DataTypes.INTEGER, defaultValue: 10 },
                 defense: { type: DataTypes.INTEGER, defaultValue: 5 },

@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.4
  */
 const { EmbedBuilder } = require('discord.js');
-const User = require('../database/models/UserAdventure');
+const UserAdventure = require('../database/models/UserAdventure');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 const CharManager = require('../helpers/charManager');
@@ -40,7 +40,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const existing = await User.getCache({ userId: interaction.user.id });
+        const existing = await UserAdventure.getCache({ userId: interaction.user.id });
 
         if (existing) {
             const alreadyEmbed = new EmbedBuilder()
@@ -71,11 +71,12 @@ module.exports = {
         defense += selected.defenseBonus;
         baseHp = Math.floor(baseHp * (1 + (selected.hpBonusPercent || 0) / 100));
 
-        await User.create({
+        await UserAdventure.create({
             userId: interaction.user.id,
             level,
             xp,
             hp: baseHp,
+            maxHp: baseHp,
             gold,
             strength,
             defense,

@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.4
  */
 const { SlashCommandSubcommandBuilder, EmbedBuilder } = require('discord.js');
-const User = require('../database/models/UserAdventure');
+const UserAdventure = require('../database/models/UserAdventure');
 const CharManager = require('../helpers/charManager');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
@@ -25,7 +25,7 @@ module.exports = {
             }),
     async execute(interaction) {
         await interaction.deferReply();
-        const user = await User.getCache({ userId: interaction.user.id });
+        const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
         if (!user) {
             const embed = new EmbedBuilder()

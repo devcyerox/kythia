@@ -6,8 +6,8 @@
  * @version 0.9.9-beta-rc.4
  */
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, PermissionFlagsBits } = require('discord.js');
-const User = require('../database/models/UserAdventure');
-const Inventory = require('../database/models/InventoryAdventure');
+const UserAdventure = require('../database/models/UserAdventure');
+const InventoryAdventure = require('../database/models/InventoryAdventure');
 const CharManager = require('../helpers/charManager');
 const { getRandomMonster } = require('../helpers/monster');
 const { embedFooter } = require('@utils/discord');
@@ -28,7 +28,7 @@ module.exports = {
     // permissions: PermissionFlagsBits.ManageGuild,
     async execute(interaction, container) {
         await interaction.deferReply();
-        const user = await User.getCache({ userId: interaction.user.id });
+        const user = await UserAdventure.getCache({ userId: interaction.user.id });
         const userId = interaction.user.id;
         if (!user) {
             const embed = new EmbedBuilder()
@@ -44,9 +44,6 @@ module.exports = {
             const filledLength = Math.round(barLength * hpPercent);
             return `[${'█'.repeat(filledLength)}${'░'.repeat(barLength - filledLength)}] ${currentHp} HP`;
         };
-
-        // Helper untuk dapatkan max HP user (bisa scaling dengan level)
-        const getUserMaxHp = (user) => Math.floor(100 * (1 + user.level * 0.1));
 
         // Function to handle a single round of battle and return the result
         const handleBattleRound = async (interaction, user, items) => {
@@ -65,7 +62,6 @@ module.exports = {
             let monsterRaw = user.monsterStrength - userDefense;
             const monsterDamage = Math.max(1, monsterRaw + Math.floor(Math.random() * 4));
 
-            const userMaxHp = getUserMaxHp(user);
             const monsterMaxHp = user.monsterHp > 0 ? user.monsterHp + playerDamage : 1;
 
             user.hp = Math.max(0, user.hp - monsterDamage);
@@ -74,7 +70,34 @@ module.exports = {
 
             const embed = new EmbedBuilder().setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }));
 
-            // Button to continue the adventure
+            // Buttons for battle actions
+            const battleButtons = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('adventure_continue')
+                    .setLabel(await t(interaction, 'adventure_battle_continue_button'))
+                    .setStyle(ButtonStyle.Primary),
+                new ButtonBuilder()
+                    .setCustomId('adventure_use_item')
+                    .setLabel(await t(interaction, 'inventory_use_item_button'))
+                    .setStyle(ButtonStyle.Secondary)
+                    .setEmoji('🔮')
+            );
+
+            // Check if player has any usable items
+            const usableItems = await InventoryAdventure.findAll({
+                where: {
+                    userId: interaction.user.id,
+                    itemName: ['🍶 Health Potion', '🍶 Revival'],
+                },
+                raw: true,
+            });
+
+            // Disable Use Item button if no usable items
+            if (usableItems.length === 0) {
+                battleButtons.components[1].setDisabled(true);
+            }
+
+            // Continue Button (defined here so available for returns)
             const continueButton = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('adventure_continue')
@@ -85,10 +108,10 @@ module.exports = {
             // Kalau user kalah
             if (user.hp <= 0) {
                 if (revival) {
-                    user.hp = userMaxHp;
+                    user.hp = user.maxHp;
                     await user.saveAndUpdateCache();
                     await revival.destroy();
-                    await Inventory.clearCache({ userId: user.userId, itemName: '🍶 Revival' });
+                    await InventoryAdventure.clearCache({ userId: user.userId, itemName: '🍶 Revival' });
                     return {
                         embeds: [
                             embed
@@ -106,7 +129,7 @@ module.exports = {
                 }
 
                 // Kalah tanpa revival: reset HP, hapus monster
-                user.hp = userMaxHp;
+                user.hp = user.maxHp;
                 user.monsterName = null;
                 user.monsterHp = 0;
                 user.monsterStrength = 0;
@@ -152,12 +175,18 @@ module.exports = {
                 // XP required for next level (sederhanakan, misal: 100 * level)
                 const XP_REQUIRED = 100 * user.level;
                 let levelUp = false;
+                // For tracking previous maxHp to report/display etc if needed
                 while (user.xp >= XP_REQUIRED) {
                     user.xp -= XP_REQUIRED;
                     user.level++;
                     user.strength += 5;
                     user.defense += 3;
-                    user.hp = getUserMaxHp(user);
+
+                    // Before leveling up, increase maxHp by 10%
+                    user.maxHp = Math.ceil(user.maxHp * 1.1);
+
+                    // Set new current HP to new max
+                    user.hp = user.maxHp;
                     levelUp = true;
                 }
 
@@ -171,6 +200,7 @@ module.exports = {
                                     await t(interaction, 'adventure_battle_levelup', {
                                         level: user.level,
                                         hp: user.hp,
+                                        maxHp: user.maxHp,
                                     })
                                 )
                                 .setColor(kythia.bot.color)
@@ -215,7 +245,7 @@ module.exports = {
                         .addFields(
                             {
                                 name: await t(interaction, 'adventure_battle_hp_you'),
-                                value: generateHpBar(user.hp, userMaxHp),
+                                value: generateHpBar(user.hp, user.maxHp),
                                 inline: false,
                             },
                             {
@@ -226,7 +256,7 @@ module.exports = {
                         )
                         .setFooter(await embedFooter(interaction)),
                 ],
-                components: [continueButton],
+                components: [battleButtons],
                 end: false,
             };
         };
@@ -242,7 +272,7 @@ module.exports = {
             await user.saveAndUpdateCache();
         }
 
-        const items = await Inventory.getCache([
+        const items = await InventoryAdventure.getCache([
             { userId: userId, itemName: '⚔️ Sword' },
             { userId: userId, itemName: '🛡️ Shield' },
             { userId: userId, itemName: '🥋 Armor' },
@@ -270,8 +300,8 @@ module.exports = {
             await i.deferUpdate();
 
             // Re-fetch user and items for up-to-date stats
-            const freshUser = await User.getCache({ userId });
-            const freshItems = await Inventory.getCache([
+            const freshUser = await UserAdventure.getCache({ userId });
+            const freshItems = await InventoryAdventure.getCache([
                 { userId: userId, itemName: '⚔️ Sword' },
                 { userId: userId, itemName: '🛡️ Shield' },
                 { userId: userId, itemName: '🥋 Armor' },

@@ -6,7 +6,7 @@
  * @version 0.9.9-beta-rc.4
  */
 const { EmbedBuilder } = require('discord.js');
-const User = require('../database/models/UserAdventure');
+const UserAdventure = require('../database/models/UserAdventure');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@src/utils/translator');
 
@@ -20,7 +20,7 @@ module.exports = {
             .setDescriptionLocalizations({ id: '🏙️ kembali ke kota', fr: '🏙️ Retourne en ville !', ja: '🏙️ 街へ戻ろう！' }),
     async execute(interaction) {
         await interaction.deferReply();
-        const user = await User.getCache({ userId: interaction.user.id });
+        const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
         if (!user) {
             const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'adventure_no_character'));
