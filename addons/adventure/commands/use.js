@@ -1,3 +1,11 @@
+/**
+ * @namespace: addons/adventure/commands/use.js
+ * @type: Command
+ * @copyright © 2025 kenndeclouv
+ * @assistant chaa & graa
+ * @version 0.9.9-beta-rc.4
+ */
+
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
 const UserAdventure = require('../database/models/UserAdventure');
 const InventoryAdventure = require('../database/models/InventoryAdventure');

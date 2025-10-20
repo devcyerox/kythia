@@ -13,21 +13,20 @@ const ModLog = require('@coreModels/ModLog');
 const router = require('express').Router();
 const client = require('@src/KythiaClient');
 
-// Global middleware to define `guilds` for all dashboard routes
 router.use('/dashboard', isAuthorized, (req, res, next) => {
     const botClient = req.app.locals.bot;
     const botGuilds = new Set(botClient.guilds.cache.map((g) => g.id));
-    // Mark which guilds have the bot and which are manageable
+
     const guildsWithBotStatus = req.user.guilds.map((guild) => ({
         ...guild,
         hasBot: botGuilds.has(guild.id),
     }));
-    // Only include guilds the user can manage
+
     const manageableGuilds = guildsWithBotStatus.filter((g) => {
         const perms = new PermissionsBitField(BigInt(g.permissions));
         return perms.has(PermissionsBitField.Flags.ManageGuild);
     });
-    // Make available to all dashboard views
+
     res.locals.guilds = manageableGuilds;
     next();
 });
@@ -127,39 +126,6 @@ router.post('/dashboard/:guildId/settings', isAuthorized, checkServerAccess, asy
         });
     }
 });
-
-// router.get('/dashboard/:guildId/features', isAuthorized, checkServerAccess, (req, res) => {
-//     renderDash(res, 'features', {
-//         guild: req.guild,
-//         settings: req.settings,
-//         page: 'features',
-//         query: req.query,
-//         currentPage: '',
-//     });
-// });
-
-// router.post('/dashboard/:guildId/features', isAuthorized, checkServerAccess, async (req, res) => {
-//     try {
-//         const settings = req.settings;
-//         const guild = req.guild;
-//         const body = req.body;
-//         const featureKeys = Object.keys(ServerSetting.getAttributes()).filter((k) => k.endsWith('On'));
-//         for (const key of featureKeys) {
-//             settings[key] = body[key] === 'on';
-//         }
-//         await settings.save();
-//         res.redirect(`/dashboard/${guild.id}/features?success=true`);
-//     } catch (error) {
-//         console.error('Error saat menyimpan fitur:', error);
-//         renderDash(res, 'error', {
-//             title: 'Gagal Menyimpan',
-//             message: 'Terjadi kesalahan saat mencoba menyimpan pengaturan fitur.',
-//             page: 'features',
-//             currentPage: '',
-//             guild: req.guild || null,
-//         });
-//     }
-// });
 
 router.get('/dashboard/:guildId/welcomer', isAuthorized, checkServerAccess, (req, res) => {
     const channels = {

@@ -122,7 +122,6 @@ router.post('/api/topgg-webhook', async (req, res) => {
             return res.status(400).send('Bad Request: Missing user ID');
         }
 
-        // Simpan atau Update data ke Database
         const kythiaVoter = await KythiaVoter.getCache({ userId: userId });
         if (kythiaVoter) {
             await kythiaVoter.update({ votedAt: new Date() });
@@ -137,22 +136,20 @@ router.post('/api/topgg-webhook', async (req, res) => {
         let dmEmbed;
 
         if (!voterUser) {
-            // User has no account: DM embed suggesting to create account with /eco account create
             dmEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setTitle('👤 Create Your Kythia Account')
                 .setDescription(
                     `You just voted for **${kythia.bot.name}** on Top.gg, thank you!\n\n` +
-                    `To receive your **1,000 Kythia Coin** reward, please create an account on the bot first:\n\n` +
-                    `> Use the command \`/eco account create\` on Discord.`
+                        `To receive your **1,000 Kythia Coin** reward, please create an account on the bot first:\n\n` +
+                        `> Use the command \`/eco account create\` on Discord.`
                 )
                 .setThumbnail(client.user.displayAvatarURL())
                 .setFooter({ text: `© ${kythia.bot.name} by ${kythia.owner.names}` });
         } else {
-            // Give 1000 coins and save+cache (with change marking)
             voterUser.kythiaCoin = (voterUser.kythiaCoin || 0) + 1000;
             await voterUser.saveAndUpdateCache();
-            // Normal DM reward embed
+
             dmEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
@@ -162,7 +159,6 @@ router.post('/api/topgg-webhook', async (req, res) => {
                 .setFooter({ text: `© ${kythia.bot.name} by ${kythia.owner.names}` });
         }
 
-        // Send DM to voter
         if (client) {
             try {
                 const user = await client.users.fetch(userId);
@@ -178,12 +174,10 @@ router.post('/api/topgg-webhook', async (req, res) => {
             try {
                 const user = await client.users.fetch(userId);
 
-                // 1. Siapkan URL dengan query parameter
                 const webhookUrl = new URL(webhookVoteLogs);
                 webhookUrl.searchParams.append('wait', 'true');
                 webhookUrl.searchParams.append('with_components', 'true');
 
-                // 2. Siapkan payload JSON manual DENGAN STRUKTUR YANG BENAR
                 const payload = {
                     flags: MessageFlags.IsComponentsV2,
                     components: [
@@ -235,7 +229,6 @@ router.post('/api/topgg-webhook', async (req, res) => {
                     ],
                 };
 
-                // 3. Kirim menggunakan fetch
                 const response = await fetch(webhookUrl.href, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

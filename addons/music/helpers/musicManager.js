@@ -44,7 +44,6 @@ const {
 } = require('./handlers');
 const { setVoiceChannelStatus } = require('@src/utils/discord');
 
-// Stores per-guild music state (previous tracks, last played, etc.)
 const guildStates = new Map();
 
 module.exports.guildStates = guildStates;
@@ -110,9 +109,7 @@ async function shutdownPlayerUI(player, track, client, channel) {
             components: [container],
             flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
         });
-    } catch (e) {
-        // Silent fail
-    }
+    } catch (e) {}
 }
 
 /**
@@ -122,7 +119,6 @@ async function shutdownPlayerUI(player, track, client, channel) {
 async function initializeMusicManager(bot) {
     const client = bot.client;
 
-    // Validate environment variables for Spotify and Lavalink
     if (!kythia.addons.music.spotify.clientID || !kythia.addons.music.spotify.clientSecret) {
         logger.warn('⚠️ Spotify Client ID/Secret not found in .env. Spotify features will be disabled.');
     }
@@ -130,7 +126,6 @@ async function initializeMusicManager(bot) {
         logger.warn('⚠️ Lavalink Host/Port/Password/Secure not found in .env. Music features will be disabled.');
     }
 
-    // Setup Poru nodes
     const nodes = (kythia.addons.music.lavalink.hosts || 'localhost').split(',').map((host, i) => ({
         name: `kythia-${i}`,
         host: host.trim(),
@@ -158,7 +153,6 @@ async function initializeMusicManager(bot) {
 
     client.poru = new Poru(client, nodes, PoruOptions);
 
-    // Add custom state to player
     client.poru.on('playerCreate', (player) => {
         player.autoplay = false;
         player.nowPlayingMessage = null;
@@ -170,7 +164,6 @@ async function initializeMusicManager(bot) {
         player._247 = false;
     });
 
-    // Poru node events
     client.poru.on('nodeConnect', (node) => logger.info(`🎚️  Node "${node.name}" connected.`));
     client.poru.on('nodeError', (node, error) => logger.info(`❌ Node "${node.name}" error: ${error.message}`));
 
@@ -187,17 +180,15 @@ async function initializeMusicManager(bot) {
 
         const channel = client.channels.cache.get(player.textChannel);
         if (!channel) return;
-        // Ambil nama lagu
+
         const songTitle = track.info && track.info.title ? track.info.title : 'Unknown';
 
-        // Set status channel voice menjadi "playing: {namalagu}"
         try {
             await setVoiceChannelStatus(channel, `🎵 ${songTitle}`);
         } catch (e) {
             logger.error('❌ Failed to set voice channel status', e);
         }
 
-        // Delete previous Now Playing embed if exists, to keep the player embed at the bottom
         if (player.nowPlayingMessage && player.nowPlayingMessage.deletable) {
             try {
                 await player.nowPlayingMessage.delete().catch(() => {});
@@ -206,7 +197,6 @@ async function initializeMusicManager(bot) {
         }
         if (player.updateInterval) clearInterval(player.updateInterval);
 
-        // Stop and dispose any previous collector
         if (player.buttonCollector) {
             try {
                 player.buttonCollector.stop('newTrack');
@@ -214,7 +204,6 @@ async function initializeMusicManager(bot) {
             player.buttonCollector = null;
         }
 
-        // Fetch recommended tracks for dropdown suggestion
         let recommendations = [];
         try {
             const searchUrl = `https://www.youtube.com/watch?v=${track.info.identifier}&list=RD${track.info.identifier}`;
@@ -231,21 +220,18 @@ async function initializeMusicManager(bot) {
 
         player.playedTrackIdentifiers.add(track.info.identifier);
 
-        // Now Playing text
         const nowPlayingText = await t(channel, 'music_helpers_musicManager_manager_playing', {
             title: track.info.title,
             url: track.info.uri,
         });
         const progress = createProgressBar(player);
 
-        // Artist/Channel text
         const artistText = await t(channel, 'music_helpers_musicManager_manager_channel', { author: track.info.author });
-        // Requested by text
+
         const requestedByText = await t(channel, 'music_helpers_musicManager_manager_requested_by', {
             user: track.info.requester?.username ? `${track.info.requester} (${track.info.requester.username})` : `${track.info.requester}`,
         });
 
-        // --- DYNAMIC CONTROL BUTTONS ---
         function getFirstControlButtonRow(isPaused, disabled = false) {
             return new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
@@ -338,11 +324,6 @@ async function initializeMusicManager(bot) {
         let firstControlButtonRow = getFirstControlButtonRow(false, false);
         let secondControlButtonRow = getSecondControlButtonRow(false);
 
-        // const lyricsButtonRow = new ActionRowBuilder().addComponents(
-        //     new ButtonBuilder().setCustomId('music_lyrics').setEmoji(kythia.emojis.musicLyrics).setStyle(ButtonStyle.Secondary).setDisabled(false)
-        // );
-
-        // Dropdown for recommendations
         let suggestionRow = null;
         if (recommendations.length > 0) {
             const suggestionOptions = [];
@@ -398,20 +379,16 @@ async function initializeMusicManager(bot) {
 
         const components = [container];
 
-        // Prevent double embed by ensuring only one Now Playing message is sent per track
         if (player._sendingNowPlaying) return;
         player._sendingNowPlaying = true;
 
         try {
-            // Always send a new Now Playing message so the player embed stays at the bottom
             const message = await channel.send({
                 components: components,
                 flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
             });
             player.nowPlayingMessage = message;
 
-            // --- BUTTON COLLECTOR LOGIC ---
-            // Set up a collector for the Now Playing message
             const filter = (i) =>
                 i.isButton() && i.message.id === message.id && i.guildId === player.guildId && i.customId.startsWith('music_');
             const collector = message.createMessageComponentCollector({
@@ -423,12 +400,16 @@ async function initializeMusicManager(bot) {
             collector.on('collect', async (interaction) => {
                 if (!interaction.member.voice.channelId || interaction.member.voice.channelId !== player.voiceChannel) {
                     return interaction.reply({
-                        embeds: [new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_required'))],
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(await t(interaction, 'music_helpers_musicManager_manager_required')),
+                        ],
                     });
                 }
                 if (!hasControlPermission(interaction, player)) {
                     return interaction.reply({
-                        content: await t(interaction, 'music_helpers_musicManager_music_permission_denied'), // Buat terjemahan baru
+                        content: await t(interaction, 'music_helpers_musicManager_music_permission_denied'),
                         ephemeral: true,
                     });
                 }
@@ -479,12 +460,10 @@ async function initializeMusicManager(bot) {
             player._sendingNowPlaying = false;
         }
 
-        // Interval logic for updating the progress bar and control buttons
         player.updateInterval = setInterval(async () => {
             const currentTrack = player.currentTrack;
             if (!currentTrack || !player.nowPlayingMessage?.editable) return;
 
-            // Dynamically update the play/pause button emoji
             const updatedFirstControlButtonRow = getFirstControlButtonRow(player.isPaused, false);
             const updatedSecondControlButtonRow = getSecondControlButtonRow(false);
 
@@ -502,7 +481,6 @@ async function initializeMusicManager(bot) {
 
             let updatedSuggestionRow = null;
             if (suggestionRow) {
-                // Enable the select menu
                 const menu = suggestionRow.components[0];
                 menu.setDisabled(false);
                 updatedSuggestionRow = new ActionRowBuilder().addComponents(menu);
@@ -558,10 +536,8 @@ async function initializeMusicManager(bot) {
             }
         }, 1000);
 
-        // --- AUTOPLAY REFERENCE: Set the most recently played track for autoplay ---
         player._autoplayReference = track;
 
-        // Also update lastPlayedTrack in guildStates for legacy/other uses
         const state = guildStates.get(player.guildId);
         if (state) {
             state.lastPlayedTrack = track;
@@ -572,17 +548,14 @@ async function initializeMusicManager(bot) {
      * ⏭️ Handles when a track ends (either naturally or by skip/stop).
      */
     client.poru.on('trackEnd', async (player, track) => {
-        // Save finished track to history
         const state = guildStates.get(player.guildId);
         if (state) {
             state.previousTracks.unshift(track);
             if (state.previousTracks.length > 10) state.previousTracks.pop();
         }
 
-        // Clear progress bar update interval
         if (player.updateInterval) clearInterval(player.updateInterval);
 
-        // Stop and dispose any button collector
         if (player.buttonCollector) {
             try {
                 player.buttonCollector.stop('trackEnd');
@@ -590,15 +563,9 @@ async function initializeMusicManager(bot) {
             player.buttonCollector = null;
         }
 
-        // Edit Now Playing to ended container
-        // await shutdownPlayerUI(player, track, client);
-
-        // If repeat track mode is active, add the track back to the queue
         if (player.trackRepeat) {
             player.queue.add(track);
-        }
-        // If repeat queue mode is active, also add the track to the end of the queue
-        else if (player.queueRepeat) {
+        } else if (player.queueRepeat) {
             player.queue.add(track);
         }
     });
@@ -613,18 +580,13 @@ async function initializeMusicManager(bot) {
     client.poru.on('queueEnd', async (player) => {
         const channel = client.channels.cache.get(player.textChannel);
 
-        // --- CHECK FOR ACTIVE USERS IN THE VOICE CHANNEL ---
         let shouldContinue = true;
         try {
-            // Fetch the voice channel
             const voiceChannel = client.channels.cache.get(player.voiceChannel);
-            if (voiceChannel && !player._247) { // "247" mode will force continue
-                // Count members excluding the bot itself
-                const nonBotMembers = voiceChannel.members.filter(
-                    m => !m.user.bot || (m.id === client.user.id) // count the bot only if it's this bot instance (should always be)
-                );
-                // Remove this bot from the count so we only check for other users
-                const realUsers = voiceChannel.members.filter(m => !m.user.bot);
+            if (voiceChannel && !player._247) {
+                const nonBotMembers = voiceChannel.members.filter((m) => !m.user.bot || m.id === client.user.id);
+
+                const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
 
                 if (realUsers.size === 0) {
                     shouldContinue = false;
@@ -634,15 +596,14 @@ async function initializeMusicManager(bot) {
             logger.error('❌ Error checking voice channel members:', err);
         }
 
-        // If no non-bot user and no 24/7 mode, destroy and return
         if (!shouldContinue) {
             if (channel) {
                 channel.send({
                     embeds: [
-                        new EmbedBuilder().setColor('Orange').setDescription(
-                            await t(channel, 'music_helpers_musicManager_manager_no_listener') // You may need to add this translation key
-                        )
-                    ]
+                        new EmbedBuilder()
+                            .setColor('Orange')
+                            .setDescription(await t(channel, 'music_helpers_musicManager_manager_no_listener')),
+                    ],
                 });
             }
             if (player && !player.destroyed) {
@@ -651,8 +612,6 @@ async function initializeMusicManager(bot) {
             return;
         }
 
-        // --- Proceed as before ---
-        // Stop and dispose any button collector
         if (player.buttonCollector) {
             try {
                 player.buttonCollector.stop('queueEnd');
@@ -668,9 +627,11 @@ async function initializeMusicManager(bot) {
                     (async () => {
                         await channel.send({
                             embeds: [
-                                new EmbedBuilder()
-                                    .setColor(kythia.bot.color)
-                                    .setDescription(await t(channel, 'music_helpers_musicManager_manager_searching', { title: autoplayReference.info.title })),
+                                new EmbedBuilder().setColor(kythia.bot.color).setDescription(
+                                    await t(channel, 'music_helpers_musicManager_manager_searching', {
+                                        title: autoplayReference.info.title,
+                                    })
+                                ),
                             ],
                         });
                     })();
@@ -687,21 +648,23 @@ async function initializeMusicManager(bot) {
                     throw new Error(await t(channel, 'music_helpers_musicManager_manager_recommendation'));
                 }
 
-                // --- ✨ LOGIKA FILTER ANTI-REPEAT YANG DISEMPURNAKAN ---
                 const potentialNextTracks = res.tracks.filter((t) => !player.playedTrackIdentifiers.has(t.info.identifier));
 
                 if (!potentialNextTracks.length) {
                     if (channel) {
                         (async () => {
                             await channel.send({
-                                embeds: [new EmbedBuilder().setColor('Orange').setDescription(await t(channel, 'music_helpers_musicManager_manager_played'))],
+                                embeds: [
+                                    new EmbedBuilder()
+                                        .setColor('Orange')
+                                        .setDescription(await t(channel, 'music_helpers_musicManager_manager_played')),
+                                ],
                             });
                         })();
                     }
                     return player.destroy();
                 }
 
-                // Ambil 5 rekomendasi teratas untuk variasi, lalu pilih satu secara acak
                 const topRecommendations = potentialNextTracks.slice(0, 5);
                 const nextTrack = topRecommendations[Math.floor(Math.random() * topRecommendations.length)];
 
@@ -719,8 +682,6 @@ async function initializeMusicManager(bot) {
                 return player.destroy();
             }
         } else {
-            // Jika autoplay mati, akhiri sesi
-            // if (channel) channel.send({ embeds: [new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(channel, "music_helpers_musicManager_manager_ended"))] });
             if (player && !player.destroyed) {
                 player.destroy();
             }
@@ -736,7 +697,6 @@ async function initializeMusicManager(bot) {
         }
         if (player.updateInterval) clearInterval(player.updateInterval);
 
-        // Stop and dispose any button collector
         if (player.buttonCollector) {
             try {
                 player.buttonCollector.stop('playerDestroy');
@@ -751,7 +711,6 @@ async function initializeMusicManager(bot) {
             logger.error('❌ Failed to set voice channel status', e);
         }
 
-        // Use the ended container for the last played track
         let lastTrack = player.currentTrack || (player.queue && player.queue.length > 0 ? player.queue[0] : player._autoplayReference);
         await shutdownPlayerUI(player, lastTrack, client);
     });
@@ -761,65 +720,72 @@ async function initializeMusicManager(bot) {
      * (Button logic is now handled by the collector above, only dropdown handled here)
      */
     client.on('interactionCreate', async (interaction) => {
-        // === Dropdown suggestion logic ===
         if (interaction.isStringSelectMenu() && interaction.customId === 'music_suggest') {
             await interaction.deferReply();
             const player = client.poru.players.get(interaction.guildId);
 
-            // Basic checks
             if (!player) {
                 return await interaction.editReply({
-                    embeds: [new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_ended'))],
+                    embeds: [
+                        new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_ended')),
+                    ],
                 });
             }
             if (!interaction.member.voice.channel) {
                 return await interaction.editReply({
-                    embeds: [new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_simple'))],
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(await t(interaction, 'music_helpers_musicManager_manager_simple')),
+                    ],
                 });
             }
             if (interaction.member.voice.channel.id !== player.voiceChannel) {
                 return await interaction.editReply({
-                    embeds: [new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_required'))],
+                    embeds: [
+                        new EmbedBuilder()
+                            .setColor('Red')
+                            .setDescription(await t(interaction, 'music_helpers_musicManager_manager_required')),
+                    ],
                 });
             }
 
-            // Get the selected track URL from the dropdown value
             const selectedSongUri = interaction.values[0];
 
             try {
-                // Search for the selected track by URL
                 const res = await client.poru.resolve({ query: selectedSongUri, source: 'ytsearch', requester: interaction.user });
                 if (res.loadType === 'error' || !res.tracks.length) {
                     return await interaction.editReply({
-                        embeds: [new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_track'))],
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Red')
+                                .setDescription(await t(interaction, 'music_helpers_musicManager_manager_track')),
+                        ],
                     });
                 }
 
-                // Add the track to the queue
                 player.queue.add(res.tracks[0]);
 
-                // Confirm to the user
                 await interaction.editReply({
                     embeds: [
-                        new EmbedBuilder()
-                            .setColor(kythia.bot.color)
-                            .setDescription(
-                                await t(interaction, 'music_helpers_musicManager_manager_queue', {
-                                    title: res.tracks[0].info.title,
-                                    url: res.tracks[0].info.uri,
-                                })
-                            ),
+                        new EmbedBuilder().setColor(kythia.bot.color).setDescription(
+                            await t(interaction, 'music_helpers_musicManager_manager_queue', {
+                                title: res.tracks[0].info.title,
+                                url: res.tracks[0].info.uri,
+                            })
+                        ),
                     ],
                 });
             } catch (e) {
                 await interaction.editReply({
-                    embeds: [new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_track'))],
+                    embeds: [
+                        new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_track')),
+                    ],
                 });
             }
         }
     });
 
-    // Initialize Poru when the bot is ready
     client.once('clientReady', () => client.poru.init(client));
 }
 

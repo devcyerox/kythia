@@ -1728,7 +1728,7 @@
     "adventure_shop_items_revival_desc": "Brings you back to life with 50% health when defeated.",
     "adventure_shop_items_health_potion_name": "Health Potion",
     "adventure_shop_items_health_potion_desc": "Restores 50 health points when used.",
-    
+
     "inventory_use_title": "🔮 Use Item",
     "inventory_use_desc": "Select an item to use from your inventory.",
     "inventory_select_item_placeholder": "Select an item to use...",
@@ -1773,5 +1773,15 @@
     "adventure_start_confirm_button": "✅ Confirm Character",
     "adventure_start_selected_char": "Chosen Character",
     "adventure_start_timeout": "⏱️ Time's up! Please run `/adventure start` again to choose a character.",
-    "adventure_stats_character": "🎭 Character"
+    "adventure_stats_character": "🎭 Character",
+    "image_add_invalid_type_desc": "## ❌ Image Upload Failed!\nPlease upload a valid image file (image/* only).",
+    "image_add_success_desc": "## ✅ Image Saved!\nYour image has been saved successfully!\nURL: {url}",
+    "image_delete_not_found_desc": "## ❌ Image Not Found!\nThe image code could not be found or you do not have permission to delete it.",
+    "image_delete_error_desc": "## ❌ Error Deleting Image!\nAn error occurred while trying to delete the image. Please try again later.",
+    "image_delete_success_desc": "## ✅ Image Deleted!\nThe image has been deleted successfully.",
+    "image_commands_list_empty": "You have not uploaded any images yet.",
+    "image_commands_list_title": "## 📷 **Your Uploaded Images**\nHere are all the images you've uploaded:",
+    "image_commands_list_title_contd": "## 📷 **Your Uploaded Images (cont'd)**",
+    "image_commands_list_item": "**Code:** `{code}`\n[View Image]({url})",
+    "image_commands_list_footer_help": "Use the filenames above with the image commands to show or delete your uploaded images."
 }

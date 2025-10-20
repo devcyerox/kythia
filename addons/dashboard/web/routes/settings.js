@@ -9,11 +9,6 @@
 const router = require('express').Router();
 const { isAuthorized, checkServerAccess, renderDash } = require('../helpers');
 
-// =================================================================
-// GET ROUTES
-// =================================================================
-
-// Main settings overview
 router.get('/dashboard/:guildId/settings', isAuthorized, checkServerAccess, (req, res) => {
     const guild = req.guild;
     const channels = {
@@ -260,16 +255,11 @@ router.get('/dashboard/:guildId/settings/features', isAuthorized, checkServerAcc
     });
 });
 
-// =================================================================
-// POST ROUTES
-// =================================================================
-
 router.post('/dashboard/:guildId/settings/automod', isAuthorized, checkServerAccess, async (req, res) => {
     try {
         const settings = req.settings;
         const body = req.body;
 
-        // Update automod toggles - always update, not only if (body.XXX)
         settings.antiInviteOn = body.antiInviteOn === 'on';
         settings.antiLinkOn = body.antiLinkOn === 'on';
         settings.antiSpamOn = body.antiSpamOn === 'on';
@@ -280,19 +270,19 @@ router.post('/dashboard/:guildId/settings/automod', isAuthorized, checkServerAcc
 
         if (body.whitelist !== undefined) {
             const arr = Array.isArray(body.whitelist) ? body.whitelist : [body.whitelist];
-            settings.whitelist = arr.filter(item => item && item.trim() !== '');
+            settings.whitelist = arr.filter((item) => item && item.trim() !== '');
         }
         if (body.badwords !== undefined) {
             const arr = Array.isArray(body.badwords) ? body.badwords : [body.badwords];
-            settings.badwords = arr.filter(item => item && item.trim() !== '');
+            settings.badwords = arr.filter((item) => item && item.trim() !== '');
         }
         if (body.badwordWhitelist !== undefined) {
             const arr = Array.isArray(body.badwordWhitelist) ? body.badwordWhitelist : [body.badwordWhitelist];
-            settings.badwordWhitelist = arr.filter(item => item && item.trim() !== '');
+            settings.badwordWhitelist = arr.filter((item) => item && item.trim() !== '');
         }
         if (body.ignoredChannels !== undefined) {
             const arr = Array.isArray(body.ignoredChannels) ? body.ignoredChannels : [body.ignoredChannels];
-            settings.ignoredChannels = arr.filter(item => item && item.trim() !== '');
+            settings.ignoredChannels = arr.filter((item) => item && item.trim() !== '');
         }
 
         await settings.saveAndUpdateCache('guildId');
@@ -308,11 +298,9 @@ router.post('/dashboard/:guildId/settings/stats', isAuthorized, checkServerAcces
         const settings = req.settings;
         const body = req.body;
 
-        // Toggle for stats
         settings.serverStatsOn = body.serverStatsOn === 'on';
         if (body.serverStatsCategoryId) settings.serverStatsCategoryId = body.serverStatsCategoryId;
 
-        // Handle server stats array (normalize object/string to array)
         if (body.serverStats !== undefined) {
             let rawStats = body.serverStats;
             try {
@@ -335,7 +323,6 @@ router.post('/dashboard/:guildId/settings/stats', isAuthorized, checkServerAcces
                 : [];
         }
 
-        // Welcome out passthrough from stats page
         settings.welcomeOutOn = body.welcomeOutOn === 'on';
         if (body.welcomeOutChannelId) settings.welcomeOutChannelId = body.welcomeOutChannelId;
         if (body.welcomeOutBackgroundUrl) settings.welcomeOutBackgroundUrl = body.welcomeOutBackgroundUrl;
@@ -354,24 +341,19 @@ router.post('/dashboard/:guildId/settings/welcome', isAuthorized, checkServerAcc
         const settings = req.settings;
         const body = req.body;
 
-        // Welcome channels
         if (body.welcomeInChannelId) settings.welcomeInChannelId = body.welcomeInChannelId;
         if (body.welcomeOutChannelId) settings.welcomeOutChannelId = body.welcomeOutChannelId;
         if (body.welcomeRoleId) settings.welcomeRoleId = body.welcomeRoleId;
 
-        // Welcome text
         if (body.welcomeInText) settings.welcomeInText = body.welcomeInText;
         if (body.welcomeOutText) settings.welcomeOutText = body.welcomeOutText;
 
-        // Welcome backgrounds
         if (body.welcomeInBackgroundUrl) settings.welcomeInBackgroundUrl = body.welcomeInBackgroundUrl;
         if (body.welcomeOutBackgroundUrl) settings.welcomeOutBackgroundUrl = body.welcomeOutBackgroundUrl;
 
-        // Welcome features
         settings.welcomeInOn = body.welcomeInOn === 'on';
         settings.welcomeOutOn = body.welcomeOutOn === 'on';
 
-        // Advanced Welcome In
         if (body.welcomeInBannerWidth) settings.welcomeInBannerWidth = parseInt(body.welcomeInBannerWidth);
         if (body.welcomeInBannerHeight) settings.welcomeInBannerHeight = parseInt(body.welcomeInBannerHeight);
         if (body.welcomeInForegroundUrl) settings.welcomeInForegroundUrl = body.welcomeInForegroundUrl;
@@ -404,7 +386,6 @@ router.post('/dashboard/:guildId/settings/welcome', isAuthorized, checkServerAcc
 
         if (body.welcomeInExtraDraw) settings.welcomeInExtraDraw = body.welcomeInExtraDraw;
 
-        // Advanced Welcome Out
         if (body.welcomeOutBannerWidth) settings.welcomeOutBannerWidth = parseInt(body.welcomeOutBannerWidth);
         if (body.welcomeOutBannerHeight) settings.welcomeOutBannerHeight = parseInt(body.welcomeOutBannerHeight);
         if (body.welcomeOutForegroundUrl) settings.welcomeOutForegroundUrl = body.welcomeOutForegroundUrl;
@@ -455,7 +436,6 @@ router.post('/dashboard/:guildId/settings/leveling', isAuthorized, checkServerAc
         if (body.levelingCooldown) settings.levelingCooldown = parseInt(body.levelingCooldown) * 1000;
         if (body.levelingXp) settings.levelingXp = parseInt(body.levelingXp);
 
-        // Handle role rewards (normalize object/string to array)
         if (body.roleRewards !== undefined) {
             let rawRewards = body.roleRewards;
             try {
@@ -546,7 +526,6 @@ router.post('/dashboard/:guildId/settings/ai', isAuthorized, checkServerAccess, 
         const settings = req.settings;
         const body = req.body;
 
-        // Handle AI channel IDs
         if (body.aiChannelIds !== undefined) {
             const aiChannelIdsArray = Array.isArray(body.aiChannelIds) ? body.aiChannelIds : [body.aiChannelIds];
             settings.aiChannelIds = aiChannelIdsArray.filter((item) => item && item.trim() !== '');
@@ -569,7 +548,6 @@ router.post('/dashboard/:guildId/settings/streak', isAuthorized, checkServerAcce
         if (body.streakEmoji) settings.streakEmoji = body.streakEmoji;
         if (body.streakMinimum) settings.streakMinimum = parseInt(body.streakMinimum);
 
-        // Handle streak role rewards
         if (body.streakRoleRewards !== undefined) {
             let rawRewards = body.streakRoleRewards;
             try {

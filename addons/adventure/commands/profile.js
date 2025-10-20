@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/adventure/commands/stats.js
+ * @namespace: addons/adventure/commands/profile.js
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

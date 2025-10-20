@@ -14,25 +14,21 @@ const path = require('path');
 const fs = require('fs');
 
 router.get('/', trackVisitor, loadVisitorCounts, async (req, res) => {
-    // Get bot client from app
     const client = req.app.get('botClient');
     let totalServers = 0;
     let totalMembers = 0;
 
     if (client && client.guilds && client.guilds.cache) {
         totalServers = client.guilds.cache.size;
-        // Count unique members across all servers
+
         const memberSet = new Set();
         if (client && client.guilds && client.guilds.cache) {
             totalServers = client.guilds.cache.size;
 
-            // --- INI DIA CARA YANG BENAR DAN EFISIEN ---
-            // Langsung jumlahkan memberCount dari setiap server.
-            // Cepat, akurat untuk metrik "jangkauan", dan hemat memori.
             totalMembers = client.guilds.cache.reduce((acc, guild) => acc + (guild.memberCount || 0), 0);
         }
         totalMembers = memberSet.size;
-        // If cache is empty (e.g. bot just restarted), fallback to approximate
+
         if (totalMembers === 0) {
             totalMembers = client.guilds.cache.reduce((acc, guild) => acc + (guild.memberCount || 0), 0);
         }
@@ -45,7 +41,7 @@ router.get('/', trackVisitor, loadVisitorCounts, async (req, res) => {
         botPermissions: '8',
         user: req.user,
         currentPage: '/',
-        // statusPage: kythia.settings.statusPage,
+
         page: '/',
         todayVisitors: res.locals.todayVisitors,
         totalVisitors: res.locals.totalVisitors,
@@ -62,7 +58,7 @@ router.get('/partner', trackVisitor, loadVisitorCounts, (req, res) => {
         botPermissions: '8',
         user: req.user,
         currentPage: '/partner',
-        // statusPage: kythia.settings.statusPage,
+
         page: '/partner',
     });
 });
@@ -75,7 +71,7 @@ router.get('/owner', trackVisitor, loadVisitorCounts, (req, res) => {
         botPermissions: '8',
         user: req.user,
         currentPage: '/owner',
-        // statusPage: kythia.settings.statusPage,
+
         page: '/owner',
     });
 });
@@ -91,7 +87,7 @@ router.get('/commands', trackVisitor, loadVisitorCounts, async (req, res) => {
                 user: req.user || null,
                 page: 'error',
                 currentPage: '/commands',
-                // statusPage: kythia.settings.statusPage,
+
                 guild: null,
             });
         }
@@ -103,7 +99,7 @@ router.get('/commands', trackVisitor, loadVisitorCounts, async (req, res) => {
             totalCommands: totalCommands,
             title: 'Bot Commands',
             currentPage: '/commands',
-            // statusPage: kythia.settings.statusPage,
+
             page: '/',
             user: req.user || null,
             guild: null,
@@ -117,7 +113,7 @@ router.get('/commands', trackVisitor, loadVisitorCounts, async (req, res) => {
             user: req.user || null,
             page: 'settings',
             currentPage: '',
-            // statusPage: kythia.settings.statusPage,
+
             guild: req.guild || null,
         });
     }
@@ -125,37 +121,24 @@ router.get('/commands', trackVisitor, loadVisitorCounts, async (req, res) => {
 
 router.get('/changelog', trackVisitor, loadVisitorCounts, (req, res) => {
     try {
-        // Use absolute path to ensure correct file resolution regardless of working directory
         const changelogPath = path.resolve(__dirname, '../../../../changelog.md');
         const changelogMd = fs.readFileSync(changelogPath, 'utf-8');
-        const parsedChangelogs = parseChangelog(changelogMd); // Call parser
+        const parsedChangelogs = parseChangelog(changelogMd);
 
         res.render('layouts/main', {
-            // statusPage: kythia.settings.statusPage,
             viewName: 'changelog',
             title: 'Changelog',
             user: req.user,
             currentPage: '/changelog',
             page: '/',
-            // Send already-parsed data, not raw text
+
             changelogs: parsedChangelogs,
         });
     } catch (error) {
         logger.error('Error reading or parsing changelog:', error);
-        res.render('error', { message: 'Could not load the changelog.' }); // Error page if failed
+        res.render('error', { message: 'Could not load the changelog.' });
     }
 });
-
-// router.get("/status", trackVisitor, loadVisitorCounts, (req, res) => {
-//   res.render("layouts/main", {
-//     viewName: "status",
-//     title: "Status",
-//     user: req.user,
-//     currentPage: "/status",
-// statusPage: kythia.settings.statusPage,
-//     page: "/",
-//   });
-// });
 
 router.get('/tos', trackVisitor, loadVisitorCounts, (req, res) => {
     res.render('layouts/main', {
@@ -163,7 +146,7 @@ router.get('/tos', trackVisitor, loadVisitorCounts, (req, res) => {
         title: 'Terms of Service',
         user: req.user,
         currentPage: '/tos',
-        // statusPage: kythia.settings.statusPage,
+
         page: '/',
     });
 });
@@ -174,7 +157,7 @@ router.get('/privacy', trackVisitor, loadVisitorCounts, (req, res) => {
         title: 'Privacy Policy',
         user: req.user,
         currentPage: '/privacy',
-        // statusPage: kythia.settings.statusPage,
+
         page: '/',
     });
 });
@@ -184,7 +167,7 @@ router.get('/premium', trackVisitor, loadVisitorCounts, (req, res) => {
         viewName: 'premium',
         title: 'Premium - Kythia',
         currentPage: '/premium',
-        // statusPage: kythia.settings.statusPage,
+
         page: '/',
         user: req.user || null,
         guild: null,

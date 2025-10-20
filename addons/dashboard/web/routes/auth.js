@@ -9,21 +9,18 @@
 const router = require('express').Router();
 const passport = require('passport');
 
-// Rute untuk memulai proses login Discord
 router.get('/auth/discord', passport.authenticate('discord'));
 
-// Rute callback setelah user menyetujui di Discord
 router.get(
     '/auth/discord/callback',
     passport.authenticate('discord', {
-        failureRedirect: '/', // Kembali ke halaman login jika gagal
+        failureRedirect: '/',
     }),
     (req, res) => {
-        res.redirect('/dashboard/servers'); // Arahkan ke dashboard jika berhasil
+        res.redirect('/dashboard/servers');
     }
 );
 
-// Rute untuk logout
 router.get('/auth/logout', (req, res) => {
     if (req.user) {
         req.logout((err) => {

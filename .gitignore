@@ -134,3 +134,5 @@ lavalink/
 kythia.config.js
 private_key.pem
 temp/
+
+storage/
