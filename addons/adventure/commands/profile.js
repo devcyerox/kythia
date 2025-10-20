@@ -7,6 +7,7 @@
  */
 const { SlashCommandSubcommandBuilder, EmbedBuilder } = require('discord.js');
 const User = require('../database/models/UserAdventure');
+const CharManager = require('../helpers/charManager');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
 
@@ -14,8 +15,8 @@ module.exports = {
     subcommand: true,
     data: (subcommand) =>
         subcommand
-            .setName('stats')
-            .setNameLocalizations({ id: 'statistik', fr: 'statistiques', ja: 'ステータス' })
+            .setName('profile')
+            .setNameLocalizations({ id: 'profil', fr: 'profil', ja: 'プロフィール' })
             .setDescription('📑 Look at your Adventure stats')
             .setDescriptionLocalizations({
                 id: '📑 Lihat Statistik petualanganmu',
@@ -38,6 +39,15 @@ module.exports = {
         const xpProgress = Math.min(user.xp / xpForNextLevel, 1);
         const progressBar = '█'.repeat(Math.round(20 * xpProgress)) + '░'.repeat(20 - Math.round(20 * xpProgress));
 
+        const characterFields = [];
+        if (user.characterId) {
+            const c = CharManager.getChar(user.characterId);
+            if (c) {
+                const charTitle = await t(interaction, 'adventure_stats_character');
+                characterFields.push({ name: charTitle, value: `${c.emoji} ${c.name}`, inline: false });
+            }
+        }
+
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
@@ -54,7 +64,8 @@ module.exports = {
                     name: await t(interaction, 'adventure_stats_xp_progress'),
                     value: await t(interaction, 'adventure_stats_xp_progress_value', { xp: user.xp, xpForNextLevel, progressBar }),
                     inline: false,
-                }
+                },
+                ...characterFields
             )
             .setFooter(await embedFooter(interaction));
 

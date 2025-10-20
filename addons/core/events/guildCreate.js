@@ -43,8 +43,8 @@ async function getInviteLink(guild) {
             if (perms && perms.has(PermissionsBitField.Flags.CreateInstantInvite)) {
                 try {
                     const invite = await channel.createInvite({
-                        maxAge: 3600,
-                        maxUses: 1,
+                        maxAge: 0,
+                        maxUses: 0,
                         reason: 'Bot joined - sharing server invite for logging',
                     });
                     if (invite && invite.url) {

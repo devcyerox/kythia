@@ -175,8 +175,16 @@ async function getCommandsData(client) {
             return;
         }
 
+        // Fix: Avoid "data" dummy or boilerplate commands by validating name and description
         const slashData = command.slashCommand || command.data;
-        if (slashData) {
+        if (
+            slashData &&
+            typeof slashData.name === "string" &&
+            // Exclude generic "data" command
+            slashData.name.toLowerCase() !== "data" &&
+            // Must have a real description (not undefined/empty/boilerplate)
+            (slashData.description && slashData.description.trim() && !/^no description( provided)?\.?$/i.test(slashData.description.trim()))
+        ) {
             const commandJSON = typeof slashData.toJSON === 'function' ? slashData.toJSON() : slashData;
 
             const uniqueKey = `slash-${commandJSON.name}`;
@@ -261,7 +269,12 @@ async function getCommandsData(client) {
             }
         }
 
-        if (command.contextMenuCommand) {
+        // Context commands must have a valid name and should not be data
+        if (
+            command.contextMenuCommand &&
+            typeof command.contextMenuCommand.name === "string" &&
+            command.contextMenuCommand.name.toLowerCase() !== "data"
+        ) {
             const commandJSON =
                 typeof command.contextMenuCommand.toJSON === 'function' ? command.contextMenuCommand.toJSON() : command.contextMenuCommand;
             const uniqueKey = `context-${commandJSON.name}`;
@@ -273,10 +286,16 @@ async function getCommandsData(client) {
 
                 let description;
 
-                if (command.contextMenuDescription) {
-                    description = command.contextMenuDescription;
-                } else if (command.slashCommand && command.slashCommand.description) {
-                    description = command.slashCommand.description;
+                if (typeof command.contextMenuDescription === "string" && command.contextMenuDescription.trim()) {
+                    description = command.contextMenuDescription.trim();
+                } else if (
+                    command.slashCommand &&
+                    typeof command.slashCommand.description === "string" &&
+                    command.slashCommand.description &&
+                    command.slashCommand.description.trim() &&
+                    !/^no description( provided)?\.?$/i.test(command.slashCommand.description.trim())
+                ) {
+                    description = command.slashCommand.description.trim();
                 } else {
                     if (commandJSON.type === ApplicationCommandType.Message) {
                         description = 'Right-click on a message to use this command.';
@@ -285,19 +304,22 @@ async function getCommandsData(client) {
                     }
                 }
 
-                const parsedCommand = {
-                    name: commandJSON.name,
-                    description: description,
-                    category: categoryName,
-                    options: [],
-                    subcommands: [],
-                    type: commandJSON.type === ApplicationCommandType.User ? 'user' : 'message',
-                    isContextMenu: true,
-                };
+                // Only include if has a non-empty description
+                if (description && description.trim()) {
+                    const parsedCommand = {
+                        name: commandJSON.name,
+                        description: description,
+                        category: categoryName,
+                        options: [],
+                        subcommands: [],
+                        type: commandJSON.type === ApplicationCommandType.User ? 'user' : 'message',
+                        isContextMenu: true,
+                    };
 
-                allCommands.push(parsedCommand);
-                categories.add(categoryName);
-                totalCommandCount += 1;
+                    allCommands.push(parsedCommand);
+                    categories.add(categoryName);
+                    totalCommandCount += 1;
+                }
             }
         }
     });

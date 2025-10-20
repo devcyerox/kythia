@@ -8,6 +8,7 @@
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, PermissionFlagsBits } = require('discord.js');
 const User = require('../database/models/UserAdventure');
 const Inventory = require('../database/models/InventoryAdventure');
+const CharManager = require('../helpers/charManager');
 const { getRandomMonster } = require('../helpers/monster');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
@@ -56,6 +57,9 @@ module.exports = {
 
             let userStrength = user.strength + (sword ? 10 : 0);
             let userDefense = user.defense + (shield ? 10 : 0) + (armor ? 15 : 0);
+
+            // Apply character passive bonuses per turn (xp/gold modifiers on outcomes below)
+            const char = user.characterId ? CharManager.getChar(user.characterId) : null;
 
             const playerDamage = Math.max(1, userStrength + Math.floor(Math.random() * 4));
             let monsterRaw = user.monsterStrength - userDefense;
@@ -127,8 +131,12 @@ module.exports = {
 
             // Kalau monster mati
             if (user.monsterHp <= 0) {
-                const goldEarned = user.monsterGoldDrop;
-                const xpEarned = user.monsterXpDrop;
+                let goldEarned = user.monsterGoldDrop;
+                let xpEarned = user.monsterXpDrop;
+                if (char) {
+                    if (char.goldBonusPercent) goldEarned = Math.floor(goldEarned * (1 + char.goldBonusPercent / 100));
+                    if (char.xpBonusPercent) xpEarned = Math.floor(xpEarned * (1 + char.xpBonusPercent / 100));
+                }
                 const monsterName = user.monsterName;
 
                 user.xp += xpEarned;

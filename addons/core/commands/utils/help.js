@@ -31,6 +31,7 @@ const EXCLUDED_CORE_CATEGORIES = [];
 const CATEGORIES_PER_PAGE = 25;
 
 module.exports = {
+    aliases: ["h"],
     data: new SlashCommandBuilder().setName('help').setDescription('💡 Displays a list of bot commands with complete details.'),
 
     async execute(interaction) {
@@ -54,34 +55,66 @@ module.exports = {
             return true;
         }
 
+        // Adapted to match the detail and structure of getCommandsData in file_context_0
+
         function countTotalCommands(commands) {
-            let total = 0;
-            commands.each((command) => {
+            let totalCount = 0;
+            const processedCommands = new Set();
+
+            commands.forEach((command) => {
+                // Skip owner-only commands
+                if (command.ownerOnly === true) return;
+
+                // Prefer .slashCommand or .data
+                const slashData = command.slashCommand || command.data;
                 let commandJSON;
-                if (typeof command.data?.toJSON === 'function') {
-                    commandJSON = command.data.toJSON();
-                } else if (typeof command.data === 'object' && command.data !== null) {
-                    commandJSON = command.data;
+                if (slashData) {
+                    commandJSON = typeof slashData.toJSON === 'function' ? slashData.toJSON() : slashData;
                 } else {
                     return;
                 }
-                const SUBCOMMAND = ApplicationCommandOptionType.Subcommand;
-                const SUBCOMMAND_GROUP = ApplicationCommandOptionType.SubcommandGroup;
-                const options = Array.isArray(commandJSON.options) ? commandJSON.options : [];
-                const subcommandOptions = options.filter((opt) => opt.type === SUBCOMMAND || opt.type === SUBCOMMAND_GROUP);
-                if (subcommandOptions.length === 0) {
-                    total += 1;
-                } else {
-                    for (const option of subcommandOptions) {
-                        if (option.type === SUBCOMMAND_GROUP) {
-                            total += Array.isArray(option.options) ? option.options.length : 0;
-                        } else if (option.type === SUBCOMMAND) {
-                            total += 1;
-                        }
+
+                // Build a unique key for this command to avoid double-counting
+                const uniqueKey = `slash-${commandJSON.name}`;
+                if (processedCommands.has(uniqueKey)) return;
+                processedCommands.add(uniqueKey);
+
+                // Count subcommands/subcommand groups if present
+                if (Array.isArray(commandJSON.options) && commandJSON.options.length > 0) {
+                    const subcommands = commandJSON.options.filter(
+                        (opt) =>
+                            opt.type === ApplicationCommandOptionType.Subcommand ||
+                            opt.type === ApplicationCommandOptionType.SubcommandGroup
+                    );
+
+                    if (subcommands.length > 0) {
+                        subcommands.forEach((sub) => {
+                            if (sub.type === ApplicationCommandOptionType.SubcommandGroup) {
+                                totalCount += sub.options?.length || 0;
+                            } else {
+                                totalCount += 1;
+                            }
+                        });
+                        return;
+                    }
+                }
+                // If not a subcommand or subcommand group, count as 1
+                totalCount += 1;
+
+                // Optionally: If context menu command, also count (as getCommandsData does)
+                if (command.contextMenuCommand) {
+                    const cmJSON = typeof command.contextMenuCommand.toJSON === 'function'
+                        ? command.contextMenuCommand.toJSON()
+                        : command.contextMenuCommand;
+                    const contextKey = `context-${cmJSON.name}`;
+                    if (!processedCommands.has(contextKey)) {
+                        processedCommands.add(contextKey);
+                        totalCount += 1;
                     }
                 }
             });
-            return total;
+
+            return totalCount;
         }
 
         function smartSplit(content, maxLength = 3500) {

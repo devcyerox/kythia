@@ -30,9 +30,6 @@ module.exports = async (bot, guild) => {
                 guildId: guild.id,
                 ownerId: guild.ownerId,
                 memberCount: guild.memberCount ?? '?',
-                invite: guild.vanityURLCode
-                    ? `https://discord.gg/${guild.vanityURLCode}`
-                    : await t(guild, 'core_events_guildDelete_events_guild_delete_no_invite'),
                 createdAt: guild.createdAt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
             })
         )

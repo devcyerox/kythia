@@ -1726,5 +1726,13 @@
     "ai_ai_manage_not_enabled": "❌ AI is not enabled in this channel. Nothing to disable.",
     "ai_ai_manage_disable_success": "🛑 AI has been disabled in this channel. See you again!",
     "ai_ai_manage_unknown_subcommand": "❌ Unknown subcommand. Use `/ai enable` or `/ai disable`.",
-    "adventure_no_character": "❌ You don't have a character yet! Use `/adventure start` first!"
+    "adventure_no_character": "❌ You don't have a character yet! Use `/adventure start` first!",
+    "adventure_start_choose_char_title": "🧭 Choose Your Path",
+    "adventure_start_choose_char_desc": "Select a character below. Each has unique strengths and bonuses!",
+    "adventure_start_choose_char_stats": "**Character Bonuses**\n• Strength: {str}\n• Defense: {def}\n• Max HP%: {hp}\n• XP%: {xp}\n• Gold%: {gold}",
+    "adventure_start_select_placeholder": "Select your character...",
+    "adventure_start_confirm_button": "✅ Confirm Character",
+    "adventure_start_selected_char": "Chosen Character",
+    "adventure_start_timeout": "⏱️ Time's up! Please run `/adventure start` again to choose a character.",
+    "adventure_stats_character": "🎭 Character"
 }

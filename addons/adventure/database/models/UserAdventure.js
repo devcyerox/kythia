@@ -21,6 +21,7 @@ class UserAdventure extends KythiaModel {
                 gold: { type: DataTypes.INTEGER, defaultValue: 50 },
                 strength: { type: DataTypes.INTEGER, defaultValue: 10 },
                 defense: { type: DataTypes.INTEGER, defaultValue: 5 },
+                characterId: { type: DataTypes.STRING, allowNull: true },
                 monsterName: { type: DataTypes.STRING, defaultValue: null },
                 monsterHp: { type: DataTypes.INTEGER, defaultValue: 0 },
                 monsterStrength: { type: DataTypes.INTEGER, defaultValue: 0 },
