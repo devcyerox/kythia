@@ -71,7 +71,7 @@
                         <div class="mb-3">
                             <label for="minecraftIp" class="form-label">Server IP</label>
                             <input type="text" class="form-control" id="minecraftIp" name="minecraftIp" 
-                                   value="<%= settings.minecraftIp || '' %>" 
+                                   value="<%= (settings.minecraftIp !== null && settings.minecraftIp !== undefined) ? settings.minecraftIp : '' %>" 
                                    placeholder="play.example.com">
                             <div class="form-text">Minecraft server IP address or domain</div>
                         </div>
@@ -79,7 +79,7 @@
                         <div class="mb-3">
                             <label for="minecraftPort" class="form-label">Server Port</label>
                             <input type="number" class="form-control" id="minecraftPort" name="minecraftPort" 
-                                   value="<%= settings.minecraftPort || '' %>" 
+                                   value="<%= (settings.minecraftPort !== null && settings.minecraftPort !== undefined) ? settings.minecraftPort : '' %>" 
                                    placeholder="25565" min="1" max="65535">
                             <div class="form-text">Minecraft server port (1-65535)</div>
                         </div>
@@ -163,14 +163,14 @@
                                 <div class="text-center p-3 glass-effect rounded">
                                     <i class="fas fa-server fa-2x text-primary mb-2"></i>
                                     <h6>Server IP</h6>
-                                    <p class="mb-0" id="ipPreview"><%= settings.minecraftIp || 'Not set' %></p>
+                                    <p class="mb-0" id="ipPreview"><%= (settings.minecraftIp !== null && settings.minecraftIp !== undefined) ? settings.minecraftIp : 'Not set' %></p>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="text-center p-3 glass-effect rounded">
                                     <i class="fas fa-plug fa-2x text-info mb-2"></i>
                                     <h6>Port</h6>
-                                    <p class="mb-0" id="portPreview"><%= settings.minecraftPort || 'Not set' %></p>
+                                    <p class="mb-0" id="portPreview"><%= (settings.minecraftPort !== null && settings.minecraftPort !== undefined) ? settings.minecraftPort : 'Not set' %></p>
                                 </div>
                             </div>
                             <div class="col-md-3">

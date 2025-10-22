@@ -84,14 +84,14 @@
                         <div class="mb-3">
                             <label for="levelingXp" class="form-label">XP per Message</label>
                             <input type="number" class="form-control" id="levelingXp" name="levelingXp" 
-                                   value="<%= settings.levelingXp || 60 %>" min="1" max="1000">
+                                   value="<%= (settings.levelingXp !== null && settings.levelingXp !== undefined) ? settings.levelingXp : 60 %>" min="1" max="1000">
                             <div class="form-text">XP gained per message (1-1000)</div>
                         </div>
 
                         <div class="mb-3">
                             <label for="levelingCooldown" class="form-label">XP Cooldown (seconds)</label>
                             <input type="number" class="form-control" id="levelingCooldown" name="levelingCooldown" 
-                                   value="<%= (settings.levelingCooldown || 300) / 1000 %>" min="0" max="3600">
+                                   value="<%= ((settings.levelingCooldown !== null && settings.levelingCooldown !== undefined) ? settings.levelingCooldown : 300) / 1000 %>" min="0" max="3600">
                             <div class="form-text">Time between XP gains (1-3600 seconds)</div>
                         </div>
                     </div>

@@ -255,6 +255,8 @@ router.get('/dashboard/:guildId/settings/features', isAuthorized, checkServerAcc
     });
 });
 
+// --- POST ROUTES ---
+
 router.post('/dashboard/:guildId/settings/automod', isAuthorized, checkServerAccess, async (req, res) => {
     try {
         const settings = req.settings;
@@ -266,24 +268,24 @@ router.post('/dashboard/:guildId/settings/automod', isAuthorized, checkServerAcc
         settings.antiBadwordOn = body.antiBadwordOn === 'on';
         settings.antiMentionOn = body.antiMentionOn === 'on';
 
-        if (body.modLogChannelId) settings.modLogChannelId = body.modLogChannelId;
-        if (body.auditLogChannelId) settings.auditLogChannelId = body.auditLogChannelId;
+        if ('modLogChannelId' in body) settings.modLogChannelId = body.modLogChannelId;
+        if ('auditLogChannelId' in body) settings.auditLogChannelId = body.auditLogChannelId;
 
-        if (body.whitelist !== undefined) {
+        if ('whitelist' in body) {
             const arr = Array.isArray(body.whitelist) ? body.whitelist : [body.whitelist];
-            settings.whitelist = arr.filter((item) => item && item.trim() !== '');
+            settings.whitelist = arr.filter((item) => typeof item === "string" ? item.trim() !== '' : !!item);
         }
-        if (body.badwords !== undefined) {
+        if ('badwords' in body) {
             const arr = Array.isArray(body.badwords) ? body.badwords : [body.badwords];
-            settings.badwords = arr.filter((item) => item && item.trim() !== '');
+            settings.badwords = arr.filter((item) => typeof item === "string" ? item.trim() !== '' : !!item);
         }
-        if (body.badwordWhitelist !== undefined) {
+        if ('badwordWhitelist' in body) {
             const arr = Array.isArray(body.badwordWhitelist) ? body.badwordWhitelist : [body.badwordWhitelist];
-            settings.badwordWhitelist = arr.filter((item) => item && item.trim() !== '');
+            settings.badwordWhitelist = arr.filter((item) => typeof item === "string" ? item.trim() !== '' : !!item);
         }
-        if (body.ignoredChannels !== undefined) {
+        if ('ignoredChannels' in body) {
             const arr = Array.isArray(body.ignoredChannels) ? body.ignoredChannels : [body.ignoredChannels];
-            settings.ignoredChannels = arr.filter((item) => item && item.trim() !== '');
+            settings.ignoredChannels = arr.filter((item) => typeof item === "string" ? item.trim() !== '' : !!item);
         }
 
         await settings.saveAndUpdateCache('guildId');
@@ -300,9 +302,9 @@ router.post('/dashboard/:guildId/settings/stats', isAuthorized, checkServerAcces
         const body = req.body;
 
         settings.serverStatsOn = body.serverStatsOn === 'on';
-        if (body.serverStatsCategoryId) settings.serverStatsCategoryId = body.serverStatsCategoryId;
+        if ('serverStatsCategoryId' in body) settings.serverStatsCategoryId = body.serverStatsCategoryId;
 
-        if (body.serverStats !== undefined) {
+        if ('serverStats' in body) {
             let rawStats = body.serverStats;
             try {
                 if (typeof rawStats === 'string') {
@@ -325,9 +327,9 @@ router.post('/dashboard/:guildId/settings/stats', isAuthorized, checkServerAcces
         }
 
         settings.welcomeOutOn = body.welcomeOutOn === 'on';
-        if (body.welcomeOutChannelId) settings.welcomeOutChannelId = body.welcomeOutChannelId;
-        if (body.welcomeOutBackgroundUrl) settings.welcomeOutBackgroundUrl = body.welcomeOutBackgroundUrl;
-        if (body.welcomeOutText) settings.welcomeOutText = body.welcomeOutText;
+        if ('welcomeOutChannelId' in body) settings.welcomeOutChannelId = body.welcomeOutChannelId;
+        if ('welcomeOutBackgroundUrl' in body) settings.welcomeOutBackgroundUrl = body.welcomeOutBackgroundUrl;
+        if ('welcomeOutText' in body) settings.welcomeOutText = body.welcomeOutText;
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/stats?success=true`);
@@ -337,87 +339,102 @@ router.post('/dashboard/:guildId/settings/stats', isAuthorized, checkServerAcces
     }
 });
 
+// ================== PATCHED WELCOME HANDLING ======================
+
+const assignField = (obj, key, value, isNumber = false) => {
+    if (isNumber) {
+        // Perlu cek biar 0 juga valid, null NaN jadi null (hapus).
+        obj[key] = value === '' || value === null || value === undefined ? null : parseInt(value);
+    } else {
+        obj[key] = value;
+    }
+};
+
 router.post('/dashboard/:guildId/settings/welcome', isAuthorized, checkServerAccess, async (req, res) => {
     try {
         const settings = req.settings;
         const body = req.body;
 
-        if (body.welcomeInChannelId) settings.welcomeInChannelId = body.welcomeInChannelId;
-        if (body.welcomeOutChannelId) settings.welcomeOutChannelId = body.welcomeOutChannelId;
-        if (body.welcomeRoleId) settings.welcomeRoleId = body.welcomeRoleId;
+        // Channel/Role id fields
+        if ('welcomeInChannelId' in body) settings.welcomeInChannelId = body.welcomeInChannelId;
+        if ('welcomeOutChannelId' in body) settings.welcomeOutChannelId = body.welcomeOutChannelId;
+        if ('welcomeRoleId' in body) settings.welcomeRoleId = body.welcomeRoleId;
 
-        if (body.welcomeInText) settings.welcomeInText = body.welcomeInText;
-        if (body.welcomeOutText) settings.welcomeOutText = body.welcomeOutText;
+        // Text fields. Harus save even if empty string
+        if ('welcomeInText' in body) settings.welcomeInText = body.welcomeInText;
+        if ('welcomeOutText' in body) settings.welcomeOutText = body.welcomeOutText;
 
-        if (body.welcomeInBackgroundUrl) settings.welcomeInBackgroundUrl = body.welcomeInBackgroundUrl;
-        if (body.welcomeOutBackgroundUrl) settings.welcomeOutBackgroundUrl = body.welcomeOutBackgroundUrl;
+        if ('welcomeInBackgroundUrl' in body) settings.welcomeInBackgroundUrl = body.welcomeInBackgroundUrl;
+        if ('welcomeOutBackgroundUrl' in body) settings.welcomeOutBackgroundUrl = body.welcomeOutBackgroundUrl;
 
         settings.welcomeInOn = body.welcomeInOn === 'on';
         settings.welcomeOutOn = body.welcomeOutOn === 'on';
 
-        if (body.welcomeInBannerWidth) settings.welcomeInBannerWidth = parseInt(body.welcomeInBannerWidth);
-        if (body.welcomeInBannerHeight) settings.welcomeInBannerHeight = parseInt(body.welcomeInBannerHeight);
-        if (body.welcomeInForegroundUrl) settings.welcomeInForegroundUrl = body.welcomeInForegroundUrl;
-        if (body.welcomeInOverlayColor) settings.welcomeInOverlayColor = body.welcomeInOverlayColor;
+        // In banner
+        if ('welcomeInBannerWidth' in body) assignField(settings, 'welcomeInBannerWidth', body.welcomeInBannerWidth, true);
+        if ('welcomeInBannerHeight' in body) assignField(settings, 'welcomeInBannerHeight', body.welcomeInBannerHeight, true);
+        if ('welcomeInForegroundUrl' in body) settings.welcomeInForegroundUrl = body.welcomeInForegroundUrl;
+        if ('welcomeInOverlayColor' in body) settings.welcomeInOverlayColor = body.welcomeInOverlayColor;
 
         settings.welcomeInAvatarEnabled = body.welcomeInAvatarEnabled === 'on';
-        if (body.welcomeInAvatarSize) settings.welcomeInAvatarSize = parseInt(body.welcomeInAvatarSize);
-        if (body.welcomeInAvatarShape) settings.welcomeInAvatarShape = body.welcomeInAvatarShape;
-        if (body.welcomeInAvatarYOffset) settings.welcomeInAvatarYOffset = parseInt(body.welcomeInAvatarYOffset);
-        if (body.welcomeInAvatarBorderWidth) settings.welcomeInAvatarBorderWidth = parseInt(body.welcomeInAvatarBorderWidth);
-        if (body.welcomeInAvatarBorderColor) settings.welcomeInAvatarBorderColor = body.welcomeInAvatarBorderColor;
+        if ('welcomeInAvatarSize' in body) assignField(settings, 'welcomeInAvatarSize', body.welcomeInAvatarSize, true);
+        if ('welcomeInAvatarShape' in body) settings.welcomeInAvatarShape = body.welcomeInAvatarShape;
+        if ('welcomeInAvatarYOffset' in body) assignField(settings, 'welcomeInAvatarYOffset', body.welcomeInAvatarYOffset, true);
+        if ('welcomeInAvatarBorderWidth' in body) assignField(settings, 'welcomeInAvatarBorderWidth', body.welcomeInAvatarBorderWidth, true);
+        if ('welcomeInAvatarBorderColor' in body) settings.welcomeInAvatarBorderColor = body.welcomeInAvatarBorderColor;
 
-        if (body.welcomeInMainTextContent) settings.welcomeInMainTextContent = body.welcomeInMainTextContent;
-        if (body.welcomeInMainTextFont) settings.welcomeInMainTextFont = body.welcomeInMainTextFont;
-        if (body.welcomeInMainTextFontFamily) settings.welcomeInMainTextFontFamily = body.welcomeInMainTextFontFamily;
-        if (body.welcomeInMainTextColor) settings.welcomeInMainTextColor = body.welcomeInMainTextColor;
-        if (body.welcomeInMainTextYOffset) settings.welcomeInMainTextYOffset = parseInt(body.welcomeInMainTextYOffset);
+        if ('welcomeInMainTextContent' in body) settings.welcomeInMainTextContent = body.welcomeInMainTextContent;
+        if ('welcomeInMainTextFont' in body) settings.welcomeInMainTextFont = body.welcomeInMainTextFont;
+        if ('welcomeInMainTextFontFamily' in body) settings.welcomeInMainTextFontFamily = body.welcomeInMainTextFontFamily;
+        if ('welcomeInMainTextColor' in body) settings.welcomeInMainTextColor = body.welcomeInMainTextColor;
+        if ('welcomeInMainTextYOffset' in body) assignField(settings, 'welcomeInMainTextYOffset', body.welcomeInMainTextYOffset, true);
 
-        if (body.welcomeInSubTextContent) settings.welcomeInSubTextContent = body.welcomeInSubTextContent;
-        if (body.welcomeInSubTextFont) settings.welcomeInSubTextFont = body.welcomeInSubTextFont;
-        if (body.welcomeInSubTextFontFamily) settings.welcomeInSubTextFontFamily = body.welcomeInSubTextFontFamily;
-        if (body.welcomeInSubTextColor) settings.welcomeInSubTextColor = body.welcomeInSubTextColor;
-        if (body.welcomeInSubTextYOffset) settings.welcomeInSubTextYOffset = parseInt(body.welcomeInSubTextYOffset);
+        if ('welcomeInSubTextContent' in body) settings.welcomeInSubTextContent = body.welcomeInSubTextContent;
+        if ('welcomeInSubTextFont' in body) settings.welcomeInSubTextFont = body.welcomeInSubTextFont;
+        if ('welcomeInSubTextFontFamily' in body) settings.welcomeInSubTextFontFamily = body.welcomeInSubTextFontFamily;
+        if ('welcomeInSubTextColor' in body) settings.welcomeInSubTextColor = body.welcomeInSubTextColor;
+        if ('welcomeInSubTextYOffset' in body) assignField(settings, 'welcomeInSubTextYOffset', body.welcomeInSubTextYOffset, true);
 
-        if (body.welcomeInShadowColor) settings.welcomeInShadowColor = body.welcomeInShadowColor;
-        if (body.welcomeInShadowBlur) settings.welcomeInShadowBlur = parseInt(body.welcomeInShadowBlur);
+        if ('welcomeInShadowColor' in body) settings.welcomeInShadowColor = body.welcomeInShadowColor;
+        if ('welcomeInShadowBlur' in body) assignField(settings, 'welcomeInShadowBlur', body.welcomeInShadowBlur, true);
 
-        if (body.welcomeInBorderColor) settings.welcomeInBorderColor = body.welcomeInBorderColor;
-        if (body.welcomeInBorderWidth) settings.welcomeInBorderWidth = parseInt(body.welcomeInBorderWidth);
+        if ('welcomeInBorderColor' in body) settings.welcomeInBorderColor = body.welcomeInBorderColor;
+        if ('welcomeInBorderWidth' in body) assignField(settings, 'welcomeInBorderWidth', body.welcomeInBorderWidth, true);
 
-        if (body.welcomeInExtraDraw) settings.welcomeInExtraDraw = body.welcomeInExtraDraw;
+        if ('welcomeInExtraDraw' in body) settings.welcomeInExtraDraw = body.welcomeInExtraDraw;
 
-        if (body.welcomeOutBannerWidth) settings.welcomeOutBannerWidth = parseInt(body.welcomeOutBannerWidth);
-        if (body.welcomeOutBannerHeight) settings.welcomeOutBannerHeight = parseInt(body.welcomeOutBannerHeight);
-        if (body.welcomeOutForegroundUrl) settings.welcomeOutForegroundUrl = body.welcomeOutForegroundUrl;
-        if (body.welcomeOutOverlayColor) settings.welcomeOutOverlayColor = body.welcomeOutOverlayColor;
+        // Out fields:
+        if ('welcomeOutBannerWidth' in body) assignField(settings, 'welcomeOutBannerWidth', body.welcomeOutBannerWidth, true);
+        if ('welcomeOutBannerHeight' in body) assignField(settings, 'welcomeOutBannerHeight', body.welcomeOutBannerHeight, true);
+        if ('welcomeOutForegroundUrl' in body) settings.welcomeOutForegroundUrl = body.welcomeOutForegroundUrl;
+        if ('welcomeOutOverlayColor' in body) settings.welcomeOutOverlayColor = body.welcomeOutOverlayColor;
 
         settings.welcomeOutAvatarEnabled = body.welcomeOutAvatarEnabled === 'on';
-        if (body.welcomeOutAvatarSize) settings.welcomeOutAvatarSize = parseInt(body.welcomeOutAvatarSize);
-        if (body.welcomeOutAvatarShape) settings.welcomeOutAvatarShape = body.welcomeOutAvatarShape;
-        if (body.welcomeOutAvatarYOffset) settings.welcomeOutAvatarYOffset = parseInt(body.welcomeOutAvatarYOffset);
-        if (body.welcomeOutAvatarBorderWidth) settings.welcomeOutAvatarBorderWidth = parseInt(body.welcomeOutAvatarBorderWidth);
-        if (body.welcomeOutAvatarBorderColor) settings.welcomeOutAvatarBorderColor = body.welcomeOutAvatarBorderColor;
+        if ('welcomeOutAvatarSize' in body) assignField(settings, 'welcomeOutAvatarSize', body.welcomeOutAvatarSize, true);
+        if ('welcomeOutAvatarShape' in body) settings.welcomeOutAvatarShape = body.welcomeOutAvatarShape;
+        if ('welcomeOutAvatarYOffset' in body) assignField(settings, 'welcomeOutAvatarYOffset', body.welcomeOutAvatarYOffset, true);
+        if ('welcomeOutAvatarBorderWidth' in body) assignField(settings, 'welcomeOutAvatarBorderWidth', body.welcomeOutAvatarBorderWidth, true);
+        if ('welcomeOutAvatarBorderColor' in body) settings.welcomeOutAvatarBorderColor = body.welcomeOutAvatarBorderColor;
 
-        if (body.welcomeOutMainTextContent) settings.welcomeOutMainTextContent = body.welcomeOutMainTextContent;
-        if (body.welcomeOutMainTextFont) settings.welcomeOutMainTextFont = body.welcomeOutMainTextFont;
-        if (body.welcomeOutMainTextFontFamily) settings.welcomeOutMainTextFontFamily = body.welcomeOutMainTextFontFamily;
-        if (body.welcomeOutMainTextColor) settings.welcomeOutMainTextColor = body.welcomeOutMainTextColor;
-        if (body.welcomeOutMainTextYOffset) settings.welcomeOutMainTextYOffset = parseInt(body.welcomeOutMainTextYOffset);
+        if ('welcomeOutMainTextContent' in body) settings.welcomeOutMainTextContent = body.welcomeOutMainTextContent;
+        if ('welcomeOutMainTextFont' in body) settings.welcomeOutMainTextFont = body.welcomeOutMainTextFont;
+        if ('welcomeOutMainTextFontFamily' in body) settings.welcomeOutMainTextFontFamily = body.welcomeOutMainTextFontFamily;
+        if ('welcomeOutMainTextColor' in body) settings.welcomeOutMainTextColor = body.welcomeOutMainTextColor;
+        if ('welcomeOutMainTextYOffset' in body) assignField(settings, 'welcomeOutMainTextYOffset', body.welcomeOutMainTextYOffset, true);
 
-        if (body.welcomeOutSubTextContent) settings.welcomeOutSubTextContent = body.welcomeOutSubTextContent;
-        if (body.welcomeOutSubTextFont) settings.welcomeOutSubTextFont = body.welcomeOutSubTextFont;
-        if (body.welcomeOutSubTextFontFamily) settings.welcomeOutSubTextFontFamily = body.welcomeOutSubTextFontFamily;
-        if (body.welcomeOutSubTextColor) settings.welcomeOutSubTextColor = body.welcomeOutSubTextColor;
-        if (body.welcomeOutSubTextYOffset) settings.welcomeOutSubTextYOffset = parseInt(body.welcomeOutSubTextYOffset);
+        if ('welcomeOutSubTextContent' in body) settings.welcomeOutSubTextContent = body.welcomeOutSubTextContent;
+        if ('welcomeOutSubTextFont' in body) settings.welcomeOutSubTextFont = body.welcomeOutSubTextFont;
+        if ('welcomeOutSubTextFontFamily' in body) settings.welcomeOutSubTextFontFamily = body.welcomeOutSubTextFontFamily;
+        if ('welcomeOutSubTextColor' in body) settings.welcomeOutSubTextColor = body.welcomeOutSubTextColor;
+        if ('welcomeOutSubTextYOffset' in body) assignField(settings, 'welcomeOutSubTextYOffset', body.welcomeOutSubTextYOffset, true);
 
-        if (body.welcomeOutShadowColor) settings.welcomeOutShadowColor = body.welcomeOutShadowColor;
-        if (body.welcomeOutShadowBlur) settings.welcomeOutShadowBlur = parseInt(body.welcomeOutShadowBlur);
+        if ('welcomeOutShadowColor' in body) settings.welcomeOutShadowColor = body.welcomeOutShadowColor;
+        if ('welcomeOutShadowBlur' in body) assignField(settings, 'welcomeOutShadowBlur', body.welcomeOutShadowBlur, true);
 
-        if (body.welcomeOutBorderColor) settings.welcomeOutBorderColor = body.welcomeOutBorderColor;
-        if (body.welcomeOutBorderWidth) settings.welcomeOutBorderWidth = parseInt(body.welcomeOutBorderWidth);
+        if ('welcomeOutBorderColor' in body) settings.welcomeOutBorderColor = body.welcomeOutBorderColor;
+        if ('welcomeOutBorderWidth' in body) assignField(settings, 'welcomeOutBorderWidth', body.welcomeOutBorderWidth, true);
 
-        if (body.welcomeOutExtraDraw) settings.welcomeOutExtraDraw = body.welcomeOutExtraDraw;
+        if ('welcomeOutExtraDraw' in body) settings.welcomeOutExtraDraw = body.welcomeOutExtraDraw;
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/welcome?success=true`);
@@ -433,11 +450,17 @@ router.post('/dashboard/:guildId/settings/leveling', isAuthorized, checkServerAc
         const body = req.body;
 
         settings.levelingOn = body.levelingOn === 'on';
-        if (body.levelingChannelId) settings.levelingChannelId = body.levelingChannelId;
-        if (body.levelingCooldown) settings.levelingCooldown = parseInt(body.levelingCooldown) * 1000;
-        if (body.levelingXp) settings.levelingXp = parseInt(body.levelingXp);
+        if ('levelingChannelId' in body) settings.levelingChannelId = body.levelingChannelId;
+        if ('levelingCooldown' in body)
+            settings.levelingCooldown = body.levelingCooldown === '' || body.levelingCooldown === null || body.levelingCooldown === undefined
+                ? null
+                : parseInt(body.levelingCooldown) * 1000;
+        if ('levelingXp' in body)
+            settings.levelingXp = body.levelingXp === '' || body.levelingXp === null || body.levelingXp === undefined
+                ? null
+                : parseInt(body.levelingXp);
 
-        if (body.roleRewards !== undefined) {
+        if ('roleRewards' in body) {
             let rawRewards = body.roleRewards;
             try {
                 if (typeof rawRewards === 'string') {
@@ -453,8 +476,8 @@ router.post('/dashboard/:guildId/settings/leveling', isAuthorized, checkServerAc
 
             settings.roleRewards = Array.isArray(rawRewards)
                 ? rawRewards.filter(Boolean).map((item) => ({
-                      level: parseInt(item.level) || 1,
-                      role: item.role || item.roleId || '',
+                      level: item && ('level' in item) ? (item.level === '' || item.level == null ? 1 : parseInt(item.level)) : 1,
+                      role: item && ('role' in item) ? (item.role || item.roleId || '') : '',
                   }))
                 : [];
         }
@@ -473,12 +496,14 @@ router.post('/dashboard/:guildId/settings/minecraft', isAuthorized, checkServerA
         const body = req.body;
 
         settings.minecraftStatsOn = body.minecraftStatsOn === 'on';
-        if (body.minecraftIp) settings.minecraftIp = body.minecraftIp;
-        if (body.minecraftPort) settings.minecraftPort = parseInt(body.minecraftPort);
-        if (body.minecraftIpChannelId) settings.minecraftIpChannelId = body.minecraftIpChannelId;
-        if (body.minecraftPortChannelId) settings.minecraftPortChannelId = body.minecraftPortChannelId;
-        if (body.minecraftStatusChannelId) settings.minecraftStatusChannelId = body.minecraftStatusChannelId;
-        if (body.minecraftPlayersChannelId) settings.minecraftPlayersChannelId = body.minecraftPlayersChannelId;
+        if ('minecraftIp' in body) settings.minecraftIp = body.minecraftIp;
+        if ('minecraftPort' in body)
+            settings.minecraftPort = body.minecraftPort === '' || body.minecraftPort === null || body.minecraftPort === undefined
+                ? null : parseInt(body.minecraftPort);
+        if ('minecraftIpChannelId' in body) settings.minecraftIpChannelId = body.minecraftIpChannelId;
+        if ('minecraftPortChannelId' in body) settings.minecraftPortChannelId = body.minecraftPortChannelId;
+        if ('minecraftStatusChannelId' in body) settings.minecraftStatusChannelId = body.minecraftStatusChannelId;
+        if ('minecraftPlayersChannelId' in body) settings.minecraftPlayersChannelId = body.minecraftPlayersChannelId;
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/minecraft?success=true`);
@@ -493,7 +518,7 @@ router.post('/dashboard/:guildId/settings/language', isAuthorized, checkServerAc
         const settings = req.settings;
         const body = req.body;
 
-        if (body.lang) settings.lang = body.lang;
+        if ('lang' in body) settings.lang = body.lang;
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/language?success=true`);
@@ -508,11 +533,13 @@ router.post('/dashboard/:guildId/settings/testimony', isAuthorized, checkServerA
         const settings = req.settings;
         const body = req.body;
 
-        if (body.testimonyChannelId) settings.testimonyChannelId = body.testimonyChannelId;
-        if (body.feedbackChannelId) settings.feedbackChannelId = body.feedbackChannelId;
-        if (body.testimonyCountChannelId) settings.testimonyCountChannelId = body.testimonyCountChannelId;
-        if (body.testimonyCountFormat) settings.testimonyCountFormat = body.testimonyCountFormat;
-        if (body.testimonyCount) settings.testimonyCount = parseInt(body.testimonyCount);
+        if ('testimonyChannelId' in body) settings.testimonyChannelId = body.testimonyChannelId;
+        if ('feedbackChannelId' in body) settings.feedbackChannelId = body.feedbackChannelId;
+        if ('testimonyCountChannelId' in body) settings.testimonyCountChannelId = body.testimonyCountChannelId;
+        if ('testimonyCountFormat' in body) settings.testimonyCountFormat = body.testimonyCountFormat;
+        if ('testimonyCount' in body)
+            settings.testimonyCount = body.testimonyCount === '' || body.testimonyCount == null
+                ? null : parseInt(body.testimonyCount);
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/testimony?success=true`);
@@ -527,7 +554,7 @@ router.post('/dashboard/:guildId/settings/ai', isAuthorized, checkServerAccess, 
         const settings = req.settings;
         const body = req.body;
 
-        if (body.aiChannelIds !== undefined) {
+        if ('aiChannelIds' in body) {
             const aiChannelIdsArray = Array.isArray(body.aiChannelIds) ? body.aiChannelIds : [body.aiChannelIds];
             settings.aiChannelIds = aiChannelIdsArray.filter((item) => item && item.trim() !== '');
         }
@@ -546,10 +573,12 @@ router.post('/dashboard/:guildId/settings/streak', isAuthorized, checkServerAcce
         const body = req.body;
 
         settings.streakOn = body.streakOn === 'on';
-        if (body.streakEmoji) settings.streakEmoji = body.streakEmoji;
-        if (body.streakMinimum) settings.streakMinimum = parseInt(body.streakMinimum);
+        if ('streakEmoji' in body) settings.streakEmoji = body.streakEmoji;
+        if ('streakMinimum' in body)
+            settings.streakMinimum = body.streakMinimum === '' || body.streakMinimum == null 
+                ? null : parseInt(body.streakMinimum);
 
-        if (body.streakRoleRewards !== undefined) {
+        if ('streakRoleRewards' in body) {
             let rawRewards = body.streakRoleRewards;
             try {
                 if (typeof rawRewards === 'string') {
@@ -565,8 +594,8 @@ router.post('/dashboard/:guildId/settings/streak', isAuthorized, checkServerAcce
 
             settings.streakRoleRewards = Array.isArray(rawRewards)
                 ? rawRewards.filter(Boolean).map((item) => ({
-                      streak: parseInt(item.streak) || 1,
-                      role: item.role || item.roleId || '',
+                      streak: item && ('streak' in item) ? (item.streak === '' || item.streak == null ? 1 : parseInt(item.streak)) : 1,
+                      role: item && ('role' in item) ? (item.role || item.roleId || '') : '',
                   }))
                 : [];
         }
@@ -584,8 +613,8 @@ router.post('/dashboard/:guildId/settings/channels', isAuthorized, checkServerAc
         const settings = req.settings;
         const body = req.body;
 
-        if (body.announcementChannelId) settings.announcementChannelId = body.announcementChannelId;
-        if (body.inviteChannelId) settings.inviteChannelId = body.inviteChannelId;
+        if ('announcementChannelId' in body) settings.announcementChannelId = body.announcementChannelId;
+        if ('inviteChannelId' in body) settings.inviteChannelId = body.inviteChannelId;
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/channels?success=true`);
@@ -601,8 +630,8 @@ router.post('/dashboard/:guildId/settings/booster', isAuthorized, checkServerAcc
         const body = req.body;
 
         settings.boostLogOn = body.boostLogOn === 'on';
-        if (body.boostLogChannelId) settings.boostLogChannelId = body.boostLogChannelId;
-        if (body.boostLogMessage !== undefined) settings.boostLogMessage = body.boostLogMessage;
+        if ('boostLogChannelId' in body) settings.boostLogChannelId = body.boostLogChannelId;
+        if ('boostLogMessage' in body) settings.boostLogMessage = body.boostLogMessage;
 
         await settings.saveAndUpdateCache('guildId');
         res.redirect(`/dashboard/${req.guild.id}/settings/booster?success=true`);

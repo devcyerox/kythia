@@ -101,14 +101,14 @@
                         <div class="mb-3">
                             <label for="testimonyCount" class="form-label">Current Count</label>
                             <input type="number" class="form-control" id="testimonyCount" name="testimonyCount" 
-                                   value="<%= settings.testimonyCount || 0 %>" min="0">
+                                   value="<%= (settings.testimonyCount !== null && settings.testimonyCount !== undefined) ? settings.testimonyCount : 0 %>" min="0">
                             <div class="form-text">Current testimony count</div>
                         </div>
 
                         <div class="mb-3">
                             <label for="testimonyCountFormat" class="form-label">Channel Name Format</label>
                             <input type="text" class="form-control" id="testimonyCountFormat" name="testimonyCountFormat" 
-                                   value="<%= settings.testimonyCountFormat || '{count} Testimonies' %>" 
+                                   value="<%= (settings.testimonyCountFormat !== null && settings.testimonyCountFormat !== undefined) ? settings.testimonyCountFormat : '{count} Testimonies' %>" 
                                    placeholder="e.g., {count} Testimonies">
                             <div class="form-text">Use {count} for the number placeholder</div>
                         </div>
@@ -135,7 +135,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="text-center">
-                                    <h3 class="text-primary mb-1"><%= settings.testimonyCount || 0 %></h3>
+                                    <h3 class="text-primary mb-1"><%= (settings.testimonyCount !== null && settings.testimonyCount !== undefined) ? settings.testimonyCount : 0 %></h3>
                                     <p class="text-muted mb-0">Total Testimonies</p>
                                 </div>
                             </div>

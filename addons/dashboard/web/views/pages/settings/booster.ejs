@@ -102,7 +102,7 @@
                                 name="boostLogMessage" 
                                 rows="4" 
                                 placeholder="Thank you so much, **{displayName}**! Thanks to you, our server just got even cooler!"
-                            ><%= settings.boostLogMessage || '' %></textarea>
+                            ><%= (settings.boostLogMessage !== null && settings.boostLogMessage !== undefined) ? settings.boostLogMessage : '' %></textarea>
                             <div class="form-text">Custom message to send when someone boosts the server</div>
                         </div>
 
@@ -135,7 +135,7 @@
                             <h6 class="mb-3">Example Output:</h6>
                             <div class="border-start border-primary border-3 ps-3">
                                 <% 
-                                    let previewMessage = settings.boostLogMessage || "Thank you so much, **{displayName}**! Thanks to you, our server just got even cooler!";
+                                    let previewMessage = (settings.boostLogMessage !== null && settings.boostLogMessage !== undefined) ? settings.boostLogMessage : "Thank you so much, **{displayName}**! Thanks to you, our server just got even cooler!";
                                     previewMessage = previewMessage
                                         .replace(/{username}/g, user.username)
                                         .replace(/{displayName}/g, user.globalName || user.username)
