@@ -188,7 +188,7 @@ module.exports = async (bot, message) => {
     }
 
     if (message.guild) {
-        if (!isOwner(message.author.id) || message.member?.permissions.has(['Administrator', 'ManageGuild'])) {
+        if (isOwner(message.author.id) || message.member?.permissions.has(['Administrator', 'ManageGuild'])) {
             const isFlagged = await automodSystem(message, client);
             if (isFlagged) return true;
         }
