@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/core/events/guildMemberUpdate.js
+ * @namespace: addons/core/events/guildStickerUpdate.js
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
@@ -23,22 +23,22 @@ function formatChanges(changes) {
         .join('\n');
 }
 
-module.exports = async (bot, oldMember, newMember) => {
-    if (!newMember.guild) return;
+module.exports = async (bot, oldSticker, newSticker) => {
+    if (!newSticker.guild) return;
 
     try {
-        const settings = await ServerSetting.getCache({ guildId: newMember.guild.id });
+        const settings = await ServerSetting.getCache({ guildId: newSticker.guild.id });
         if (!settings || !settings.auditLogChannelId) return;
 
-        const logChannel = await newMember.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
+        const logChannel = await newSticker.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
         if (!logChannel || !logChannel.isTextBased()) return;
 
-        const audit = await newMember.guild.fetchAuditLogs({
-            type: AuditLogEvent.MemberUpdate,
+        const audit = await newSticker.guild.fetchAuditLogs({
+            type: AuditLogEvent.StickerUpdate,
             limit: 1,
         });
 
-        const entry = audit.entries.find((e) => e.target?.id === newMember.id && e.createdTimestamp > Date.now() - 5000);
+        const entry = audit.entries.find((e) => e.target?.id === newSticker.id && e.createdTimestamp > Date.now() - 5000);
 
         if (!entry) return;
 
@@ -48,12 +48,12 @@ module.exports = async (bot, oldMember, newMember) => {
                 name: entry.executor?.tag || 'Unknown',
                 iconURL: entry.executor?.displayAvatarURL?.(),
             })
-            .setDescription(`📝 **Member Updated** by <@${entry.executor?.id || 'Unknown'}>`)
+            .setDescription(`🏷️ **Sticker Updated** by <@${entry.executor?.id || 'Unknown'}>`)
             .addFields(
-                { name: 'Member', value: `<@${newMember.id}>`, inline: true },
+                { name: 'Sticker', value: `<:${newSticker.name}:${newSticker.id}>`, inline: true },
                 { name: 'Changes', value: formatChanges(entry.changes) }
             )
-            .setThumbnail(newMember.user.displayAvatarURL())
+            .setThumbnail(newSticker.url)
             .setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
             .setTimestamp();
 
@@ -63,6 +63,6 @@ module.exports = async (bot, oldMember, newMember) => {
 
         await logChannel.send({ embeds: [embed] });
     } catch (err) {
-        console.error('Error in guildMemberUpdate audit log:', err);
+        console.error('Error in guildStickerUpdate audit log:', err);
     }
 };

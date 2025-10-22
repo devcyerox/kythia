@@ -14,6 +14,7 @@ module.exports = function kythiaClient() {
             GatewayIntentBits.DirectMessages,
             GatewayIntentBits.DirectMessageReactions,
             GatewayIntentBits.DirectMessageTyping,
+            GatewayIntentBits.GuildExpressions,
         ],
 
         partials: [Partials.Message, Partials.Channel, Partials.Reaction, Partials.User, Partials.GuildMember],

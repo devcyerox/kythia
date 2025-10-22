@@ -33,7 +33,7 @@ const isOwner = (userId) => {
  * @param {{id:string}} user - Discord user object.
  * @returns {Promise<boolean>} True if user is owner or in a team.
  */
-async function checkIsTeam(user) {
+async function isTeam(user) {
     if (isOwner(user.id)) return true;
     const teams = await KythiaTeam.getCache({ userId: user.id });
     return !!(teams && teams.length);
@@ -104,4 +104,4 @@ async function setVoiceChannelStatus(channel, status) {
     }
 }
 
-module.exports = { isOwner, checkIsTeam, embedFooter, checkIsPremium, setVoiceChannelStatus };
+module.exports = { isOwner, isTeam, embedFooter, checkIsPremium, setVoiceChannelStatus };

@@ -27,6 +27,7 @@ class ServerSetting extends KythiaModel {
                 admins: { type: DataTypes.JSON, defaultValue: [] },
                 ignoredChannels: { type: DataTypes.JSON, defaultValue: [] },
                 modLogChannelId: { type: DataTypes.STRING },
+                auditLogChannelId: { type: DataTypes.STRING },
 
                 // SERVER STATS
                 serverStats: { type: DataTypes.JSON, defaultValue: [] },
@@ -52,9 +53,9 @@ class ServerSetting extends KythiaModel {
                 invitesOn: { type: DataTypes.BOOLEAN, defaultValue: false },
 
                 rolePrefixOn: { type: DataTypes.BOOLEAN, defaultValue: false },
-                
+
                 boostLogOn: { type: DataTypes.BOOLEAN, defaultValue: false },
-                
+
                 // LEVELING
                 levelingChannelId: { type: DataTypes.STRING },
                 levelingCooldown: { type: DataTypes.INTEGER, defaultValue: 300 },
@@ -173,7 +174,7 @@ class ServerSetting extends KythiaModel {
 
                 announcementChannelId: { type: DataTypes.STRING, allowNull: true },
                 inviteChannelId: { type: DataTypes.STRING, allowNull: true },
-                
+
                 boostLogChannelId: { type: DataTypes.STRING, allowNull: true },
                 boostLogMessage: { type: DataTypes.TEXT, allowNull: true },
             },

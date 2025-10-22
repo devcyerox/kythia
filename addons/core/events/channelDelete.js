@@ -46,9 +46,9 @@ async function handleAntiNuke(bot, channel, entry) {
             await member.kick(await t(channel.guild, 'core_events_channelDelete_events_channel_delete_antinuke_reason'));
 
             const settings = await ServerSetting.getCache({ guildId: channel.guild.id });
-            if (!settings || !settings.modLogChannelId) return;
+            if (!settings || !settings.auditLogChannelId) return;
 
-            const logChannel = await channel.guild.channels.fetch(settings.modLogChannelId).catch(() => null);
+            const logChannel = await channel.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
             if (logChannel?.isTextBased()) {
                 const message = await t(channel.guild, 'core_events_channelDelete_events_channel_delete_antinuke_kick_log', {
                     user: member.user.tag,
@@ -73,11 +73,74 @@ module.exports = async (bot, channel) => {
             limit: 1,
         });
 
-        const entry = audit.entries.find(
-            (e) => e.changes?.some((c) => c.key === 'name' && c.old === channel.name) && e.createdTimestamp > Date.now() - 5000
+        // Try to match by .target?.id first (like in update), fallback to name if not found
+        let entry = audit.entries.find(
+            (e) => e.target?.id === channel.id && e.createdTimestamp > Date.now() - 5000
         );
 
+        if (!entry) {
+            entry = audit.entries.find(
+                (e) => e.changes?.some((c) => c.key === 'name' && c.old === channel.name) && e.createdTimestamp > Date.now() - 5000
+            );
+        }
+
         await handleAntiNuke(bot, channel, entry);
+
+        // Send audit log embed if audit entry found and server configured
+        const settings = await ServerSetting.getCache({ guildId: channel.guild.id });
+        if (!settings || !settings.auditLogChannelId) return;
+
+        const logChannel = await channel.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
+        if (!logChannel || !logChannel.isTextBased() || !entry) return;
+
+        // Humanize channel type (simple version)
+        const channelTypeNames = {
+            [ChannelType.GuildText]: 'Text Channel',
+            [ChannelType.GuildVoice]: 'Voice Channel',
+            [ChannelType.GuildCategory]: 'Category',
+            [ChannelType.GuildAnnouncement]: 'Announcement Channel',
+            [ChannelType.AnnouncementThread]: 'Announcement Thread',
+            [ChannelType.PublicThread]: 'Public Thread',
+            [ChannelType.PrivateThread]: 'Private Thread',
+            [ChannelType.GuildStageVoice]: 'Stage Channel',
+            [ChannelType.GuildForum]: 'Forum Channel',
+            [ChannelType.GuildMedia]: 'Media Channel',
+            [ChannelType.GuildDirectory]: 'Directory Channel',
+            [ChannelType.GuildStore]: 'Store Channel',
+            [ChannelType.DM]: 'Direct Message',
+            [ChannelType.GroupDM]: 'Group DM',
+        };
+        function humanChannelType(type) {
+            return channelTypeNames[type] || (typeof type === "number" ? `Unknown (${type})` : "Unknown");
+        }
+
+        // Use the typical color utility if available, else fallback
+        let color;
+        try {
+            color = require('@utils/color')('Red', { from: 'discord', to: 'decimal' });
+        } catch (e) {
+            color = 0xed4245; // default Discord red
+        }
+
+        const embed = new EmbedBuilder()
+            .setColor(color)
+            .setAuthor({
+                name: entry.executor?.tag || 'Unknown',
+                iconURL: entry.executor?.displayAvatarURL?.(),
+            })
+            .setDescription(`🗑️ **Channel Deleted** by <@${entry.executor?.id || 'Unknown'}>`)
+            .addFields(
+                { name: 'Channel Name', value: channel.name || 'Unknown', inline: true },
+                { name: 'Type', value: humanChannelType(channel.type), inline: true }
+            )
+            .setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
+            .setTimestamp();
+
+        if (entry.reason) {
+            embed.addFields({ name: 'Reason', value: entry.reason });
+        }
+
+        await logChannel.send({ embeds: [embed] });
     } catch (err) {
         console.error('Error fetching audit logs for channelDelete:', err);
         if (kythia.sentry.dsn) {

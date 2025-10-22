@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/core/events/guildMemberUpdate.js
+ * @namespace: addons/core/events/guildEmojiUpdate.js
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
@@ -23,22 +23,22 @@ function formatChanges(changes) {
         .join('\n');
 }
 
-module.exports = async (bot, oldMember, newMember) => {
-    if (!newMember.guild) return;
+module.exports = async (bot, oldEmoji, newEmoji) => {
+    if (!newEmoji.guild) return;
 
     try {
-        const settings = await ServerSetting.getCache({ guildId: newMember.guild.id });
+        const settings = await ServerSetting.getCache({ guildId: newEmoji.guild.id });
         if (!settings || !settings.auditLogChannelId) return;
 
-        const logChannel = await newMember.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
+        const logChannel = await newEmoji.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
         if (!logChannel || !logChannel.isTextBased()) return;
 
-        const audit = await newMember.guild.fetchAuditLogs({
-            type: AuditLogEvent.MemberUpdate,
+        const audit = await newEmoji.guild.fetchAuditLogs({
+            type: AuditLogEvent.EmojiUpdate,
             limit: 1,
         });
 
-        const entry = audit.entries.find((e) => e.target?.id === newMember.id && e.createdTimestamp > Date.now() - 5000);
+        const entry = audit.entries.find((e) => e.target?.id === newEmoji.id && e.createdTimestamp > Date.now() - 5000);
 
         if (!entry) return;
 
@@ -48,12 +48,12 @@ module.exports = async (bot, oldMember, newMember) => {
                 name: entry.executor?.tag || 'Unknown',
                 iconURL: entry.executor?.displayAvatarURL?.(),
             })
-            .setDescription(`📝 **Member Updated** by <@${entry.executor?.id || 'Unknown'}>`)
+            .setDescription(`😃 **Emoji Updated** by <@${entry.executor?.id || 'Unknown'}>`)
             .addFields(
-                { name: 'Member', value: `<@${newMember.id}>`, inline: true },
+                { name: 'Emoji', value: `<:${newEmoji.name}:${newEmoji.id}>`, inline: true },
                 { name: 'Changes', value: formatChanges(entry.changes) }
             )
-            .setThumbnail(newMember.user.displayAvatarURL())
+            .setThumbnail(newEmoji.url)
             .setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
             .setTimestamp();
 
@@ -63,6 +63,6 @@ module.exports = async (bot, oldMember, newMember) => {
 
         await logChannel.send({ embeds: [embed] });
     } catch (err) {
-        console.error('Error in guildMemberUpdate audit log:', err);
+        console.error('Error in guildEmojiUpdate audit log:', err);
     }
 };

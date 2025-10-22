@@ -99,14 +99,14 @@ class AuditLogger {
     async onAuditLogEntryCreate(entry, guild) {
         try {
             const settings = await ServerSetting.getCache({ guildId: guild.id });
-            if (!settings || !settings.modLogChannelId) return;
+            if (!settings || !settings.auditLogChannelId) return;
 
             const eventName = auditLogEventNames[entry.action];
 
             const logData = this._formatEntry(entry);
             if (!logData) return;
 
-            const logChannel = await guild.channels.fetch(settings.modLogChannelId).catch(() => null);
+            const logChannel = await guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
             if (!logChannel || !logChannel.isTextBased()) return;
 
             // --- Fix: Ensure logData.fields is always a valid array of objects with name and value ---

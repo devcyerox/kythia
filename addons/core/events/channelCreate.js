@@ -43,9 +43,9 @@ async function handleAntiNuke(bot, channel, entry) {
             await member.kick(await t(channel.guild, 'core_events_channelCreate_events_channel_create_antinuke_reason'));
 
             const settings = await ServerSetting.getCache({ guildId: channel.guild.id });
-            if (!settings || !settings.modLogChannelId) return;
+            if (!settings || !settings.auditLogChannelId) return;
 
-            const logChannel = await channel.guild.channels.fetch(settings.modLogChannelId).catch(() => null);
+            const logChannel = await channel.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
             if (logChannel?.isTextBased()) {
                 const message = await t(channel.guild, 'core_events_channelCreate_events_channel_create_antinuke_kick_log', {
                     user: member.user,
@@ -62,7 +62,11 @@ async function handleAntiNuke(bot, channel, entry) {
 }
 
 module.exports = async (bot, channel) => {
-    if (!channel.guild || ![ChannelType.GuildText, ChannelType.GuildVoice, ChannelType.GuildCategory].includes(channel.type)) return;
+    if (
+        !channel.guild ||
+        ![ChannelType.GuildText, ChannelType.GuildVoice, ChannelType.GuildCategory].includes(channel.type)
+    )
+        return;
 
     try {
         const audit = await channel.guild.fetchAuditLogs({
@@ -70,9 +74,45 @@ module.exports = async (bot, channel) => {
             limit: 1,
         });
 
-        const entry = audit.entries.find((e) => e.target?.id === channel.id && e.createdTimestamp > Date.now() - 5000);
+        const entry = audit.entries.find(
+            (e) => e.target?.id === channel.id && e.createdTimestamp > Date.now() - 5000
+        );
 
         await handleAntiNuke(bot, channel, entry);
+
+        // Send audit log embed if audit entry found and server configured
+        const settings = await ServerSetting.getCache({ guildId: channel.guild.id });
+        if (!settings || !settings.auditLogChannelId) return;
+
+        const logChannel = await channel.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
+        if (!logChannel || !logChannel.isTextBased() || !entry) return;
+
+        const embed = new EmbedBuilder()
+            .setColor("Blurple")
+            .setAuthor({
+                name: entry.executor?.tag || 'Unknown',
+                iconURL: entry.executor?.displayAvatarURL?.(),
+            })
+            .setDescription(`📢 **Channel Created** by <@${entry.executor?.id || 'Unknown'}>`)
+            .addFields(
+                { name: 'Channel', value: `<#${channel.id}> (${channel.name})`, inline: true },
+                { name: 'Type', value: channel.type === ChannelType.GuildText
+                    ? 'Text Channel'
+                    : channel.type === ChannelType.GuildVoice
+                        ? 'Voice Channel'
+                        : channel.type === ChannelType.GuildCategory
+                            ? 'Category'
+                            : `Unknown (${channel.type})`, inline: true
+                }
+            )
+            .setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
+            .setTimestamp();
+
+        if (entry.reason) {
+            embed.addFields({ name: 'Reason', value: entry.reason });
+        }
+
+        await logChannel.send({ embeds: [embed] });
     } catch (err) {
         console.error('Error fetching audit logs for channelCreate:', err);
     }

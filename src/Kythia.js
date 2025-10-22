@@ -37,7 +37,7 @@ const {
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandGroupBuilder,
 } = require('discord.js');
-const { checkIsTeam, isOwner } = require('./utils/discord');
+const { isTeam, isOwner } = require('./utils/discord');
 const ServerSetting = require('@coreModels/ServerSetting');
 const KythiaVoter = require('@coreModels/KythiaVoter');
 const KythiaModel = require('./database/KythiaModel');
@@ -1098,7 +1098,7 @@ class Kythia {
                         return interaction.reply({ content: await t(interaction, 'common_error_not_owner'), ephemeral: true });
                     }
                     if (command.teamOnly && !isOwner(interaction.user.id)) {
-                        const isTeam = await checkIsTeam(interaction.user);
+                        const isTeam = await isTeam(interaction.user);
                         if (!isTeam) return interaction.reply({ content: await t(interaction, 'common_error_not_team'), ephemeral: true });
                     }
                     if (command.permissions && interaction.inGuild()) {
@@ -1237,7 +1237,7 @@ class Kythia {
                         return interaction.reply({ content: await t(interaction, 'common_error_not_owner'), ephemeral: true });
                     }
                     if (command.teamOnly && !isOwner(interaction.user.id)) {
-                        const isTeam = await checkIsTeam(interaction.user);
+                        const isTeam = await isTeam(interaction.user);
                         if (!isTeam) return interaction.reply({ content: await t(interaction, 'common_error_not_team'), ephemeral: true });
                     }
                     if (command.permissions && interaction.inGuild()) {
@@ -1865,8 +1865,8 @@ class Kythia {
             this._shutdownCollectorsOnExit();
 
             logger.info('▬▬▬▬▬▬▬▬▬▬▬[ Systems Initializing ]▬▬▬▬▬▬▬▬▬▬▬▬');
-            const auditLogger = new AuditLogger(this);
-            auditLogger.initialize();
+            // const auditLogger = new AuditLogger(this);
+            // auditLogger.initialize();
 
             this.client.once('clientReady', async (c) => {
                 logger.info(`🌸 Logged in as ${this.client.user.tag}`);
