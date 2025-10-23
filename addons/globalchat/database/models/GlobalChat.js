@@ -1,0 +1,36 @@
+/**
+ * @namespace: addons/GlobalChat/database/models/GlobalChat.js
+ * @type: Database Model
+ * @copyright © 2025 kenndeclouv
+ * @assistant chaa & graa
+ * @version 0.9.9-beta-rc.5
+ */
+
+const { DataTypes } = require('sequelize');
+const sequelize = require('@src/database/KythiaSequelize');
+const KythiaModel = require('@src/database/KythiaModel');
+
+class GlobalChat extends KythiaModel {
+    static init(sequelize) {
+        super.init(
+            {
+                guildId: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
+                globalChannelId: { type: DataTypes.STRING, allowNull: true },
+                webhookId: { type: DataTypes.STRING, allowNull: true },
+                webhookToken: { type: DataTypes.STRING, allowNull: true },
+            },
+            {
+                sequelize,
+                modelName: 'GlobalChat',
+                tableName: 'global_chats',
+                timestamps: true,
+            }
+        );
+
+        return this;
+    }
+}
+
+GlobalChat.init(sequelize);
+
+module.exports = GlobalChat;

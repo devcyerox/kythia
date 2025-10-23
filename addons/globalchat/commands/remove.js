@@ -10,18 +10,24 @@ const { EmbedBuilder, MessageFlags } = require('discord.js');
 const fetch = require('node-fetch');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
+const GlobalChat = require('../database/models/GlobalChat.js');
 
 module.exports = {
     subcommand: true,
-    data: (subcommand) => subcommand.setName('unset').setDescription('Remove this server from the global chat network'),
+    data: (subcommand) => subcommand.setName('remove').setDescription('Remove this server from the global chat network'),
     async execute(interaction, container) {
         const { logger } = container;
         const apiUrl = kythia?.addons?.globalchat?.apiUrl;
 
         await interaction.deferReply();
 
+        let localDbChat = await GlobalChat.getCache({ guildId: interaction.guild.id });
+        if (localDbChat) {
+            await localDbChat.destroy();
+        }
+
         try {
-            const res = await fetch(`${apiUrl}/remove/${interaction.guildId}`, {
+            const res = await fetch(`${apiUrl}/remove/${interaction.guild.id}`, {
                 method: 'DELETE',
             });
             const resJson = await res.json();

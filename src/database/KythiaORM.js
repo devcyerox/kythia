@@ -296,6 +296,34 @@ async function KythiaORM(kythiaInstance, options = {}) {
         const isProduction = kythia.env === 'production';
         const shouldReset = process.argv.includes('--db-reset');
 
+        // --- CHECK AND CREATE DATABASE IF NOT EXISTS ---
+        try {
+            // Only do this check for MySQL or MariaDB; for SQLite this is not needed.
+            const dialect = (kythia.db.driver || '').toLowerCase();
+            if (dialect === 'mysql' || dialect === 'mariadb') {
+                const dbName = kythia.db.name;
+                // Create a temporary connection to MySQL WITHOUT selecting the database
+                const { Sequelize } = require('sequelize');
+                const tempSequelize = new Sequelize('', kythia.db.user, kythia.db.password, {
+                    host: kythia.db.host,
+                    port: kythia.db.port,
+                    dialect,
+                    logging: false,
+                    dialectOptions: kythia.db.dialectOptions,
+                    socketPath: kythia.db.socketPath,
+                });
+
+                // Try to create the database if it does not exist
+                await tempSequelize.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
+                await tempSequelize.close();
+                logger.info(`🗄️ Ensured database "${dbName}" exists.`);
+            }
+        } catch (dbCreateError) {
+            logger.error('❌ Failed to create/check database existence:', dbCreateError);
+            throw dbCreateError;
+        }
+        // --- END CHECK AND CREATE DATABASE IF NOT EXISTS ---
+
         // --- INI DIA KUNCI PENGAMANNYA ---
         if (!isProduction && shouldReset) {
             logger.warn('==================== 🔥 DATABASE RESET 🔥 ====================');

@@ -10,6 +10,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, ChannelType, EmbedBuilder, Int
 const fetch = require('node-fetch');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
+const GlobalChat = require('../database/models/GlobalChat');
 
 module.exports = {
     subcommand: true,
@@ -39,7 +40,7 @@ module.exports = {
             const res = await fetch(`${apiUrl}/list`);
             const resJson = await res.json();
 
-            const found = resJson?.data?.guilds?.find((g) => g.id === interaction.guildId);
+            const found = resJson?.data?.guilds?.find((g) => g.id === interaction.guild.id);
 
             if (found) {
                 alreadySetup = true;
@@ -51,10 +52,15 @@ module.exports = {
             return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
-        if (alreadySetup) {
+        let localDbChat = await GlobalChat.getCache({ guildId: interaction.guild.id });
+        if (alreadySetup || localDbChat) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'globalchat_setup_already_set', { channel: `<#${existingChannelId}>` }));
+                .setDescription(
+                    await t(interaction, 'globalchat_setup_already_set', {
+                        channel: `<#${existingChannelId || localDbChat?.globalChannelId}>`,
+                    })
+                );
             return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
@@ -104,7 +110,7 @@ module.exports = {
                             ],
                         },
                         {
-                            id: interaction.guildId,
+                            id: interaction.guild.id,
                             type: 0,
                             allow: [
                                 PermissionFlagsBits.ViewChannel,
@@ -148,11 +154,22 @@ module.exports = {
         }
 
         try {
+            await GlobalChat.create({
+                guildId: interaction.guild.id,
+                globalChannelId: usedChannelId,
+                webhookId: webhook.id,
+                webhookToken: webhook.token,
+            });
+        } catch (err) {
+            logger.error('Failed to save GlobalChat to DB:', err);
+        }
+
+        try {
             await fetch(`${apiUrl}/add`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    guildId: interaction.guildId,
+                    guildId: interaction.guild.id,
                     globalChannelId: usedChannelId,
                     webhookId: webhook.id,
                     webhookToken: webhook.token,

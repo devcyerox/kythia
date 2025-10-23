@@ -171,6 +171,33 @@ async function initializeMusicManager(bot) {
      * ▶️ Handles when a new track starts playing.
      */
     client.poru.on('trackStart', async (player, track) => {
+        // --- NEW: Leave if no real users in VC and not 24/7, even if queue is not empty.
+        try {
+            const voiceChannel = client.channels.cache.get(player.voiceChannel);
+            if (voiceChannel && !player._247) {
+                const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
+                if (realUsers.size === 0) {
+                    const channel = client.channels.cache.get(player.textChannel);
+                    if (channel) {
+                        channel.send({
+                            embeds: [
+                                new EmbedBuilder()
+                                    .setColor('Orange')
+                                    .setDescription(await t(channel, 'music_helpers_musicManager_manager_no_listener')),
+                            ],
+                        });
+                    }
+                    if (player && !player.destroyed) {
+                        player.destroy();
+                    }
+                    return;
+                }
+            }
+        } catch (err) {
+            logger.error('❌ Error checking voice channel members (on trackStart):', err);
+        }
+        // --- END NEW
+
         if (!guildStates.has(player.guildId)) {
             guildStates.set(player.guildId, {
                 previousTracks: [],
@@ -461,6 +488,34 @@ async function initializeMusicManager(bot) {
         }
 
         player.updateInterval = setInterval(async () => {
+            // --- NEW: Leave if no real users in VC and not 24/7, periodic check to catch others
+            try {
+                const voiceChannel = client.channels.cache.get(player.voiceChannel);
+                if (voiceChannel && !player._247) {
+                    const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
+                    if (realUsers.size === 0) {
+                        const channel = client.channels.cache.get(player.textChannel);
+                        if (channel) {
+                            channel.send({
+                                embeds: [
+                                    new EmbedBuilder()
+                                        .setColor('Orange')
+                                        .setDescription(await t(channel, 'music_helpers_musicManager_manager_no_listener')),
+                                ],
+                            });
+                        }
+                        if (player && !player.destroyed) {
+                            player.destroy();
+                        }
+                        clearInterval(player.updateInterval);
+                        return;
+                    }
+                }
+            } catch (err) {
+                logger.error('❌ Error checking voice channel members (periodic):', err);
+            }
+            // --- END NEW
+
             const currentTrack = player.currentTrack;
             if (!currentTrack || !player.nowPlayingMessage?.editable) return;
 
@@ -584,10 +639,7 @@ async function initializeMusicManager(bot) {
         try {
             const voiceChannel = client.channels.cache.get(player.voiceChannel);
             if (voiceChannel && !player._247) {
-                const nonBotMembers = voiceChannel.members.filter((m) => !m.user.bot || m.id === client.user.id);
-
                 const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
-
                 if (realUsers.size === 0) {
                     shouldContinue = false;
                 }
