@@ -267,6 +267,9 @@ router.post('/dashboard/:guildId/settings/automod', isAuthorized, checkServerAcc
         settings.antiSpamOn = body.antiSpamOn === 'on';
         settings.antiBadwordOn = body.antiBadwordOn === 'on';
         settings.antiMentionOn = body.antiMentionOn === 'on';
+        settings.antiAllCapsOn = body.antiAllCapsOn === 'on';
+        settings.antiEmojiSpamOn = body.antiEmojiSpamOn === 'on';
+        settings.antiZalgoOn = body.antiZalgoOn === 'on';
 
         if ('modLogChannelId' in body) settings.modLogChannelId = body.modLogChannelId;
         if ('auditLogChannelId' in body) settings.auditLogChannelId = body.auditLogChannelId;
@@ -652,6 +655,9 @@ router.post('/dashboard/:guildId/settings/features', isAuthorized, checkServerAc
             'antiSpamOn',
             'antiBadwordOn',
             'antiMentionOn',
+            'antiAllCapsOn',
+            'antiEmojiSpamOn',
+            'antiZalgoOn',
             'serverStatsOn',
             'adventureOn',
             'levelingOn',

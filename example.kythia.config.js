@@ -373,6 +373,12 @@ function loadKythiaConfig() {
 
             // owner can skip all cooldown like in ecomony or pet
             ownerSkipCooldown: true,
+
+            antiAllCapsMinLength: 15,
+            antiAllCapsRatio: 0.7,
+            antiEmojiMinTotal: 11,
+            antiEmojiRatio: 0.8,
+            antiZalgoMin: 8,
         },
         /** -------------------------------------------------------------------
          * X. EMOJIS

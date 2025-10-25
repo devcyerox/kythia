@@ -10,784 +10,24 @@ const { Collection, PermissionsBitField } = require('discord.js');
 const ServerSetting = require('@coreModels/ServerSetting');
 const { sendLogsWarning } = require('./system');
 const { t } = require('@utils/translator');
-const logger = require('@src/utils/logger');
+const logger = require('@utils/logger');
+const leetMap = require('./leetMap');
+
 const userCache = new Collection();
 const SPAM_THRESHOLD = kythia.settings.spamThreshold || 5;
 const DUPLICATE_THRESHOLD = kythia.settings.duplicateThreshold || 3;
 const MENTION_THRESHOLD = kythia.settings.mentionThreshold || 3;
-const FAST_TIME_WINDOW = kythia.settings.fastTimeWindow || 40 * 1000; // 40 seconds
-const DUPLICATE_TIME_WINDOW = kythia.settings.duplicateTimeWindow || 15 * 60 * 1000; // 15 minutes
-const CACHE_EXPIRATION_TIME = kythia.settings.cacheExpirationTime || 15 * 60 * 1000; // 15 minutes
-const PUNISHMENT_COOLDOWN = kythia.settings.punishmentCooldown || 1 * 1000; // 1 second
+const FAST_TIME_WINDOW = kythia.settings.fastTimeWindow || 40 * 1000;
+const DUPLICATE_TIME_WINDOW = kythia.settings.duplicateTimeWindow || 15 * 60 * 1000;
+const CACHE_EXPIRATION_TIME = kythia.settings.cacheExpirationTime || 15 * 60 * 1000;
+const PUNISHMENT_COOLDOWN = kythia.settings.punishmentCooldown || 1 * 1000;
 const SHORT_MESSAGE_THRESHOLD = kythia.settings.shortMessageThreshold || 5;
 
-const leetMap = {
-    a: [
-        'a',
-        'A',
-        '4',
-        '@',
-        'à',
-        'á',
-        'â',
-        'ã',
-        'ä',
-        'å',
-        'α',
-        'а',
-        'æ',
-        'ª',
-        '∆',
-        'Λ',
-        '∂',
-        'ɑ',
-        'ɐ',
-        'ᴀ',
-        'ꞻ',
-        'Ꜳ',
-        'Ꞻ',
-        '𝔞',
-        '𝕒',
-        '𝓪',
-        '𝖆',
-        '𝒶',
-        '𝚊',
-        '𝑎',
-        '𝘢',
-        '𝙖',
-        '𝔸',
-        '𝔄',
-        '𝕬',
-        '𝓐',
-        '𝖠',
-        '𝒜',
-        '𝙰',
-        '𝑨',
-        '𝘈',
-        '𝙰',
-    ],
-    b: [
-        'b',
-        'B',
-        '8',
-        'ß',
-        '฿',
-        'β',
-        'в',
-        '|3',
-        '13',
-        'I3',
-        'ʙ',
-        'ḃ',
-        'ƀ',
-        'þ',
-        'Ь',
-        'Ꮟ',
-        'Ᏼ',
-        '𝔟',
-        '𝕓',
-        '𝓫',
-        '𝖇',
-        '𝒷',
-        '𝚋',
-        '𝑏',
-        '𝘣',
-        '𝙗',
-        '𝔹',
-        '𝔅',
-        '𝕭',
-        '𝓑',
-        '𝖡',
-        'ℬ',
-        '𝙱',
-        '𝑩',
-        '𝘉',
-        '𝙱',
-    ],
-    c: [
-        'c',
-        'C',
-        '(',
-        '{',
-        '[',
-        '<',
-        '¢',
-        '©',
-        'с',
-        'ḉ',
-        'ċ',
-        'ć',
-        'ç',
-        'Ꮯ',
-        'ᑕ',
-        '𝔠',
-        '𝕔',
-        '𝓬',
-        '𝖈',
-        '𝒸',
-        '𝚌',
-        '𝑐',
-        '𝘤',
-        '𝙘',
-        'ℂ',
-        'ℭ',
-        '𝕮',
-        '𝓒',
-        '𝖢',
-        '𝒞',
-        '𝙲',
-        '𝑪',
-        '𝘊',
-        '𝙲',
-    ],
-    d: [
-        'd',
-        'D',
-        'đ',
-        'Ð',
-        'ԁ',
-        'Ԁ',
-        'ḋ',
-        'ḍ',
-        '|)',
-        'cl',
-        'ď',
-        'Ꭰ',
-        'ᗪ',
-        '𝔡',
-        '𝕕',
-        '𝓭',
-        '𝖉',
-        '𝒹',
-        '𝚍',
-        '𝑑',
-        '𝘥',
-        '𝙙',
-        '𝔻',
-        '𝔇',
-        '𝕯',
-        '𝓓',
-        '𝖣',
-        '𝒟',
-        '𝙳',
-        '𝑫',
-        '𝘋',
-        '𝙳',
-    ],
-    e: [
-        'e',
-        'E',
-        '3',
-        '€',
-        'ë',
-        'è',
-        'é',
-        'ê',
-        'ē',
-        'ė',
-        'ę',
-        '∑',
-        'є',
-        '℮',
-        'ε',
-        'е',
-        'ɘ',
-        'ǝ',
-        'ҽ',
-        '𝔢',
-        '𝕖',
-        '𝓮',
-        '𝖊',
-        '𝑒',
-        '𝚎',
-        '𝑒',
-        '𝘦',
-        '𝙚',
-        '𝔼',
-        '𝔈',
-        '𝕰',
-        '𝓔',
-        '𝖤',
-        'ℰ',
-        '𝙴',
-        '𝑬',
-        '𝘌',
-        '𝙴',
-    ],
-    f: ['f', 'F', 'ƒ', 'ph', 'ғ', 'ḟ', '𝔣', '𝕗', '𝓯', '𝖋', '𝒻', '𝚏', '𝑓', '𝘧', '𝙛', '𝔽', '𝔉', '𝕱', '𝓕', '𝖥', 'ℱ', '𝙵', '𝑭', '𝘍', '𝙵'],
-    g: [
-        'g',
-        'G',
-        '9',
-        '6',
-        'ɢ',
-        'ğ',
-        'ģ',
-        'ǥ',
-        'ḡ',
-        'ĝ',
-        'ǧ',
-        'ɠ',
-        'ġ',
-        '𝔤',
-        '𝕘',
-        '𝓰',
-        '𝖌',
-        '𝑔',
-        '𝚐',
-        '𝑔',
-        '𝘨',
-        '𝙜',
-        '𝔾',
-        '𝔊',
-        '𝕲',
-        '𝓖',
-        '𝖦',
-        '𝒢',
-        '𝙶',
-        '𝑮',
-        '𝘎',
-        '𝙶',
-    ],
-    h: [
-        'h',
-        'H',
-        '#',
-        '|-|',
-        'н',
-        'ħ',
-        'ḩ',
-        'ĥ',
-        'ḥ',
-        'ḫ',
-        'н',
-        '𝔥',
-        '𝕙',
-        '𝓱',
-        '𝖍',
-        '𝒽',
-        '𝚑',
-        '𝒉',
-        '𝘩',
-        '𝙝',
-        'ℍ',
-        'ℋ',
-        '𝕳',
-        '𝓗',
-        '𝖧',
-        'ℋ',
-        '𝙷',
-        '𝑯',
-        '𝘏',
-        '𝙷',
-    ],
-    i: [
-        'i',
-        'I',
-        '1',
-        '!',
-        '|',
-        'í',
-        'ì',
-        'î',
-        'ï',
-        'ι',
-        'і',
-        '¡',
-        'ɪ',
-        'ỉ',
-        'ī',
-        'į',
-        'ı',
-        'l',
-        'L',
-        '𝔦',
-        '𝕚',
-        '𝓲',
-        '𝖎',
-        '𝒾',
-        '𝚒',
-        '𝑖',
-        '𝘪',
-        '𝙞',
-        '𝕀',
-        '𝕴',
-        '𝓘',
-        '𝖨',
-        'ℐ',
-        '𝙸',
-        '𝑰',
-        '𝘐',
-        '𝙸',
-    ],
-    j: ['j', 'J', '¿', 'ʝ', 'ј', 'ĵ', '𝔧', '𝕛', '𝓳', '𝖏', '𝒿', '𝚓', '𝑗', '𝘫', '𝙟', '𝕁', '𝕵', '𝓙', '𝖩', '𝒥', '𝙹', '𝑱', '𝘑', '𝙹'],
-    k: [
-        'k',
-        'K',
-        '|<',
-        '|{',
-        'κ',
-        'ḱ',
-        'ķ',
-        'ĸ',
-        'к',
-        '𝔨',
-        '𝕜',
-        '𝓴',
-        '𝖐',
-        '𝓀',
-        '𝚔',
-        '𝑘',
-        '𝘬',
-        '𝙠',
-        '𝕂',
-        '𝕶',
-        '𝓚',
-        '𝖪',
-        '𝒦',
-        '𝙺',
-        '𝑲',
-        '𝘒',
-        '𝙺',
-    ],
-    l: [
-        'l',
-        'L',
-        '1',
-        '|',
-        '£',
-        'ℓ',
-        'ł',
-        'ι',
-        'ا',
-        'ļ',
-        'ľ',
-        'ĺ',
-        'ł',
-        '𝔩',
-        '𝕝',
-        '𝓵',
-        '𝖑',
-        '𝓁',
-        '𝚕',
-        '𝑙',
-        '𝘭',
-        '𝙡',
-        '𝕃',
-        '𝕷',
-        '𝓛',
-        '𝖫',
-        'ℒ',
-        '𝙻',
-        '𝑳',
-        '𝘓',
-        '𝙻',
-    ],
-    m: [
-        'm',
-        'M',
-        'м',
-        '|\\/|',
-        '/\\/\\',
-        'ṃ',
-        'ɱ',
-        'ḿ',
-        'ṁ',
-        '𝔪',
-        '𝕞',
-        '𝓶',
-        '𝖒',
-        '𝓂',
-        '𝚖',
-        '𝑚',
-        '𝘮',
-        '𝙢',
-        '𝕄',
-        '𝕸',
-        '𝓜',
-        '𝖬',
-        'ℳ',
-        '𝙼',
-        '𝑴',
-        '𝘔',
-        '𝙼',
-    ],
-    n: [
-        'n',
-        'N',
-        'η',
-        'ñ',
-        'ń',
-        'ņ',
-        'ň',
-        'ŋ',
-        'п',
-        'и',
-        '∩',
-        '₪',
-        'ɴ',
-        '𝔫',
-        '𝕟',
-        '𝓷',
-        '𝖓',
-        '𝓃',
-        '𝚗',
-        '𝑛',
-        '𝘯',
-        '𝙣',
-        'ℕ',
-        'ℵ',
-        '𝕹',
-        '𝓝',
-        '𝖭',
-        '𝒩',
-        '𝙽',
-        '𝑵',
-        '𝘕',
-        '𝙽',
-    ],
-    o: [
-        'o',
-        'O',
-        '0',
-        '*',
-        '°',
-        'ö',
-        'ó',
-        'ò',
-        'ô',
-        'õ',
-        'ø',
-        'ō',
-        'õ',
-        'ο',
-        'σ',
-        'о',
-        'օ',
-        '¤',
-        '∘',
-        '○',
-        '◯',
-        '⭕',
-        '𝔬',
-        '𝕠',
-        '𝓸',
-        '𝖔',
-        '𝓸',
-        '𝚘',
-        '𝑜',
-        '𝘰',
-        '𝙤',
-        '𝕆',
-        '𝕺',
-        '𝓞',
-        '𝖮',
-        '𝒪',
-        '𝙾',
-        '𝑶',
-        '𝘖',
-        '𝙾',
-    ],
-    p: [
-        'p',
-        'P',
-        'ρ',
-        'р',
-        'þ',
-        '|*',
-        '|o',
-        '|º',
-        '|>',
-        '¶',
-        '₱',
-        'ṕ',
-        'ṗ',
-        '𝔭',
-        '𝕡',
-        '𝓹',
-        '𝖕',
-        '𝓅',
-        '𝚙',
-        '𝑝',
-        '𝘱',
-        '𝙥',
-        'ℙ',
-        '𝕻',
-        '𝓟',
-        '𝖯',
-        '𝒫',
-        '𝙿',
-        '𝑷',
-        '𝘗',
-        '𝙿',
-    ],
-    q: ['q', 'Q', '9', 'φ', 'ϙ', 'զ', 'ǫ', 'ʠ', '𝔮', '𝕢', '𝓺', '𝖖', '𝓆', '𝚚', '𝑞', '𝘲', '𝙦', 'ℚ', '𝕼', '𝓠', '𝖰', '𝒬', '𝚀', '𝑸', '𝘘', '𝚀'],
-    r: [
-        'r',
-        'R',
-        '®',
-        'я',
-        'ɾ',
-        'ř',
-        'ŕ',
-        'ȑ',
-        'ȓ',
-        'ṙ',
-        'ṛ',
-        'ṟ',
-        '𝔯',
-        '𝕣',
-        '𝓻',
-        '𝖗',
-        '𝓇',
-        '𝚛',
-        '𝑟',
-        '𝘳',
-        '𝙧',
-        'ℝ',
-        'ℜ',
-        'ℛ',
-        '𝕽',
-        '𝓡',
-        '𝖱',
-        'ℛ',
-        '𝚁',
-        '𝑹',
-        '𝘙',
-        '𝚁',
-    ],
-    s: [
-        's',
-        'S',
-        '5',
-        '$',
-        '§',
-        'ś',
-        'š',
-        'ş',
-        'ѕ',
-        'ṡ',
-        'ṣ',
-        'ș',
-        'ʂ',
-        'ƨ',
-        '𝔰',
-        '𝕤',
-        '𝓼',
-        '𝖘',
-        '𝓈',
-        '𝚜',
-        '𝑠',
-        '𝘴',
-        '𝙨',
-        '𝕊',
-        '𝕾',
-        '𝓢',
-        '𝖲',
-        '𝒮',
-        '𝚂',
-        '𝑺',
-        '𝘚',
-        '𝚂',
-    ],
-    t: [
-        't',
-        'T',
-        '7',
-        '+',
-        '†',
-        'τ',
-        'т',
-        'ţ',
-        'ť',
-        'ŧ',
-        'ṭ',
-        'ț',
-        'ʇ',
-        '𝔱',
-        '𝕥',
-        '𝓽',
-        '𝖙',
-        '𝓉',
-        '𝚝',
-        '𝑡',
-        '𝘵',
-        '𝙩',
-        '𝕋',
-        '𝕿',
-        '𝓣',
-        '𝖳',
-        '𝒯',
-        '𝚃',
-        '𝑻',
-        '𝘛',
-        '𝚃',
-    ],
-    u: [
-        'u',
-        'U',
-        'v',
-        'ü',
-        'ú',
-        'ù',
-        'û',
-        'ū',
-        'µ',
-        'υ',
-        'ц',
-        'บ',
-        'น',
-        'ǔ',
-        'ů',
-        'ų',
-        'ư',
-        '𝔲',
-        '𝕦',
-        '𝓾',
-        '𝖚',
-        '𝓊',
-        '𝚞',
-        '𝑢',
-        '𝘶',
-        '𝙪',
-        '𝕌',
-        '𝖀',
-        '𝓤',
-        '𝖴',
-        '𝒰',
-        '𝚄',
-        '𝑼',
-        '𝘜',
-        '𝚄',
-    ],
-    v: ['v', 'V', 'υ', 'ν', '\\/', 'ṽ', 'ṿ', 'ѵ', '𝔳', '𝕧', '𝓿', '𝖛', '𝓋', '𝚟', '𝑣', '𝘷', '𝙫', '𝕍', '𝖁', '𝓥', '𝖵', '𝒱', '𝚅', '𝑽', '𝘝', '𝚅'],
-    w: [
-        'w',
-        'W',
-        'vv',
-        'ѡ',
-        'ω',
-        'ψ',
-        '\\/\\/',
-        'Ш',
-        'щ',
-        'ẁ',
-        'ẃ',
-        'ẅ',
-        'ŵ',
-        '𝔴',
-        '𝕨',
-        '𝔀',
-        '𝖜',
-        '𝓌',
-        '𝚠',
-        '𝑤',
-        '𝘸',
-        '𝙬',
-        '𝕎',
-        '𝖂',
-        '𝓦',
-        '𝖶',
-        '𝒲',
-        '𝚆',
-        '𝑾',
-        '𝘞',
-        '𝚆',
-    ],
-    x: [
-        'x',
-        'X',
-        '%',
-        '*',
-        '×',
-        'χ',
-        'х',
-        'ẋ',
-        'ẍ',
-        '𝔵',
-        '𝕩',
-        '𝔁',
-        '𝖝',
-        '𝓍',
-        '𝚡',
-        '𝑥',
-        '𝘹',
-        '𝙭',
-        '𝕏',
-        '𝖃',
-        '𝓧',
-        '𝖷',
-        '𝒳',
-        '𝚇',
-        '𝑿',
-        '𝘟',
-        '𝚇',
-    ],
-    y: [
-        'y',
-        'Y',
-        '¥',
-        'γ',
-        'у',
-        'ý',
-        'ÿ',
-        'ỳ',
-        'ŷ',
-        'ȳ',
-        'ẏ',
-        'ỳ',
-        'ƴ',
-        '𝔶',
-        '𝕪',
-        '𝔂',
-        '𝖞',
-        '𝓎',
-        '𝚢',
-        '𝑦',
-        '𝘺',
-        '𝙮',
-        '𝕐',
-        '𝖄',
-        '𝓨',
-        '𝖸',
-        '𝒴',
-        '𝚈',
-        '𝒀',
-        '𝘠',
-        '𝚈',
-    ],
-    z: [
-        'z',
-        'Z',
-        '2',
-        'ʐ',
-        'ż',
-        'ź',
-        'ž',
-        'ẓ',
-        'ẕ',
-        'ƶ',
-        '𝔷',
-        '𝕫',
-        '𝔃',
-        '𝖟',
-        '𝓏',
-        '𝚣',
-        '𝑧',
-        '𝘻',
-        '𝙯',
-        'ℤ',
-        'ℨ',
-        '𝖅',
-        '𝓩',
-        '𝖹',
-        '𝒵',
-        '𝚉',
-        '𝒁',
-        '𝘡',
-        '𝚉',
-    ],
-};
+const ALL_CAPS_MIN_LENGTH = kythia.settings.antiAllCapsMinLength || 15;
+const ALL_CAPS_RATIO = kythia.settings.antiAllCapsRatio || 0.7;
+const ANTI_EMOJI_MIN_TOTAL = kythia.settings.antiEmojiMinTotal || 11;
+const ANTI_EMOJI_RATIO = kythia.settings.antiEmojiRatio || 0.8;
+const ANTI_ZALGO_MIN = kythia.settings.antiZalgoMin || 8;
 
 const reverseLeetMap = new Map();
 for (const [baseChar, variations] of Object.entries(leetMap)) {
@@ -804,11 +44,10 @@ function normalizeText(text) {
 
     for (let i = 0; i < lowerText.length; i++) {
         const char = lowerText[i];
-
         normalized += reverseLeetMap.get(char) || char;
     }
 
-    return normalized.replace(/[^a-z0-9]/g, '');
+    return normalized.replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
 function canDeleteMessage(message) {
@@ -843,6 +82,15 @@ async function automodSystem(message) {
     if (isFlagged) return true;
 
     isFlagged = await checkLinks(message, setting);
+    if (isFlagged) return true;
+
+    isFlagged = await checkAllCaps(message, setting);
+    if (isFlagged) return true;
+
+    isFlagged = await checkEmojiSpam(message, setting);
+    if (isFlagged) return true;
+
+    isFlagged = await checkZalgo(message, setting);
     if (isFlagged) return true;
 }
 
@@ -939,23 +187,114 @@ async function checkSpam(message, setting) {
     return false;
 }
 
+async function checkAllCaps(message, setting) {
+    if (!setting.antiAllCapsOn) return false;
+
+    const raw = message.content || '';
+    if (raw.length < ALL_CAPS_MIN_LENGTH) return false;
+
+    const chars = [...raw].filter((c) => c.match(/[A-Za-z]/));
+    if (chars.length < ALL_CAPS_MIN_LENGTH) return false;
+
+    const upper = chars.filter((c) => c === c.toUpperCase() && c !== c.toLowerCase());
+    const capRatio = upper.length / chars.length;
+
+    if (capRatio >= ALL_CAPS_RATIO) {
+        const reason = await t(message, 'core_helpers_automod_system_automod_capslock_detected');
+        sendLogsWarning(message, reason, message.content, setting);
+        if (canDeleteMessage(message)) {
+            message.delete().catch((err) => {
+                if (err.code !== 50013) logger.error('Failed to delete ALL CAPS message:', err);
+            });
+        }
+        return true;
+    }
+    return false;
+}
+
+function _countEmojis(str) {
+    const unicodeEmojiRegex =
+        /(?:[\u203C-\u3299]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDDFF]|\p{Emoji_Presentation}|\p{Extended_Pictographic})/gu;
+    const customEmojiRegex = /<a?:\w+:\d+>/g;
+    let unicodeMatch = str.match(unicodeEmojiRegex) || [];
+    let customMatch = str.match(customEmojiRegex) || [];
+    return {
+        total: unicodeMatch.length + customMatch.length,
+        ratio: (unicodeMatch.length + customMatch.length) / Math.max(str.length, 1),
+    };
+}
+
+async function checkEmojiSpam(message, setting) {
+    if (!setting.antiEmojiSpamOn) return false;
+
+    const raw = message.content || '';
+    if (!raw || raw.length < 3) return false;
+
+    const { total, ratio } = _countEmojis(raw);
+
+    if (total >= ANTI_EMOJI_MIN_TOTAL || ratio >= ANTI_EMOJI_RATIO) {
+        const reason = await t(message, 'core_helpers_automod_system_automod_emojispam_detected');
+        sendLogsWarning(message, reason, message.content, setting);
+
+        if (canDeleteMessage(message)) {
+            message.delete().catch((err) => {
+                if (err.code !== 50013) logger.error('Failed to delete emoji spam message:', err);
+            });
+        }
+        return true;
+    }
+    return false;
+}
+
+function _countZalgo(str) {
+    const reg = /[\u0300-\u036f]/g;
+    const matches = str.match(reg);
+    return matches ? matches.length : 0;
+}
+
+async function checkZalgo(message, setting) {
+    if (!setting.antiZalgoOn) return false;
+
+    const raw = message.content || '';
+
+    if (!raw || raw.length < 6) return false;
+
+    const count = _countZalgo(raw);
+    if (count >= ANTI_ZALGO_MIN) {
+        const reason = await t(message, 'core_helpers_automod_system_automod_zalgo_detected');
+        sendLogsWarning(message, reason, message.content, setting);
+
+        if (canDeleteMessage(message)) {
+            message.delete().catch((err) => {
+                if (err.code !== 50013) logger.error('Failed to delete zalgo message:', err);
+            });
+        }
+        return true;
+    }
+    return false;
+}
+
 async function checkBadwords(message, setting) {
     if (!setting.antiBadwordOn) return false;
 
-    const badwords = Array.isArray(setting.badwords)
-        ? setting.badwords.map((w) => w.trim().toLowerCase()).filter(Boolean)
+    const rawBadwords = Array.isArray(setting.badwords)
+        ? setting.badwords
         : typeof setting.badwords === 'string' && setting.badwords.trim().length > 0
-          ? setting.badwords
-                .split(',')
-                .map((w) => w.trim().toLowerCase())
-                .filter(Boolean)
+          ? setting.badwords.split(',')
           : [];
+    const badwords = rawBadwords.map((w) => w.trim().toLowerCase()).filter(Boolean);
 
     if (badwords.length === 0) return false;
 
     const escapeRegex = (str) => str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
-    const normalizedBadwords = badwords.map((word) => escapeRegex(normalizeText(word)));
+    const normalizedBadwords = badwords.map((w) => {
+        const normalized = normalizeText(w);
+
+        const coreWord = normalized.replace(/\s+/g, '');
+
+        return coreWord.split('').map(escapeRegex).join('+\\s*') + '+';
+    });
 
     const badwordRegex = new RegExp(`\\b(${normalizedBadwords.join('|')})\\b`, 'i');
 
@@ -969,14 +308,13 @@ async function checkBadwords(message, setting) {
 
     if (!contentToCheck) return false;
 
-    const normalizedContent = normalizeText(contentToCheck);
+    const normalizedContent = normalizeText(contentToCheck).toLowerCase();
 
     const match = normalizedContent.match(badwordRegex);
 
     if (match) {
         const foundBadword = match[0];
         const reason = await t(message, 'core_helpers_automod_system_automod_badword_detected', { word: foundBadword });
-
         sendLogsWarning(message, reason, foundBadword, setting);
 
         if (canDeleteMessage(message)) {

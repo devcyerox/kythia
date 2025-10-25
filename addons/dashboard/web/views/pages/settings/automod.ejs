@@ -93,6 +93,32 @@
                                 <br><small class="text-muted">Prevent excessive mentions</small>
                             </label>
                         </div>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="antiAllCapsOn" name="antiAllCapsOn" 
+                                   <%= settings.antiAllCapsOn ? 'checked' : '' %>>
+                            <label class="form-check-label" for="antiAllCapsOn">
+                                <strong>Anti-All Caps</strong>
+                                <br><small class="text-muted">Block messages with excessive capital letters</small>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="antiEmojiSpamOn" name="antiEmojiSpamOn" 
+                                   <%= settings.antiEmojiSpamOn ? 'checked' : '' %>>
+                            <label class="form-check-label" for="antiEmojiSpamOn">
+                                <strong>Anti-Emoji Spam</strong>
+                                <br><small class="text-muted">Prevent spammy use of emojis</small>
+                            </label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="antiZalgoOn" name="antiZalgoOn" 
+                                   <%= settings.antiZalgoOn ? 'checked' : '' %>>
+                            <label class="form-check-label" for="antiZalgoOn">
+                                <strong>Anti-Zalgo</strong>
+                                <br><small class="text-muted">Detect and block Zalgo (glitchy) text</small>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

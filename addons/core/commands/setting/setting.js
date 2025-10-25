@@ -10,6 +10,7 @@ const { updateStats } = require('../../helpers/stats');
 const ServerSetting = require('@coreModels/ServerSetting');
 const { embedFooter } = require('@utils/discord');
 const { t } = require('@utils/translator');
+const logger = require('@utils/logger');
 
 const fs = require('fs');
 const path = require('path');
@@ -74,6 +75,9 @@ const featureMap = {
     'anti-spam': ['antiSpamOn', 'Anti-Spam'],
     'anti-badwords': ['antiBadwordOn', 'Anti-Badwords'],
     'anti-mention': ['antiMentionOn', 'Anti-Mention'],
+    'anti-all-caps': ['antiAllCapsOn', 'Anti-All Caps'],
+    'anti-emoji-spam': ['antiEmojiSpamOn', 'Anti-Emoji Spam'],
+    'anti-zalgo': ['antiZalgoOn', 'Anti-Zalgo'],
     'server-stats': ['serverStatsOn', 'Server Stats'],
     leveling: ['levelingOn', 'Leveling'],
     adventure: ['adventureOn', 'Adventure'],
@@ -166,7 +170,7 @@ const command = new SlashCommandBuilder()
             .addSubcommand((sub) => sub.setName('exception-channel-list').setDescription('View exception channels'))
             .addSubcommand((sub) => sub.setName('whitelist-list').setDescription('View whitelist'))
     )
-    // SERVER STATS
+
     .addSubcommandGroup((group) =>
         group
             .setName('stats')
@@ -226,7 +230,7 @@ const command = new SlashCommandBuilder()
                     )
             )
     )
-    // ADMINS
+
     .addSubcommandGroup((group) =>
         group
             .setName('admin')
@@ -246,7 +250,7 @@ const command = new SlashCommandBuilder()
             )
             .addSubcommand((sub) => sub.setName('admin-list').setDescription('View admin list'))
     )
-    // WELCOME IN - OUT
+
     .addSubcommandGroup((group) =>
         group
             .setName('welcome')
@@ -294,7 +298,7 @@ const command = new SlashCommandBuilder()
                     .addStringOption((opt) => opt.setName('background').setDescription('Background for welcome out').setRequired(true))
             )
     )
-    // LEVELING
+
     .addSubcommandGroup((group) =>
         group
             .setName('leveling')
@@ -332,7 +336,7 @@ const command = new SlashCommandBuilder()
                     .addRoleOption((opt) => opt.setName('role').setDescription('Role to be given').setRequired(true))
             )
     )
-    // Minecraft server settings: ip, port, ip-channel, port-channel, status-channel
+
     .addSubcommandGroup((group) =>
         group
             .setName('minecraft')
@@ -368,7 +372,7 @@ const command = new SlashCommandBuilder()
                     .addChannelOption((opt) => opt.setName('channel').setDescription('Channel for Minecraft status').setRequired(true))
             )
     )
-    // LANGUAGE
+
     .addSubcommandGroup((group) =>
         group
             .setName('language')
@@ -388,7 +392,7 @@ const command = new SlashCommandBuilder()
                     )
             )
     )
-    // TESTIMONY
+
     .addSubcommandGroup((group) =>
         group
             .setName('testimony')
@@ -430,7 +434,7 @@ const command = new SlashCommandBuilder()
                     .addIntegerOption((opt) => opt.setName('count').setDescription('New testimony count').setRequired(true))
             )
     )
-    // AI
+
     .addSubcommandGroup((group) =>
         group
             .setName('ai')
@@ -449,7 +453,7 @@ const command = new SlashCommandBuilder()
             )
             .addSubcommand((sub) => sub.setName('list').setDescription('🤖 List AI-enabled channels'))
     )
-    // OTHER CHANNELS
+
     .addSubcommandGroup((group) =>
         group
             .setName('channels')
@@ -467,7 +471,7 @@ const command = new SlashCommandBuilder()
                     .addChannelOption((opt) => opt.setName('channel').setDescription('Channel').setRequired(true))
             )
     )
-    // BOOSTER
+
     .addSubcommandGroup((group) =>
         group
             .setName('booster')
@@ -490,7 +494,7 @@ const command = new SlashCommandBuilder()
                     )
             )
     )
-    // STREAK EXTRA
+
     .addSubcommandGroup((group) =>
         group
             .setName('streak-settings')
@@ -508,7 +512,7 @@ const command = new SlashCommandBuilder()
                     .addStringOption((opt) => opt.setName('emoji').setDescription('Emoji').setRequired(true))
             )
     )
-    // RAW GENERIC SETTER
+
     .addSubcommandGroup((group) =>
         group
             .setName('raw')
@@ -521,7 +525,7 @@ const command = new SlashCommandBuilder()
                     .addStringOption((opt) => opt.setName('value').setDescription('Value').setRequired(true))
             )
     )
-    // LEVELING
+
     .addSubcommandGroup((group) =>
         group
             .setName('streak')
@@ -541,13 +545,12 @@ const command = new SlashCommandBuilder()
                     .addRoleOption((opt) => opt.setName('role').setDescription('Role to be given').setRequired(true))
             )
     )
-    // STANDALONE
+
     .addSubcommand((sub) => sub.setName('view').setDescription('🔍 View all bot settings'))
 
     .addSubcommandGroup((group) => {
         group.setName('features').setDescription('🔄 Enable or disable a specific feature');
 
-        // Loop untuk mengisi group 'toggle' ini
         for (const [subcommandName, [, featureDisplayName]] of Object.entries(featureMap)) {
             group.addSubcommand((sub) =>
                 sub
@@ -581,12 +584,11 @@ module.exports = {
                 };
             });
 
-        await interaction.respond(filtered.slice(0, 25)); // Discord limit 25
+        await interaction.respond(filtered.slice(0, 25));
     },
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
 
-        // GET
         const group = interaction.options.getSubcommandGroup(false);
         const sub = interaction.options.getSubcommand();
         const guildId = interaction.guild.id;
@@ -596,21 +598,16 @@ module.exports = {
         const target = interaction.options.getMentionable('target');
         const channel = interaction.options.getChannel('channel');
 
-        // FETCH OR CREATE BOT SETTING (Anti Race Condition Version)
         const [serverSetting, created] = await ServerSetting.findOrCreateWithCache({
             where: { guildId: guildId },
             defaults: { guildId: guildId, guildName: guildName },
         });
 
-        // Jika setting baru saja dibuat, ada kemungkinan negative cache yang perlu dibersihkan.
-        // Hook `afterSave` sudah menangani cache positif, tapi kita perlu membersihkan
-        // "catatan hantu" secara manual di sini.
         if (created) {
             await ServerSetting.clearNegativeCache({ where: { guildId: guildId } });
             logger.info(`[CACHE] Cleared negative cache for new ServerSetting: ${guildId}`);
         }
 
-        // EMBED
         const embed = new EmbedBuilder()
             .setTitle(await t(interaction, 'core_setting_setting_embed_title'))
             .setColor(kythia.bot.color)
@@ -618,18 +615,15 @@ module.exports = {
             .setFooter(await embedFooter(interaction))
             .setTimestamp();
 
-        // Helper: Clean and parse JSON stringified values (for double/triple stringified arrays/objects)
         function cleanAndParseJson(value) {
             if (typeof value !== 'string') return value;
             let tempValue = value;
             try {
-                // Try to parse repeatedly until not a string or error
                 while (typeof tempValue === 'string') {
                     tempValue = JSON.parse(tempValue);
                 }
                 return tempValue;
             } catch (e) {
-                // If failed, return last valid value
                 return tempValue;
             }
         }
@@ -674,7 +668,6 @@ module.exports = {
                     let displayValue = value;
                     const cleanedValue = cleanAndParseJson(value);
 
-                    // Special handling for some keys
                     if (key === 'badwords' || key === 'whitelist' || key === 'ignoredChannels') {
                         if (Array.isArray(cleanedValue) && cleanedValue.length > 0) {
                             if (key === 'ignoredChannels') {
@@ -708,35 +701,32 @@ module.exports = {
                 }
             }
 
-            // --- Pagination: Build all lines, then split into pages safely ---
             const allLines = [];
 
-            // Boolean
             if (kategori.boolean.length) {
                 allLines.push(`### ⭕ ${await t(interaction, 'core_setting_setting_section_boolean')}`);
                 allLines.push(...kategori.boolean);
                 allLines.push('');
             }
-            // Umum
+
             if (kategori.umum.length) {
                 allLines.push(`### ⚙️ ${await t(interaction, 'core_setting_setting_section_umum')}`);
                 allLines.push(...kategori.umum);
                 allLines.push('');
             }
-            // Array
+
             if (kategori.array.length) {
                 allLines.push(`### 🗃️ ${await t(interaction, 'core_setting_setting_section_array')}`);
                 allLines.push(...kategori.array);
                 allLines.push('');
             }
-            // Lainnya
+
             if (kategori.lainnya.length) {
                 allLines.push(`### ❓ ${await t(interaction, 'core_setting_setting_section_lainnya')}`);
                 allLines.push(...kategori.lainnya);
                 allLines.push('');
             }
 
-            // Pagination: build pages line by line, never exceeding 4096 chars
             const pages = [];
             let currentPage = '';
             const MAX_LENGTH = 4096;
@@ -751,11 +741,9 @@ module.exports = {
                 pages.push(currentPage);
             }
 
-            // We'll use customId with page number for navigation
             let page = 0;
             const totalPages = pages.length;
 
-            // Helper to build embed for a page
             const buildPageEmbed = async (pageIdx) => {
                 return new EmbedBuilder()
                     .setTitle(await t(interaction, 'core_setting_setting_embed_title_view'))
@@ -766,7 +754,6 @@ module.exports = {
                     });
             };
 
-            // If only one page, just send it
             if (pages.length === 1) {
                 embed
                     .setTitle(await t(interaction, 'core_setting_setting_embed_title_view'))
@@ -776,7 +763,6 @@ module.exports = {
                 return interaction.editReply({ embeds: [embed] });
             }
 
-            // If multiple pages, send with navigation buttons
             const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
             const prevBtn = new ButtonBuilder()
                 .setCustomId('setting_view_prev')
@@ -797,7 +783,6 @@ module.exports = {
                 fetchReply: true,
             });
 
-            // Collector for navigation
             const filter = (i) =>
                 i.user.id === interaction.user.id && (i.customId === 'setting_view_prev' || i.customId === 'setting_view_next');
             const collector = msg.createMessageComponentCollector({ filter, time: 60_000 });
@@ -808,7 +793,7 @@ module.exports = {
                 } else if (i.customId === 'setting_view_next') {
                     page = Math.min(pages.length - 1, page + 1);
                 }
-                // Update buttons
+
                 prevBtn.setDisabled(page === 0);
                 nextBtn.setDisabled(page === pages.length - 1);
 
@@ -819,31 +804,24 @@ module.exports = {
             });
 
             collector.on('end', async () => {
-                // Disable buttons after timeout
                 prevBtn.setDisabled(true);
                 nextBtn.setDisabled(true);
                 try {
                     await msg.edit({
                         components: [row],
                     });
-                } catch (e) {
-                    // Message might be deleted
-                }
+                } catch (e) {}
             });
 
             return;
         }
 
-        // --- INI LOGIKA BARUNYA ---
         if (toggleableFeatures.includes(sub)) {
             const status = interaction.options.getString('status');
             const [settingKey, featureName] = featureMap[sub];
 
-            // Asumsi kamu punya model ServerSetting yang sudah di-fetch
-            // const serverSetting = await ServerSetting.getCache({ guildId: interaction.guild.id });
-
             serverSetting[settingKey] = status === 'enable';
-            await serverSetting.saveAndUpdateCache(); // Asumsi method ini ada di KythiaModel
+            await serverSetting.saveAndUpdateCache();
 
             const isEnabled = status === 'enable';
             const translationKey = isEnabled ? 'core_setting_setting_feature_enabled' : 'core_setting_setting_feature_disabled';
@@ -858,7 +836,7 @@ module.exports = {
                     const cat = interaction.options.getChannel('category');
                     if (!cat || cat.type !== ChannelType.GuildCategory) {
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_stats_category_invalid')
+                            content: await t(interaction, 'core_setting_setting_stats_category_invalid'),
                         });
                     }
                     serverSetting.serverStatsCategoryId = cat.id;
@@ -870,9 +848,8 @@ module.exports = {
             case 'automod': {
                 switch (sub) {
                     case 'whitelist': {
-                        // Di dalam case "whitelist":
                         const targetId = target.id;
-                        let whitelist = ensureArray(serverSetting.whitelist); // Jadi satu baris!
+                        let whitelist = ensureArray(serverSetting.whitelist);
 
                         if (action === 'add') {
                             if (whitelist.includes(targetId)) {
@@ -1166,8 +1143,6 @@ module.exports = {
                 }
             }
             case 'features': {
-                // 'sub' di sini adalah nama fiturnya (misal: "anti-invites")
-                // Cek apakah subcommand ini ada di featureMap kita
                 if (toggleableFeatures.includes(sub)) {
                     const status = interaction.options.getString('status');
                     const [settingKey, featureName] = featureMap[sub];
@@ -1232,7 +1207,7 @@ module.exports = {
                             return interaction.editReply({
                                 content: await t(interaction, 'core_setting_setting_stats_format_invalid', {
                                     placeholders: allowedPlaceholders.join(', '),
-                                })
+                                }),
                             });
                         }
                         if (!channel) {
@@ -1252,7 +1227,7 @@ module.exports = {
                         const already = serverSetting.serverStats?.find((s) => s.channelId === channel.id);
                         if (already) {
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_already')
+                                content: await t(interaction, 'core_setting_setting_stats_already'),
                             });
                         }
                         serverSetting.serverStats ??= [];
@@ -1270,7 +1245,7 @@ module.exports = {
                         let stat = serverSetting.serverStats?.find((s) => s.channelId === statsId);
                         if (!stat)
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_notfound')
+                                content: await t(interaction, 'core_setting_setting_stats_notfound'),
                             });
                         if (format) stat.format = format;
                         const hasAllowedPlaceholder = allowedPlaceholders.some((ph) => format.includes(ph));
@@ -1278,7 +1253,7 @@ module.exports = {
                             return interaction.editReply({
                                 content: await t(interaction, 'core_setting_setting_stats_format_invalid', {
                                     placeholders: allowedPlaceholders.join(', '),
-                                })
+                                }),
                             });
                         }
                         serverSetting.changed('serverStats', true);
@@ -1293,7 +1268,7 @@ module.exports = {
                         let stat = serverSetting.serverStats?.find((s) => s.channelId === statsId);
                         if (!stat)
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_notfound')
+                                content: await t(interaction, 'core_setting_setting_stats_notfound'),
                             });
                         stat.enabled = true;
                         serverSetting.changed('serverStats', true);
@@ -1308,7 +1283,7 @@ module.exports = {
                         let stat = serverSetting.serverStats?.find((s) => s.channelId === statsId);
                         if (!stat)
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_notfound')
+                                content: await t(interaction, 'core_setting_setting_stats_notfound'),
                             });
                         stat.enabled = false;
                         serverSetting.changed('serverStats', true);
@@ -1739,7 +1714,7 @@ module.exports = {
                     const valueStr = interaction.options.getString('value');
                     if (!Object.prototype.hasOwnProperty.call(serverSetting.dataValues, field)) {
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_raw_field_invalid', { field })
+                            content: await t(interaction, 'core_setting_setting_raw_field_invalid', { field }),
                         });
                     }
                     const original = serverSetting.dataValues[field];
@@ -1750,7 +1725,6 @@ module.exports = {
                             parsed = ['true', '1', 'yes', 'on', 'enable'].includes(valueStr.toLowerCase());
                         else if (Array.isArray(original)) parsed = JSON.parse(valueStr);
                         else if (original === null) {
-                            // try json then fallback string/number/bool
                             try {
                                 parsed = JSON.parse(valueStr);
                             } catch {
