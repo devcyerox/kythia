@@ -22,7 +22,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'adventure_no_character'))
+                .setDescription(await t(interaction, 'adventure.no.character'))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
@@ -37,7 +37,7 @@ module.exports = {
 
         if (inventory.length === 0) {
             return interaction.reply({
-                content: await t(interaction, 'inventory_no_usable_items'),
+                content: await t(interaction, 'inventory.no.usable.items'),
                 ephemeral: true,
             });
         }
@@ -52,13 +52,13 @@ module.exports = {
         const selectMenu = new ActionRowBuilder().addComponents(
             new StringSelectMenuBuilder()
                 .setCustomId('use_item_select')
-                .setPlaceholder(t(interaction, 'inventory_select_item_placeholder'))
+                .setPlaceholder(t(interaction, 'inventory.select.item.placeholder'))
                 .addOptions(options)
         );
 
         const embed = new EmbedBuilder()
-            .setTitle(t(interaction, 'inventory_use_title'))
-            .setDescription(t(interaction, 'inventory_use_desc'))
+            .setTitle(t(interaction, 'inventory.use.title'))
+            .setDescription(t(interaction, 'inventory.use.desc'))
             .setColor('#2ecc71');
 
         await interaction.reply({
@@ -80,7 +80,7 @@ module.exports = {
 
             if (!item) {
                 return response.update({
-                    content: t(interaction, 'inventory_item_not_found'),
+                    content: t(interaction, 'inventory.item.not.found'),
                     embeds: [],
                     components: [],
                 });
@@ -102,15 +102,15 @@ module.exports = {
                     });
                     await InventoryAdventure.clearCache({ userId: interaction.user.id, itemName });
 
-                    resultMessage = t(interaction, 'inventory_use_potion_success', { amount: actualHeal });
+                    resultMessage = t(interaction, 'inventory.use.potion.success', { amount: actualHeal });
                     break;
 
                 case '🍶 Revival':
-                    resultMessage = t(interaction, 'inventory_use_revival_success');
+                    resultMessage = t(interaction, 'inventory.use.revival.success');
                     break;
 
                 default:
-                    resultMessage = t(interaction, 'inventory_cannot_use_item');
+                    resultMessage = t(interaction, 'inventory.cannot.use.item');
             }
 
             await response.update({
@@ -121,7 +121,7 @@ module.exports = {
         } catch (error) {
             if (!interaction.replied) {
                 await interaction.editReply({
-                    content: t(interaction, 'inventory_selection_timeout'),
+                    content: t(interaction, 'inventory.selection.timeout'),
                     embeds: [],
                     components: [],
                 });

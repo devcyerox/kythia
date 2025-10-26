@@ -32,7 +32,7 @@ module.exports = {
 
         if (subcommand === 'enable') {
             if (aiChannelIds.includes(channelId)) {
-                const embed = new EmbedBuilder().setColor('Yellow').setDescription(await t(interaction, 'ai_ai_manage_already_enabled'));
+                const embed = new EmbedBuilder().setColor('Yellow').setDescription(await t(interaction, 'ai.ai.manage.already.enabled'));
                 return interaction.editReply({ embeds: [embed] });
             }
 
@@ -40,14 +40,14 @@ module.exports = {
             await kythiaManager.update(interaction.guild.id, {
                 aiChannelIds: aiChannelIds,
             });
-            const embed = new EmbedBuilder().setColor('Green').setDescription(await t(interaction, 'ai_ai_manage_enable_success'));
+            const embed = new EmbedBuilder().setColor('Green').setDescription(await t(interaction, 'ai.ai.manage.enable.success'));
             return interaction.editReply({ embeds: [embed] });
         }
 
         if (subcommand === 'disable') {
             const index = aiChannelIds.indexOf(channelId);
             if (index === -1) {
-                const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'ai_ai_manage_not_enabled'));
+                const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'ai.ai.manage.not.enabled'));
                 return interaction.editReply({ embeds: [embed] });
             }
 
@@ -55,12 +55,12 @@ module.exports = {
             await kythiaManager.update(interaction.guild.id, {
                 aiChannelIds: aiChannelIds,
             });
-            const embed = new EmbedBuilder().setColor('Orange').setDescription(await t(interaction, 'ai_ai_manage_disable_success'));
+            const embed = new EmbedBuilder().setColor('Orange').setDescription(await t(interaction, 'ai.ai.manage.disable.success'));
             return interaction.editReply({ embeds: [embed] });
         }
 
         // Fallback for unknown subcommand
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'ai_ai_manage_unknown_subcommand'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'ai.ai.manage.unknown.subcommand'));
         return interaction.editReply({ embeds: [embed] });
     },
 };

@@ -32,7 +32,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `## ${await t(interaction, 'leveling_xp-set_leveling_user_not_found_title')}\n${await t(interaction, 'leveling_xp-set_leveling_user_not_found')}`
+                    `## ${await t(interaction, 'leveling.xp-set.leveling.user.not.found.title')}\n${await t(interaction, 'leveling.xp-set.leveling.user.not.found.desc')}`
                 )
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -48,8 +48,8 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                `## ${await t(interaction, 'leveling_xp-set_leveling_xp_set_title')}\n` +
-                    (await t(interaction, 'leveling_xp-set_leveling_xp_set_desc', {
+                `## ${await t(interaction, 'leveling.xp-set.leveling.xp.set.title')}\n` +
+                    (await t(interaction, 'leveling.xp-set.leveling.xp.set.desc', {
                         username: targetUser.username,
                         newLevel: user.level,
                         newXp: user.xp,

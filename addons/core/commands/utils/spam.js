@@ -40,13 +40,13 @@ module.exports = {
         const delay = interaction.options.getInteger('delay') ?? 1000;
 
         if (pesan.length > 2000) {
-            return interaction.editReply({ content: await t(interaction, 'core_utils_spam_too_long', { max: 2000 }) });
+            return interaction.editReply({ content: await t(interaction, 'core.utils.spam.too.long', { max: 2000 }) });
         }
         if (jumlah > 20) {
-            return interaction.editReply({ content: await t(interaction, 'core_utils_spam_too_many', { max: 20 }) });
+            return interaction.editReply({ content: await t(interaction, 'core.utils.spam.too.many', { max: 20 }) });
         }
         if (delay < 250) {
-            return interaction.editReply({ content: await t(interaction, 'core_utils_spam_too_fast', { min: 250 }) });
+            return interaction.editReply({ content: await t(interaction, 'core.utils.spam.too.fast', { min: 250 }) });
         }
 
         // Kirim pesan ke channel tempat command dipanggil
@@ -58,10 +58,10 @@ module.exports = {
 
         // Cek permission
         if (!channel || !channel.permissionsFor?.(interaction.client.user)?.has('SendMessages')) {
-            return interaction.editReply({ content: await t(interaction, 'core_utils_spam_no_permission') });
+            return interaction.editReply({ content: await t(interaction, 'core.utils.spam.no.permission') });
         }
 
-        await interaction.editReply({ content: await t(interaction, 'core_utils_spam_start', { jumlah, delay }) });
+        await interaction.editReply({ content: await t(interaction, 'core.utils.spam.start', { jumlah, delay }) });
 
         for (let i = 0; i < jumlah; i++) {
             try {
@@ -75,7 +75,7 @@ module.exports = {
 
         // Beri info selesai
         try {
-            await interaction.followUp({ content: await t(interaction, 'core_utils_spam_done', { sent }), ephemeral: true });
+            await interaction.followUp({ content: await t(interaction, 'core.utils.spam.done', { sent }), ephemeral: true });
         } catch (e) {
             // ignore
         }

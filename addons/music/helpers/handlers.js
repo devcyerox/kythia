@@ -46,7 +46,7 @@ async function handlePlay(interaction) {
 
     // Check if Spotify feature is not configured by the bot owner
     if (query.toLowerCase().includes('spotify') && (!kythia.addons.music.spotify.clientID || !kythia.addons.music.spotify.clientSecret)) {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_music_configured'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.music.configured'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -58,7 +58,7 @@ async function handlePlay(interaction) {
         logger.error('Poru resolve error:', e);
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_failed', { error: e?.message || 'Unknown error' }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.failed', { error: e?.message || 'Unknown error' }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -67,7 +67,7 @@ async function handlePlay(interaction) {
     if (isSpotifyPlaylist) {
         // If Poru failed to resolve as a playlist, show error
         if (!res || res.loadType !== 'PLAYLIST_LOADED' || !Array.isArray(res.tracks) || res.tracks.length === 0) {
-            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_music_results'));
+            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.music.results'));
             return interaction.editReply({ embeds: [embed] });
         }
 
@@ -91,7 +91,7 @@ async function handlePlay(interaction) {
             .setThumbnail(res.playlistInfo?.image)
             .setFooter(await embedFooter(interaction))
             .setDescription(
-                await t(interaction, 'music_helpers_handlers_music_playlist_desc_spotify', {
+                await t(interaction, 'music.helpers.handlers.music.playlist.desc.spotify', {
                     count: res.tracks.length,
                     name: res.playlistInfo?.name || 'Spotify Playlist',
                 })
@@ -103,7 +103,7 @@ async function handlePlay(interaction) {
     if (res.loadType === 'search') {
         const filteredTracks = res.tracks.filter((track) => !track.info.isStream && track.info.length > 70000);
         if (!filteredTracks.length) {
-            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_music_results'));
+            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.music.results'));
             return interaction.editReply({ embeds: [embed] });
         }
         res.tracks = filteredTracks;
@@ -113,12 +113,12 @@ async function handlePlay(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                await t(interaction, 'music_helpers_handlers_music_failed', { error: res.exception?.message || 'Unknown error' })
+                await t(interaction, 'music.helpers.handlers.music.failed', { error: res.exception?.message || 'Unknown error' })
             );
         return interaction.editReply({ embeds: [embed] });
     }
     if (res.loadType === 'empty') {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_music_results'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.music.results'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -146,7 +146,7 @@ async function handlePlay(interaction) {
     const embed = new EmbedBuilder().setColor(kythia.bot.color);
     if (res.loadType === 'playlist' || res.loadType === 'PLAYLIST_LOADED') {
         embed.setDescription(
-            await t(interaction, 'music_helpers_handlers_music_playlist_desc', {
+            await t(interaction, 'music.helpers.handlers.music.playlist.desc.text', {
                 count: res.tracks.length,
                 name: res.playlistInfo?.name || 'Playlist',
             })
@@ -154,7 +154,7 @@ async function handlePlay(interaction) {
     } else {
         const track = res.tracks[0];
         embed.setDescription(
-            await t(interaction, 'music_helpers_handlers_music_added_to_queue', { title: track.info.title, url: track.info.uri })
+            await t(interaction, 'music.helpers.handlers.music.added.to.queue', { title: track.info.title, url: track.info.uri })
         );
     }
     return interaction.editReply({ embeds: [embed] });
@@ -170,11 +170,11 @@ async function handlePause(interaction, player) {
     if (player.isPaused) {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_paused'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.paused'));
         return interaction.reply({ embeds: [embed] });
     }
     player.pause(true);
-    const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(interaction, 'music_helpers_handlers_music_paused'));
+    const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(interaction, 'music.helpers.handlers.music.paused'));
     return interaction.reply({ embeds: [embed] });
 }
 
@@ -188,11 +188,11 @@ async function handleResume(interaction, player) {
     if (!player.isPaused) {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playing'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playing.desc'));
         return interaction.reply({ embeds: [embed] });
     }
     player.pause(false);
-    const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(interaction, 'music_helpers_handlers_music_resume'));
+    const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(interaction, 'music.helpers.handlers.music.resume'));
     return interaction.reply({ embeds: [embed] });
 }
 
@@ -200,13 +200,13 @@ async function handlePauseResume(interaction, player) {
     player.pause(!player.isPaused);
     // console.log(player.currentTrack)
     const state = player.isPaused
-        ? await t(interaction, 'music_helpers_handlers_manager_paused')
-        : await t(interaction, 'music_helpers_handlers_manager_resumed');
+        ? await t(interaction, 'music.helpers.handlers.manager.paused')
+        : await t(interaction, 'music.helpers.handlers.manager.resumed');
     await interaction.reply({
         embeds: [
             new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'music_helpers_handlers_manager_reply', { state })),
+                .setDescription(await t(interaction, 'music.helpers.handlers.manager.reply', { state })),
         ],
     });
 }
@@ -219,13 +219,13 @@ async function handlePauseResume(interaction, player) {
  */
 async function handleSkip(interaction, player) {
     if (!player.currentTrack) {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_music_skip'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.music.skip'));
         return interaction.reply({ embeds: [embed] });
     }
     player.skip();
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_skipped'));
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.skipped'));
     return interaction.reply({ embeds: [embed] });
 }
 
@@ -239,7 +239,7 @@ async function handleStop(interaction, player) {
     player.autoplay = false;
     player.manualStop = true;
     player.destroy();
-    const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_music_stopped'));
+    const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.music.stopped'));
     return interaction.reply({ embeds: [embed] });
 }
 
@@ -288,7 +288,7 @@ async function _createQueueEmbed(player, page = 1, interaction) {
         .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                await t(interaction, 'music_helpers_handlers_queue_nowplaying', {
+                await t(interaction, 'music.helpers.handlers.queue.nowplaying', {
                     nowTitle: nowPlaying.info.title,
                     nowUrl: nowPlaying.info.uri,
                     nowDuration: formatDuration(nowPlaying.info.length),
@@ -296,14 +296,14 @@ async function _createQueueEmbed(player, page = 1, interaction) {
             )
         )
         .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(queueList || (await t(interaction, 'music_helpers_handlers_music_more')))
+            new TextDisplayBuilder().setContent(queueList || (await t(interaction, 'music.helpers.handlers.music.more')))
         )
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addActionRowComponents(buttons)
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                await t(interaction, 'music_helpers_handlers_queue_footer', {
+                await t(interaction, 'music.helpers.handlers.queue.footer', {
                     page: page,
                     totalPages: totalPages,
                     totalTracks: player.queue.length,
@@ -328,7 +328,7 @@ async function handleQueue(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_empty'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.empty'));
         return interaction.reply({ embeds: [embed] });
     }
 
@@ -385,7 +385,7 @@ async function handleNowPlaying(interaction, player) {
     if (!player.currentTrack) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_nowplaying_error'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.nowplaying.error'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed] });
     }
@@ -397,7 +397,7 @@ async function handleNowPlaying(interaction, player) {
         .setURL(track.info.uri)
         .setThumbnail(track.info.thumbnail)
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_music_nowplaying', {
+            await t(interaction, 'music.helpers.handlers.music.nowplaying.text', {
                 duration: formatDuration(track.info.length),
                 author: track.info.author,
             })
@@ -440,17 +440,17 @@ async function handleLoop(interaction, player) {
         case 'track':
             player.trackRepeat = true;
             player.queueRepeat = false;
-            descriptionText = await t(interaction, 'music_helpers_handlers_music_track');
+            descriptionText = await t(interaction, 'music.helpers.handlers.music.track');
             break;
         case 'queue':
             player.trackRepeat = false;
             player.queueRepeat = true;
-            descriptionText = await t(interaction, 'music_helpers_handlers_music_queue');
+            descriptionText = await t(interaction, 'music.helpers.handlers.music.queue');
             break;
         default: // case 'off'
             player.trackRepeat = false;
             player.queueRepeat = false;
-            descriptionText = await t(interaction, 'music_helpers_handlers_music_off');
+            descriptionText = await t(interaction, 'music.helpers.handlers.music.off');
             break;
     }
 
@@ -490,12 +490,12 @@ async function handleAutoplay(interaction, player) {
     }
 
     const statusMessage = player.autoplay
-        ? await t(interaction, 'music_helpers_handlers_music_autoplay_enabled_message')
-        : await t(interaction, 'music_helpers_handlers_music_autoplay_disabled_message');
+        ? await t(interaction, 'music.helpers.handlers.music.autoplay.enabled.message')
+        : await t(interaction, 'music.helpers.handlers.music.autoplay.disabled.message');
 
     const embed = new EmbedBuilder()
         .setColor(player.autoplay ? kythia.bot.color : 'Red')
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_autoplay_status_desc', { status: statusMessage }));
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.autoplay.status.desc', { status: statusMessage }));
 
     return interaction.reply({ embeds: [embed] });
 }
@@ -511,7 +511,7 @@ async function handleVolume(interaction, player) {
     player.setVolume(level);
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_set', { level }))
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.set', { level }))
         .setFooter(await embedFooter(interaction));
     return interaction.reply({ embeds: [embed] });
 }
@@ -527,7 +527,7 @@ async function handleShuffle(interaction, player) {
     if (player.queue.length < 2) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_enough'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.enough'))
             .setFooter(await embedFooter(interaction));
         return interaction.editReply({ embeds: [embed] });
     }
@@ -536,7 +536,7 @@ async function handleShuffle(interaction, player) {
 
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_shuffled'))
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.shuffled'))
         .setFooter(await embedFooter(interaction));
     return interaction.editReply({ embeds: [embed] });
 }
@@ -556,7 +556,7 @@ async function handleBack(interaction, player, guildStates) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             // Jangan lupa buat terjemahan baru di file bahasamu, misal: music_music_no_previous_track: "Gak ada lagu di history."
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_no_previous_track'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.no.previous.track'))
             .setFooter(await embedFooter(interaction));
         return interaction.editReply({ embeds: [embed] });
     }
@@ -578,7 +578,7 @@ async function handleBack(interaction, player, guildStates) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         // Buat terjemahan baru, misal: music_music_playing_previous: "⏮️ Memutar lagu sebelumnya: **{title}**"
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_playing_previous', { title: previousTrack.info.title }))
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.playing.previous', { title: previousTrack.info.title }))
         .setFooter(await embedFooter(interaction));
     return interaction.editReply({ embeds: [embed] });
 }
@@ -637,7 +637,7 @@ async function handleFilter(interaction, player) {
     // ContainerBuilder untuk UI filter
     const container = new ContainerBuilder()
         .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
-        .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'music_helpers_handlers_filter_title')))
+        .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'music.helpers.handlers.filter.title')))
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addActionRowComponents(rows[0])
         .addActionRowComponents(rows[1])
@@ -645,7 +645,7 @@ async function handleFilter(interaction, player) {
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
             )
         );
 
@@ -676,7 +676,7 @@ async function handleFilter(interaction, player) {
     collector.on('collect', async (btnInt) => {
         // Hanya user yang sama yang bisa tekan
         if (btnInt.user.id !== interaction.user.id) {
-            return btnInt.reply({ content: await t(btnInt, 'music_helpers_musicManager_music_permission_denied'), ephemeral: true });
+            return btnInt.reply({ content: await t(btnInt, 'music.helpers.musicManager.music.permission.denied'), ephemeral: true });
         }
 
         // Pastikan player.filters masih valid
@@ -692,7 +692,7 @@ async function handleFilter(interaction, player) {
                 embeds: [
                     new EmbedBuilder()
                         .setColor(kythia.bot.color)
-                        .setDescription(await t(btnInt, 'music_helpers_handlers_music_filter_reset'))
+                        .setDescription(await t(btnInt, 'music.helpers.handlers.music.filter.reset'))
                         .setFooter(await embedFooter(btnInt)),
                 ],
             });
@@ -782,7 +782,7 @@ async function handleFilter(interaction, player) {
                 embeds: [
                     new EmbedBuilder()
                         .setColor(kythia.bot.color)
-                        .setDescription(await t(btnInt, 'music_helpers_handlers_music_filter_applied', { preset: filterId }))
+                        .setDescription(await t(btnInt, 'music.helpers.handlers.music.filter.applied', { preset: filterId }))
                         .setFooter(await embedFooter(btnInt)),
                 ],
             });
@@ -791,7 +791,7 @@ async function handleFilter(interaction, player) {
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Orange')
-                        .setDescription(await t(btnInt, 'music_helpers_handlers_music_filter_not_available', { preset: filterId }))
+                        .setDescription(await t(btnInt, 'music.helpers.handlers.music.filter.not.available', { preset: filterId }))
                         .setFooter(await embedFooter(btnInt)),
                 ],
             });
@@ -816,7 +816,7 @@ async function handleRemove(interaction, player) {
     if (!Number.isInteger(position) || position < 1 || position > player.queue.length) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_position', { size: player.queue.length }))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.position', { size: player.queue.length }))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed] });
     }
@@ -824,7 +824,7 @@ async function handleRemove(interaction, player) {
     if (!removed || removed.length === 0) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_failed'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.failed'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed] });
     }
@@ -832,7 +832,7 @@ async function handleRemove(interaction, player) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_music_removed', { title: track.info.title, url: track.info.uri, position })
+            await t(interaction, 'music.helpers.handlers.music.removed', { title: track.info.title, url: track.info.uri, position })
         )
         .setFooter(await embedFooter(interaction));
     return interaction.reply({ embeds: [embed] });
@@ -852,14 +852,14 @@ async function handleMove(interaction, player) {
     if (!Number.isInteger(from) || !Number.isInteger(to) || from < 1 || from > queueSize || to < 1 || to > queueSize) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_positions', { size: queueSize }))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.positions', { size: queueSize }))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed] });
     }
     if (from === to) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_position'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.position'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed] });
     }
@@ -869,7 +869,7 @@ async function handleMove(interaction, player) {
     if (!track) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_found'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.found'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed] });
     }
@@ -878,7 +878,7 @@ async function handleMove(interaction, player) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_music_moved', { title: track.info.title, url: track.info.uri, from, to })
+            await t(interaction, 'music.helpers.handlers.music.moved', { title: track.info.title, url: track.info.uri, from, to })
         )
         .setFooter(await embedFooter(interaction));
     return interaction.reply({ embeds: [embed] });
@@ -888,7 +888,7 @@ async function handleClear(interaction, player) {
     player.queue.clear();
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_clear'))
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.clear'))
         .setFooter(await embedFooter(interaction));
     return interaction.reply({ embeds: [embed] });
 }
@@ -898,7 +898,7 @@ async function handleSeek(interaction, player) {
     player.seekTo(time * 1000);
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_seeked', { time: time }))
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.seeked', { time: time }))
         .setFooter(await embedFooter(interaction));
     return interaction.reply({ embeds: [embed] });
 }
@@ -910,7 +910,7 @@ async function handleLyrics(interaction, player) {
     if (!track) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_lyrics_music_not_found'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.lyrics.music.not.found'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1017,7 +1017,7 @@ async function handleLyrics(interaction, player) {
     if (!lyrics) {
         const embed = new EmbedBuilder()
             .setColor('Orange')
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_lyrics_lyrics_not_found'))
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.lyrics.lyrics.not.found'))
             .setFooter(await embedFooter(interaction));
         return interaction.editReply({ embeds: [embed] });
     }
@@ -1089,7 +1089,7 @@ async function _handlePlaylistSave(interaction, player) {
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
             .setDescription(
-                await t(interaction, 'music_helpers_handlers_music_playlist_save_limit', { count: kythia.addons.music.playlistLimit })
+                await t(interaction, 'music.helpers.handlers.music.playlist.save.limit.desc', { count: kythia.addons.music.playlistLimit })
             );
         return interaction.editReply({ embeds: [embed] });
     }
@@ -1098,7 +1098,7 @@ async function _handlePlaylistSave(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_save_empty_queue'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.save.empty.queue'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1108,7 +1108,7 @@ async function _handlePlaylistSave(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_save_duplicate', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.save.duplicate', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1143,7 +1143,7 @@ async function _handlePlaylistSave(interaction, player) {
         .setColor(kythia.bot.color)
         .setFooter(await embedFooter(interaction))
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_music_playlist_save_success', { name: playlistName, count: tracksToSave.length })
+            await t(interaction, 'music.helpers.handlers.music.playlist.save.success', { name: playlistName, count: tracksToSave.length })
         );
     await interaction.editReply({ embeds: [embed] });
 }
@@ -1164,7 +1164,7 @@ async function _handlePlaylistLoad(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_load_not_found', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.load.not.found', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1172,7 +1172,7 @@ async function _handlePlaylistLoad(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_load_empty', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.load.empty', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1206,7 +1206,7 @@ async function _handlePlaylistLoad(interaction, player) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setFooter(await embedFooter(interaction))
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_load_success', { count: added, name: playlistName }));
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.load.success', { count: added, name: playlistName }));
     await interaction.editReply({ embeds: [embed] });
 }
 
@@ -1225,7 +1225,7 @@ async function _handlePlaylistList(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_list_empty'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.list.empty'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1260,17 +1260,17 @@ async function _handlePlaylistList(interaction) {
         const container = new ContainerBuilder()
             .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${await t(interaction, 'music_helpers_handlers_music_playlist_list_title')}`)
+                new TextDisplayBuilder().setContent(`${await t(interaction, 'music.helpers.handlers.music.playlist.list.title')}`)
             )
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(list || (await t(interaction, 'music_helpers_handlers_music_playlist_list_empty')))
+                new TextDisplayBuilder().setContent(list || (await t(interaction, 'music.helpers.handlers.music.playlist.list.empty')))
             )
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
             .addActionRowComponents(buttons)
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    await t(interaction, 'music_helpers_handlers_queue_footer', {
+                    await t(interaction, 'music.helpers.handlers.queue.footer', {
                         page: page,
                         totalPages: totalPages,
                         totalTracks: playlists.length,
@@ -1335,7 +1335,7 @@ async function _handlePlaylistDelete(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_delete_not_found', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.delete.not.found', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1345,7 +1345,7 @@ async function _handlePlaylistDelete(interaction) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setFooter(await embedFooter(interaction))
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_delete_success', { name: playlistName }));
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.delete.success', { name: playlistName }));
     await interaction.editReply({ embeds: [embed] });
 }
 
@@ -1358,7 +1358,7 @@ async function _handlePlaylistAppend(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_append_no_player')); // "Nggak ada musik yang lagi jalan. Putar lagu dulu baru bisa nambahin dari playlist."
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.append.no.player')); // "Nggak ada musik yang lagi jalan. Putar lagu dulu baru bisa nambahin dari playlist."
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1373,7 +1373,7 @@ async function _handlePlaylistAppend(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_load_not_found', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.load.not.found', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1381,7 +1381,7 @@ async function _handlePlaylistAppend(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_load_empty', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.load.empty', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1399,7 +1399,7 @@ async function _handlePlaylistAppend(interaction, player) {
         .setColor(kythia.bot.color)
         .setFooter(await embedFooter(interaction))
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_music_playlist_append_success_v2', { count: addedCount, name: playlistName })
+            await t(interaction, 'music.helpers.handlers.music.playlist.append.success.v2', { count: addedCount, name: playlistName })
         ); // Buat terjemahan baru: "✅ Berhasil menambahkan **{count}** lagu dari playlist **{name}** ke antrian."
     await interaction.editReply({ embeds: [embed] });
 }
@@ -1421,21 +1421,21 @@ async function _handlePlaylistRemoveTrack(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_remove_track_not_found', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.remove.track.not.found', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
     if (!playlist.tracks || playlist.tracks.length === 0) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_remove_track_empty', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.remove.track.empty', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
     if (position < 1 || position > playlist.tracks.length) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_remove_track_invalid_position'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.remove.track.invalid.position'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1446,7 +1446,7 @@ async function _handlePlaylistRemoveTrack(interaction) {
         .setColor(kythia.bot.color)
         .setFooter(await embedFooter(interaction))
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_music_playlist_remove_track_success', { position, name: playlistName })
+            await t(interaction, 'music.helpers.handlers.music.playlist.remove.track.success', { position, name: playlistName })
         );
     await interaction.editReply({ embeds: [embed] });
 }
@@ -1463,7 +1463,7 @@ async function _handlePlaylistRename(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_rename_not_found', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.rename.not.found', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1473,7 +1473,7 @@ async function _handlePlaylistRename(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_rename_duplicate', { name: newName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.rename.duplicate', { name: newName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1483,7 +1483,7 @@ async function _handlePlaylistRename(interaction) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setFooter(await embedFooter(interaction))
-        .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_rename_success', { oldName: playlistName, newName }));
+        .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.rename.success', { oldName: playlistName, newName }));
     await interaction.editReply({ embeds: [embed] });
 }
 
@@ -1503,7 +1503,7 @@ async function _handlePlaylistTrackList(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_track_list_not_found', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.track.list.not.found', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1511,7 +1511,7 @@ async function _handlePlaylistTrackList(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setFooter(await embedFooter(interaction))
-            .setDescription(await t(interaction, 'music_helpers_handlers_music_playlist_track_list_empty', { name: playlistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playlist.track.list.empty', { name: playlistName }));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1547,18 +1547,18 @@ async function _handlePlaylistTrackList(interaction) {
             .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    `${(await t(interaction, 'music_helpers_handlers_music_playlist_track_list_title', { name: playlistName })) || playlistName}`
+                    `${(await t(interaction, 'music.helpers.handlers.music.playlist.track.list.title', { name: playlistName })) || playlistName}`
                 )
             )
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(trackList || (await t(interaction, 'music_helpers_handlers_music_more')))
+                new TextDisplayBuilder().setContent(trackList || (await t(interaction, 'music.helpers.handlers.music.more')))
             )
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
             .addActionRowComponents(buttons)
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    await t(interaction, 'music_helpers_handlers_queue_footer', {
+                    await t(interaction, 'music.helpers.handlers.queue.footer', {
                         page: page,
                         totalPages: totalPages,
                         totalTracks: playlist.tracks.length,
@@ -1620,14 +1620,14 @@ async function _handlePlaylistTrackAdd(interaction) {
     const playlist = await Playlist.getCache({ userId: user.id, name: playlistName });
     if (!playlist) {
         return interaction.editReply({
-            content: await t(interaction, 'music_helpers_handlers_music_playlist_load_not_found', { name: playlistName }),
+            content: await t(interaction, 'music.helpers.handlers.music.playlist.load.not.found', { name: playlistName }),
         });
     }
 
     // 2. Cari lagunya pake Poru
     const res = await client.poru.resolve({ query, requester: user });
     if (!res || !res.tracks || res.tracks.length === 0) {
-        return interaction.editReply({ content: await t(interaction, 'music_helpers_handlers_music_play_no_results') });
+        return interaction.editReply({ content: await t(interaction, 'music.helpers.handlers.music.play.no.results') });
     }
 
     const trackToAdd = res.tracks[0];
@@ -1642,7 +1642,7 @@ async function _handlePlaylistTrackAdd(interaction) {
 
     if (existingTrack) {
         return interaction.editReply({
-            content: await t(interaction, 'music_helpers_handlers_music_playlist_track_add_duplicate', {
+            content: await t(interaction, 'music.helpers.handlers.music.playlist.track.add.duplicate', {
                 track: trackToAdd.info.title,
                 name: playlistName,
             }),
@@ -1654,14 +1654,14 @@ async function _handlePlaylistTrackAdd(interaction) {
         await _saveTracksToPlaylist(playlist, [trackToAdd]);
 
         await interaction.editReply({
-            content: await t(interaction, 'music_helpers_handlers_music_playlist_track_add_success', {
+            content: await t(interaction, 'music.helpers.handlers.music.playlist.track.add.success', {
                 track: trackToAdd.info.title,
                 name: playlistName,
             }),
         });
     } catch (e) {
         logger.error('Error adding track to playlist:', e);
-        await interaction.editReply({ content: await t(interaction, 'music_helpers_handlers_music_playlist_track_add_error') });
+        await interaction.editReply({ content: await t(interaction, 'music.helpers.handlers.music.playlist.track.add.error') });
     }
 }
 
@@ -1675,9 +1675,9 @@ async function _handlePlaylistShare(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'music_helpers_handlers_playlist_share_not_found_title')}\n${await t(
+                `${await t(interaction, 'music.helpers.handlers.playlist.share.not.found.title')}\n${await t(
                     interaction,
-                    'music_helpers_handlers_playlist_share_not_found_desc',
+                    'music.helpers.handlers.playlist.share.not.found.desc',
                     { name: playlistName }
                 )}`
             );
@@ -1697,10 +1697,8 @@ async function _handlePlaylistShare(interaction) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setDescription(
-            `${await t(interaction, 'music_helpers_handlers_playlist_share_title', { name: playlist.name })}\n${await t(
-                interaction,
-                'music_helpers_handlers_playlist_share_desc'
-            )}\n\n**${await t(interaction, 'music_helpers_handlers_playlist_share_code_label')}**: \`${shareCode}\``
+            `${await t(interaction, 'music.helpers.handlers.playlist.share.title', { name: playlist.name })}\n${await t(
+                interaction, 'music.helpers.handlers.playlist.share.desc')}\n\n**${await t(interaction, 'music.helpers.handlers.playlist.share.code.label')}**: \`${shareCode}\``
         );
 
     await interaction.editReply({ embeds: [embed] });
@@ -1730,10 +1728,8 @@ async function _handlePlaylistImport(interaction) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `${await t(interaction, 'music_helpers_handlers_playlist_import_invalid_title')}\n${await t(
-                        interaction,
-                        'music_helpers_handlers_playlist_import_invalid_desc'
-                    )}`
+                    `${await t(interaction, 'music.helpers.handlers.playlist.import.invalid.title')}\n${await t(
+                        interaction, 'music.helpers.handlers.playlist.import.invalid.desc')}`
                 );
             return interaction.editReply({ embeds: [embed] });
         }
@@ -1754,9 +1750,9 @@ async function _handlePlaylistImport(interaction) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `${await t(interaction, 'music_helpers_handlers_music_playlist_save_limit_title')}\n${await t(
+                    `${await t(interaction, 'music.helpers.handlers.music.playlist.save.limit.title')}\n${await t(
                         interaction,
-                        'music_helpers_handlers_music_playlist_save_limit',
+                        'music.helpers.handlers.music.playlist.save.limit.desc',
                         { count: kythia.addons.music.playlistLimit }
                     )}`
                 );
@@ -1784,9 +1780,9 @@ async function _handlePlaylistImport(interaction) {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                `${await t(interaction, 'music_helpers_handlers_playlist_import_success_title')}\n${await t(
+                `${await t(interaction, 'music.helpers.handlers.playlist.import.success.title')}\n${await t(
                     interaction,
-                    'music_helpers_handlers_playlist_import_success_desc',
+                    'music.helpers.handlers.playlist.import.success.desc',
                     { original: originalPlaylist.name, name: newPlaylist.name, count: tracksToCopy.length }
                 )}`
             );
@@ -1797,7 +1793,7 @@ async function _handlePlaylistImport(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'music_helpers_handlers_playlist_import_error_title')}\n${await t(interaction, 'music_helpers_handlers_playlist_import_error_desc')}`
+                `${await t(interaction, 'music.helpers.handlers.playlist.import.error.title')}\n${await t(interaction, 'music.helpers.handlers.playlist.import.error.desc')}`
             );
         return interaction.editReply({ embeds: [embed] });
     }
@@ -1816,7 +1812,7 @@ async function _importFromSpotify(interaction, url) {
     if (!res || res.loadType !== 'PLAYLIST_LOADED' || !res.tracks.length) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_playlist_import_failed'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.playlist.import.failed'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -1830,20 +1826,20 @@ async function _importFromSpotify(interaction, url) {
         // --- BAGIAN BARU: TAMPILKAN TOMBOL ---
         const embed = new EmbedBuilder()
             .setColor('Yellow')
-            .setDescription(await t(interaction, 'music_helpers_handlers_playlist_import_duplicate_prompt', { name: spotifyPlaylistName }));
+            .setDescription(await t(interaction, 'music.helpers.handlers.playlist.import.duplicate.prompt', { name: spotifyPlaylistName }));
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('import_overwrite')
-                .setLabel(await t(interaction, 'music_helpers_handlers_playlist_import_btn_overwrite'))
+                .setLabel(await t(interaction, 'music.helpers.handlers.playlist.import.btn.overwrite'))
                 .setStyle(ButtonStyle.Danger),
             new ButtonBuilder()
                 .setCustomId('import_copy')
-                .setLabel(await t(interaction, 'music_helpers_handlers_playlist_import_btn_copy'))
+                .setLabel(await t(interaction, 'music.helpers.handlers.playlist.import.btn.copy'))
                 .setStyle(ButtonStyle.Primary),
             new ButtonBuilder()
                 .setCustomId('import_cancel')
-                .setLabel(await t(interaction, 'music_helpers_handlers_playlist_import_btn_cancel'))
+                .setLabel(await t(interaction, 'music.helpers.handlers.playlist.import.btn.cancel'))
                 .setStyle(ButtonStyle.Secondary)
         );
 
@@ -1864,7 +1860,7 @@ async function _importFromSpotify(interaction, url) {
                 await _saveTracksToPlaylist(existingPlaylist, tracksFromSpotify);
 
                 const successEmbed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(
-                    await t(interaction, 'music_helpers_handlers_playlist_import_overwrite_success', {
+                    await t(interaction, 'music.helpers.handlers.playlist.import.overwrite.success', {
                         count: tracksFromSpotify.length,
                         name: spotifyPlaylistName,
                         source: 'spotify',
@@ -1891,7 +1887,7 @@ async function _importFromSpotify(interaction, url) {
                 await _saveTracksToPlaylist(newPlaylist, tracksFromSpotify);
 
                 const successEmbed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(
-                    await t(interaction, 'music_helpers_handlers_playlist_import_copy_success', {
+                    await t(interaction, 'music.helpers.handlers.playlist.import.copy.success', {
                         count: tracksFromSpotify.length,
                         newName: newName,
                         source: 'spotify',
@@ -1901,7 +1897,7 @@ async function _importFromSpotify(interaction, url) {
             } else if (i.customId === 'import_cancel') {
                 const cancelEmbed = new EmbedBuilder()
                     .setColor('Grey')
-                    .setDescription(await t(interaction, 'music_helpers_handlers_playlist_import_cancelled'));
+                    .setDescription(await t(interaction, 'music.helpers.handlers.playlist.import.cancelled'));
                 await i.editReply({ embeds: [cancelEmbed], components: [] });
             }
             collector.stop();
@@ -1911,7 +1907,7 @@ async function _importFromSpotify(interaction, url) {
             if (reason === 'time') {
                 const timeoutEmbed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(await t(interaction, 'music_helpers_handlers_playlist_import_timeout'));
+                    .setDescription(await t(interaction, 'music.helpers.handlers.playlist.import.timeout'));
                 interaction.editReply({ embeds: [timeoutEmbed], components: [] });
             }
         });
@@ -1924,7 +1920,7 @@ async function _importFromSpotify(interaction, url) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    await t(interaction, 'music_helpers_handlers_music_playlist_save_limit', { count: kythia.addons.music.playlistLimit })
+                    await t(interaction, 'music.helpers.handlers.music.playlist.save.limit.desc', { count: kythia.addons.music.playlistLimit })
                 );
             return interaction.editReply({ embeds: [embed] });
         }
@@ -1933,7 +1929,7 @@ async function _importFromSpotify(interaction, url) {
         await _saveTracksToPlaylist(newPlaylist, tracksFromSpotify);
 
         const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(
-            await t(interaction, 'music_helpers_handlers_playlist_import_success', {
+            await t(interaction, 'music.helpers.handlers.playlist.import.success.text', {
                 count: tracksFromSpotify.length,
                 name: spotifyPlaylistName,
                 source: 'spotify',
@@ -1984,7 +1980,7 @@ async function _handleFavoritePlay(interaction, player) {
     });
 
     if (!favorites || favorites.length === 0) {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_favorite_play_empty'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.favorite.play.empty'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -2015,7 +2011,7 @@ async function _handleFavoritePlay(interaction, player) {
 
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_favorite_play_success', { count: added }));
+        .setDescription(await t(interaction, 'music.helpers.handlers.favorite.play.success', { count: added }));
     await interaction.editReply({ embeds: [embed] });
 }
 
@@ -2031,7 +2027,7 @@ async function _handleFavoriteList(interaction) {
     });
 
     if (!favorites || favorites.length === 0) {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_favorite_list_empty'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.favorite.list.empty'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -2063,17 +2059,17 @@ async function _handleFavoriteList(interaction) {
         const container = new ContainerBuilder()
             .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${await t(interaction, 'music_helpers_handlers_favorite_list_title')}`)
+                new TextDisplayBuilder().setContent(`${await t(interaction, 'music.helpers.handlers.favorite.list.title')}`)
             )
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(list || (await t(interaction, 'music_helpers_handlers_favorite_list_empty')))
+                new TextDisplayBuilder().setContent(list || (await t(interaction, 'music.helpers.handlers.favorite.list.empty')))
             )
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
             .addActionRowComponents(buttons)
             .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    await t(interaction, 'music_helpers_handlers_queue_footer', {
+                    await t(interaction, 'music.helpers.handlers.queue.footer', {
                         page: page,
                         totalPages: totalPages,
                         totalTracks: favorites.length,
@@ -2140,7 +2136,7 @@ async function _handleFavoriteAdd(interaction, player) {
         if (!res || !res.tracks || res.tracks.length === 0) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'music_helpers_handlers_favorite_add_no_track'));
+                .setDescription(await t(interaction, 'music.helpers.handlers.favorite.add.no.track'));
             return interaction.editReply({ embeds: [embed] });
         }
         track = res.tracks[0];
@@ -2152,7 +2148,7 @@ async function _handleFavoriteAdd(interaction, player) {
     if (!track) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_favorite_add_no_track'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.favorite.add.no.track'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -2168,7 +2164,7 @@ async function _handleFavoriteAdd(interaction, player) {
         const embed = new EmbedBuilder()
             .setColor('Yellow')
             .setDescription(
-                await t(interaction, 'music_helpers_handlers_favorite_add_duplicate', { title: track.info.title || track.info.name })
+                await t(interaction, 'music.helpers.handlers.favorite.add.duplicate', { title: track.info.title || track.info.name })
             );
         return interaction.editReply({ embeds: [embed] });
     }
@@ -2186,7 +2182,7 @@ async function _handleFavoriteAdd(interaction, player) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setDescription(
-            await t(interaction, 'music_helpers_handlers_favorite_add_success', { title: track.info.title || track.info.name })
+            await t(interaction, 'music.helpers.handlers.favorite.add.success', { title: track.info.title || track.info.name })
         );
     await interaction.editReply({ embeds: [embed] });
 }
@@ -2205,14 +2201,14 @@ async function _handleFavoriteRemove(interaction) {
     });
 
     if (!favorite) {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_handlers_favorite_list_empty'));
+        const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.handlers.favorite.list.empty'));
         return interaction.editReply({ embeds: [embed] });
     }
 
     if (!favorite) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'music_helpers_handlers_favorite_remove_invalid_name'));
+            .setDescription(await t(interaction, 'music.helpers.handlers.favorite.remove.invalid.name'));
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -2220,7 +2216,7 @@ async function _handleFavoriteRemove(interaction) {
 
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
-        .setDescription(await t(interaction, 'music_helpers_handlers_favorite_remove_success', { title: favorite.title }));
+        .setDescription(await t(interaction, 'music.helpers.handlers.favorite.remove.success', { title: favorite.title }));
     await interaction.editReply({ embeds: [embed] });
 }
 

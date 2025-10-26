@@ -21,21 +21,21 @@ module.exports = {
         const userPet = await UserPet.getCache({ userId: userId, include: [{ model: Pet, as: 'pet' }] });
         if (!userPet) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_info_no_pet_title')}\n${await t(interaction, 'pet_info_no_pet')}`)
+                .setDescription(`## ${await t(interaction, 'pet.info.no.pet.title')}\n${await t(interaction, 'pet.info.no.pet.desc')}`)
                 .setColor(kythia.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
         if (userPet.isDead) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_info_dead_title')}\n${await t(interaction, 'pet_info_dead')}`)
+                .setDescription(`## ${await t(interaction, 'pet.info.dead.title')}\n${await t(interaction, 'pet.info.dead.desc')}`)
                 .setColor(kythia.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_info_title')}\n${await t(interaction, 'pet_info_info', {
+                `## ${await t(interaction, 'pet.info.title')}\n${await t(interaction, 'pet.info.desc', {
                     icon: userPet.pet.icon,
                     name: userPet.pet.name,
                     rarity: userPet.pet.rarity,

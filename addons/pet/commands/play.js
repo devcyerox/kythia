@@ -22,14 +22,14 @@ module.exports = {
         const userPet = await UserPet.getCache({ userId: userId, include: [{ model: Pet, as: 'pet' }] });
         if (!userPet) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_play_no_pet_title')}\n${await t(interaction, 'pet_play_no_pet')}`)
+                .setDescription(`## ${await t(interaction, 'pet.play.no.pet.title')}\n${await t(interaction, 'pet.play.no.pet.desc')}`)
                 .setColor(kythia.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
         if (userPet.isDead) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_play_dead_title')}\n${await t(interaction, 'pet_play_dead')}`)
+                .setDescription(`## ${await t(interaction, 'pet.play.dead.title')}\n${await t(interaction, 'pet.play.dead.desc')}`)
                 .setColor(kythia.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -41,7 +41,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_play_success_title')}\n${await t(interaction, 'pet_play_success', {
+                `## ${await t(interaction, 'pet.play.success.title')}\n${await t(interaction, 'pet.play.success.desc', {
                     icon: userPet.pet.icon,
                     name: userPet.pet.name,
                     rarity: userPet.pet.rarity,

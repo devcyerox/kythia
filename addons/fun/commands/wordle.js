@@ -85,18 +85,18 @@ async function buildGameEmbed(interaction, game) {
 
     if (game.isOver) {
         if (game.win) {
-            description += `\n\n${await t(interaction, 'fun_wordle_win', { answer: game.answer.toUpperCase() })}`;
+            description += `\n\n${await t(interaction, 'fun.wordle.win', { answer: game.answer.toUpperCase() })}`;
         } else {
-            description += `\n\n${await t(interaction, 'fun_wordle_lose', { answer: game.answer.toUpperCase() })}`;
+            description += `\n\n${await t(interaction, 'fun.wordle.lose', { answer: game.answer.toUpperCase() })}`;
         }
     } else {
-        description += `\n\n${await t(interaction, 'fun_wordle_remaining', { remaining: 6 - game.guesses.length })}`;
+        description += `\n\n${await t(interaction, 'fun.wordle.remaining', { remaining: 6 - game.guesses.length })}`;
     }
 
     return new EmbedBuilder()
-        .setDescription((await t(interaction, 'fun_wordle_title')) + '\n' + description)
+        .setDescription((await t(interaction, 'fun.wordle.title')) + '\n' + description)
         .setColor(game.isOver ? (game.win ? '#2ecc71' : '#e74c3c') : kythia.bot.color)
-        .setFooter({ text: game.isOver ? await t(interaction, 'fun_wordle_footer_end') : await t(interaction, 'fun_wordle_footer_play') });
+        .setFooter({ text: game.isOver ? await t(interaction, 'fun.wordle.footer.end') : await t(interaction, 'fun.wordle.footer.play') });
 }
 
 module.exports = {
@@ -107,7 +107,7 @@ module.exports = {
 
         // Cek jika sudah ada game berjalan
         if (games[userId] && !games[userId].isOver) {
-            const embed = new EmbedBuilder().setColor('#e67e22').setDescription(await t(interaction, 'fun_wordle_already_playing'));
+            const embed = new EmbedBuilder().setColor('#e67e22').setDescription(await t(interaction, 'fun.wordle.already.playing'));
             return interaction.reply({ embeds: [embed], ephemeral: true });
         }
 
@@ -124,7 +124,7 @@ module.exports = {
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('wordle_guess_button')
-                .setLabel(await t(interaction, 'fun_wordle_button_guess'))
+                .setLabel(await t(interaction, 'fun.wordle.button.guess'))
                 .setStyle(ButtonStyle.Primary)
         );
 
@@ -134,15 +134,15 @@ module.exports = {
 
         collector.on('collect', async (i) => {
             if (i.user.id !== userId) {
-                const embed = new EmbedBuilder().setColor('#e67e22').setDescription(await t(i, 'fun_wordle_not_your_game'));
+                const embed = new EmbedBuilder().setColor('#e67e22').setDescription(await t(i, 'fun.wordle.not.your.game'));
                 return i.reply({ embeds: [embed], ephemeral: true });
             }
 
-            const modal = new ModalBuilder().setCustomId(`wordle_modal_${userId}`).setTitle(await t(i, 'fun_wordle_modal_title'));
+            const modal = new ModalBuilder().setCustomId(`wordle_modal_${userId}`).setTitle(await t(i, 'fun.wordle.modal.title'));
 
             const wordInput = new TextInputBuilder()
                 .setCustomId('wordle_input')
-                .setLabel(await t(i, 'fun_wordle_modal_label'))
+                .setLabel(await t(i, 'fun.wordle.modal.label'))
                 .setStyle(TextInputStyle.Short)
                 .setMinLength(5)
                 .setMaxLength(5)
@@ -159,13 +159,13 @@ module.exports = {
                 if (!isValidWord(guess)) {
                     const embed = new EmbedBuilder()
                         .setColor('#e74c3c')
-                        .setDescription(await t(modalSubmit, 'fun_wordle_invalid_word', { word: guess }));
+                        .setDescription(await t(modalSubmit, 'fun.wordle.invalid.word', { word: guess }));
                     return modalSubmit.reply({ embeds: [embed], ephemeral: true });
                 }
                 if (game.guesses.includes(guess)) {
                     const embed = new EmbedBuilder()
                         .setColor('#e67e22')
-                        .setDescription(await t(modalSubmit, 'fun_wordle_already_guessed', { word: guess }));
+                        .setDescription(await t(modalSubmit, 'fun.wordle.already.guessed', { word: guess }));
                     return modalSubmit.reply({ embeds: [embed], ephemeral: true });
                 }
 
@@ -199,7 +199,7 @@ module.exports = {
             const finalRow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('wordle_guess_button')
-                    .setLabel(await t(interaction, 'fun_wordle_button_end'))
+                    .setLabel(await t(interaction, 'fun.wordle.button.end'))
                     .setStyle(ButtonStyle.Secondary)
                     .setDisabled(true)
             );

@@ -88,21 +88,21 @@ async function proposeMarriage(interaction) {
 
     if (existingMarriage) {
         return interaction.reply({
-            content: await t(interaction, 'fun_marry_already_married'),
+            content: await t(interaction, 'fun.marry.already.married'),
             ephemeral: true,
         });
     }
 
     if (targetUser.bot) {
         return interaction.reply({
-            content: await t(interaction, 'fun_marry_bot_error'),
+            content: await t(interaction, 'fun.marry.bot.error'),
             ephemeral: true,
         });
     }
 
     if (targetId === proposerId) {
         return interaction.reply({
-            content: await t(interaction, 'fun_marry_yourself_error'),
+            content: await t(interaction, 'fun.marry.yourself.error'),
             ephemeral: true,
         });
     }
@@ -118,16 +118,16 @@ async function proposeMarriage(interaction) {
         ? targetUser.displayAvatarURL({ extension: 'png', size: 256 })
         : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
-    const proposalTitle = `## ${await t(interaction, 'fun_marry_proposal_title')}`;
+    const proposalTitle = `## ${await t(interaction, 'fun.marry.proposal.title')}`;
     const proposerBlock = `## ${proposer.username}\n-# ${proposerId}`;
     const targetBlock = `## ${targetUser.username}\n-# ${targetId}`;
-    const proposalText = await t(interaction, 'fun_marry_proposal_description', {
+    const proposalText = await t(interaction, 'fun.marry.proposal.description', {
         proposer: proposer.toString(),
         target: targetUser.toString(),
     });
 
-    const acceptBtnLabel = await t(interaction, 'fun_marry_accept_button');
-    const rejectBtnLabel = await t(interaction, 'fun_marry_reject_button');
+    const acceptBtnLabel = await t(interaction, 'fun.marry.accept.button');
+    const rejectBtnLabel = await t(interaction, 'fun.marry.reject.button');
 
     const container = new ContainerBuilder()
         .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
@@ -168,7 +168,7 @@ async function proposeMarriage(interaction) {
         .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
             )
         );
 
@@ -196,7 +196,7 @@ async function divorce(interaction) {
     if (!marriage) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'fun_marry_not_married'))
+            .setDescription(await t(interaction, 'fun.marry.not.married'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({
             embeds: [embed],
@@ -226,7 +226,7 @@ async function divorce(interaction) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    await t(interaction, 'fun_marry_divorce_partner_confirm', {
+                    await t(interaction, 'fun.marry.divorce.partner.confirm', {
                         partnerName: interaction.user.username,
                         serverName: interaction.guild ? interaction.guild.name : 'the server',
                     })
@@ -242,7 +242,7 @@ async function divorce(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                await t(interaction, 'fun_marry_divorce_confirmation_needed', { partner: partner ? partner.tag : `ID: ${partnerId}` })
+                await t(interaction, 'fun.marry.divorce.confirmation.needed', { partner: partner ? partner.tag : `ID: ${partnerId}` })
             )
             .setFooter(await embedFooter(interaction));
         return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -250,7 +250,7 @@ async function divorce(interaction) {
 
     if (confirmation.confirmedBy.has(userId)) {
         return interaction.reply({
-            content: await t(interaction, 'fun_marry_divorce_already_confirmed'),
+            content: await t(interaction, 'fun.marry.divorce.already.confirmed'),
             ephemeral: true,
         });
     }
@@ -271,8 +271,8 @@ async function divorce(interaction) {
 
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setTitle(await t(interaction, 'fun_marry_divorced_title'))
-            .setDescription(await t(interaction, 'fun_marry_divorced_description'))
+            .setTitle(await t(interaction, 'fun.marry.divorced.title'))
+            .setDescription(await t(interaction, 'fun.marry.divorced.description'))
             .setFooter(await embedFooter(interaction));
 
         for (let user of [userA, userB]) {
@@ -284,7 +284,7 @@ async function divorce(interaction) {
         return interaction.reply({ embeds: [embed] });
     } else {
         return interaction.reply({
-            content: await t(interaction, 'fun_marry_divorce_confirmed_on_your_side'),
+            content: await t(interaction, 'fun.marry.divorce.confirmed.on.your.side'),
             ephemeral: true,
         });
     }
@@ -309,7 +309,7 @@ async function kiss(interaction) {
     if (!marriage) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'fun_marry_not_married'))
+            .setDescription(await t(interaction, 'fun.marry.not.married'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({
             embeds: [embed],
@@ -319,7 +319,7 @@ async function kiss(interaction) {
     if (marriage.lastKiss && now - marriage.lastKiss < KISS_COOLDOWN) {
         const remaining = Math.ceil((KISS_COOLDOWN - (now - marriage.lastKiss)) / 60000);
         return interaction.reply({
-            content: await t(interaction, 'fun_marry_kiss_cooldown', { minutes: remaining }),
+            content: await t(interaction, 'fun.marry.kiss.cooldown', { minutes: remaining }),
             ephemeral: true,
         });
     }
@@ -333,9 +333,9 @@ async function kiss(interaction) {
     const partner = await interaction.client.users.fetch(partnerId).catch(() => null);
 
     const kissMessages = [
-        await t(interaction, 'fun_marry_kiss_1', { user: interaction.user.toString(), partner: partner?.toString() || 'Unknown' }),
-        await t(interaction, 'fun_marry_kiss_2', { user: interaction.user.toString(), partner: partner?.toString() || 'Unknown' }),
-        await t(interaction, 'fun_marry_kiss_3', { user: interaction.user.toString(), partner: partner?.toString() || 'Unknown' }),
+        await t(interaction, 'fun.marry.kiss.1', { user: interaction.user.toString(), partner: partner?.toString() || 'Unknown' }),
+        await t(interaction, 'fun.marry.kiss.2', { user: interaction.user.toString(), partner: partner?.toString() || 'Unknown' }),
+        await t(interaction, 'fun.marry.kiss.3', { user: interaction.user.toString(), partner: partner?.toString() || 'Unknown' }),
     ];
 
     const randomMessage = kissMessages[Math.floor(Math.random() * kissMessages.length)];
@@ -366,7 +366,7 @@ async function viewProfile(interaction) {
     if (!marriage) {
         const embed = new EmbedBuilder()
             .setColor('Red')
-            .setDescription(await t(interaction, 'fun_marry_not_married'))
+            .setDescription(await t(interaction, 'fun.marry.not.married'))
             .setFooter(await embedFooter(interaction));
         return interaction.reply({
             embeds: [embed],
@@ -379,24 +379,24 @@ async function viewProfile(interaction) {
     const marriedFor = Math.floor((new Date() - marriage.marriedAt) / (1000 * 60 * 60 * 24));
     const marriedAtStr = marriage.marriedAt.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
-    const selfBlock = `-# ${(await t(interaction, 'fun_marry_profile_you_label', {}, null)) || 'YOU'}\n## ${self.username}\n`;
-    const partnerBlock = `-# ${(await t(interaction, 'fun_marry_profile_partner_label', {}, null)) || 'YOUR PARTNER'}\n## ${partner?.username || 'Unknown'}\n`;
+    const selfBlock = `-# ${(await t(interaction, 'fun.marry.profile.you.label', {}, null)) || 'YOU'}\n## ${self.username}\n`;
+    const partnerBlock = `-# ${(await t(interaction, 'fun.marry.profile.partner.label', {}, null)) || 'YOUR PARTNER'}\n## ${partner?.username || 'Unknown'}\n`;
 
     const defaultAvatar = 'https://cdn.discordapp.com/embed/avatars/0.png';
     const selfAvatar = self.displayAvatarURL ? self.displayAvatarURL({ extension: 'png', size: 256 }) : defaultAvatar;
     const partnerAvatar = partner?.displayAvatarURL ? partner.displayAvatarURL({ extension: 'png', size: 256 }) : defaultAvatar;
 
     const statsSection =
-        `${(await t(interaction, 'fun_marry_profile_married_since', {}, null)) || 'Married Since'}\n${marriedAtStr}\n` +
-        `${(await t(interaction, 'fun_marry_profile_days_married', {}, null)) || 'Days Together'}\n${marriedFor} days\n` +
-        `${(await t(interaction, 'fun_marry_profile_love_score', {}, null)) || 'Love Score'}\n${marriage.loveScore} ❤️`;
+        `${(await t(interaction, 'fun.marry.profile.married.since', {}, null)) || 'Married Since'}\n${marriedAtStr}\n` +
+        `${(await t(interaction, 'fun.marry.profile.days.married', {}, null)) || 'Days Together'}\n${marriedFor} days\n` +
+        `${(await t(interaction, 'fun.marry.profile.love.score', {}, null)) || 'Love Score'}\n${marriage.loveScore} ❤️`;
 
-    const footerText = `${await t(interaction, 'common_container_footer', { username: interaction.client.user.username })}`;
+    const footerText = `${await t(interaction, 'common.container.footer', { username: interaction.client.user.username })}`;
 
     const container = new ContainerBuilder()
         .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
         .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent((await t(interaction, 'fun_marry_profile_title')) || '💘 MARRIAGE PROFILE')
+            new TextDisplayBuilder().setContent((await t(interaction, 'fun.marry.profile.title')) || '💘 MARRIAGE PROFILE')
         )
         .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
         .addSectionComponents(

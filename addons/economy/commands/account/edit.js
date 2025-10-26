@@ -42,7 +42,7 @@ module.exports = {
             if (!existingUser) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                    .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
@@ -56,7 +56,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    await t(interaction, 'economy_account_edit_account_edit_success_desc', { bankType: bankDisplay })
+                    await t(interaction, 'economy.account.edit.account.edit.success.desc', { bankType: bankDisplay })
                 )
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
@@ -65,7 +65,7 @@ module.exports = {
             console.error('Error during account edit command execution:', error);
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_account_edit_account_edit_error_desc'))
+                .setDescription(await t(interaction, 'economy.account.edit.account.edit.error.desc'))
                 .setTimestamp()
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });

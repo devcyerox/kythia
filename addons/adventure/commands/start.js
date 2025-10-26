@@ -45,7 +45,7 @@ module.exports = {
         if (existing) {
             const alreadyEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'adventure_start_already_have'))
+                .setDescription(await t(interaction, 'adventure.start.already.have'))
                 .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [alreadyEmbed] });
@@ -84,7 +84,7 @@ module.exports = {
         });
 
         // Compose char bonus info for display
-        const charStatsString = await t(interaction, 'adventure_start_choose_char_stats', {
+        const charStatsString = await t(interaction, 'adventure.start.choose.char.stats', {
             str: `${strength - selected.strengthBonus} (${selected.strengthBonus >= 0 ? '+' : ''}${selected.strengthBonus})`,
             def: `${defense - selected.defenseBonus} (${selected.defenseBonus >= 0 ? '+' : ''}${selected.defenseBonus})`,
             hp: `100% (${selected.hpBonusPercent >= 0 ? '+' : ''}${selected.hpBonusPercent}%)`,
@@ -94,12 +94,12 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setTitle(await t(interaction, 'adventure_start_success_title'))
+            .setTitle(await t(interaction, 'adventure.start.success.title'))
             .setDescription(
                 [
-                    await t(interaction, 'adventure_start_success_desc'),
+                    await t(interaction, 'adventure.start.success.desc'),
                     '',
-                    `**${await t(interaction, 'adventure_start_selected_char')}**`,
+                    `**${await t(interaction, 'adventure.start.selected.char')}**`,
                     `${selected.emoji} ${selected.name}`,
                     selected.description,
                     charStatsString,

@@ -89,18 +89,18 @@ module.exports = {
 
                 if (newCategory) {
                     category = await guild.channels.create({
-                        name: await t(interaction, 'core_autosetup_autosetup_testimony_category_name'),
+                        name: await t(interaction, 'core.autosetup.autosetup.testimony.category.name'),
                         type: ChannelType.GuildCategory,
                     });
                 } else {
                     category = guild.channels.cache.get(existingCategoryId);
                     if (!category || category.type !== ChannelType.GuildCategory) {
-                        return interaction.editReply({ content: await t(interaction, 'core_autosetup_autosetup_invalid_category_id') });
+                        return interaction.editReply({ content: await t(interaction, 'core.autosetup.autosetup.invalid.category.id') });
                     }
                 }
 
                 const testimonyChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_testimony_channel_name'),
+                    name: await t(interaction, 'core.autosetup.autosetup.testimony.channel.name'),
                     type: ChannelType.GuildText,
                     parent: category.id,
                     permissionOverwrites: [
@@ -112,7 +112,7 @@ module.exports = {
                 });
 
                 const feedbackChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_feedback_channel_name'),
+                    name: await t(interaction, 'core.autosetup.autosetup.feedback.channel.name'),
                     type: ChannelType.GuildText,
                     parent: category.id,
                     permissionOverwrites: [
@@ -124,7 +124,7 @@ module.exports = {
                 });
 
                 const countChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_testimony_count_channel_name', { count: 0 }),
+                    name: await t(interaction, 'core.autosetup.autosetup.testimony.count.channel.name', { count: 0 }),
                     type: ChannelType.GuildVoice,
                     parent: category.id,
                     permissionOverwrites: [
@@ -141,14 +141,14 @@ module.exports = {
                 serverSetting.testimonyChannelId = testimonyChannel.id;
                 serverSetting.feedbackChannelId = feedbackChannel.id;
                 serverSetting.testimonyCountChannelId = countChannel.id;
-                serverSetting.testimonyCountFormat = await t(interaction, 'core_autosetup_autosetup_testimony_count_channel_name', {
+                serverSetting.testimonyCountFormat = await t(interaction, 'core.autosetup.autosetup.testimony.count.channel.name', {
                     count: '{count}',
                 });
 
                 await serverSetting.saveAndUpdateCache('guildId');
 
                 await interaction.editReply({
-                    content: await t(interaction, 'core_autosetup_autosetup_testimony_success', {
+                    content: await t(interaction, 'core.autosetup.autosetup.testimony.success', {
                         testimonyChannel: testimonyChannel.id,
                         feedbackChannel: feedbackChannel.id,
                         countChannel: countChannel.id,
@@ -161,13 +161,13 @@ module.exports = {
 
                 if (newCategory) {
                     category = await guild.channels.create({
-                        name: await t(interaction, 'core_autosetup_autosetup_serverstats_category_name'),
+                        name: await t(interaction, 'core.autosetup.autosetup.serverstats.category.name'),
                         type: ChannelType.GuildCategory,
                     });
                 } else {
                     category = guild.channels.cache.get(existingCategoryId);
                     if (!category || category.type !== ChannelType.GuildCategory) {
-                        return interaction.editReply({ content: await t(interaction, 'core_autosetup_autosetup_invalid_category_id') });
+                        return interaction.editReply({ content: await t(interaction, 'core.autosetup.autosetup.invalid.category.id') });
                     }
                 }
 
@@ -180,7 +180,7 @@ module.exports = {
                 const humanCount = totalMembers - botCount;
 
                 const totalMembersChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_serverstats_total', { memberstotal: totalMembers }),
+                    name: await t(interaction, 'core.autosetup.autosetup.serverstats.total', { memberstotal: totalMembers }),
                     type: ChannelType.GuildVoice,
                     parent: category.id,
                     permissionOverwrites: [
@@ -193,7 +193,7 @@ module.exports = {
                 });
 
                 const onlineMembersChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_serverstats_online', { online: onlineMembers }),
+                    name: await t(interaction, 'core.autosetup.autosetup.serverstats.online', { online: onlineMembers }),
                     type: ChannelType.GuildVoice,
                     parent: category.id,
                     permissionOverwrites: [
@@ -206,7 +206,7 @@ module.exports = {
                 });
 
                 const humanMembersChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_serverstats_humans', { humans: humanCount }),
+                    name: await t(interaction, 'core.autosetup.autosetup.serverstats.humans', { humans: humanCount }),
                     type: ChannelType.GuildVoice,
                     parent: category.id,
                     permissionOverwrites: [
@@ -219,7 +219,7 @@ module.exports = {
                 });
 
                 const botMembersChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_serverstats_bots', { bots: botCount }),
+                    name: await t(interaction, 'core.autosetup.autosetup.serverstats.bots', { bots: botCount }),
                     type: ChannelType.GuildVoice,
                     parent: category.id,
                     permissionOverwrites: [
@@ -238,29 +238,29 @@ module.exports = {
                 serverSetting.serverStats = [
                     {
                         channelId: totalMembersChannel.id,
-                        format: await t(interaction, 'core_autosetup_autosetup_serverstats_total', { memberstotal: '{memberstotal}' }),
+                        format: await t(interaction, 'core.autosetup.autosetup.serverstats.total', { memberstotal: '{memberstotal}' }),
                         enabled: true,
                     },
                     {
                         channelId: onlineMembersChannel.id,
-                        format: await t(interaction, 'core_autosetup_autosetup_serverstats_online', { online: '{online}' }),
+                        format: await t(interaction, 'core.autosetup.autosetup.serverstats.online', { online: '{online}' }),
                         enabled: true,
                     },
                     {
                         channelId: humanMembersChannel.id,
-                        format: await t(interaction, 'core_autosetup_autosetup_serverstats_humans', { humans: '{humans}' }),
+                        format: await t(interaction, 'core.autosetup.autosetup.serverstats.humans', { humans: '{humans}' }),
                         enabled: true,
                     },
                     {
                         channelId: botMembersChannel.id,
-                        format: await t(interaction, 'core_autosetup_autosetup_serverstats_bots', { bots: '{bots}' }),
+                        format: await t(interaction, 'core.autosetup.autosetup.serverstats.bots', { bots: '{bots}' }),
                         enabled: true,
                     },
                 ];
                 await serverSetting.saveAndUpdateCache('guildId');
 
                 await interaction.editReply({
-                    content: await t(interaction, 'core_autosetup_autosetup_serverstats_success', {
+                    content: await t(interaction, 'core.autosetup.autosetup.serverstats.success', {
                         total: totalMembersChannel.id,
                         online: onlineMembersChannel.id,
                         humans: humanMembersChannel.id,
@@ -274,13 +274,13 @@ module.exports = {
 
                 if (newCategory) {
                     category = await guild.channels.create({
-                        name: await t(interaction, 'core_autosetup_autosetup_minecraft_category_name'),
+                        name: await t(interaction, 'core.autosetup.autosetup.minecraft.category.name'),
                         type: ChannelType.GuildCategory,
                     });
                 } else {
                     category = guild.channels.cache.get(existingCategoryId);
                     if (!category || category.type !== ChannelType.GuildCategory) {
-                        return interaction.editReply({ content: await t(interaction, 'core_autosetup_autosetup_invalid_category_id') });
+                        return interaction.editReply({ content: await t(interaction, 'core.autosetup.autosetup.invalid.category.id') });
                     }
                 }
 
@@ -291,10 +291,10 @@ module.exports = {
                 const ip = serverSetting.minecraftIp || '0.0.0.0';
                 const port = serverSetting.minecraftPort || 25565;
 
-                const ipName = await t(interaction, 'core_autosetup_autosetup_minecraft_ip_channel', { ip });
-                const portName = await t(interaction, 'core_autosetup_autosetup_minecraft_port_channel', { port });
-                const statusName = await t(interaction, 'core_autosetup_autosetup_minecraft_status_channel');
-                const playersName = await t(interaction, 'core_autosetup_autosetup_minecraft_players_channel', { players: 0, max: 0 });
+                const ipName = await t(interaction, 'core.autosetup.autosetup.minecraft.ip.channel', { ip });
+                const portName = await t(interaction, 'core.autosetup.autosetup.minecraft.port.channel', { port });
+                const statusName = await t(interaction, 'core.autosetup.autosetup.minecraft.status.channel');
+                const playersName = await t(interaction, 'core.autosetup.autosetup.minecraft.players.channel', { players: 0, max: 0 });
 
                 // bikin channel satu per satu
                 const ipChannel = await guild.channels.create({
@@ -356,7 +356,7 @@ module.exports = {
                 await serverSetting.saveAndUpdateCache('guildId');
 
                 await interaction.editReply({
-                    content: await t(interaction, 'core_autosetup_autosetup_minecraft_success', {
+                    content: await t(interaction, 'core.autosetup.autosetup.minecraft.success', {
                         ip: ipChannel.id,
                         port: portChannel.id,
                         status: statusChannel.id,
@@ -370,19 +370,19 @@ module.exports = {
 
                 if (newCategory) {
                     category = await guild.channels.create({
-                        name: await t(interaction, 'core_autosetup_autosetup_store_category_name'),
+                        name: await t(interaction, 'core.autosetup.autosetup.store.category.name'),
                         type: ChannelType.GuildCategory,
                     });
                 } else {
                     category = guild.channels.cache.get(existingCategoryId);
                     if (!category || category.type !== ChannelType.GuildCategory) {
-                        return interaction.editReply({ content: await t(interaction, 'core_autosetup_autosetup_invalid_category_id') });
+                        return interaction.editReply({ content: await t(interaction, 'core.autosetup.autosetup.invalid.category.id') });
                     }
                 }
 
                 // Buat channel untuk open/close store
                 const storeChannel = await guild.channels.create({
-                    name: await t(interaction, 'core_autosetup_autosetup_store_open_channel_name'),
+                    name: await t(interaction, 'core.autosetup.autosetup.store.open.channel.name'),
                     type: ChannelType.GuildText,
                     parent: category.id,
                     permissionOverwrites: [
@@ -395,20 +395,20 @@ module.exports = {
 
                 // Default values mirip dengan store.js
                 const type = interaction.options.getString('type') || 'channelnameandmessage';
-                const openName = await t(interaction, 'core_autosetup_autosetup_store_open_channel_name');
-                const openTitle = await t(interaction, 'core_autosetup_autosetup_store_open_title');
-                const openDesc = await t(interaction, 'core_autosetup_autosetup_store_open_desc');
+                const openName = await t(interaction, 'core.autosetup.autosetup.store.open.channel.name');
+                const openTitle = await t(interaction, 'core.autosetup.autosetup.store.open.title');
+                const openDesc = await t(interaction, 'core.autosetup.autosetup.store.open.desc');
                 const openColor = 'Green';
-                const closeName = await t(interaction, 'core_autosetup_autosetup_store_close_channel_name');
-                const closeTitle = await t(interaction, 'core_autosetup_autosetup_store_close_title');
-                const closeDesc = await t(interaction, 'core_autosetup_autosetup_store_close_desc');
+                const closeName = await t(interaction, 'core.autosetup.autosetup.store.close.channel.name');
+                const closeTitle = await t(interaction, 'core.autosetup.autosetup.store.close.title');
+                const closeDesc = await t(interaction, 'core.autosetup.autosetup.store.close.desc');
                 const closeColor = 'Red';
 
                 // validasi kalau tipenya butuh message
                 if (['channelmessage', 'channelnameandmessage'].includes(type)) {
                     if (!openTitle || !openDesc || !closeTitle || !closeDesc) {
                         return interaction.editReply({
-                            content: await t(interaction, 'core_autosetup_autosetup_store_missing_embed_fields'),
+                            content: await t(interaction, 'core.autosetup.autosetup.store.missing.embed.fields'),
                             ephemeral: true,
                         });
                     }
@@ -450,7 +450,7 @@ module.exports = {
                 await serverSetting.saveAndUpdateCache('guildId');
 
                 await interaction.editReply({
-                    content: await t(interaction, 'core_autosetup_autosetup_store_success', {
+                    content: await t(interaction, 'core.autosetup.autosetup.store.success', {
                         storeChannel: storeChannel.id,
                     }),
                 });

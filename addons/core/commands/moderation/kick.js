@@ -24,12 +24,12 @@ module.exports = {
         await interaction.deferReply();
         const setting = ServerSetting.getCache({ guildId: interaction.guild.id });
         const user = interaction.options.getUser('user');
-        const reason = interaction.options.getString('reason') || (await t(interaction, 'core_moderation_kick_default_reason'));
+        const reason = interaction.options.getString('reason') || (await t(interaction, 'core.moderation.kick.default.reason'));
 
         // Prevent self-kick
         if (user.id === interaction.user.id) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_kick_cannot_self'),
+                content: await t(interaction, 'core.moderation.kick.cannot.self'),
                 ephemeral: true,
             });
         }
@@ -48,9 +48,9 @@ module.exports = {
                 if (modLogChannel) {
                     const modLogEmbed = new EmbedBuilder()
                         .setColor('Red')
-                        .setTitle(await t(interaction, 'core_moderation_kick_modlog_title'))
+                        .setTitle(await t(interaction, 'core.moderation.kick.modlog.title'))
                         .setDescription(
-                            await t(interaction, 'core_moderation_kick_modlog_desc', {
+                            await t(interaction, 'core.moderation.kick.modlog.desc', {
                                 member: user.tag,
                                 kicker: interaction.user.tag,
                                 reason,
@@ -65,9 +65,9 @@ module.exports = {
             }
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setTitle(await t(interaction, 'core_moderation_kick_embed_title'))
+                .setTitle(await t(interaction, 'core.moderation.kick.embed.title'))
                 .setDescription(
-                    await t(interaction, 'core_moderation_kick_embed_desc', {
+                    await t(interaction, 'core.moderation.kick.embed.desc', {
                         member: user.tag,
                         kicker: interaction.user.tag,
                         reason,
@@ -79,7 +79,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         } else {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_kick_user_not_found'),
+                content: await t(interaction, 'core.moderation.kick.user.not.found'),
                 ephemeral: true,
             });
         }

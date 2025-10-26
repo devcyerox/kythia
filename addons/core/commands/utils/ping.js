@@ -157,28 +157,28 @@ async function buildPingEmbed(interaction, container) {
 
     const embedContainer = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
 
-    embedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'core_utils_ping_embed_title')));
+    embedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.ping.embed.title')));
     embedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
 
     // Bot latency
     embedContainer.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(`**${await t(interaction, 'core_utils_ping_field_bot_latency')}**\n\`\`\`${botLatency}ms\`\`\``)
+        new TextDisplayBuilder().setContent(`**${await t(interaction, 'core.utils.ping.field.bot.latency')}**\n\`\`\`${botLatency}ms\`\`\``)
     );
     // API latency
     embedContainer.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(`**${await t(interaction, 'core_utils_ping_field_api_latency')}**\n\`\`\`${apiLatency}ms\`\`\``)
+        new TextDisplayBuilder().setContent(`**${await t(interaction, 'core.utils.ping.field.api.latency')}**\n\`\`\`${apiLatency}ms\`\`\``)
     );
     // DB ping
     embedContainer.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
-            `**${await t(interaction, 'core_utils_ping_field_db_latency')}**\n\`\`\`${dbPingInfo.status === 'connected' ? dbPingInfo.ping + 'ms' : dbPingInfo.status === 'not_configured' ? 'Not Configured' : dbPingInfo.status === 'error' ? 'Error' : 'Unknown'}\`\`\`` +
+            `**${await t(interaction, 'core.utils.ping.field.db.latency')}**\n\`\`\`${dbPingInfo.status === 'connected' ? dbPingInfo.ping + 'ms' : dbPingInfo.status === 'not_configured' ? 'Not Configured' : dbPingInfo.status === 'error' ? 'Error' : 'Unknown'}\`\`\`` +
                 (dbPingInfo.status === 'error' && dbPingInfo.error ? `\n\`\`\`Error: ${dbPingInfo.error}\`\`\`` : '')
         )
     );
     // Redis ping
     embedContainer.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
-            `**${await t(interaction, 'core_utils_ping_field_redis_latency')}**\n\`\`\`${redisPingInfo.status === 'connected' ? redisPingInfo.ping + 'ms' : redisPingInfo.status === 'not_configured' ? 'Not Configured' : redisPingInfo.status === 'not_supported' ? 'Not Supported' : redisPingInfo.status === 'error' ? 'Error' : 'Unknown'}\`\`\`` +
+            `**${await t(interaction, 'core.utils.ping.field.redis.latency')}**\n\`\`\`${redisPingInfo.status === 'connected' ? redisPingInfo.ping + 'ms' : redisPingInfo.status === 'not_configured' ? 'Not Configured' : redisPingInfo.status === 'not_supported' ? 'Not Supported' : redisPingInfo.status === 'error' ? 'Error' : 'Unknown'}\`\`\`` +
                 (redisPingInfo.status === 'error' && redisPingInfo.error ? `\n\`\`\`Error: ${redisPingInfo.error}\`\`\`` : '')
         )
     );
@@ -186,7 +186,7 @@ async function buildPingEmbed(interaction, container) {
     if (lavalinkNodes.length > 0) {
         embedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
         embedContainer.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`**${await t(interaction, 'core_utils_ping_field_lavalink_nodes')}**`)
+            new TextDisplayBuilder().setContent(`**${await t(interaction, 'core.utils.ping.field.lavalink.nodes')}**`)
         );
 
         for (const node of lavalinkNodes) {
@@ -220,13 +220,13 @@ async function buildPingEmbed(interaction, container) {
         new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('ping_refresh')
-                .setLabel(await t(interaction, 'core_utils_ping_button_refresh'))
+                .setLabel(await t(interaction, 'core.utils.ping.button.refresh'))
                 .setStyle(ButtonStyle.Secondary)
         )
     );
     embedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
     embedContainer.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(await t(interaction, 'common_container_footer', { username: interaction.client.user.username }))
+        new TextDisplayBuilder().setContent(await t(interaction, 'common.container.footer', { username: interaction.client.user.username }))
     );
 
     return { embedContainer, botLatency, apiLatency, lavalinkNodes, dbPingInfo, redisPingInfo };

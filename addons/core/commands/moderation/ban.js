@@ -23,7 +23,7 @@ module.exports = {
         await interaction.deferReply();
 
         const user = interaction.options.getUser('user');
-        const reason = interaction.options.getString('reason') || (await t(interaction, 'core_moderation_ban_default_reason'));
+        const reason = interaction.options.getString('reason') || (await t(interaction, 'core.moderation.ban.default.reason'));
 
         let member;
         try {
@@ -35,7 +35,7 @@ module.exports = {
         // Prevent self-ban
         if (user.id === interaction.user.id) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_ban_cannot_self'),
+                content: await t(interaction, 'core.moderation.ban.cannot.self'),
                 ephemeral: true,
             });
         }
@@ -44,9 +44,9 @@ module.exports = {
             await member.ban({ reason });
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setTitle(await t(interaction, 'core_moderation_ban_embed_title'))
+                .setTitle(await t(interaction, 'core.moderation.ban.embed.title'))
                 .setDescription(
-                    await t(interaction, 'core_moderation_ban_embed_desc', {
+                    await t(interaction, 'core.moderation.ban.embed.desc', {
                         tag: user.tag,
                         reason,
                     })
@@ -57,7 +57,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         } else {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_ban_user_not_found'),
+                content: await t(interaction, 'core.moderation.ban.user.not.found'),
             });
         }
     },

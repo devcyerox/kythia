@@ -30,7 +30,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -41,7 +41,7 @@ module.exports = {
         if (user.kythiaCoin < bet) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_coinflip_coinflip_not_enough_cash'))
+                .setDescription(await t(interaction, 'economy.coinflip.coinflip.not.enough.cash'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -59,7 +59,7 @@ module.exports = {
                 .setColor(kythia.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_coinflip_coinflip_win', {
+                    await t(interaction, 'economy.coinflip.coinflip.win', {
                         flip: flip.charAt(0).toUpperCase() + flip.slice(1),
                         amount: bet,
                     })
@@ -76,7 +76,7 @@ module.exports = {
                 .setColor('Red')
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_coinflip_coinflip_lose', {
+                    await t(interaction, 'economy.coinflip.coinflip.lose', {
                         flip: flip.charAt(0).toUpperCase() + flip.slice(1),
                         amount: bet,
                     })

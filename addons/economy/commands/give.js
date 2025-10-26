@@ -28,7 +28,7 @@ module.exports = {
         if (!giver) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -37,7 +37,7 @@ module.exports = {
         if (amount <= 0) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_give_give_invalid_amount'))
+                .setDescription(await t(interaction, 'economy.give.give.invalid.amount'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -46,7 +46,7 @@ module.exports = {
         if (target.id === interaction.user.id) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_give_give_self'))
+                .setDescription(await t(interaction, 'economy.give.give.self'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -56,7 +56,7 @@ module.exports = {
         if (!receiver) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_give_give_no_target_account'))
+                .setDescription(await t(interaction, 'economy.give.give.no.target.account'))
                 .setThumbnail(target.displayAvatarURL ? target.displayAvatarURL() : null)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -65,7 +65,7 @@ module.exports = {
         if (giver.kythiaCoin < amount) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_give_give_not_enough_cash'))
+                .setDescription(await t(interaction, 'economy.give.give.not.enough.cash'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -75,7 +75,7 @@ module.exports = {
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL())
             .setDescription(
-                await t(interaction, 'economy_give_give_confirm', {
+                await t(interaction, 'economy.give.give.confirm', {
                     amount,
                     target: target.username,
                 })
@@ -85,11 +85,11 @@ module.exports = {
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('confirm')
-                .setLabel(await t(interaction, 'economy_give_give_btn_confirm'))
+                .setLabel(await t(interaction, 'economy.give.give.btn.confirm'))
                 .setStyle(ButtonStyle.Success),
             new ButtonBuilder()
                 .setCustomId('cancel')
-                .setLabel(await t(interaction, 'economy_give_give_btn_cancel'))
+                .setLabel(await t(interaction, 'economy.give.give.btn.cancel'))
                 .setStyle(ButtonStyle.Danger)
         );
 
@@ -112,7 +112,7 @@ module.exports = {
                 const successEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
                     .setDescription(
-                        await t(interaction, 'economy_give_give_success', {
+                        await t(interaction, 'economy.give.give.success', {
                             amount,
                             target: target.username,
                         })
@@ -124,7 +124,7 @@ module.exports = {
                 const receiverEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
                     .setDescription(
-                        await t(interaction, 'economy_give_give_received', {
+                        await t(interaction, 'economy.give.give.received', {
                             amount,
                             from: interaction.user.username,
                         })
@@ -138,7 +138,7 @@ module.exports = {
             } else if (i.customId === 'cancel') {
                 const cancelEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_give_give_cancelled'))
+                    .setDescription(await t(interaction, 'economy.give.give.cancelled'))
                     .setFooter(await embedFooter(interaction));
                 await i.update({ embeds: [cancelEmbed], components: [] });
             }
@@ -148,7 +148,7 @@ module.exports = {
             if (collected.size === 0) {
                 const timeoutEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_give_give_timeout'))
+                    .setDescription(await t(interaction, 'economy.give.give.timeout'))
                     .setFooter(await embedFooter(interaction));
                 await interaction.editReply({ embeds: [timeoutEmbed], components: [] });
             }

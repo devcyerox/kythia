@@ -31,7 +31,7 @@ module.exports = {
 
         if (!message) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_unpin_not_found'),
+                content: await t(interaction, 'core.moderation.unpin.not.found'),
             });
         }
 
@@ -40,8 +40,8 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'core_moderation_unpin_embed_title')}\n` +
-                        (await t(interaction, 'core_moderation_unpin_embed_desc', { messageId }))
+                    `## ${await t(interaction, 'core.moderation.unpin.embed.title')}\n` +
+                        (await t(interaction, 'core.moderation.unpin.embed.desc', { messageId }))
                 )
                 .setThumbnail(interaction.client.user.displayAvatarURL())
                 .setTimestamp()
@@ -49,7 +49,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         } catch (e) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_unpin_failed'),
+                content: await t(interaction, 'core.moderation.unpin.failed'),
             });
         }
     },

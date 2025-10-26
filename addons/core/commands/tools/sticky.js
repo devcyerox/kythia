@@ -37,11 +37,11 @@ module.exports = {
                 const existingSticky = await StickyMessage.getCache({ channelId });
 
                 if (existingSticky) {
-                    return interaction.reply({ content: await t(interaction, 'core_tools_sticky_set_error_exists'), ephemeral: true });
+                    return interaction.reply({ content: await t(interaction, 'core.tools.sticky.set.error.exists'), ephemeral: true });
                 }
 
                 const stickyEmbed = new EmbedBuilder()
-                    .setTitle(await t(interaction, 'core_tools_sticky_embed_title'))
+                    .setTitle(await t(interaction, 'core.tools.sticky.embed.title'))
                     .setDescription(pesan) // Pesan dari user tidak perlu di-translate
                     .setColor(kythia.bot.color)
                     .setFooter(await embedFooter(interaction));
@@ -57,7 +57,7 @@ module.exports = {
                     { individualHooks: true }
                 );
 
-                return interaction.reply({ content: await t(interaction, 'core_tools_sticky_set_success'), ephemeral: true });
+                return interaction.reply({ content: await t(interaction, 'core.tools.sticky.set.success'), ephemeral: true });
             }
 
             case 'remove': {
@@ -65,7 +65,7 @@ module.exports = {
 
                 if (!sticky) {
                     return interaction.reply({
-                        content: await t(interaction, 'core_tools_sticky_remove_error_not_found'),
+                        content: await t(interaction, 'core.tools.sticky.remove.error.not.found'),
                         ephemeral: true,
                     });
                 }
@@ -79,7 +79,7 @@ module.exports = {
                     }
                 }
                 await sticky.destroy({ individualHooks: true });
-                return interaction.reply({ content: await t(interaction, 'core_tools_sticky_remove_success'), ephemeral: true });
+                return interaction.reply({ content: await t(interaction, 'core.tools.sticky.remove.success'), ephemeral: true });
             }
         }
     },

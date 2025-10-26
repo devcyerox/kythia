@@ -27,7 +27,7 @@ module.exports = {
         if (targetUser.id === interaction.user.id) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_rob_rob_cannot_rob_self'))
+                .setDescription(await t(interaction, 'economy.rob.rob.cannot.rob.self'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -37,7 +37,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -47,7 +47,7 @@ module.exports = {
         if (!target) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_rob_rob_target_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.rob.rob.target.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -58,7 +58,7 @@ module.exports = {
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_rob_rob_cooldown', { time: cooldown.time }))
+                .setDescription(await t(interaction, 'economy.rob.rob.cooldown', { time: cooldown.time }))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -95,7 +95,7 @@ module.exports = {
             if (target.kythiaCoin < robAmount) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(await t(interaction, 'economy_rob_rob_target_not_enough_money'))
+                    .setDescription(await t(interaction, 'economy.rob.rob.target.not.enough.money'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
@@ -115,7 +115,7 @@ module.exports = {
                 .setColor(kythia.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_rob_rob_success', {
+                    await t(interaction, 'economy.rob.rob.success.text', {
                         amount: robAmount,
                         target: targetUser.username,
                     })
@@ -127,7 +127,7 @@ module.exports = {
                 .setColor('Red')
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_rob_rob_success_dm', {
+                    await t(interaction, 'economy.rob.rob.success.dm', {
                         robber: interaction.user.username,
                         amount: robAmount,
                     })
@@ -141,7 +141,7 @@ module.exports = {
             if (user.kythiaCoin < basePenalty && !poison) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(await t(interaction, 'economy_rob_rob_user_not_enough_money_fail'))
+                    .setDescription(await t(interaction, 'economy.rob.rob.user.not.enough.money.fail'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
@@ -170,11 +170,11 @@ module.exports = {
                 .setColor('Red')
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_rob_rob_fail', {
+                    await t(interaction, 'economy.rob.rob.fail.text', {
                         target: targetUser.username,
-                        penalty: poison ? await t(interaction, 'economy_rob_rob_fail_penalty_all') : `${robAmount} kythia coin`,
-                        guard: guard ? await t(interaction, 'economy_rob_rob_fail_guard') : '',
-                        poison: poison ? await t(interaction, 'economy_rob_rob_fail_poison') : '',
+                        penalty: poison ? await t(interaction, 'economy.rob.rob.fail.penalty.all') : `${robAmount} kythia coin`,
+                        guard: guard ? await t(interaction, 'economy.rob.rob.fail.guard.text') : '',
+                        poison: poison ? await t(interaction, 'economy.rob.rob.fail.poison') : '',
                     })
                 )
                 .setFooter(await embedFooter(interaction));
@@ -184,12 +184,12 @@ module.exports = {
                 .setColor(kythia.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_rob_rob_fail_dm', {
+                    await t(interaction, 'economy.rob.rob.fail.dm', {
                         robber: interaction.user.username,
                         amount: robAmount,
                         penalty: poison ? penalty : robAmount,
-                        guard: guard ? await t(interaction, 'economy_rob_rob_fail_guard_dm') : '',
-                        poison: poison ? await t(interaction, 'economy_rob_rob_fail_poison_dm') : '',
+                        guard: guard ? await t(interaction, 'economy.rob.rob.fail.guard.dm') : '',
+                        poison: poison ? await t(interaction, 'economy.rob.rob.fail.poison.dm') : '',
                     })
                 )
                 .setFooter(await embedFooter(interaction));

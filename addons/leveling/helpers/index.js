@@ -100,8 +100,8 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
     }
 
     let description =
-        `${await t(message, 'leveling_helpers_index_leveling_profile_up_title')}\n` +
-        (await t(message, 'leveling_helpers_index_leveling_profile_up_desc', {
+        `${await t(message, 'leveling.helpers.index.leveling.profile.up.title')}\n` +
+        (await t(message, 'leveling.helpers.index.leveling.profile.up.desc', {
             username: message.author.username,
             mention: message.author.toString(),
             level: user.level || 0,
@@ -111,8 +111,8 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 
     if (rewardRoleName && rewardLevel) {
         description +=
-            `\n\n${await t(message, 'leveling_helpers_index_leveling_role_reward_title')}\n` +
-            (await t(message, 'leveling_helpers_index_leveling_role_reward_desc', {
+            `\n\n${await t(message, 'leveling.helpers.index.leveling.role.reward.title')}\n` +
+            (await t(message, 'leveling.helpers.index.leveling.role.reward.desc', {
                 mention: message.author.toString(),
                 role: rewardRoleName,
                 level: rewardLevel,

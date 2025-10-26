@@ -24,8 +24,8 @@ module.exports = {
 
         if (!checklist || !Array.isArray(items) || items.length === 0) {
             const embed = new EmbedBuilder()
-                .setTitle(await t(interaction, 'checklist_server_clear_already_empty_title', { scope: await t(interaction, scopeKey) }))
-                .setDescription(await t(interaction, 'checklist_server_clear_clear_empty_desc'))
+                .setTitle(await t(interaction, 'checklist.server.clear.already.empty.title', { scope: await t(interaction, scopeKey) }))
+                .setDescription(await t(interaction, 'checklist.server.clear.clear.empty.desc'))
                 .setColor('Red')
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral });
@@ -43,8 +43,8 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle(await t(interaction, 'checklist_server_clear_clear_success_title', { scope: await t(interaction, scopeKey) }))
-            .setDescription(await t(interaction, 'checklist_server_clear_clear_success_desc'))
+            .setTitle(await t(interaction, 'checklist.server.clear.clear.success.title', { scope: await t(interaction, scopeKey) }))
+            .setDescription(await t(interaction, 'checklist.server.clear.clear.success.desc'))
             .setColor(colorName)
             .setTimestamp();
 

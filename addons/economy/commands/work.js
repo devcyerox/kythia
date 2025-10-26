@@ -41,7 +41,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_work_work_cooldown_title')}\n${await t(interaction, 'economy_work_work_cooldown_desc', { time: cooldown.time })}`
+                    `## ${await t(interaction, 'economy.work.work.cooldown.title')}\n${await t(interaction, 'economy.work.work.cooldown.desc', { time: cooldown.time })}`
                 )
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -78,7 +78,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_work_work_no_job_title')}\n${await t(interaction, 'economy_work_work_no_job_desc')}`
+                    `## ${await t(interaction, 'economy.work.work.no.job.title')}\n${await t(interaction, 'economy.work.work.no.job.desc')}`
                 )
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -105,7 +105,7 @@ module.exports = {
         let levelUpText = '';
         if (scenario.outcome === 'success' && (user.careerLevel || 0) < 50) {
             user.careerLevel = (user.careerLevel || 0) + 1;
-            levelUpText = `\n\n${await t(interaction, 'economy_work_work_levelup_text', { level: user.careerLevel })}`;
+            levelUpText = `\n\n${await t(interaction, 'economy.work.work.levelup.text', { level: user.careerLevel })}`;
         }
 
         user.changed('kythiaCoin', true);
@@ -121,23 +121,23 @@ module.exports = {
         const resultEmbed = new EmbedBuilder()
             .setColor(outcomeColors[scenario.outcome])
             .setAuthor({
-                name: await t(interaction, 'economy_work_work_result_author', { job: jobName, emoji: job.emoji }),
+                name: await t(interaction, 'economy.work.work.result.author', { job: jobName, emoji: job.emoji }),
                 iconURL: interaction.user.displayAvatarURL(),
             })
-            .setDescription(`${await t(interaction, `eco_work_result_title_outcome`)}\n*${scenarioDesc}*${levelUpText}`)
+            .setDescription(`${await t(interaction, 'eco.work.result.title.outcome')}\n*${scenarioDesc}*${levelUpText}`)
             .addFields(
                 {
-                    name: await t(interaction, 'economy_work_work_basepay_field'),
+                    name: await t(interaction, 'economy.work.work.basepay.field'),
                     value: `🪙 ${baseEarning.toLocaleString()}`,
                     inline: true,
                 },
                 {
-                    name: await t(interaction, 'economy_work_work_bonus_field', { modifier: scenario.modifier }),
+                    name: await t(interaction, 'economy.work.work.bonus.field', { modifier: scenario.modifier }),
                     value: `🪙 ${(finalEarning - baseEarning).toLocaleString()}`,
                     inline: true,
                 },
                 {
-                    name: await t(interaction, 'economy_work_work_total_field'),
+                    name: await t(interaction, 'economy.work.work.total.field'),
                     value: `**💰 ${finalEarning.toLocaleString()}**`,
                     inline: true,
                 }

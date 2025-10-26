@@ -100,14 +100,14 @@ module.exports = {
 
                             if (!label || !roleId || !style) {
                                 return interaction.editReply({
-                                    content: await t(interaction, 'core_embed_embed_role_button_format_error'),
+                                    content: await t(interaction, 'core.embed.embed.role.button.format.error'),
                                 });
                             }
 
                             const validStyles = Object.keys(ButtonStyle).filter((k) => isNaN(k));
                             if (!validStyles.includes(style)) {
                                 return interaction.editReply({
-                                    content: await t(interaction, 'core_embed_embed_role_button_style_error', {
+                                    content: await t(interaction, 'core.embed.embed.role.button.style.error', {
                                         styles: validStyles.join(', '),
                                     }),
                                 });
@@ -125,13 +125,13 @@ module.exports = {
 
                             if (!role) {
                                 return interaction.editReply({
-                                    content: await t(interaction, 'core_embed_embed_role_not_found', { roleId: btn.roleId }),
+                                    content: await t(interaction, 'core.embed.embed.role.not.found', { roleId: btn.roleId }),
                                 });
                             }
 
                             if (role.comparePositionTo(interaction.guild.members.me.roles.highest) >= 0) {
                                 return interaction.editReply({
-                                    content: await t(interaction, 'core_embed_embed_role_too_high', { roleName: role.name }),
+                                    content: await t(interaction, 'core.embed.embed.role.too.high', { roleName: role.name }),
                                 });
                             }
                         }
@@ -147,7 +147,7 @@ module.exports = {
                             });
                         } catch (error) {
                             logger.error(error);
-                            return interaction.editReply({ content: await t(interaction, 'core_embed_embed_db_save_error') });
+                            return interaction.editReply({ content: await t(interaction, 'core.embed.embed.db.save.error') });
                         }
 
                         const buttonsWithId = buttonsData.map((btn, i) => ({
@@ -160,7 +160,7 @@ module.exports = {
                             await newEmbed.save();
                         } catch (error) {
                             logger.error(error);
-                            return interaction.editReply({ content: await t(interaction, 'core_embed_embed_db_button_save_error') });
+                            return interaction.editReply({ content: await t(interaction, 'core.embed.embed.db.button.save.error') });
                         }
 
                         const actionRow = new ActionRowBuilder();
@@ -183,7 +183,7 @@ module.exports = {
                             });
                         } catch (error) {
                             logger.error(error);
-                            return interaction.editReply({ content: await t(interaction, 'core_embed_embed_send_error') });
+                            return interaction.editReply({ content: await t(interaction, 'core.embed.embed.send.error') });
                         }
 
                         try {
@@ -193,7 +193,7 @@ module.exports = {
                         }
 
                         return interaction.editReply({
-                            content: await t(interaction, 'core_embed_embed_sent_success', { channel: channel.toString() }),
+                            content: await t(interaction, 'core.embed.embed.sent.success', { channel: channel.toString() }),
                         });
                     }
                 }
@@ -218,7 +218,7 @@ module.exports = {
                             for (const entry of buttonEntries) {
                                 const [label, link] = entry.split('|');
                                 if (link && !/^https?:\/\/\S+$/i.test(link)) {
-                                    return interaction.editReply({ content: await t(interaction, 'core_embed_embed_button_link_invalid') });
+                                    return interaction.editReply({ content: await t(interaction, 'core.embed.embed.button.link.invalid') });
                                 }
                             }
                         }
@@ -231,7 +231,7 @@ module.exports = {
                                 const [label, link] = entry.split('|');
 
                                 if (!label || !link) {
-                                    return interaction.editReply({ content: await t(interaction, 'core_embed_embed_button_format_error') });
+                                    return interaction.editReply({ content: await t(interaction, 'core.embed.embed.button.format.error') });
                                 }
 
                                 buttonsData.push({
@@ -250,7 +250,7 @@ module.exports = {
                                 const [name, value] = entry.split('|');
 
                                 if (!name || !value) {
-                                    return interaction.editReply({ content: await t(interaction, 'core_embed_embed_field_format_error') });
+                                    return interaction.editReply({ content: await t(interaction, 'core.embed.embed.field.format.error') });
                                 }
 
                                 fieldsData.push({
@@ -275,7 +275,7 @@ module.exports = {
                                 });
                             } catch (error) {
                                 logger.error(error);
-                                return interaction.editReply({ content: await t(interaction, 'core_embed_embed_db_save_error') });
+                                return interaction.editReply({ content: await t(interaction, 'core.embed.embed.db.save.error') });
                             }
                         }
 
@@ -287,7 +287,7 @@ module.exports = {
                                 await newEmbed.save();
                             } catch (error) {
                                 logger.error(error);
-                                return interaction.editReply({ content: await t(interaction, 'core_embed_embed_db_button_save_error') });
+                                return interaction.editReply({ content: await t(interaction, 'core.embed.embed.db.button.save.error') });
                             }
                         }
 
@@ -325,7 +325,7 @@ module.exports = {
                             });
                         } catch (error) {
                             logger.error(error);
-                            return interaction.editReply({ content: await t(interaction, 'core_embed_embed_send_error') });
+                            return interaction.editReply({ content: await t(interaction, 'core.embed.embed.send.error') });
                         }
 
                         if (storeToDb && newEmbed) {
@@ -337,14 +337,14 @@ module.exports = {
                         }
 
                         return interaction.editReply({
-                            content: await t(interaction, 'core_embed_embed_sent_success', { channel: channel.toString() }),
+                            content: await t(interaction, 'core.embed.embed.sent.success', { channel: channel.toString() }),
                         });
                     }
 
                     case 'delete': {
                         const messageId = interaction.options.getString('message_id');
                         if (!messageId) {
-                            return interaction.editReply({ content: await t(interaction, 'core_embed_embed_delete_no_id') });
+                            return interaction.editReply({ content: await t(interaction, 'core.embed.embed.delete.no.id') });
                         }
 
                         if (interaction.guild) {
@@ -352,7 +352,7 @@ module.exports = {
 
                             if (!reactEmbed) {
                                 return interaction.editReply({
-                                    content: await t(interaction, 'core_embed_embed_delete_not_found', { messageId }),
+                                    content: await t(interaction, 'core.embed.embed.delete.not.found', { messageId }),
                                 });
                             }
 
@@ -377,11 +377,11 @@ module.exports = {
                                 await reactEmbed.destroy();
                             } catch (err) {
                                 logger.error(`Gagal hapus data embed dari database:`, err);
-                                return interaction.editReply({ content: await t(interaction, 'core_embed_embed_delete_db_error') });
+                                return interaction.editReply({ content: await t(interaction, 'core.embed.embed.delete.db.error') });
                             }
 
                             return interaction.editReply({
-                                content: await t(interaction, 'core_embed_embed_delete_success', {
+                                content: await t(interaction, 'core.embed.embed.delete.success', {
                                     messageId,
                                     deletedMessage: deletedMessage ? ' (message in channel also deleted)' : '',
                                 }),
@@ -393,16 +393,16 @@ module.exports = {
                                 if (msg) {
                                     await msg.delete();
                                     return interaction.editReply({
-                                        content: await t(interaction, 'core_embed_embed_delete_dm_success', { messageId }),
+                                        content: await t(interaction, 'core.embed.embed.delete.dm.success', { messageId }),
                                     });
                                 } else {
                                     return interaction.editReply({
-                                        content: await t(interaction, 'core_embed_embed_delete_dm_not_found', { messageId }),
+                                        content: await t(interaction, 'core.embed.embed.delete.dm.not.found', { messageId }),
                                     });
                                 }
                             } catch (err) {
                                 logger.error(`Gagal hapus pesan embed di DM:`, err);
-                                return interaction.editReply({ content: await t(interaction, 'core_embed_embed_delete_dm_error') });
+                                return interaction.editReply({ content: await t(interaction, 'core.embed.embed.delete.dm.error') });
                             }
                         }
                     }

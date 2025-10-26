@@ -31,7 +31,7 @@ module.exports = {
                 const notFoundEmbed = new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(
-                        `## ${await t(interaction, 'economy_market_cancel_not_found_title')}\n${await t(interaction, 'economy_market_cancel_not_found_desc')}`
+                        `## ${await t(interaction, 'economy.market.cancel.not.found.title')}\n${await t(interaction, 'economy.market.cancel.not.found.desc')}`
                     );
                 return interaction.editReply({ embeds: [notFoundEmbed] });
             }
@@ -66,7 +66,7 @@ module.exports = {
             const successEmbed = new EmbedBuilder()
                 .setColor('Green')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_cancel_success_title')}\n${await t(interaction, 'economy_market_cancel_success_desc', { orderId: order.id })}`
+                    `## ${await t(interaction, 'economy.market.cancel.success.title')}\n${await t(interaction, 'economy.market.cancel.success.desc', { orderId: order.id })}`
                 );
             await interaction.editReply({ embeds: [successEmbed] });
         } catch (error) {
@@ -74,7 +74,7 @@ module.exports = {
             const errorEmbed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_cancel_error_title')}\n${await t(interaction, 'economy_market_cancel_error_desc')}`
+                    `## ${await t(interaction, 'economy.market.cancel.error.title')}\n${await t(interaction, 'economy.market.cancel.error.desc')}`
                 );
             await interaction.editReply({ embeds: [errorEmbed] });
         }

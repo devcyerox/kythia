@@ -38,7 +38,7 @@ module.exports = {
 
         if (!message) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_pin_not_found'),
+                content: await t(interaction, 'core.moderation.pin.not.found'),
                 ephemeral: true,
             });
         }
@@ -47,7 +47,7 @@ module.exports = {
             await message.pin();
         } catch (e) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_pin_failed'),
+                content: await t(interaction, 'core.moderation.pin.failed'),
                 ephemeral: true,
             });
         }
@@ -55,8 +55,8 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                await t(interaction, 'core_moderation_pin_success', {
-                    content: message.content || (await t(interaction, 'core_moderation_pin_no_content')),
+                await t(interaction, 'core.moderation.pin.success', {
+                    content: message.content || (await t(interaction, 'core.moderation.pin.no.content')),
                 })
             )
             .setThumbnail(interaction.client.user.displayAvatarURL())

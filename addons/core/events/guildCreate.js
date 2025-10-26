@@ -90,13 +90,13 @@ module.exports = async (bot, guild) => {
     if (inviteUrl) {
         inviteText = inviteUrl;
     } else {
-        inviteText = await t(guild, 'core_events_guildCreate_events_guild_create_no_invite');
+        inviteText = await t(guild, 'core.events.guildCreate.events.guild.create.no.invite');
     }
 
     const inviteEmbed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setDescription(
-            await t(guild, 'core_events_guildCreate_events_guild_create_webhook_desc', {
+            await t(guild, 'core.events.guildCreate.events.guild.create.webhook.desc', {
                 bot: guild.client.user.username,
                 guild: guild.name,
                 guildId: guild.id,
@@ -125,7 +125,7 @@ module.exports = async (bot, guild) => {
             const welcomeEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    await t(guild, 'core_events_guildCreate_events_guild_create_welcome_desc', {
+                    await t(guild, 'core.events.guildCreate.events.guild.create.welcome.desc', {
                         bot: guild.client.user.username,
                     })
                 )
@@ -136,7 +136,7 @@ module.exports = async (bot, guild) => {
             await channel.send({ embeds: [welcomeEmbed] });
         } catch (e) {
             channel.send(
-                await t(guild, 'core_events_guildCreate_events_guild_create_welcome_fallback', {
+                await t(guild, 'core.events.guildCreate.events.guild.create.welcome.fallback', {
                     bot: guild.client.user.username,
                 })
             );

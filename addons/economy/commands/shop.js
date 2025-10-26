@@ -34,7 +34,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     if (user && typeof user.kythiaCoin !== 'undefined' && user.kythiaCoin !== null) {
         cashDisplay = safeLocaleString(user.kythiaCoin, '0');
     }
-    const headerText = await t(interaction, 'economy_shop_desc', {
+    const headerText = await t(interaction, 'economy.shop.desc', {
         bot: interaction.client.user.username,
         category: category.charAt(0).toUpperCase() + category.slice(1),
         cash: cashDisplay,
@@ -44,7 +44,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     if (pageItems.length === 0) {
         itemBlocks.push(
             new TextDisplayBuilder().setContent(
-                `**${await t(interaction, 'economy_shop_empty_title')}**\n${await t(interaction, 'economy_shop_empty_desc')}`
+                `**${await t(interaction, 'economy.shop.empty.title')}**\n${await t(interaction, 'economy.shop.empty.desc')}`
             )
         );
     } else {
@@ -65,7 +65,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     );
     page = Math.max(1, Math.min(page, totalPages));
 
-    const footerText = await t(interaction, 'economy_shop_footer', { page, totalPages });
+    const footerText = await t(interaction, 'economy.shop.footer', { page, totalPages });
 
     const container = new ContainerBuilder()
         .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
@@ -101,10 +101,10 @@ async function generateShopComponentRows(interaction, page, totalPages, category
     const categoryRow = new ActionRowBuilder().addComponents(
         new StringSelectMenuBuilder()
             .setCustomId('select_category')
-            .setPlaceholder(await t(interaction, 'economy_shop_select_category_placeholder'))
+            .setPlaceholder(await t(interaction, 'economy.shop.select.category.placeholder'))
             .addOptions([
                 {
-                    label: await t(interaction, 'economy_shop_category_all'),
+                    label: await t(interaction, 'economy.shop.category.all'),
                     value: 'shop_category_all',
                     default: category === 'all',
                 },
@@ -114,7 +114,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
     const buyOptions = await Promise.all(
         pageItems.map(async (item) => ({
             label: await t(interaction, item.nameKey),
-            description: await t(interaction, 'economy_shop_item_price', { price: safeLocaleString(item.price, '?') }),
+            description: await t(interaction, 'economy.shop.item.price', { price: safeLocaleString(item.price, '?') }),
             value: item.id,
             emoji: item.emoji,
         }))
@@ -123,7 +123,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
     const buyRow = new ActionRowBuilder().addComponents(
         new StringSelectMenuBuilder()
             .setCustomId('buy_item')
-            .setPlaceholder(await t(interaction, 'economy_shop_buy_placeholder'))
+            .setPlaceholder(await t(interaction, 'economy.shop.buy.placeholder'))
             .setDisabled(pageItems.length === 0)
             .addOptions(buyOptions)
     );
@@ -131,22 +131,22 @@ async function generateShopComponentRows(interaction, page, totalPages, category
     const navigationRow = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
             .setCustomId(`shop_nav_first_${category}`)
-            .setLabel(await t(interaction, 'economy_shop_nav_first'))
+            .setLabel(await t(interaction, 'economy.shop.nav.first'))
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(page <= 1),
         new ButtonBuilder()
             .setCustomId(`shop_nav_prev_${category}`)
-            .setLabel(await t(interaction, 'economy_shop_nav_prev'))
+            .setLabel(await t(interaction, 'economy.shop.nav.prev'))
             .setStyle(ButtonStyle.Primary)
             .setDisabled(page <= 1),
         new ButtonBuilder()
             .setCustomId(`shop_nav_next_${category}`)
-            .setLabel(await t(interaction, 'economy_shop_nav_next'))
+            .setLabel(await t(interaction, 'economy.shop.nav.next'))
             .setStyle(ButtonStyle.Primary)
             .setDisabled(page >= totalPages),
         new ButtonBuilder()
             .setCustomId(`shop_nav_last_${category}`)
-            .setLabel(await t(interaction, 'economy_shop_nav_last'))
+            .setLabel(await t(interaction, 'economy.shop.nav.last'))
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(page >= totalPages)
     );
@@ -164,7 +164,7 @@ module.exports = {
         if (!user) {
             const errContainer = new ContainerBuilder()
                 .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
-                .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'economy_withdraw_no_account_desc')))
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'economy.withdraw.no.account.desc')))
                 .addTextDisplayComponents(new TextDisplayBuilder().setContent(''));
             return interaction.reply({
                 components: [errContainer],
@@ -204,7 +204,7 @@ module.exports = {
             if (i.user.id !== interaction.user.id) {
                 const errContainer = new ContainerBuilder()
                     .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
-                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(i, 'economy_shop_not_your_interaction_desc')));
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(i, 'economy.shop.not.your.interaction.desc')));
                 return i.reply({
                     components: [errContainer],
                     ephemeral: true,
@@ -239,7 +239,7 @@ module.exports = {
                 if (!selectedItem) {
                     const errContainer = new ContainerBuilder()
                         .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
-                        .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(i, 'economy_shop_item_not_found_desc')));
+                        .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(i, 'economy.shop.item.not.found.desc')));
                     return i.followUp({
                         components: [errContainer],
                         ephemeral: true,
@@ -257,7 +257,7 @@ module.exports = {
                         .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
                         .addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(
-                                await t(i, 'economy_shop_not_enough_money_desc', { item: itemNameWithEmoji })
+                                await t(i, 'economy.shop.not.enough.money.desc', { item: itemNameWithEmoji })
                             )
                         );
                     return i.followUp({
@@ -272,7 +272,7 @@ module.exports = {
                         .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
                         .addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(
-                                await t(i, 'economy_shop_not_enough_money_desc', { item: itemNameWithEmoji })
+                                await t(i, 'economy.shop.not.enough.money.desc', { item: itemNameWithEmoji })
                             )
                         );
                     return i.followUp({
@@ -295,7 +295,7 @@ module.exports = {
                     .setAccentColor(kythia.bot.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            await t(i, 'economy_shop_buy_success_desc', {
+                            await t(i, 'economy.shop.buy.success.desc', {
                                 item: itemNameWithEmoji,
                                 price: priceStr,
                             })

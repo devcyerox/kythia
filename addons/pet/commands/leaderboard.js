@@ -36,7 +36,7 @@ module.exports = {
             // Await all translations before joining
             const entries = await Promise.all(
                 leaderboard.map((pet, index) =>
-                    t(interaction, 'pet_leaderboard_entry', {
+                    t(interaction, 'pet.leaderboard.entry', {
                         index: index + 1,
                         userId: pet.userId,
                         username: interaction.client.users.cache.get(pet.userId)?.username || 'Unknown',
@@ -49,11 +49,11 @@ module.exports = {
             );
             leaderboardDesc = entries.join('\n');
         } else {
-            leaderboardDesc = await t(interaction, 'pet_leaderboard_empty');
+            leaderboardDesc = await t(interaction, 'pet.leaderboard.empty');
         }
 
         const embed = new EmbedBuilder()
-            .setDescription(`${await t(interaction, 'pet_leaderboard_title')}\n${leaderboardDesc}`)
+            .setDescription(`${await t(interaction, 'pet.leaderboard.title')}\n${leaderboardDesc}`)
             .setColor(kythia.bot.color)
             .setFooter(await embedFooter(interaction))
             .setTimestamp();

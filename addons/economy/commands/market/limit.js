@@ -52,7 +52,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -65,7 +65,7 @@ module.exports = {
                     const embed = new EmbedBuilder()
                         .setColor('Red')
                         .setDescription(
-                            `## ${await t(interaction, 'economy_market_buy_insufficient_funds_title')}\n${await t(interaction, 'economy_market_buy_insufficient_funds_desc', { amount: totalCost.toLocaleString() })}`
+                            `## ${await t(interaction, 'economy.market.buy.insufficient.funds.title')}\n${await t(interaction, 'economy.market.buy.insufficient.funds.desc', { amount: totalCost.toLocaleString() })}`
                         )
                         .setThumbnail(interaction.user.displayAvatarURL())
                         .setFooter(await embedFooter(interaction));
@@ -90,7 +90,7 @@ module.exports = {
                 const successEmbed = new EmbedBuilder()
                     .setColor('Green')
                     .setDescription(
-                        `## ${await t(interaction, 'economy_market_limit_buy_success_title')}\n${await t(interaction, 'economy_market_limit_buy_success_desc', { quantity: quantity, asset: assetId.toUpperCase(), price: price.toLocaleString() })}\n\nOrder ID: \`${order.id}\``
+                        `## ${await t(interaction, 'economy.market.limit.buy.success.title')}\n${await t(interaction, 'economy.market.limit.buy.success.desc', { quantity: quantity, asset: assetId.toUpperCase(), price: price.toLocaleString() })}\n\nOrder ID: \`${order.id}\``
                     )
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [successEmbed] });
@@ -104,7 +104,7 @@ module.exports = {
                     const embed = new EmbedBuilder()
                         .setColor('Red')
                         .setDescription(
-                            `## ${await t(interaction, 'economy_market_sell_insufficient_asset_title')}\n${await t(interaction, 'economy_market_sell_insufficient_asset_desc', { asset: assetId.toUpperCase() })}`
+                            `## ${await t(interaction, 'economy.market.sell.insufficient.asset.title')}\n${await t(interaction, 'economy.market.sell.insufficient.asset.desc', { asset: assetId.toUpperCase() })}`
                         )
                         .setThumbnail(interaction.user.displayAvatarURL())
                         .setFooter(await embedFooter(interaction));
@@ -130,7 +130,7 @@ module.exports = {
                 const successEmbed = new EmbedBuilder()
                     .setColor('Yellow')
                     .setDescription(
-                        `## ${await t(interaction, 'economy_market_limit_sell_success_title')}\n${await t(interaction, 'economy_market_limit_sell_success_desc', { quantity: quantity, asset: assetId.toUpperCase(), price: price.toLocaleString() })}\n\nOrder ID: \`${order.id}\``
+                        `## ${await t(interaction, 'economy.market.limit.sell.success.title')}\n${await t(interaction, 'economy.market.limit.sell.success.desc', { quantity: quantity, asset: assetId.toUpperCase(), price: price.toLocaleString() })}\n\nOrder ID: \`${order.id}\``
                     )
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [successEmbed] });
@@ -140,7 +140,7 @@ module.exports = {
             const errorEmbed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_order_error_title')}\n${await t(interaction, 'economy_market_order_error_desc')}`
+                    `## ${await t(interaction, 'economy.market.order.error.title')}\n${await t(interaction, 'economy.market.order.error.desc')}`
                 );
             await interaction.editReply({ embeds: [errorEmbed] });
         }

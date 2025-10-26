@@ -27,8 +27,8 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'core_moderation_unban_embed_title')}\n` +
-                        (await t(interaction, 'core_moderation_unban_embed_desc', { user: `<@${userId}>` }))
+                    `## ${await t(interaction, 'core.moderation.unban.embed.title')}\n` +
+                        (await t(interaction, 'core.moderation.unban.embed.desc', { user: `<@${userId}>` }))
                 )
                 .setThumbnail(interaction.client.user.displayAvatarURL())
                 .setTimestamp()
@@ -36,7 +36,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         } catch (error) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_unban_failed', { error: error.message }),
+                content: await t(interaction, 'core.moderation.unban.failed', { error: error.message }),
             });
         }
     },

@@ -19,13 +19,13 @@ module.exports = {
         const giveaway = await Giveaway.getCache({ messageId: messageId });
 
         if (!giveaway || giveaway.ended) {
-            return interaction.editReply({ content: await t(interaction, 'giveaway_buttons_giveawayjoin_error_ended') });
+            return interaction.editReply({ content: await t(interaction, 'giveaway.buttons.giveawayjoin.error.ended') });
         }
 
         // Cek role requirement
         if (giveaway.roleId) {
             if (!interaction.member.roles.cache.has(giveaway.roleId)) {
-                return interaction.editReply({ content: await t(interaction, 'giveaway_buttons_giveawayjoin_error_role_required', { role: giveaway.roleId }) });
+                return interaction.editReply({ content: await t(interaction, 'giveaway.buttons.giveawayjoin.error.role.required', { role: giveaway.roleId }) });
             }
         }
 
@@ -35,10 +35,10 @@ module.exports = {
         // Toggle join/unjoin
         if (userIndex > -1) {
             participants.splice(userIndex, 1);
-            await interaction.editReply({ content: await t(interaction, 'giveaway_buttons_giveawayjoin_response_unjoin') });
+            await interaction.editReply({ content: await t(interaction, 'giveaway.buttons.giveawayjoin.response.unjoin') });
         } else {
             participants.push(interaction.user.id);
-            await interaction.editReply({ content: await t(interaction, 'giveaway_buttons_giveawayjoin_response_join') });
+            await interaction.editReply({ content: await t(interaction, 'giveaway.buttons.giveawayjoin.response.join') });
         }
 
         giveaway.participants = JSON.stringify(participants);

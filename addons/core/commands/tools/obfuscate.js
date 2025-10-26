@@ -30,7 +30,7 @@ module.exports = {
         const file = interaction.options.getAttachment('file');
 
         if (!file || !file.url) {
-            return interaction.editReply({ content: await t(interaction, 'core_tools_obfuscate_no_file'), ephemeral: true });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.no.file'), ephemeral: true });
         }
 
         // Download the file content
@@ -39,7 +39,7 @@ module.exports = {
             const res = await axios.get(file.url);
             scriptText = res.data;
         } catch (err) {
-            return interaction.editReply({ content: await t(interaction, 'core_tools_obfuscate_failed_download'), ephemeral: true });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.failed.download'), ephemeral: true });
         }
 
         let obfuscated, filename;
@@ -51,7 +51,7 @@ module.exports = {
                 }).getObfuscatedCode();
                 filename = file.name.replace(/\.js$/i, '') + '.obf.js';
             } catch (e) {
-                return interaction.editReply({ content: await t(interaction, 'core_tools_obfuscate_failed_javascript'), ephemeral: true });
+                return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.failed.javascript'), ephemeral: true });
             }
         } else if (type === 'lua') {
             try {
@@ -69,7 +69,7 @@ module.exports = {
                     !response.data.obfuscated.trim()
                 ) {
                     console.error('Unexpected response from Lua obfuscator:', response.data);
-                    return interaction.editReply({ content: await t(interaction, 'core_tools_obfuscate_failed_lua'), ephemeral: true });
+                    return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.failed.lua'), ephemeral: true });
                 }
                 // Replace the version comment with "by kenndeclouv"
                 obfuscated = response.data.obfuscated.replace(
@@ -79,17 +79,17 @@ module.exports = {
                 filename = file.name.replace(/\.lua$/i, '') + '.obf.lua';
             } catch (e) {
                 console.error(e);
-                return interaction.editReply({ content: await t(interaction, 'core_tools_obfuscate_failed_lua'), ephemeral: true });
+                return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.failed.lua'), ephemeral: true });
             }
         } else {
-            return interaction.editReply({ content: await t(interaction, 'core_tools_obfuscate_invalid_type'), ephemeral: true });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.invalid.type'), ephemeral: true });
         }
 
         const buffer = Buffer.from(obfuscated, 'utf8');
         const attachment = new AttachmentBuilder(buffer, { name: filename });
 
         await interaction.editReply({
-            content: await t(interaction, 'core_tools_obfuscate_success', { type }),
+            content: await t(interaction, 'core.tools.obfuscate.success', { type }),
             ephemeral: true,
             files: [attachment],
         });

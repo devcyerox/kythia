@@ -27,8 +27,8 @@ module.exports = {
         const lockEmbed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                `## ${await t(interaction, 'core_moderation_unlock_embed_channel_unlocked')}\n` +
-                    (await t(interaction, 'core_moderation_unlock_embed_channel_unlocked_desc', { user: `<@${interaction.user.id}>` }))
+                `## ${await t(interaction, 'core.moderation.unlock.embed.channel.unlocked.title')}\n` +
+                    (await t(interaction, 'core.moderation.unlock.embed.channel.unlocked.desc', { user: `<@${interaction.user.id}>` }))
             )
             .setThumbnail(interaction.user.displayAvatarURL())
             .setTimestamp()
@@ -39,8 +39,8 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                `## ${await t(interaction, 'core_moderation_unlock_embed_reply_title')}\n` +
-                    (await t(interaction, 'core_moderation_unlock_embed_reply_desc', { channel: channel.toString() }))
+                `## ${await t(interaction, 'core.moderation.unlock.embed.reply.title')}\n` +
+                    (await t(interaction, 'core.moderation.unlock.embed.reply.desc', { channel: channel.toString() }))
             )
             .setThumbnail(interaction.client.user.displayAvatarURL())
             .setTimestamp()

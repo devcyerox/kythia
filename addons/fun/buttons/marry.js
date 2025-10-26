@@ -23,11 +23,11 @@ module.exports = {
             if (!marriage || marriage.status !== 'pending') {
                 const container = new ContainerBuilder()
                     .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
-                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'fun_marry_proposal_expired')))
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'fun.marry.proposal.expired')))
                     .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                            await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                         )
                     );
                 return interaction.update({
@@ -37,7 +37,7 @@ module.exports = {
 
             if (interaction.user.id !== marriage.user2Id) {
                 return interaction.reply({
-                    content: await t(interaction, 'fun_marry_not_your_proposal'),
+                    content: await t(interaction, 'fun.marry.not.your.proposal'),
                     ephemeral: true,
                 });
             }
@@ -58,12 +58,12 @@ module.exports = {
             }
             user2Display = interaction.user.toString();
 
-            const congratsTitle = `## ${await t(interaction, 'fun_marry_congrats_title')}`;
-            const congratsDesc = await t(interaction, 'fun_marry_congrats_description', {
+            const congratsTitle = `## ${await t(interaction, 'fun.marry.congrats.title')}`;
+            const congratsDesc = await t(interaction, 'fun.marry.congrats.description', {
                 user1: user1Display,
                 user2: user2Display,
             });
-            const footer = await t(interaction, 'common_container_footer', { username: interaction.client.user.username });
+            const footer = await t(interaction, 'common.container.footer', { username: interaction.client.user.username });
 
             const container = new ContainerBuilder()
                 .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
@@ -80,11 +80,11 @@ module.exports = {
             if (!marriage || marriage.status !== 'pending') {
                 const container = new ContainerBuilder()
                     .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
-                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'fun_marry_proposal_expired')))
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'fun.marry.proposal.expired')))
                     .addSeparatorComponents(new SeparatorBuilder().setDivider(true))
                     .addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                            await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                         )
                     );
                 return interaction.update({
@@ -94,18 +94,18 @@ module.exports = {
 
             if (interaction.user.id !== marriage.user2Id) {
                 return interaction.reply({
-                    content: await t(interaction, 'fun_marry_not_your_proposal'),
+                    content: await t(interaction, 'fun.marry.not.your.proposal'),
                     ephemeral: true,
                 });
             }
 
             await marriage.update({ status: 'rejected' });
 
-            const rejectedText = await t(interaction, 'fun_marry_proposal_rejected', {
+            const rejectedText = await t(interaction, 'fun.marry.proposal.rejected', {
                 user1: `<@${marriage.user1Id}>`,
                 user2: `<@${marriage.user2Id}>`,
             });
-            const footer = await t(interaction, 'common_container_footer', { username: interaction.client.user.username });
+            const footer = await t(interaction, 'common.container.footer', { username: interaction.client.user.username });
 
             const container = new ContainerBuilder()
                 .setAccentColor(convertColor('Red', { from: 'discord', to: 'decimal' }))

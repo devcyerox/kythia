@@ -23,13 +23,13 @@ module.exports = {
 
         if (!userPet) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_feed_no_pet_title')}\n${await t(interaction, 'pet_feed_no_pet')}`)
+                .setDescription(`## ${await t(interaction, 'pet.feed.no.pet.title')}\n${await t(interaction, 'pet.feed.no.pet.desc')}`)
                 .setColor(0xed4245);
             return interaction.editReply({ embeds: [embed] });
         }
         if (userPet.isDead) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_feed_dead_title')}\n${await t(interaction, 'pet_feed_dead')}`)
+                .setDescription(`## ${await t(interaction, 'pet.feed.dead.title')}\n${await t(interaction, 'pet.feed.dead.desc')}`)
                 .setColor(0xed4245);
             return interaction.editReply({ embeds: [embed] });
         }
@@ -37,7 +37,7 @@ module.exports = {
         const petFood = await Inventory.getCache({ userId: userId, itemName: '🍪 Pet Food' });
         if (!petFood) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_feed_no_food_title')}\n${await t(interaction, 'pet_feed_no_food')}`)
+                .setDescription(`## ${await t(interaction, 'pet.feed.no.food.title')}\n${await t(interaction, 'pet.feed.no.food.desc')}`)
                 .setColor(0xed4245);
             return interaction.editReply({ embeds: [embed] });
         }
@@ -49,14 +49,14 @@ module.exports = {
         // Check if hunger exceeds the maximum limit
         if (userPet.hunger >= 100) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_feed_full_title')}\n${await t(interaction, 'pet_feed_full')}`)
+                .setDescription(`## ${await t(interaction, 'pet.feed.full.title')}\n${await t(interaction, 'pet.feed.full.desc')}`)
                 .setColor(0x57f287);
             return interaction.editReply({ embeds: [embed] });
         }
 
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_feed_success_title')}\n${await t(interaction, 'pet_feed_success', {
+                `## ${await t(interaction, 'pet.feed.success.title')}\n${await t(interaction, 'pet.feed.success.desc', {
                     icon: userPet.pet.icon,
                     name: userPet.pet.name,
                     rarity: userPet.pet.rarity,

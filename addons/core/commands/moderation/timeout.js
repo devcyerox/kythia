@@ -34,12 +34,12 @@ module.exports = {
 
         if (member) {
             try {
-                await member.timeout(duration, await t(interaction, 'core_moderation_timeout_reason'));
+                await member.timeout(duration, await t(interaction, 'core.moderation.timeout.reason'));
                 const embed = new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(
-                        `## ${await t(interaction, 'core_moderation_timeout_embed_title')}\n` +
-                            (await t(interaction, 'core_moderation_timeout_embed_desc', {
+                        `## ${await t(interaction, 'core.moderation.timeout.embed.title')}\n` +
+                            (await t(interaction, 'core.moderation.timeout.embed.desc', {
                                 user: `<@${user.id}>`,
                                 duration: duration / 1000,
                                 moderator: `<@${interaction.user.id}>`,
@@ -52,12 +52,12 @@ module.exports = {
             } catch (error) {
                 console.error('Error during timeout:', error);
                 return interaction.editReply({
-                    content: await t(interaction, 'core_moderation_timeout_failed', { error: error.message }),
+                    content: await t(interaction, 'core.moderation.timeout.failed', { error: error.message }),
                 });
             }
         } else {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_timeout_user_not_found'),
+                content: await t(interaction, 'core.moderation.timeout.user.not.found'),
             });
         }
     },

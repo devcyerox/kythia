@@ -97,19 +97,19 @@ module.exports = async (bot, member) => {
             const channel = guild.channels.cache.get(inviteChannelId);
             if (channel && channel.isTextBased && channel.viewable) {
                 let embedDesc = '';
-                let title = await t(guild, 'invite_events_guildMemberAdd_tracker_title');
-                let accountAgeStr = await t(guild, 'invite_events_guildMemberAdd_tracker_account_age', {
+                let title = await t(guild, 'invite.events.guildMemberAdd.tracker.title');
+                let accountAgeStr = await t(guild, 'invite.events.guildMemberAdd.tracker.account.age', {
                     days: Math.floor(accountAgeDays),
                 });
 
                 if (inviterId) {
                     // Normal invite
                     let inviteTypeStr = isFake
-                        ? await t(guild, 'invite_events_guildMemberAdd_tracker_type_fake')
-                        : await t(guild, 'invite_events_guildMemberAdd_tracker_type_real');
+                        ? await t(guild, 'invite.events.guildMemberAdd.tracker.type.fake')
+                        : await t(guild, 'invite.events.guildMemberAdd.tracker.type.real');
                     embedDesc =
                         `## ${title}\n` +
-                        (await t(guild, 'invite_events_guildMemberAdd_tracker_joined_by', {
+                        (await t(guild, 'invite.events.guildMemberAdd.tracker.joined.by', {
                             user: `<@${member.id}>`,
                             username: member.user.username,
                             inviter: `<@${inviterId}>`,
@@ -117,13 +117,13 @@ module.exports = async (bot, member) => {
                             inviteType: inviteTypeStr,
                         })) +
                         '\n' +
-                        (await t(guild, 'invite_events_guildMemberAdd_tracker_code', { code: inviteCode })) +
+                        (await t(guild, 'invite.events.guildMemberAdd.tracker.code', { code: inviteCode })) +
                         '\n' +
                         accountAgeStr;
                 } else if (inviteType === 'vanity') {
                     embedDesc =
                         `## ${title}\n` +
-                        (await t(guild, 'invite_events_guildMemberAdd_tracker_joined_vanity', {
+                        (await t(guild, 'invite.events.guildMemberAdd.tracker.joined.vanity', {
                             user: `<@${member.id}>`,
                             username: member.user.username,
                             code: inviteCode,
@@ -133,7 +133,7 @@ module.exports = async (bot, member) => {
                 } else if (inviteType === 'oauth') {
                     embedDesc =
                         `## ${title}\n` +
-                        (await t(guild, 'invite_events_guildMemberAdd_tracker_joined_oauth', {
+                        (await t(guild, 'invite.events.guildMemberAdd.tracker.joined.oauth', {
                             user: `<@${member.id}>`,
                             username: member.user.username,
                         })) +
@@ -142,7 +142,7 @@ module.exports = async (bot, member) => {
                 } else {
                     embedDesc =
                         `## ${title}\n` +
-                        (await t(guild, 'invite_events_guildMemberAdd_tracker_joined_unknown', {
+                        (await t(guild, 'invite.events.guildMemberAdd.tracker.joined.unknown', {
                             user: `<@${member.id}>`,
                             username: member.user.username,
                         })) +
@@ -168,8 +168,8 @@ module.exports = async (bot, member) => {
                     const embed = new EmbedBuilder()
                         .setColor(0xed4245)
                         .setDescription(
-                            `## ${await t(guild, 'invite_events_guildMemberAdd_tracker_error_title')}\n` +
-                                (await t(guild, 'invite_events_guildMemberAdd_tracker_error_desc'))
+                            `## ${await t(guild, 'invite.events.guildMemberAdd.tracker.error.title')}\n` +
+                                (await t(guild, 'invite.events.guildMemberAdd.tracker.error.desc'))
                         )
                         .setTimestamp();
                     channel.send({ embeds: [embed] }).catch(() => {});

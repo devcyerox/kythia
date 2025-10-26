@@ -32,7 +32,7 @@ module.exports = {
             });
         } catch (e) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_lock_failed'),
+                content: await t(interaction, 'core.moderation.lock.failed'),
                 ephemeral: true,
             });
         }
@@ -42,7 +42,7 @@ module.exports = {
             const lockEmbed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    await t(interaction, 'core_moderation_lock_embed_channel_locked', {
+                    await t(interaction, 'core.moderation.lock.embed.channel.locked', {
                         user: `<@${interaction.user.id}>`,
                     })
                 )
@@ -58,7 +58,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                await t(interaction, 'core_moderation_lock_embed_reply', {
+                await t(interaction, 'core.moderation.lock.embed.reply', {
                     channel: `<#${channel.id}>`,
                 })
             )

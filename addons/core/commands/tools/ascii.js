@@ -337,7 +337,7 @@ module.exports = {
 
         if (!text || text.length > 20) {
             // Kurangi batas panjang teks untuk allfonts biar ngga terlalu gede
-            return interaction.editReply({ content: await t(interaction, 'core_tools_ascii_invalid_text_allfonts') });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.ascii.invalid.text.allfonts') });
         }
 
         if (allFonts) {
@@ -397,17 +397,17 @@ module.exports = {
             // Logika untuk satu font (sudah oke)
             figlet.text(text, { font }, async (err, data) => {
                 if (err || !data) {
-                    return interaction.editReply({ content: await t(interaction, 'core_tools_ascii_failed') });
+                    return interaction.editReply({ content: await t(interaction, 'core.tools.ascii.failed') });
                 }
                 const asciiArt = '```' + data + '```';
 
                 if (asciiArt.length > 4096) {
                     // Batas deskripsi embed adalah 4096
-                    return interaction.editReply({ content: await t(interaction, 'core_tools_ascii_too_long') });
+                    return interaction.editReply({ content: await t(interaction, 'core.tools.ascii.too.long') });
                 }
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'core_tools_ascii_embed_desc', { asciiArt, font }))
+                    .setDescription(await t(interaction, 'core.tools.ascii.embed.desc', { asciiArt, font }))
                     .setFooter(await embedFooter(interaction));
                 await interaction.editReply({ embeds: [embed] });
             });

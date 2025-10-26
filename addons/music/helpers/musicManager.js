@@ -62,12 +62,12 @@ async function shutdownPlayerUI(player, track, client, channel) {
         channel = channel || player.nowPlayingMessage.channel || (client && client.channels.cache.get(player.textChannel));
         let endedText, artistText, requestedByText, artworkUrl, title, url;
         if (track && track.info) {
-            endedText = await t(channel, 'music_helpers_musicManager_manager_now_ended', {
+            endedText = await t(channel, 'music.helpers.musicManager.manager.now.ended', {
                 title: track.info.title,
                 url: track.info.uri,
             });
-            artistText = await t(channel, 'music_helpers_musicManager_manager_channel', { author: track.info.author });
-            requestedByText = await t(channel, 'music_helpers_musicManager_manager_requested_by', {
+            artistText = await t(channel, 'music.helpers.musicManager.manager.channel', { author: track.info.author });
+            requestedByText = await t(channel, 'music.helpers.musicManager.manager.requested.by', {
                 user: track.info.requester?.username
                     ? `${track.info.requester} (${track.info.requester.username})`
                     : `${track.info.requester}`,
@@ -76,7 +76,7 @@ async function shutdownPlayerUI(player, track, client, channel) {
             title = track.info.title;
             url = track.info.uri;
         } else {
-            endedText = await t(channel, 'music_helpers_musicManager_manager_simple');
+            endedText = await t(channel, 'music.helpers.musicManager.manager.simple');
             artistText = '';
             requestedByText = '';
             artworkUrl = null;
@@ -102,7 +102,7 @@ async function shutdownPlayerUI(player, track, client, channel) {
         if (requestedByText) container.addTextDisplayComponents(new TextDisplayBuilder().setContent(requestedByText));
         container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
         container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(await t(channel, 'common_container_footer', { username: client.user.username }))
+            new TextDisplayBuilder().setContent(await t(channel, 'common.container.footer', { username: client.user.username }))
         );
 
         await player.nowPlayingMessage.edit({
@@ -183,7 +183,7 @@ async function initializeMusicManager(bot) {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor('Orange')
-                                    .setDescription(await t(channel, 'music_helpers_musicManager_manager_no_listener')),
+                                    .setDescription(await t(channel, 'music.helpers.musicManager.manager.no.listener')),
                             ],
                         });
                     }
@@ -247,15 +247,15 @@ async function initializeMusicManager(bot) {
 
         player.playedTrackIdentifiers.add(track.info.identifier);
 
-        const nowPlayingText = await t(channel, 'music_helpers_musicManager_manager_playing', {
+        const nowPlayingText = await t(channel, 'music.helpers.musicManager.manager.playing', {
             title: track.info.title,
             url: track.info.uri,
         });
         const progress = createProgressBar(player);
 
-        const artistText = await t(channel, 'music_helpers_musicManager_manager_channel', { author: track.info.author });
+        const artistText = await t(channel, 'music.helpers.musicManager.manager.channel', { author: track.info.author });
 
-        const requestedByText = await t(channel, 'music_helpers_musicManager_manager_requested_by', {
+        const requestedByText = await t(channel, 'music.helpers.musicManager.manager.requested.by', {
             user: track.info.requester?.username ? `${track.info.requester} (${track.info.requester.username})` : `${track.info.requester}`,
         });
 
@@ -357,13 +357,13 @@ async function initializeMusicManager(bot) {
             for (const song of recommendations) {
                 suggestionOptions.push({
                     label: song.info.title.substring(0, 95),
-                    description: await t(channel, 'music_helpers_musicManager_manager_by', { author: song.info.author.substring(0, 90) }),
+                    description: await t(channel, 'music.helpers.musicManager.manager.by', { author: song.info.author.substring(0, 90) }),
                     value: song.info.uri,
                 });
             }
             const suggestionMenu = new StringSelectMenuBuilder()
                 .setCustomId('music_suggest')
-                .setPlaceholder(await t(channel, 'music_helpers_musicManager_manager_placeholder'))
+                .setPlaceholder(await t(channel, 'music.helpers.musicManager.manager.placeholder'))
                 .addOptions(suggestionOptions)
                 .setDisabled(false);
             suggestionRow = new ActionRowBuilder().addComponents(suggestionMenu);
@@ -401,7 +401,7 @@ async function initializeMusicManager(bot) {
         container.addActionRowComponents(secondControlButtonRow);
         container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
         container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(await t(channel, 'common_container_footer', { username: client.user.username }))
+            new TextDisplayBuilder().setContent(await t(channel, 'common.container.footer', { username: client.user.username }))
         );
 
         const components = [container];
@@ -430,13 +430,13 @@ async function initializeMusicManager(bot) {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Red')
-                                .setDescription(await t(interaction, 'music_helpers_musicManager_manager_required')),
+                                .setDescription(await t(interaction, 'music.helpers.musicManager.manager.required')),
                         ],
                     });
                 }
                 if (!hasControlPermission(interaction, player)) {
                     return interaction.reply({
-                        content: await t(interaction, 'music_helpers_musicManager_music_permission_denied'),
+                        content: await t(interaction, 'music.helpers.musicManager.music.permission.denied'),
                         ephemeral: true,
                     });
                 }
@@ -500,7 +500,7 @@ async function initializeMusicManager(bot) {
                                 embeds: [
                                     new EmbedBuilder()
                                         .setColor('Orange')
-                                        .setDescription(await t(channel, 'music_helpers_musicManager_manager_no_listener')),
+                                        .setDescription(await t(channel, 'music.helpers.musicManager.manager.no.listener')),
                                 ],
                             });
                         }
@@ -522,13 +522,13 @@ async function initializeMusicManager(bot) {
             const updatedFirstControlButtonRow = getFirstControlButtonRow(player.isPaused, false);
             const updatedSecondControlButtonRow = getSecondControlButtonRow(false);
 
-            const updatedNowPlayingText = await t(channel, 'music_helpers_musicManager_manager_playing', {
+            const updatedNowPlayingText = await t(channel, 'music.helpers.musicManager.manager.playing', {
                 title: currentTrack.info.title.replace(/[\[\]\(\)]/g, ''),
                 url: currentTrack.info.uri,
             });
             const updatedProgress = createProgressBar(player);
-            const updatedArtistText = await t(channel, 'music_helpers_musicManager_manager_channel', { author: currentTrack.info.author });
-            const updatedRequestedByText = await t(channel, 'music_helpers_musicManager_manager_requested_by', {
+            const updatedArtistText = await t(channel, 'music.helpers.musicManager.manager.channel', { author: currentTrack.info.author });
+            const updatedRequestedByText = await t(channel, 'music.helpers.musicManager.manager.requested.by', {
                 user: currentTrack.info.requester?.username
                     ? `${currentTrack.info.requester} (${currentTrack.info.requester.username})`
                     : `${currentTrack.info.requester}`,
@@ -578,7 +578,7 @@ async function initializeMusicManager(bot) {
             updatedContainer.addActionRowComponents(updatedSecondControlButtonRow);
             updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
             updatedContainer.addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(await t(channel, 'common_container_footer', { username: client.user.username }))
+                new TextDisplayBuilder().setContent(await t(channel, 'common.container.footer', { username: client.user.username }))
             );
 
             try {
@@ -654,7 +654,7 @@ async function initializeMusicManager(bot) {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Orange')
-                            .setDescription(await t(channel, 'music_helpers_musicManager_manager_no_listener')),
+                            .setDescription(await t(channel, 'music.helpers.musicManager.manager.no.listener')),
                     ],
                 });
             }
@@ -680,7 +680,7 @@ async function initializeMusicManager(bot) {
                         await channel.send({
                             embeds: [
                                 new EmbedBuilder().setColor(kythia.bot.color).setDescription(
-                                    await t(channel, 'music_helpers_musicManager_manager_searching', {
+                                    await t(channel, 'music.helpers.musicManager.manager.searching', {
                                         title: autoplayReference.info.title,
                                     })
                                 ),
@@ -697,7 +697,7 @@ async function initializeMusicManager(bot) {
                 });
 
                 if (res.loadType !== 'playlist' || !res.tracks.length) {
-                    throw new Error(await t(channel, 'music_helpers_musicManager_manager_recommendation'));
+                    throw new Error(await t(channel, 'music.helpers.musicManager.manager.recommendation'));
                 }
 
                 const potentialNextTracks = res.tracks.filter((t) => !player.playedTrackIdentifiers.has(t.info.identifier));
@@ -709,7 +709,7 @@ async function initializeMusicManager(bot) {
                                 embeds: [
                                     new EmbedBuilder()
                                         .setColor('Orange')
-                                        .setDescription(await t(channel, 'music_helpers_musicManager_manager_played')),
+                                        .setDescription(await t(channel, 'music.helpers.musicManager.manager.played')),
                                 ],
                             });
                         })();
@@ -728,7 +728,7 @@ async function initializeMusicManager(bot) {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Red')
-                                .setDescription(await t(channel, 'music_helpers_musicManager_manager_failed', { error: err.message })),
+                                .setDescription(await t(channel, 'music.helpers.musicManager.manager.failed', { error: err.message })),
                         ],
                     });
                 return player.destroy();
@@ -779,7 +779,7 @@ async function initializeMusicManager(bot) {
             if (!player) {
                 return await interaction.editReply({
                     embeds: [
-                        new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_ended')),
+                        new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.musicManager.manager.ended')),
                     ],
                 });
             }
@@ -788,7 +788,7 @@ async function initializeMusicManager(bot) {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(await t(interaction, 'music_helpers_musicManager_manager_simple')),
+                            .setDescription(await t(interaction, 'music.helpers.musicManager.manager.simple')),
                     ],
                 });
             }
@@ -797,7 +797,7 @@ async function initializeMusicManager(bot) {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(await t(interaction, 'music_helpers_musicManager_manager_required')),
+                            .setDescription(await t(interaction, 'music.helpers.musicManager.manager.required')),
                     ],
                 });
             }
@@ -811,7 +811,7 @@ async function initializeMusicManager(bot) {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Red')
-                                .setDescription(await t(interaction, 'music_helpers_musicManager_manager_track')),
+                                .setDescription(await t(interaction, 'music.helpers.musicManager.manager.track')),
                         ],
                     });
                 }
@@ -821,7 +821,7 @@ async function initializeMusicManager(bot) {
                 await interaction.editReply({
                     embeds: [
                         new EmbedBuilder().setColor(kythia.bot.color).setDescription(
-                            await t(interaction, 'music_helpers_musicManager_manager_queue', {
+                            await t(interaction, 'music.helpers.musicManager.manager.queue', {
                                 title: res.tracks[0].info.title,
                                 url: res.tracks[0].info.uri,
                             })
@@ -831,7 +831,7 @@ async function initializeMusicManager(bot) {
             } catch (e) {
                 await interaction.editReply({
                     embeds: [
-                        new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music_helpers_musicManager_manager_track')),
+                        new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'music.helpers.musicManager.manager.track')),
                     ],
                 });
             }

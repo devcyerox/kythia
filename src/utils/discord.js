@@ -61,7 +61,7 @@ const embedFooter = async (source) => {
     const translationContext = source.guild || source;
 
     return {
-        text: await t(translationContext, 'common_embed_footer', { username: botUser?.username }),
+        text: await t(translationContext, 'common.embed.footer', { username: botUser?.username }),
         iconURL: botUser?.displayAvatarURL({ dynamic: true }),
     };
 };

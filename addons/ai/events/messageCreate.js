@@ -495,7 +495,7 @@ module.exports = async (bot, message) => {
                             tmpobj.removeCallback();
                         } catch (err) {
                             logger.error('❌ Error processing video/audio:', err);
-                            await message.channel.send(await t(message, 'ai_events_messageCreate_error')).catch(() => {});
+                            await message.channel.send(await t(message, 'ai.events.messageCreate.error')).catch(() => {});
                             continue;
                         }
                     } else if (attachment.contentType?.startsWith('application/pdf')) {
@@ -513,7 +513,7 @@ module.exports = async (bot, message) => {
                             });
                         } catch (err) {
                             logger.error(`❌ Error processing document ${attachment.name}:`, err);
-                            await message.channel.send(await t(message, 'ai_events_messageCreate_error')).catch(() => {});
+                            await message.channel.send(await t(message, 'ai.events.messageCreate.error')).catch(() => {});
                             continue;
                         }
                     }
@@ -567,12 +567,12 @@ module.exports = async (bot, message) => {
                 if (fact.length > 0) {
                     const status = await appendUserFact(message.author.id, fact);
                     if (status === 'added') {
-                        await message.reply(await t(message, 'ai_events_messageCreate_memory_added'));
+                        await message.reply(await t(message, 'ai.events.messageCreate.memory.added'));
                     } else if (status === 'duplicate') {
-                        await message.reply(await t(message, 'ai_events_messageCreate_memory_duplicate'));
+                        await message.reply(await t(message, 'ai.events.messageCreate.memory.duplicate'));
                     }
                 } else {
-                    await message.reply(await t(message, 'ai_events_messageCreate_memory_empty'));
+                    await message.reply(await t(message, 'ai.events.messageCreate.memory.empty'));
                 }
                 if (typingInterval) clearInterval(typingInterval);
                 return;
@@ -686,7 +686,7 @@ module.exports = async (bot, message) => {
                         logger.warn(`Token index ${tokenIdx} hit 429 limit. Retrying with next token...`);
                     } else {
                         logger.error('❌ AI Message Error (non-429):', err);
-                        await message.channel.send(await t(message, 'ai_events_messageCreate_error')).catch(() => {});
+                        await message.channel.send(await t(message, 'ai.events.messageCreate.error')).catch(() => {});
                         if (typingInterval) clearInterval(typingInterval);
                         return;
                     }
@@ -707,7 +707,7 @@ module.exports = async (bot, message) => {
                     const command = client.commands.get(baseCommandName);
 
                     if (!command) {
-                        await message.reply(await t(message, 'ai_events_messageCreate_command_not_found'));
+                        await message.reply(await t(message, 'ai.events.messageCreate.command.not.found'));
                         return;
                     }
 
@@ -752,7 +752,7 @@ module.exports = async (bot, message) => {
                         addToHistory(userConv, 'model', finalReply);
                     } catch (err) {
                         logger.error(`🧠 Error running '${fullFunctionName}':`, err);
-                        await message.channel.send(await t(message, 'ai_events_messageCreate_command_error'));
+                        await message.channel.send(await t(message, 'ai.events.messageCreate.command.error'));
                     }
                     return;
                 } else {
@@ -768,11 +768,11 @@ module.exports = async (bot, message) => {
                 }
             } else {
                 logger.error('❌ All AI tokens failed (likely 429). Informing user.');
-                await message.reply(await t(message, 'ai_events_messageCreate_memory_token_limit')).catch(() => {});
+                await message.reply(await t(message, 'ai.events.messageCreate.memory.token.limit')).catch(() => {});
             }
         } catch (err) {
             logger.error('❌ AI Pre-flight Error:', err);
-            await message.channel.send(await t(message, 'ai_events_messageCreate_error')).catch(() => {});
+            await message.channel.send(await t(message, 'ai.events.messageCreate.error')).catch(() => {});
             if (typingInterval) clearInterval(typingInterval);
         }
     }

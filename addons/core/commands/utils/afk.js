@@ -18,7 +18,7 @@ module.exports = {
         .addStringOption((option) => option.setName('reason').setDescription('The reason for being AFK.').setRequired(false))
         .setContexts(InteractionContextType.Guild),
     async execute(interaction) {
-        const reason = interaction.options.getString('reason') || (await t(interaction, 'core_utils_afk_no_reason'));
+        const reason = interaction.options.getString('reason') || (await t(interaction, 'core.utils.afk.no.reason'));
 
         try {
             const afkData = await AFK.getCache({
@@ -27,7 +27,7 @@ module.exports = {
 
             if (afkData) {
                 await interaction.reply({
-                    content: await t(interaction, 'core_utils_afk_already_afk'),
+                    content: await t(interaction, 'core.utils.afk.already.afk'),
                     ephemeral: true,
                 });
                 return;
@@ -42,7 +42,7 @@ module.exports = {
                 { individualHooks: true }
             );
 
-            const replyMessage = await t(interaction, 'core_utils_afk_set_success', { reason: reason });
+            const replyMessage = await t(interaction, 'core.utils.afk.set.success', { reason: reason });
             await interaction.reply({
                 content: replyMessage,
                 ephemeral: true,
@@ -50,7 +50,7 @@ module.exports = {
         } catch (error) {
             console.error('Error executing AFK command:', error);
             await interaction.reply({
-                content: await t(interaction, 'core_utils_afk_error'),
+                content: await t(interaction, 'core.utils.afk.error'),
                 ephemeral: true,
             });
         }

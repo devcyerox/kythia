@@ -30,13 +30,13 @@ async function updateGiveawayMessage(client, giveaway, interaction = null) {
         const tCtx = interaction || channel;
 
         // Compose embed
-        let desc = `${await t(tCtx, 'giveaway_helpers_giveawayManager_embed_title')}\n`;
-        desc += await t(tCtx, 'giveaway_helpers_giveawayManager_embed_desc', {
+        let desc = `${await t(tCtx, 'giveaway.helpers.giveawayManager.embed.title')}\n`;
+        desc += await t(tCtx, 'giveaway.helpers.giveawayManager.embed.desc', {
             prize: giveaway.prize,
             endRelative: !isNaN(endTimestamp)
                 ? `<t:${endTimestamp}:R>`
-                : await t(tCtx, 'giveaway_helpers_giveawayManager_embed_ending_soon'),
-            endFull: !isNaN(endTimestamp) ? `<t:${endTimestamp}:F>` : await t(tCtx, 'giveaway_helpers_giveawayManager_embed_ending_soon'),
+                : await t(tCtx, 'giveaway.helpers.giveawayManager.embed.ending.soon'),
+            endFull: !isNaN(endTimestamp) ? `<t:${endTimestamp}:F>` : await t(tCtx, 'giveaway.helpers.giveawayManager.embed.ending.soon'),
             host: `<@${giveaway.hostId}>`,
         });
 
@@ -45,23 +45,23 @@ async function updateGiveawayMessage(client, giveaway, interaction = null) {
             .setDescription(desc)
             .addFields(
                 {
-                    name: await t(tCtx, 'giveaway_helpers_giveawayManager_field_winners'),
+                    name: await t(tCtx, 'giveaway.helpers.giveawayManager.field.winners'),
                     value: `🏆 ${giveaway.winners}`,
                     inline: true,
                 },
                 {
-                    name: await t(tCtx, 'giveaway_helpers_giveawayManager_field_participants'),
+                    name: await t(tCtx, 'giveaway.helpers.giveawayManager.field.participants'),
                     value: `👥 ${participants.length}`,
                     inline: true,
                 }
             )
             .setFooter({
-                text: await t(tCtx, 'giveaway_helpers_giveawayManager_embed_footer_id', { id: giveaway.messageId }),
+                text: await t(tCtx, 'giveaway.helpers.giveawayManager.embed.footer.id', { id: giveaway.messageId }),
             });
 
         if (giveaway.roleId) {
             embed.addFields({
-                name: await t(tCtx, 'giveaway_helpers_giveawayManager_field_role_requirement'),
+                name: await t(tCtx, 'giveaway.helpers.giveawayManager.field.role.requirement'),
                 value: `<@&${giveaway.roleId}>`,
                 inline: true,
             });
@@ -83,7 +83,7 @@ async function updateGiveawayMessage(client, giveaway, interaction = null) {
             const errorEmbed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `${await t(interaction, 'giveaway_helpers_giveawayManager_fatal_error_title')}\n${await t(interaction, 'giveaway_helpers_giveawayManager_fatal_error_desc')}`
+                    `${await t(interaction, 'giveaway.helpers.giveawayManager.fatal.error.title')}\n${await t(interaction, 'giveaway.helpers.giveawayManager.fatal.error.desc')}`
                 );
             try {
                 await interaction.reply({ embeds: [errorEmbed], ephemeral: true });

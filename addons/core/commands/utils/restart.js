@@ -27,18 +27,18 @@ module.exports = {
     async execute(interaction) {
         const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
         container.addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(await t(interaction, 'core_utils_restart_embed_confirm_desc'))
+            new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.confirm.desc'))
         );
         container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
         container.addActionRowComponents(
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('confirm_restart')
-                    .setLabel(await t(interaction, 'core_utils_restart_button_confirm'))
+                    .setLabel(await t(interaction, 'core.utils.restart.button.confirm'))
                     .setStyle(ButtonStyle.Danger),
                 new ButtonBuilder()
                     .setCustomId('cancel_restart')
-                    .setLabel(await t(interaction, 'core_utils_restart_button_cancel'))
+                    .setLabel(await t(interaction, 'core.utils.restart.button.cancel'))
                     .setStyle(ButtonStyle.Secondary)
             )
         );
@@ -57,12 +57,12 @@ module.exports = {
             if (i.customId === 'cancel_restart') {
                 const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
                 container.addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(await t(interaction, 'core_utils_restart_embed_cancelled_desc'))
+                    new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.cancelled.desc'))
                 );
                 container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
                 container.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                        await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
                 try {
@@ -73,12 +73,12 @@ module.exports = {
             } else if (i.customId === 'confirm_restart') {
                 const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
                 container.addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(await t(interaction, 'core_utils_restart_embed_restarting_desc'))
+                    new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.restarting.desc'))
                 );
                 container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
                 container.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                        await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
                 try {
@@ -94,12 +94,12 @@ module.exports = {
             if (reason === 'time') {
                 const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
                 container.addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(await t(interaction, 'core_utils_restart_embed_timeout_desc'))
+                    new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.timeout.desc'))
                 );
                 container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
                 container.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                        await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
                 await interaction.editReply({ components: [container], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });

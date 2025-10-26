@@ -26,7 +26,7 @@ module.exports = {
 
         if (!userPet) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_gacha_no_pet_title')}\n${await t(interaction, 'pet_gacha_no_pet')}`)
+                .setDescription(`## ${await t(interaction, 'pet.gacha.no.pet.title')}\n${await t(interaction, 'pet.gacha.no.pet.desc')}`)
                 .setColor(kythia.bot.color);
             return interaction.editReply({ embeds: [embed] });
         }
@@ -35,7 +35,7 @@ module.exports = {
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setDescription(
-                    `## ${await t(interaction, 'pet_gacha_cooldown_title')}\n${await t(interaction, 'pet_gacha_cooldown', { time: cooldown.time })}`
+                    `## ${await t(interaction, 'pet.gacha.cooldown.title')}\n${await t(interaction, 'pet.gacha.cooldown.desc', { time: cooldown.time })}`
                 )
                 .setColor(kythia.bot.color)
                 .setFooter(await embedFooter(interaction));
@@ -76,7 +76,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_gacha_success_title')}\n${await t(interaction, 'pet_gacha_success', {
+                `## ${await t(interaction, 'pet.gacha.success.title')}\n${await t(interaction, 'pet.gacha.success.desc', {
                     icon: selectedPet.icon,
                     name: selectedPet.name,
                     rarity: selectedPet.rarity,

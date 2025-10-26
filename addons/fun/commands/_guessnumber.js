@@ -41,11 +41,11 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setDescription(
-                (await t(interaction, 'fun_guessnumber_desc', { maxNumber })) + '\n\n-# ' + (await t(interaction, 'fun_guessnumber_hint'))
+                (await t(interaction, 'fun.guessnumber.desc', { maxNumber })) + '\n\n-# ' + (await t(interaction, 'fun.guessnumber.hint'))
             )
             .addFields(
-                { name: await t(interaction, 'fun_guessnumber_mode_field'), value: `${mode.toUpperCase()}`, inline: true },
-                { name: await t(interaction, 'fun_guessnumber_timeleft_field'), value: `<t:${endTime}:R>`, inline: true }
+                { name: await t(interaction, 'fun.guessnumber.mode.field'), value: `${mode.toUpperCase()}`, inline: true },
+                { name: await t(interaction, 'fun.guessnumber.timeleft.field'), value: `<t:${endTime}:R>`, inline: true }
             )
             .setColor('Blue')
             .setFooter(await embedFooter(interaction))
@@ -56,7 +56,7 @@ module.exports = {
             const dm = await interaction.user.createDM();
             await dm.send({ embeds: [embed] });
             const dmEmbed = new EmbedBuilder()
-                .setDescription(await t(interaction, 'fun_guessnumber_dm_sent_desc'))
+                .setDescription(await t(interaction, 'fun.guessnumber.dm.sent.desc'))
                 .setColor('Blue')
                 .setFooter(await embedFooter(interaction))
                 .setTimestamp();
@@ -93,7 +93,7 @@ module.exports = {
                 collector.stop('guessed');
 
                 const winEmbed = new EmbedBuilder()
-                    .setDescription(await t(interaction, 'fun_guessnumber_win_desc', { number, attempts }))
+                    .setDescription(await t(interaction, 'fun.guessnumber.win.desc', { number, attempts }))
                     .setColor('Green')
                     .setFooter(await embedFooter(interaction))
                     .setTimestamp();
@@ -133,7 +133,7 @@ module.exports = {
         collector.on('end', async (_, reason) => {
             if (reason !== 'guessed') {
                 const loseEmbed = new EmbedBuilder()
-                    .setDescription(await t(interaction, 'fun_guessnumber_lose_desc', { number }))
+                    .setDescription(await t(interaction, 'fun.guessnumber.lose.desc', { number }))
                     .setColor('Red')
                     .setFooter(await embedFooter(interaction))
                     .setTimestamp();

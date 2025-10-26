@@ -28,7 +28,7 @@ module.exports = {
 
         if (!userRecord || !Array.isArray(userRecord.warnings) || userRecord.warnings.length === 0) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_warnings_none', {
+                content: await t(interaction, 'core.moderation.warnings.none', {
                     user: user.tag,
                 }),
             });
@@ -37,12 +37,12 @@ module.exports = {
         const warningsList = (
             await Promise.all(
                 userRecord.warnings.map(async (warning, idx) => {
-                    return await t(interaction, 'core_moderation_warnings_item', {
+                    return await t(interaction, 'core.moderation.warnings.item', {
                         number: idx + 1,
-                        reason: warning.reason || (await t(interaction, 'core_moderation_warnings_unknown_reason')),
+                        reason: warning.reason || (await t(interaction, 'core.moderation.warnings.unknown.reason')),
                         date: warning.date
                             ? new Date(warning.date).toLocaleString()
-                            : await t(interaction, 'core_moderation_warnings_unknown_date'),
+                            : await t(interaction, 'core.moderation.warnings.unknown.date'),
                     });
                 })
             )
@@ -51,7 +51,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                await t(interaction, 'core_moderation_warnings_embed_description', {
+                await t(interaction, 'core.moderation.warnings.embed.description', {
                     user: `<@${user.id}>`,
                     warnings: warningsList,
                 })

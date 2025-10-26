@@ -41,7 +41,7 @@ module.exports = {
         const hashLengths = { md5: 32, sha1: 40, sha256: 64, sha512: 128 };
         if (hash.length !== hashLengths[algorithm]) {
             return interaction.editReply({
-                content: await t(interaction, 'core_tools_crackhash_invalid_hash_length', {
+                content: await t(interaction, 'core.tools.crackhash.invalid.hash.length', {
                     algorithm: algorithm.toUpperCase(),
                     hashLength: hashLengths[algorithm],
                 }),
@@ -50,7 +50,7 @@ module.exports = {
 
         const algoObj = SUPPORTED_HASHES.find((a) => a.value === algorithm);
 
-        let resultText = await t(interaction, 'core_tools_crackhash_not_found');
+        let resultText = await t(interaction, 'core.tools.crackhash.not.found');
         let found = false;
 
         try {
@@ -70,16 +70,16 @@ module.exports = {
             }
         } catch (error) {
             console.error('Hash lookup API error:', error);
-            resultText = await t(interaction, 'core_tools_crackhash_api_error');
+            resultText = await t(interaction, 'core.tools.crackhash.api.error');
         }
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setDescription(await t(interaction, 'core_tools_crackhash_result_desc'))
+            .setDescription(await t(interaction, 'core.tools.crackhash.result.desc'))
             .addFields(
-                { name: await t(interaction, 'core_tools_crackhash_algorithm'), value: algoObj.name, inline: true },
-                { name: await t(interaction, 'core_tools_crackhash_hash'), value: '```' + hash + '```' },
-                { name: await t(interaction, 'core_tools_crackhash_result'), value: resultText }
+                { name: await t(interaction, 'core.tools.crackhash.algorithm'), value: algoObj.name, inline: true },
+                { name: await t(interaction, 'core.tools.crackhash.hash'), value: '```' + hash + '```' },
+                { name: await t(interaction, 'core.tools.crackhash.result.text'), value: resultText }
             )
             .setFooter(await embedFooter(interaction));
 

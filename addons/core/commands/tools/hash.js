@@ -42,29 +42,29 @@ module.exports = {
         const text = interaction.options.getString('text');
 
         if (!text || text.length > 1024) {
-            return interaction.editReply({ content: await t(interaction, 'core_tools_hash_invalid_text') });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.hash.invalid.text') });
         }
 
         // Validate algorithm
         const algoObj = SUPPORTED_ALGOS.find((a) => a.value === algorithm);
         if (!algoObj) {
-            return interaction.editReply({ content: await t(interaction, 'core_tools_hash_invalid_algorithm') });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.hash.invalid.algorithm') });
         }
 
         let hash;
         try {
             hash = crypto.createHash(algorithm).update(text, 'utf8').digest('hex');
         } catch (e) {
-            return interaction.editReply({ content: await t(interaction, 'core_tools_hash_failed_hash') });
+            return interaction.editReply({ content: await t(interaction, 'core.tools.hash.failed.hash') });
         }
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setDescription(await t(interaction, 'core_tools_hash_result'))
+            .setDescription(await t(interaction, 'core.tools.hash.result'))
             .addFields(
-                { name: await t(interaction, 'core_tools_hash_algorithm'), value: algoObj.name, inline: true },
-                { name: await t(interaction, 'core_tools_hash_input'), value: '```' + text + '```' },
-                { name: await t(interaction, 'core_tools_hash_hash'), value: '```' + hash + '```' }
+                { name: await t(interaction, 'core.tools.hash.algorithm'), value: algoObj.name, inline: true },
+                { name: await t(interaction, 'core.tools.hash.input'), value: '```' + text + '```' },
+                { name: await t(interaction, 'core.tools.hash.hash'), value: '```' + hash + '```' }
             )
             .setFooter(await embedFooter(interaction));
 

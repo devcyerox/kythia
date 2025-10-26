@@ -27,8 +27,8 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                `## ⏳ ${await t(interaction, 'core_moderation_slowmode_title')}\n` +
-                    (await t(interaction, 'core_moderation_slowmode_set_success', { duration }))
+                `## ⏳ ${await t(interaction, 'core.moderation.slowmode.title')}\n` +
+                    (await t(interaction, 'core.moderation.slowmode.set.success', { duration }))
             )
             .setThumbnail(interaction.client.user.displayAvatarURL())
             .setTimestamp()

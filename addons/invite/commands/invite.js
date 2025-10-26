@@ -57,8 +57,8 @@ module.exports = {
             const leaves = row?.leaves || 0;
             const fake = row?.fake || 0;
             embed.setDescription(
-                `## ${await t(interaction, 'invite_invite_command_title')}\n` +
-                    (await t(interaction, 'invite_invite_command_user_stats', {
+                `## ${await t(interaction, 'invite.invite.command.title')}\n` +
+                    (await t(interaction, 'invite.invite.command.user.stats', {
                         user: `<@${target.id}>`,
                         invites,
                         fake,
@@ -71,8 +71,8 @@ module.exports = {
         if (sub === 'add' || sub === 'remove') {
             if (!interaction.memberPermissions.has(PermissionFlagsBits.ManageGuild)) {
                 embed.setDescription(
-                    `## ${await t(interaction, 'invite_invite_command_title')}\n` +
-                        (await t(interaction, 'invite_invite_command_no_permission'))
+                    `## ${await t(interaction, 'invite.invite.command.title')}\n` +
+                        (await t(interaction, 'invite.invite.command.no.permission'))
                 );
                 return interaction.editReply({ embeds: [embed] });
             }
@@ -84,7 +84,7 @@ module.exports = {
             model.invites = (model.invites || 0) + delta;
             await model.save();
             embed.setDescription(
-                `## ${await t(interaction, 'invite_invite_command_title')}\n` +
+                `## ${await t(interaction, 'invite.invite.command.title')}\n` +
                     (await t(interaction, delta >= 0 ? 'invite_command_add_success' : 'invite_command_remove_success', {
                         amount: Math.abs(delta),
                         user: `<@${target.id}>`,
@@ -103,15 +103,15 @@ module.exports = {
             });
             const lines = top.map(
                 async (r, i) =>
-                    await t(interaction, 'invite_invite_command_leaderboard_line', {
+                    await t(interaction, 'invite.invite.command.leaderboard.line', {
                         rank: i + 1,
                         user: `<@${r.userId}>`,
                         invites: r.invites,
                     })
             );
             embed.setDescription(
-                `## ${await t(interaction, 'invite_invite_command_title')}\n` +
-                    (lines.length ? (await Promise.all(lines)).join('\n') : await t(interaction, 'invite_invite_command_leaderboard_empty'))
+                `## ${await t(interaction, 'invite.invite.command.title')}\n` +
+                    (lines.length ? (await Promise.all(lines)).join('\n') : await t(interaction, 'invite.invite.command.leaderboard.empty'))
             );
             return interaction.editReply({ embeds: [embed] });
         }
@@ -119,15 +119,15 @@ module.exports = {
         if (sub === 'reset') {
             if (!interaction.memberPermissions.has(PermissionFlagsBits.ManageGuild)) {
                 embed.setDescription(
-                    `## ${await t(interaction, 'invite_invite_command_title')}\n` +
-                        (await t(interaction, 'invite_invite_command_no_permission'))
+                    `## ${await t(interaction, 'invite.invite.command.title')}\n` +
+                        (await t(interaction, 'invite.invite.command.no.permission'))
                 );
                 return interaction.editReply({ embeds: [embed] });
             }
             await Invite.destroy({ where: { guildId } });
             embed.setDescription(
-                `## ${await t(interaction, 'invite_invite_command_title')}\n` +
-                    (await t(interaction, 'invite_invite_command_reset_success'))
+                `## ${await t(interaction, 'invite.invite.command.title')}\n` +
+                    (await t(interaction, 'invite.invite.command.reset.success'))
             );
             return interaction.editReply({ embeds: [embed] });
         }

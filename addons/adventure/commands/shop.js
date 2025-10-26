@@ -36,7 +36,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
         goldDisplay = safeLocaleString(user.gold, '0');
     }
     
-    const headerText = await t(interaction, 'adventure_shop_desc', {
+    const headerText = await t(interaction, 'adventure.shop.desc', {
         bot: interaction.client.user.username,
         category: (await t(interaction, `adventure_shop_category_${category}`)),
         gold: goldDisplay,
@@ -46,7 +46,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     if (pageItems.length === 0) {
         itemBlocks.push(
             new TextDisplayBuilder().setContent(
-                `**${await t(interaction, 'adventure_shop_empty_title')}**\n${await t(interaction, 'adventure_shop_empty_desc')}`
+                `**${await t(interaction, 'adventure.shop.empty.title')}**\n${await t(interaction, 'adventure.shop.empty.desc')}`
             )
         );
     } else {
@@ -67,7 +67,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     );
     page = Math.max(1, Math.min(page, totalPages));
 
-    const footerText = await t(interaction, 'adventure_shop_footer', { page, totalPages });
+    const footerText = await t(interaction, 'adventure.shop.footer', { page, totalPages });
 
     const container = new ContainerBuilder()
         .setAccentColor(kythia.bot?.color ? parseInt(kythia.bot.color.replace('#', ''), 16) : undefined)
@@ -106,7 +106,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
     const categoryRow = new ActionRowBuilder().addComponents(
         new StringSelectMenuBuilder()
             .setCustomId('adventure_shop_category')
-            .setPlaceholder(await t(interaction, 'adventure_shop_select_category'))
+            .setPlaceholder(await t(interaction, 'adventure.shop.select.category'))
             .addOptions(categoryOptions)
     );
     rows.push(categoryRow);
@@ -117,7 +117,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
         navButtons.push(
             new ButtonBuilder()
                 .setCustomId('adventure_shop_page_prev')
-                .setLabel(await t(interaction, 'common_previous'))
+                .setLabel(await t(interaction, 'common.previous'))
                 .setStyle(ButtonStyle.Secondary)
         );
     }
@@ -126,7 +126,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
         navButtons.push(
             new ButtonBuilder()
                 .setCustomId('adventure_shop_page_next')
-                .setLabel(await t(interaction, 'common_next'))
+                .setLabel(await t(interaction, 'common.next'))
                 .setStyle(ButtonStyle.Primary)
         );
     }
@@ -140,7 +140,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
         const itemOptions = await Promise.all(
             pageItems.map(async (item) => ({
                 label: await t(interaction, item.nameKey),
-                description: await t(interaction, 'adventure_shop_select_option_desc', { price: item.price }),
+                description: await t(interaction, 'adventure.shop.select.option.desc', { price: item.price }),
                 value: item.id,
                 emoji: item.emoji,
             }))
@@ -150,7 +150,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
             new ActionRowBuilder().addComponents(
                 new StringSelectMenuBuilder()
                     .setCustomId('adventure_shop_select_item')
-                    .setPlaceholder(await t(interaction, 'adventure_shop_select_item_placeholder'))
+                    .setPlaceholder(await t(interaction, 'adventure.shop.select.item.placeholder'))
                     .addOptions(itemOptions)
             )
         );
@@ -208,7 +208,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'adventure_no_character'))
+                .setDescription(await t(interaction, 'adventure.no.character'))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
@@ -246,7 +246,7 @@ module.exports = {
                         
                         if (!item) {
                             await i.reply({
-                                content: await t(interaction, 'adventure_shop_item_not_found'),
+                                content: await t(interaction, 'adventure.shop.item.not.found'),
                                 ephemeral: true,
                             });
                             return;
@@ -254,7 +254,7 @@ module.exports = {
                         
                         if (user.gold < item.price) {
                             await i.reply({
-                                content: await t(interaction, 'adventure_shop_not_enough_gold', { price: item.price, gold: user.gold }),
+                                content: await t(interaction, 'adventure.shop.not.enough.gold', { price: item.price, gold: user.gold }),
                                 ephemeral: true,
                             });
                             return;
@@ -268,7 +268,7 @@ module.exports = {
                         // await Inventory.addItem(interaction.user.id, item.id, 1);
                         
                         await i.reply({
-                            content: await t(interaction, 'adventure_shop_purchase_success', { 
+                            content: await t(interaction, 'adventure.shop.purchase.success', { 
                                 item: await t(interaction, item.nameKey),
                                 price: item.price 
                             }),
@@ -308,9 +308,9 @@ module.exports = {
             } catch (error) {
                 console.error('Error in shop interaction:', error);
                 if (!i.replied && !i.deferred) {
-                    await i.reply({ content: await t(interaction, 'common_error_generic'), ephemeral: true });
+                    await i.reply({ content: await t(interaction, 'common.error.generic'), ephemeral: true });
                 } else {
-                    await i.followUp({ content: await t(interaction, 'common_error_generic'), ephemeral: true });
+                    await i.followUp({ content: await t(interaction, 'common.error.generic'), ephemeral: true });
                 }
             }
         });

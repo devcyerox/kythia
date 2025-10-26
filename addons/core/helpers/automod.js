@@ -200,7 +200,7 @@ async function checkAllCaps(message, setting) {
     const capRatio = upper.length / chars.length;
 
     if (capRatio >= ALL_CAPS_RATIO) {
-        const reason = await t(message, 'core_helpers_automod_system_automod_capslock_detected');
+        const reason = await t(message, 'core.helpers.automod.system.automod.capslock.detected');
         sendLogsWarning(message, reason, message.content, setting);
         if (canDeleteMessage(message)) {
             message.delete().catch((err) => {
@@ -233,7 +233,7 @@ async function checkEmojiSpam(message, setting) {
     const { total, ratio } = _countEmojis(raw);
 
     if (total >= ANTI_EMOJI_MIN_TOTAL || ratio >= ANTI_EMOJI_RATIO) {
-        const reason = await t(message, 'core_helpers_automod_system_automod_emojispam_detected');
+        const reason = await t(message, 'core.helpers.automod.system.automod.emojispam.detected');
         sendLogsWarning(message, reason, message.content, setting);
 
         if (canDeleteMessage(message)) {
@@ -261,7 +261,7 @@ async function checkZalgo(message, setting) {
 
     const count = _countZalgo(raw);
     if (count >= ANTI_ZALGO_MIN) {
-        const reason = await t(message, 'core_helpers_automod_system_automod_zalgo_detected');
+        const reason = await t(message, 'core.helpers.automod.system.automod.zalgo.detected');
         sendLogsWarning(message, reason, message.content, setting);
 
         if (canDeleteMessage(message)) {
@@ -314,7 +314,7 @@ async function checkBadwords(message, setting) {
 
     if (match) {
         const foundBadword = match[0];
-        const reason = await t(message, 'core_helpers_automod_system_automod_badword_detected', { word: foundBadword });
+        const reason = await t(message, 'core.helpers.automod.system.automod.badword.detected', { word: foundBadword });
         sendLogsWarning(message, reason, foundBadword, setting);
 
         if (canDeleteMessage(message)) {
@@ -338,7 +338,7 @@ async function checkMentions(message, setting) {
         (message.content.match(mentionRegex) || []).length;
 
     if (mentionCount >= MENTION_THRESHOLD) {
-        const reason = await t(message, 'core_helpers_automod_system_automod_mention_spam');
+        const reason = await t(message, 'core.helpers.automod.system.automod.mention.spam');
         sendLogsWarning(message, reason, message.content, setting);
         if (canDeleteMessage(message)) {
             message.delete().catch((err) => {
@@ -374,7 +374,7 @@ async function checkUsername(message, setting) {
 
     if (match) {
         const foundBadword = match[0];
-        const reason = await t(message, 'core_helpers_automod_system_automod_badname_detected', { word: foundBadword });
+        const reason = await t(message, 'core.helpers.automod.system.automod.badname.detected', { word: foundBadword });
 
         sendLogsWarning(message, reason, `${author.username} | ${member?.displayName}`, setting);
 
@@ -518,7 +518,7 @@ async function checkLinks(message, setting) {
     let hasShortener = shortenerRegex.test(sanitizedContent);
 
     if (setting.antiInviteOn && (inviteRegex.test(sanitizedContent) || hasInviteInEmbed || hasInviteInAttachment)) {
-        const reason = await t(message, 'core_helpers_automod_system_automod_invite_detected');
+        const reason = await t(message, 'core.helpers.automod.system.automod.invite.detected');
         await sendLogsWarning(message, reason, message.content, setting);
         if (canDeleteMessage(message)) {
             return message.delete().catch((err) => {
@@ -531,7 +531,7 @@ async function checkLinks(message, setting) {
     }
 
     if (setting.antiLinkOn && (domainRegex.test(message.content) || hasLinkInEmbed || hasLinkInAttachment || hasShortener)) {
-        const reason = await t(message, 'core_helpers_automod_system_automod_link_detected');
+        const reason = await t(message, 'core.helpers.automod.system.automod.link.detected');
         await sendLogsWarning(message, reason, message.content, setting);
         if (canDeleteMessage(message)) {
             return message.delete().catch((err) => {

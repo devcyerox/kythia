@@ -53,7 +53,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -63,7 +63,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    await t(interaction, 'economy_slots_slots_not_enough_cash', {
+                    await t(interaction, 'economy.slots.slots.not.enough.cash', {
                         bet: bet.toLocaleString(),
                         cash: user.kythiaCoin.toLocaleString(),
                     })
@@ -75,7 +75,7 @@ module.exports = {
         const spinningEmbed = new EmbedBuilder()
             .setColor('Yellow')
             .setDescription(
-                `## ${await t(interaction, 'economy_slots_slots_spinning_title')}\n${await t(interaction, 'economy_slots_slots_spinning_desc')}\n\n🎰 | 🎰 | 🎰`
+                `## ${await t(interaction, 'economy.slots.slots.spinning.title')}\n${await t(interaction, 'economy.slots.slots.spinning.desc')}\n\n🎰 | 🎰 | 🎰`
             )
             .setFooter(await embedFooter(interaction));
 
@@ -136,23 +136,23 @@ module.exports = {
         const finalEmbed = new EmbedBuilder()
             .setColor(resultColor)
             .setAuthor({
-                name: await t(interaction, 'economy_slots_slots_author', { username: interaction.user.username }),
+                name: await t(interaction, 'economy.slots.slots.author', { username: interaction.user.username }),
                 iconURL: interaction.user.displayAvatarURL(),
             })
             .setDescription(`## ${await t(interaction, resultKey)}\n${slotDisplay}`)
             .addFields(
                 {
-                    name: await t(interaction, 'economy_slots_slots_bet_field'),
+                    name: await t(interaction, 'economy.slots.slots.bet.field'),
                     value: `🪙 ${bet.toLocaleString()}`,
                     inline: true,
                 },
                 {
-                    name: await t(interaction, 'economy_slots_slots_win_field'),
+                    name: await t(interaction, 'economy.slots.slots.win.field'),
                     value: `🪙 ${winnings.toLocaleString()} (${payoutMultiplier}x)`,
                     inline: true,
                 },
                 {
-                    name: await t(interaction, 'economy_slots_slots_cash_field'),
+                    name: await t(interaction, 'economy.slots.slots.cash.field'),
                     value: `💰 ${user.kythiaCoin.toLocaleString()}`,
                     inline: true,
                 }

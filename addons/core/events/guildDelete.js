@@ -24,7 +24,7 @@ module.exports = async (bot, guild) => {
     const leaveEmbed = new EmbedBuilder()
         .setColor('Red')
         .setDescription(
-            await t(guild, 'core_events_guildDelete_events_guild_delete_webhook_desc', {
+            await t(guild, 'core.events.guildDelete.events.guild.delete.webhook.desc', {
                 bot: guild.client.user.username,
                 guild: guild.name,
                 guildId: guild.id,

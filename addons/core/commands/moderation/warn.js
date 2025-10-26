@@ -38,14 +38,14 @@ module.exports = {
         }
         if (!member) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_warn_user_not_in_guild'),
+                content: await t(interaction, 'core.moderation.warn.user.not.in.guild'),
             });
         }
 
         const userRecord = await User.getCache({ userId: targetUser.id, guildId: interaction.guild.id });
         if (!userRecord) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_warn_user_not_in_db'),
+                content: await t(interaction, 'core.moderation.warn.user.not.in.db'),
             });
         }
 
@@ -60,7 +60,7 @@ module.exports = {
         } catch (err) {
             logger.error('Error while saving user record:', err);
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_warn_db_save_failed'),
+                content: await t(interaction, 'core.moderation.warn.db.save.failed'),
             });
         }
 
@@ -69,7 +69,7 @@ module.exports = {
         if (userRecord.warnings.length >= 3) {
             if (member.moderatable && member.permissions.has('SEND_MESSAGES')) {
                 try {
-                    await member.timeout(86400000, await t(interaction, 'core_moderation_warn_timeout_reason'));
+                    await member.timeout(86400000, await t(interaction, 'core.moderation.warn.timeout.reason'));
                     timeoutApplied = true;
                 } catch (err) {
                     logger.warn('Failed to timeout member after 3 warnings:', err.message);
@@ -84,13 +84,13 @@ module.exports = {
 
             if (!modLogChannel) {
                 return interaction.editReply({
-                    content: await t(interaction, 'core_moderation_warn_modlog_not_found'),
+                    content: await t(interaction, 'core.moderation.warn.modlog.not.found'),
                 });
             }
 
             if (!modLogChannel.permissionsFor(interaction.client.user).has('SEND_MESSAGES')) {
                 return interaction.editReply({
-                    content: await t(interaction, 'core_moderation_warn_modlog_no_permission'),
+                    content: await t(interaction, 'core.moderation.warn.modlog.no.permission'),
                 });
             }
 
@@ -98,7 +98,7 @@ module.exports = {
                 const channelEmbed = new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(
-                        await t(interaction, 'core_moderation_warn_modlog_embed', {
+                        await t(interaction, 'core.moderation.warn.modlog.embed', {
                             user: `<@${targetUser.id}>`,
                             moderator: `<@${interaction.user.id}>`,
                             reason,
@@ -113,7 +113,7 @@ module.exports = {
                     const timeoutEmbed = new EmbedBuilder()
                         .setColor(kythia.bot.color)
                         .setDescription(
-                            await t(interaction, 'core_moderation_warn_modlog_timeout_embed', {
+                            await t(interaction, 'core.moderation.warn.modlog.timeout.embed', {
                                 user: `<@${targetUser.id}>`,
                             })
                         )
@@ -129,10 +129,10 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                await t(interaction, 'core_moderation_warn_success_embed', {
+                await t(interaction, 'core.moderation.warn.success.embed', {
                     user: `<@${targetUser.id}>`,
                     reason,
-                    timeout: timeoutApplied ? `\n\n${await t(interaction, 'core_moderation_warn_timeout_notice')}` : '',
+                    timeout: timeoutApplied ? `\n\n${await t(interaction, 'core.moderation.warn.timeout.notice')}` : '',
                 })
             )
             .setThumbnail(interaction.client.user.displayAvatarURL())
@@ -142,11 +142,11 @@ module.exports = {
         const warnEmbed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                await t(interaction, 'core_moderation_warn_dm_embed', {
+                await t(interaction, 'core.moderation.warn.dm.embed', {
                     user: `<@${targetUser.id}>`,
                     moderator: `<@${interaction.user.id}>`,
                     reason,
-                    timeout: timeoutApplied ? `\n\n${await t(interaction, 'core_moderation_warn_dm_timeout_notice')}` : '',
+                    timeout: timeoutApplied ? `\n\n${await t(interaction, 'core.moderation.warn.dm.timeout.notice')}` : '',
                 })
             )
             .setTimestamp()

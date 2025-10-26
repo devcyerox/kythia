@@ -33,7 +33,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -43,7 +43,7 @@ module.exports = {
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_hack_hack_cooldown', { time: cooldown.time }))
+                .setDescription(await t(interaction, 'economy.hack.hack.cooldown', { time: cooldown.time }))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -52,7 +52,7 @@ module.exports = {
         if (!user || !target) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_hack_hack_user_or_target_not_found'))
+                .setDescription(await t(interaction, 'economy.hack.hack.user.or.target.not.found'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -61,7 +61,7 @@ module.exports = {
         if (targetUser.id === interaction.user.id) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_hack_hack_self'))
+                .setDescription(await t(interaction, 'economy.hack.hack.self'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -70,7 +70,7 @@ module.exports = {
         if (target.kythiaBank <= 0) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_hack_hack_target_no_bank'))
+                .setDescription(await t(interaction, 'economy.hack.hack.target.no.bank'))
                 .setThumbnail(targetUser.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -79,7 +79,7 @@ module.exports = {
         if (user.kythiaBank <= 20) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_hack_hack_user_no_bank'))
+                .setDescription(await t(interaction, 'economy.hack.hack.user.no.bank'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -87,7 +87,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setDescription(
-                await t(interaction, 'economy_hack_hack_in_progress', {
+                await t(interaction, 'economy.hack.hack.in.progress', {
                     user: interaction.user.username,
                     target: targetUser.username,
                     chance: user.hackMastered || 10,
@@ -131,7 +131,7 @@ module.exports = {
                     .setColor('Red')
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setDescription(
-                        await t(interaction, 'economy_hack_hack_success_dm', {
+                        await t(interaction, 'economy.hack.hack.success.dm', {
                             hacker: interaction.user.username,
                             amount: totalHacked,
                         })
@@ -145,7 +145,7 @@ module.exports = {
                     .setColor(kythia.bot.color)
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setDescription(
-                        await t(interaction, 'economy_hack_hack_success', {
+                        await t(interaction, 'economy.hack.hack.success.text', {
                             target: targetUser.username,
                         })
                     )
@@ -177,7 +177,7 @@ module.exports = {
                     .setColor('Red')
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setDescription(
-                        await t(interaction, 'economy_hack_hack_failure', {
+                        await t(interaction, 'economy.hack.hack.failure', {
                             target: targetUser.username,
                             penalty,
                         })

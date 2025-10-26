@@ -48,7 +48,7 @@ module.exports = {
             }
         } catch (error) {
             logger.error('Failed to check existing guild from API:', error);
-            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat_setup_check_failed'));
+            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat.setup.check.failed'));
             return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
@@ -57,7 +57,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    await t(interaction, 'globalchat_setup_already_set', {
+                    await t(interaction, 'globalchat.setup.already.set', {
                         channel: `<#${existingChannelId || localDbChat?.globalChannelId}>`,
                     })
                 );
@@ -77,8 +77,8 @@ module.exports = {
                 });
 
                 const setupEmbed = new EmbedBuilder()
-                    .setTitle(await t(interaction, 'globalchat_setup_title'))
-                    .setDescription(await t(interaction, 'globalchat_setup_intro_desc'))
+                    .setTitle(await t(interaction, 'globalchat.setup.title'))
+                    .setDescription(await t(interaction, 'globalchat.setup.intro.desc'))
                     .setColor(kythia.bot.color)
                     .setFooter(await embedFooter(interaction))
                     .setTimestamp(new Date());
@@ -87,7 +87,7 @@ module.exports = {
                     embeds: [setupEmbed],
                 });
             } catch (err) {
-                const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat_setup_webhook_failed'));
+                const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat.setup.webhook.failed'));
                 return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
         } else {
@@ -135,8 +135,8 @@ module.exports = {
                 });
 
                 const setupEmbed = new EmbedBuilder()
-                    .setTitle(await t(interaction, 'globalchat_setup_title'))
-                    .setDescription(await t(interaction, 'globalchat_setup_intro_desc'))
+                    .setTitle(await t(interaction, 'globalchat.setup.title'))
+                    .setDescription(await t(interaction, 'globalchat.setup.intro.desc'))
                     .setColor(kythia.bot.color)
                     .setFooter(await embedFooter(interaction))
                     .setTimestamp(new Date());
@@ -148,7 +148,7 @@ module.exports = {
                 logger.info(err);
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(await t(interaction, 'globalchat_setup_create_channel_failed'));
+                    .setDescription(await t(interaction, 'globalchat.setup.create.channel.failed'));
                 return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
         }
@@ -176,13 +176,13 @@ module.exports = {
                 }),
             });
         } catch (err) {
-            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat_setup_register_api_failed'));
+            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat.setup.register.api.failed'));
             return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
 
         const embed = new EmbedBuilder()
             .setColor('Green')
-            .setDescription(await t(interaction, 'globalchat_setup_success', { channel: `<#${usedChannelId}>` }));
+            .setDescription(await t(interaction, 'globalchat.setup.success', { channel: `<#${usedChannelId}>` }));
         return interaction.editReply({ embeds: [embed] });
     },
 };

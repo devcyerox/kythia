@@ -23,6 +23,6 @@ module.exports = {
         const message = interaction.options.getString('message');
 
         await interaction.channel.send(message);
-        return interaction.editReply(await t(interaction, 'core_moderation_say_success', { message }));
+        return interaction.editReply(await t(interaction, 'core.moderation.say.success', { message }));
     },
 };

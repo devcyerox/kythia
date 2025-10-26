@@ -30,7 +30,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'adventure_no_character'))
+                .setDescription(await t(interaction, 'adventure.no.character'))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
@@ -43,7 +43,7 @@ module.exports = {
         if (user.characterId) {
             const c = CharManager.getChar(user.characterId);
             if (c) {
-                const charTitle = await t(interaction, 'adventure_stats_character');
+                const charTitle = await t(interaction, 'adventure.stats.character');
                 characterFields.push({ name: charTitle, value: `${c.emoji} ${c.name}`, inline: false });
             }
         }
@@ -51,18 +51,18 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-            .setDescription(await t(interaction, 'adventure_stats_embed_desc', { username: interaction.user.username }))
+            .setDescription(await t(interaction, 'adventure.stats.embed.desc', { username: interaction.user.username }))
             .addFields(
-                { name: await t(interaction, 'adventure_stats_level'), value: `**${user.level}**`, inline: true },
-                { name: await t(interaction, 'adventure_stats_hp'), value: `**${user.hp}**`, inline: true },
+                { name: await t(interaction, 'adventure.stats.level'), value: `**${user.level}**`, inline: true },
+                { name: await t(interaction, 'adventure.stats.hp'), value: `**${user.hp}**`, inline: true },
                 { name: '\u200B', value: '\u200B', inline: true },
-                { name: await t(interaction, 'adventure_stats_gold'), value: `**${user.gold}**`, inline: true },
-                { name: await t(interaction, 'adventure_stats_strength'), value: `**${user.strength}**`, inline: true },
+                { name: await t(interaction, 'adventure.stats.gold'), value: `**${user.gold}**`, inline: true },
+                { name: await t(interaction, 'adventure.stats.strength'), value: `**${user.strength}**`, inline: true },
                 { name: '\u200B', value: '\u200B', inline: true },
-                { name: await t(interaction, 'adventure_stats_defense'), value: `**${user.defense}**`, inline: true },
+                { name: await t(interaction, 'adventure.stats.defense'), value: `**${user.defense}**`, inline: true },
                 {
-                    name: await t(interaction, 'adventure_stats_xp_progress'),
-                    value: await t(interaction, 'adventure_stats_xp_progress_value', { xp: user.xp, xpForNextLevel, progressBar }),
+                    name: await t(interaction, 'adventure.stats.xp.progress.text'),
+                    value: await t(interaction, 'adventure.stats.xp.progress.value', { xp: user.xp, xpForNextLevel, progressBar }),
                     inline: false,
                 },
                 ...characterFields

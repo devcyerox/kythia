@@ -12,7 +12,7 @@ const { t } = require('@utils/translator');
 
 async function sendLogsWarning(message, reason, originalContent = null, setting, userId = message.author.id) {
     // Send warning message in channel
-    const warningMessage = await t(message, 'core_helpers_system_warning_public', {
+    const warningMessage = await t(message, 'core.helpers.system.warning.public', {
         userId,
         reason,
     });
@@ -23,12 +23,12 @@ async function sendLogsWarning(message, reason, originalContent = null, setting,
     try {
         const dmEmbed = {
             color: convertColor('Red', { from: 'discord', to: 'decimal' }),
-            description: await t(message, 'core_helpers_system_warning_dm_description', {
+            description: await t(message, 'core.helpers.system.warning.dm.description', {
                 guildName: message.guild.name,
                 reason,
             }),
             footer: {
-                text: await t(message, 'common_embed_footer', {
+                text: await t(message, 'common.embed.footer', {
                     username: message.client.user.username,
                 }),
                 icon_url: message.client.user.displayAvatarURL({ dynamic: true }) || undefined,
@@ -64,7 +64,7 @@ async function sendLogsWarning(message, reason, originalContent = null, setting,
     if (logChannel) {
         const embed = {
             color: convertColor('Red', { from: 'discord', to: 'decimal' }),
-            description: await t(message, 'core_helpers_system_warning_log_description', {
+            description: await t(message, 'core.helpers.system.warning.log.description', {
                 userId: message.author.id,
                 userTag: message.author.tag,
                 channelId: message.channel.id,
@@ -76,12 +76,12 @@ async function sendLogsWarning(message, reason, originalContent = null, setting,
             }),
             fields: [
                 {
-                    name: await t(message, 'core_helpers_system_warning_log_field_sentat'),
+                    name: await t(message, 'core.helpers.system.warning.log.field.sentat'),
                     value: `<t:${Math.floor(message.createdTimestamp / 1000)}:F>`,
                 },
             ],
             footer: {
-                text: await t(message, 'common_embed_footer', {
+                text: await t(message, 'common.embed.footer', {
                     username: message.client.user.username,
                 }),
                 icon_url: message.client.user.displayAvatarURL({ dynamic: true }) || undefined,

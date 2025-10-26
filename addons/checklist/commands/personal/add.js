@@ -28,8 +28,8 @@ module.exports = {
         if (!item || typeof item !== 'string' || !item.trim()) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setTitle(await t(interaction, 'checklist_server_add_invalid_item_title'))
-                .setDescription(await t(interaction, 'checklist_server_add_invalid_item_desc'))
+                .setTitle(await t(interaction, 'checklist.server.add.invalid.item.title'))
+                .setDescription(await t(interaction, 'checklist.server.add.invalid.item.desc'))
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral: true });
         }
@@ -40,8 +40,8 @@ module.exports = {
             // Limit checklist size
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setTitle(await t(interaction, 'checklist_server_add_full_title'))
-                .setDescription(await t(interaction, 'checklist_server_add_full_desc'))
+                .setTitle(await t(interaction, 'checklist.server.add.full.title'))
+                .setDescription(await t(interaction, 'checklist.server.add.full.desc'))
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral: true });
         }
@@ -60,8 +60,8 @@ module.exports = {
 
         const { scopeKey, color, ephemeral } = getScopeMeta(userId, group);
         const embed = new EmbedBuilder()
-            .setTitle(await t(interaction, 'checklist_server_add_add_success_title', { scope: await t(interaction, scopeKey) }))
-            .setDescription(await t(interaction, 'checklist_server_add_add_success_desc', { item }))
+            .setTitle(await t(interaction, 'checklist.server.add.add.success.title', { scope: await t(interaction, scopeKey) }))
+            .setDescription(await t(interaction, 'checklist.server.add.add.success.desc', { item }))
             .setColor(color)
             .setFooter(await embedFooter(interaction))
             .setTimestamp();

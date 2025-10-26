@@ -60,7 +60,7 @@ module.exports = {
         const kythiaVersion = kythia.version;
         const githubCommit = getGitCommitId();
 
-        const desc = await t(interaction, 'core_utils_stats_embed_desc', {
+        const desc = await t(interaction, 'core.utils.stats.embed.desc', {
             username,
             uptime,
             memory,

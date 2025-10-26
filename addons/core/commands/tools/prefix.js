@@ -31,12 +31,12 @@ module.exports = {
         if (subcommand === 'add') {
             updated = await rolePrefix(interaction.guild);
             await interaction.editReply({
-                content: await t(interaction, 'core_tools_prefix_add_success', { count: updated }),
+                content: await t(interaction, 'core.tools.prefix.add.success', { count: updated }),
             });
         } else if (subcommand === 'remove') {
             updated = await roleUnprefix(interaction.guild);
             await interaction.editReply({
-                content: await t(interaction, 'core_tools_prefix_remove_success', { count: updated }),
+                content: await t(interaction, 'core.tools.prefix.remove.success', { count: updated }),
             });
         }
     },

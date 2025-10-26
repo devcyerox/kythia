@@ -22,7 +22,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -40,7 +40,7 @@ module.exports = {
                 const emptyEmbed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
                     .setDescription(
-                        `## ${await t(interaction, 'economy_market_history_empty_title')}\n${await t(interaction, 'economy_market_history_empty_desc')}`
+                        `## ${await t(interaction, 'economy.market.history.empty.title')}\n${await t(interaction, 'economy.market.history.empty.desc')}`
                     )
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [emptyEmbed] });
@@ -56,7 +56,7 @@ module.exports = {
 
             const historyEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setTitle(await t(interaction, 'economy_market_history_title', { username: interaction.user.username }))
+                .setTitle(await t(interaction, 'economy.market.history.title', { username: interaction.user.username }))
                 .setDescription(description)
                 .setFooter(await embedFooter(interaction));
 
@@ -66,7 +66,7 @@ module.exports = {
             const errorEmbed = new EmbedBuilder()
                 .setColor('Red')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_history_error_title')}\n${await t(interaction, 'economy_market_history_error_desc')}`
+                    `## ${await t(interaction, 'economy.market.history.error.title')}\n${await t(interaction, 'economy.market.history.error.desc')}`
                 );
             await interaction.editReply({ embeds: [errorEmbed] });
         }

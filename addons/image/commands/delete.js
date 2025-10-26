@@ -32,7 +32,7 @@ module.exports = {
         if (!image) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(`${await t(interaction, 'image_delete_not_found_desc')}`);
+                .setDescription(`${await t(interaction, 'image.delete.not.found.desc')}`);
             return await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
 
@@ -43,14 +43,14 @@ module.exports = {
             if (err.code !== 'ENOENT') {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(`${await t(interaction, 'image_delete_error_desc')}`);
+                    .setDescription(`${await t(interaction, 'image.delete.error.desc')}`);
                 return await interaction.editReply({ embeds: [embed], ephemeral: true });
             }
         }
 
         await image.destroy();
 
-        const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(`${await t(interaction, 'image_delete_success_desc')}`);
+        const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(`${await t(interaction, 'image.delete.success.desc')}`);
         await interaction.editReply({ embeds: [embed], ephemeral: true });
     },
 };

@@ -26,7 +26,7 @@ module.exports = {
         if (deleted) {
             const embed = new EmbedBuilder()
                 .setDescription(
-                    `## ${await t(interaction, 'pet_admin_delete_delete_success_title')}\n${await t(interaction, 'pet_admin_delete_delete_success', { name })}`
+                    `## ${await t(interaction, 'pet.admin.delete.delete.success.title')}\n${await t(interaction, 'pet.admin.delete.delete.success.desc', { name })}`
                 )
                 .setColor(kythia.bot.color)
                 .setFooter(await embedFooter(interaction));
@@ -34,7 +34,7 @@ module.exports = {
         } else {
             const embed = new EmbedBuilder()
                 .setDescription(
-                    `## ${await t(interaction, 'pet_admin_delete_delete_notfound_title')}\n${await t(interaction, 'pet_admin_delete_delete_notfound')}`
+                    `## ${await t(interaction, 'pet.admin.delete.delete.notfound.title')}\n${await t(interaction, 'pet.admin.delete.delete.notfound.desc')}`
                 )
                 .setColor('Red')
                 .setFooter(await embedFooter(interaction));

@@ -30,7 +30,7 @@ module.exports = {
         await userPet.saveAndUpdateCache('userId');
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_editname_success_title')}\n${await t(interaction, 'pet_editname_success', {
+                `## ${await t(interaction, 'pet.editname.success.title')}\n${await t(interaction, 'pet.editname.success.desc', {
                     icon: userPet.pet.icon,
                     name: userPet.pet.name,
                     rarity: userPet.pet.rarity,

@@ -40,14 +40,14 @@ async function handleAntiNuke(bot, channel, entry) {
         if (!member || !member.kickable) return;
 
         try {
-            await member.kick(await t(channel.guild, 'core_events_channelCreate_events_channel_create_antinuke_reason'));
+            await member.kick(await t(channel.guild, 'core.events.channelCreate.events.channel.create.antinuke.reason'));
 
             const settings = await ServerSetting.getCache({ guildId: channel.guild.id });
             if (!settings || !settings.auditLogChannelId) return;
 
             const logChannel = await channel.guild.channels.fetch(settings.auditLogChannelId).catch(() => null);
             if (logChannel?.isTextBased()) {
-                const message = await t(channel.guild, 'core_events_channelCreate_events_channel_create_antinuke_kick_log', {
+                const message = await t(channel.guild, 'core.events.channelCreate.events.channel.create.antinuke.kick.log', {
                     user: member.user,
                 });
                 await logChannel.send(message);

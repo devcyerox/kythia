@@ -26,7 +26,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -36,8 +36,8 @@ module.exports = {
             where: { userId: interaction.user.id, isDead: false },
         });
         if (existingPet) {
-            const title = await t(interaction, 'pet_adopt_embed_already_title');
-            const desc = await t(interaction, 'pet_adopt_already');
+            const title = await t(interaction, 'pet.adopt.already.title');
+            const desc = await t(interaction, 'pet.adopt.already.desc');
             const embed = new EmbedBuilder()
                 .setDescription(`## ${title}\n${desc}`)
                 .setColor(kythia.bot.color)
@@ -72,12 +72,12 @@ module.exports = {
             petName: name,
         });
 
-        const title = await t(interaction, 'pet_adopt_embed_success_title', {
+        const title = await t(interaction, 'pet.adopt.success.title', {
             name: selectedPet.name,
             icon: selectedPet.icon ?? '',
             rarity: selectedPet.rarity,
         });
-        const desc = await t(interaction, 'pet_adopt_success_simple', {
+        const desc = await t(interaction, 'pet.adopt.success.simple', {
             name: selectedPet.name,
             icon: selectedPet.icon ?? '',
             rarity: selectedPet.rarity,

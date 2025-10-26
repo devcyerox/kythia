@@ -29,13 +29,13 @@ module.exports = {
 
         let leaderboard;
         if (topUsers.length === 0) {
-            leaderboard = await t(interaction, 'leveling_leaderboard_leveling_leaderboard_empty');
+            leaderboard = await t(interaction, 'leveling.leaderboard.leveling.leaderboard.empty');
         } else {
             leaderboard = (
                 await Promise.all(
                     topUsers.map(
                         async (user, index) =>
-                            await t(interaction, 'leveling_leaderboard_leveling_leaderboard_entry', {
+                            await t(interaction, 'leveling.leaderboard.leveling.leaderboard.entry', {
                                 rank: index + 1,
                                 userId: user.userId,
                                 level: user.level || 0,
@@ -48,7 +48,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setDescription(`## ${await t(interaction, 'leveling_leaderboard_leveling_leaderboard_title')}\n${leaderboard}`)
+            .setDescription(`## ${await t(interaction, 'leveling.leaderboard.leveling.leaderboard.title')}\n${leaderboard}`)
             .setTimestamp()
             .setFooter(await embedFooter(interaction));
 

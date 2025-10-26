@@ -51,7 +51,7 @@ module.exports = {
 
         await Pet.create({ name, icon, rarity, bonusType, bonusValue });
         const embed = new EmbedBuilder()
-            .setDescription(`## ${await t(interaction, 'pet_admin_add_add_success_title')}\n${await t(interaction, 'pet_admin_add_add_success', { name })}`)
+            .setDescription(`## ${await t(interaction, 'pet.admin.add.add.success.title')}\n${await t(interaction, 'pet.admin.add.add.success.desc', { name })}`)
             .setColor(kythia.bot.color)
             .setFooter(await embedFooter(interaction));
         return interaction.editReply({ embeds: [embed] });

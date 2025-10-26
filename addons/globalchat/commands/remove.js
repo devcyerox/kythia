@@ -35,20 +35,20 @@ module.exports = {
             if (resJson.status === 'ok') {
                 const embed = new EmbedBuilder()
                     .setColor('Green')
-                    .setDescription(await t(interaction, 'globalchat_remove_success'))
+                    .setDescription(await t(interaction, 'globalchat.remove.success'))
                     .setFooter(await embedFooter(interaction))
                     .setTimestamp(new Date());
                 return interaction.editReply({ embeds: [embed] });
             } else if (resJson.code === 'GUILD_NOT_FOUND') {
-                const embed = new EmbedBuilder().setColor('Orange').setDescription(await t(interaction, 'globalchat_remove_not_found'));
+                const embed = new EmbedBuilder().setColor('Orange').setDescription(await t(interaction, 'globalchat.remove.not.found'));
                 return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             } else {
-                const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat_remove_failed'));
+                const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat.remove.failed'));
                 return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
             }
         } catch (error) {
             logger.error('Failed to remove guild from global chat via API:', error);
-            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat_remove_error'));
+            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'globalchat.remove.error'));
             return interaction.editReply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         }
     },

@@ -30,7 +30,7 @@ module.exports = {
         if (!userData) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -49,17 +49,17 @@ module.exports = {
             .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
             .setDescription(
                 [
-                    `## ${await t(interaction, 'economy_profile_profile_title')}`,
-                    await t(interaction, 'economy_profile_profile_user_line', {
+                    `## ${await t(interaction, 'economy.profile.profile.title')}`,
+                    await t(interaction, 'economy.profile.profile.user.line', {
                         username: targetUser.username,
                         userId: targetUser.id,
                     }),
-                    `### ${await t(interaction, 'economy_profile_profile_finance_title')}`,
-                    await t(interaction, 'economy_profile_profile_bank_line', {
+                    `### ${await t(interaction, 'economy.profile.profile.finance.title')}`,
+                    await t(interaction, 'economy.profile.profile.bank.line', {
                         bank: bank.toLocaleString(),
                         bankType: bankDisplay || '',
                     }),
-                    await t(interaction, 'economy_profile_profile_cash_line', {
+                    await t(interaction, 'economy.profile.profile.cash.line', {
                         cash: coin.toLocaleString(),
                     }),
                 ].join('\n')

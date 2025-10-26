@@ -30,13 +30,13 @@ module.exports = {
 
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'core_utils_about_embed_title', { username: interaction.client.user.username })
+                        await t(interaction, 'core.utils.about.embed.title', { username: interaction.client.user.username })
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'core_utils_about_embed_desc', { username: interaction.client.user.username })
+                        await t(interaction, 'core.utils.about.embed.desc', { username: interaction.client.user.username })
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
@@ -44,17 +44,17 @@ module.exports = {
                     new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Link)
-                            .setLabel(await t(interaction, 'core_utils_about_button_invite'))
+                            .setLabel(await t(interaction, 'core.utils.about.button.invite'))
                             .setURL(
                                 `https://discord.com/oauth2/authorize?client_id=${interaction.client.user.id}&permissions=8&scope=bot+applications.commands`
                             ),
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Link)
-                            .setLabel(await t(interaction, 'core_utils_about_button_website'))
+                            .setLabel(await t(interaction, 'core.utils.about.button.website'))
                             .setURL(kythia.settings.kythiaWeb),
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Link)
-                            .setLabel(await t(interaction, 'core_utils_about_button_owner_web'))
+                            .setLabel(await t(interaction, 'core.utils.about.button.owner.web'))
                             .setURL(kythia.settings.ownerWeb)
                     )
                 )
@@ -62,7 +62,7 @@ module.exports = {
                 .addMediaGalleryComponents(
                     new MediaGalleryBuilder().addItems([new MediaGalleryItemBuilder().setURL(kythia.settings.bannerImage)])
                 )
-                .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'core_utils_about_embed_footer'))),
+                .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.about.embed.footer'))),
         ];
 
         await interaction.reply({

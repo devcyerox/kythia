@@ -81,7 +81,7 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
                     .setDescription(
-                        `${await t(interaction, 'giveaway_giveaway_unknown_subcommand_title')}\n${await t(interaction, 'giveaway_giveaway_unknown_subcommand_desc')}`
+                        `${await t(interaction, 'giveaway.giveaway.unknown.subcommand.title')}\n${await t(interaction, 'giveaway.giveaway.unknown.subcommand.desc')}`
                     );
                 await interaction.editReply({ embeds: [embed], ephemeral: true });
             }
@@ -102,7 +102,7 @@ async function startGiveaway(interaction) {
         const errorEmbed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'giveaway_giveaway_invalid_duration_title')}\n${await t(interaction, 'giveaway_giveaway_invalid_duration_desc')}`
+                `${await t(interaction, 'giveaway.giveaway.invalid.duration.title')}\n${await t(interaction, 'giveaway.giveaway.invalid.duration.desc')}`
             );
         return interaction.editReply({ embeds: [errorEmbed], ephemeral: true });
     }
@@ -113,8 +113,8 @@ async function startGiveaway(interaction) {
     const embed = new EmbedBuilder()
         .setColor(color)
         .setDescription(
-            `${await t(interaction, 'giveaway_helpers_giveawayManager_embed_title')}\n` +
-                `${await t(interaction, 'giveaway_helpers_giveawayManager_embed_desc', {
+            `${await t(interaction, 'giveaway.helpers.giveawayManager.embed.title')}\n` +
+                `${await t(interaction, 'giveaway.helpers.giveawayManager.embed.desc', {
                     prize: prize,
                     endRelative: `<t:${endTimestamp}:R>`,
                     endFull: `<t:${endTimestamp}:F>`,
@@ -122,15 +122,15 @@ async function startGiveaway(interaction) {
                 })}`
         )
         .addFields(
-            { name: await t(interaction, 'giveaway_helpers_giveawayManager_field_winners'), value: `🏆 ${winners}`, inline: true },
-            { name: await t(interaction, 'giveaway_helpers_giveawayManager_field_participants'), value: '👥 0', inline: true }
+            { name: await t(interaction, 'giveaway.helpers.giveawayManager.field.winners'), value: `🏆 ${winners}`, inline: true },
+            { name: await t(interaction, 'giveaway.helpers.giveawayManager.field.participants'), value: '👥 0', inline: true }
         )
         // .setImage("https://i.ibb.co/Y0C1Zcw/tenor.gif")
-        .setFooter({ text: await t(interaction, 'giveaway_giveaway_embed_footer_starting') });
+        .setFooter({ text: await t(interaction, 'giveaway.giveaway.embed.footer.starting') });
 
     if (role) {
         embed.addFields({
-            name: await t(interaction, 'giveaway_helpers_giveawayManager_field_role_requirement'),
+            name: await t(interaction, 'giveaway.helpers.giveawayManager.field.role.requirement'),
             value: `${role}`,
             inline: true,
         });
@@ -138,7 +138,7 @@ async function startGiveaway(interaction) {
 
     const button = new ButtonBuilder()
         .setCustomId('giveawayjoin')
-        .setLabel(await t(interaction, 'giveaway_giveaway_button_join'))
+        .setLabel(await t(interaction, 'giveaway.giveaway.button.join'))
         .setStyle(ButtonStyle.Success)
         .setEmoji('🎉');
 
@@ -168,13 +168,13 @@ async function startGiveaway(interaction) {
         });
 
         // Update footer after message ID is available
-        embed.setFooter({ text: await t(interaction, 'giveaway_helpers_giveawayManager_embed_footer_id', { id: message.id }) });
+        embed.setFooter({ text: await t(interaction, 'giveaway.helpers.giveawayManager.embed.footer.id', { id: message.id }) });
         await message.edit({ embeds: [embed] });
 
         const successEmbed = new EmbedBuilder()
             .setColor('Green')
             .setDescription(
-                `${await t(interaction, 'giveaway_giveaway_start_success_title')}\n${await t(interaction, 'giveaway_giveaway_start_success_desc')}`
+                `${await t(interaction, 'giveaway.giveaway.start.success.title')}\n${await t(interaction, 'giveaway.giveaway.start.success.desc')}`
             );
         await interaction.editReply({ embeds: [successEmbed], ephemeral: true });
     } catch (error) {
@@ -182,7 +182,7 @@ async function startGiveaway(interaction) {
         const errorEmbed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'giveaway_helpers_giveawayManager_fatal_error_title')}\n${await t(interaction, 'giveaway_helpers_giveawayManager_fatal_error_desc')}`
+                `${await t(interaction, 'giveaway.helpers.giveawayManager.fatal.error.title')}\n${await t(interaction, 'giveaway.helpers.giveawayManager.fatal.error.desc')}`
             );
         await interaction.editReply({ embeds: [errorEmbed], ephemeral: true });
     }
@@ -197,7 +197,7 @@ async function endGiveaway(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'giveaway_giveaway_not_found_title')}\n${await t(interaction, 'giveaway_giveaway_not_found_desc')}`
+                `${await t(interaction, 'giveaway.giveaway.not.found.title')}\n${await t(interaction, 'giveaway.giveaway.not.found.desc')}`
             );
         return interaction.editReply({ embeds: [embed], ephemeral: true });
     }
@@ -206,7 +206,7 @@ async function endGiveaway(interaction) {
     const embed = new EmbedBuilder()
         .setColor('Green')
         .setDescription(
-            `${await t(interaction, 'giveaway_giveaway_end_success_title')}\n${await t(interaction, 'giveaway_giveaway_end_success_desc')}`
+            `${await t(interaction, 'giveaway.giveaway.end.success.title')}\n${await t(interaction, 'giveaway.giveaway.end.success.desc')}`
         );
     await interaction.editReply({ embeds: [embed], ephemeral: true });
 }
@@ -220,7 +220,7 @@ async function rerollGiveaway(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'giveaway_giveaway_not_found_title')}\n${await t(interaction, 'giveaway_giveaway_not_found_desc')}`
+                `${await t(interaction, 'giveaway.giveaway.not.found.title')}\n${await t(interaction, 'giveaway.giveaway.not.found.desc')}`
             );
         return interaction.editReply({ embeds: [embed], ephemeral: true });
     }
@@ -228,7 +228,7 @@ async function rerollGiveaway(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'giveaway_giveaway_not_ended_title')}\n${await t(interaction, 'giveaway_giveaway_not_ended_desc')}`
+                `${await t(interaction, 'giveaway.giveaway.not.ended.title')}\n${await t(interaction, 'giveaway.giveaway.not.ended.desc')}`
             );
         return interaction.editReply({ embeds: [embed], ephemeral: true });
     }
@@ -237,7 +237,7 @@ async function rerollGiveaway(interaction) {
     const embed = new EmbedBuilder()
         .setColor('Green')
         .setDescription(
-            `${await t(interaction, 'giveaway_giveaway_reroll_success_title')}\n${await t(interaction, 'giveaway_giveaway_reroll_success_desc')}`
+            `${await t(interaction, 'giveaway.giveaway.reroll.success.title')}\n${await t(interaction, 'giveaway.giveaway.reroll.success.desc')}`
         );
     await interaction.editReply({ embeds: [embed], ephemeral: true });
 }
@@ -250,7 +250,7 @@ async function cancelGiveaway(interaction) {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                `${await t(interaction, 'giveaway_giveaway_not_found_title')}\n${await t(interaction, 'giveaway_giveaway_not_found_desc')}`
+                `${await t(interaction, 'giveaway.giveaway.not.found.title')}\n${await t(interaction, 'giveaway.giveaway.not.found.desc')}`
             );
         return interaction.editReply({ embeds: [embed], ephemeral: true });
     }
@@ -261,7 +261,7 @@ async function cancelGiveaway(interaction) {
     const embed = new EmbedBuilder()
         .setColor('DarkRed')
         .setDescription(
-            `${await t(interaction, 'giveaway_giveaway_cancelled_title', { prize: giveaway.prize })}\n${await t(interaction, 'giveaway_giveaway_cancelled_desc', { user: interaction.user })}`
+            `${await t(interaction, 'giveaway.giveaway.cancelled.title', { prize: giveaway.prize })}\n${await t(interaction, 'giveaway.giveaway.cancelled.desc', { user: interaction.user })}`
         )
         .setTimestamp();
 
@@ -270,7 +270,7 @@ async function cancelGiveaway(interaction) {
 
     const disabledButton = new ButtonBuilder()
         .setCustomId('giveawayjoin')
-        .setLabel(await t(interaction, 'giveaway_giveaway_button_cancelled'))
+        .setLabel(await t(interaction, 'giveaway.giveaway.button.cancelled'))
         .setStyle(ButtonStyle.Danger)
         .setEmoji('❌')
         .setDisabled(true);
@@ -281,7 +281,7 @@ async function cancelGiveaway(interaction) {
     const replyEmbed = new EmbedBuilder()
         .setColor('Green')
         .setDescription(
-            `${await t(interaction, 'giveaway_giveaway_cancel_success_title')}\n${await t(interaction, 'giveaway_giveaway_cancel_success_desc')}`
+            `${await t(interaction, 'giveaway.giveaway.cancel.success.title')}\n${await t(interaction, 'giveaway.giveaway.cancel.success.desc')}`
         );
     await interaction.editReply({ embeds: [replyEmbed], ephemeral: true });
 }

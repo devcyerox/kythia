@@ -35,13 +35,13 @@ module.exports = {
         const { ServerSetting } = container;
         await interaction.deferReply({ ephemeral: true });
         const user = interaction.options.getUser('user') || interaction.targetUser || interaction.user;
-        const reason = interaction.options.getString('reason') || (await t(interaction, 'core_utils_report_reason'));
+        const reason = interaction.options.getString('reason') || (await t(interaction, 'core.utils.report.reason'));
         const guildId = interaction.guild?.id;
 
         const setting = await ServerSetting.getCache({ guildId });
         if (!setting.modLogChannelId && !interaction.guild) {
             return interaction.editReply({
-                content: await t(interaction, 'core_utils_report_no_channel'),
+                content: await t(interaction, 'core.utils.report.no.channel'),
                 ephemeral: true,
             });
         }
@@ -50,7 +50,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                await t(interaction, 'core_utils_report_embed_desc', {
+                await t(interaction, 'core.utils.report.embed.desc', {
                     reported: user.tag,
                     reporter: interaction.user?.tag,
                     reason,
@@ -60,6 +60,6 @@ module.exports = {
             .setTimestamp()
             .setFooter(await embedFooter(interaction));
         await reportChannel?.send({ embeds: [embed] });
-        return interaction.editReply(await t(interaction, 'core_utils_report_success', { user: user.tag }));
+        return interaction.editReply(await t(interaction, 'core.utils.report.success', { user: user.tag }));
     },
 };

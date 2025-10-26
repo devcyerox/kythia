@@ -236,8 +236,6 @@ async function generateBanner(options = {}) {
                 shadow: { color: options.shadow?.color || 'rgba(0,0,0,0.4)', blur: options.shadow?.blur || 6 },
                 maxWidth: null,
                 uppercase: true,
-                // translateKey: options.welcomeText ? null : "common_text_welcome",
-                // translateVars: { guildName: options.guildName }
             },
             {
                 text: options.username,

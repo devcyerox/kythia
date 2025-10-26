@@ -50,7 +50,7 @@ async function buildGameUI(game) {
 
     const turnText = isGameOver
         ? `**${statusMessage}**`
-        : await t(interaction, 'fun_tictactoe_turn', {
+        : await t(interaction, 'fun.tictactoe.turn', {
               mention: currentPlayer.toString(),
               symbol: game.symbols[currentPlayer.id] === 'X' ? '❌' : '⭕',
           });
@@ -59,7 +59,7 @@ async function buildGameUI(game) {
         .setAccentColor(convertColor(isGameOver ? '#2ecc71' : '#3498db', { from: 'hex', to: 'decimal' }))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                `${await t(interaction, 'fun_tictactoe_title')}\n\`❌\` ${playerX.username}\n\`⭕\` ${playerO.username}`
+                `${await t(interaction, 'fun.tictactoe.title')}\n\`❌\` ${playerX.username}\n\`⭕\` ${playerO.username}`
             )
         );
 
@@ -94,7 +94,7 @@ async function buildGameUI(game) {
     container.addTextDisplayComponents(new TextDisplayBuilder().setContent(turnText));
     container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
     container.addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(await t(interaction, 'common_container_footer', { username: client.user.username }))
+        new TextDisplayBuilder().setContent(await t(interaction, 'common.container.footer', { username: client.user.username }))
     );
 
     return [container];
@@ -245,7 +245,7 @@ module.exports = {
                     new EmbedBuilder()
                         .setColor('Red')
                         .setDescription(
-                            `${await t(interaction, 'fun_tictactoe_error_title')}\n${await t(interaction, 'fun_tictactoe_error_self')}`
+                            `${await t(interaction, 'fun.tictactoe.error.title')}\n${await t(interaction, 'fun.tictactoe.error.self')}`
                         ),
                 ],
                 ephemeral: true,
@@ -278,7 +278,7 @@ module.exports = {
                                 new EmbedBuilder()
                                     .setColor('Yellow')
                                     .setDescription(
-                                        `${await t(i, 'fun_tictactoe_error_title')}\n${await t(i, 'fun_tictactoe_error_rematch')}`
+                                        `${await t(i, 'fun.tictactoe.error.title')}\n${await t(i, 'fun.tictactoe.error.rematch')}`
                                     ),
                             ],
                             ephemeral: true,
@@ -296,7 +296,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Yellow')
-                                .setDescription(`${await t(i, 'fun_tictactoe_error_title')}\n${await t(i, 'fun_tictactoe_error_turn')}`),
+                                .setDescription(`${await t(i, 'fun.tictactoe.error.title')}\n${await t(i, 'fun.tictactoe.error.turn')}`),
                         ],
                         ephemeral: true,
                     });
@@ -310,7 +310,7 @@ module.exports = {
 
                 if (checkWin(gameInstance.board, playerSymbol)) {
                     gameInstance.isGameOver = true;
-                    gameInstance.statusMessage = await t(i, 'fun_tictactoe_win', { user: i.user.toString() });
+                    gameInstance.statusMessage = await t(i, 'fun.tictactoe.win', { user: i.user.toString() });
                     collector.stop('win');
                     const updatedComponents = await buildGameUI(gameInstance);
                     await interaction.editReply({
@@ -318,14 +318,14 @@ module.exports = {
                         // embeds: [
                         //   new EmbedBuilder()
                         //     .setColor(0x2ecc71)
-                        //     .setDescription(`${await t(i, "fun_tictactoe_win_title")}\n${gameInstance.statusMessage}`)
+                        //     .setDescription(`${await t(i, 'fun.tictactoe.win.title')}\n${gameInstance.statusMessage}`)
                         // ]
                     });
                     return;
                 }
                 if (checkDraw(gameInstance.board)) {
                     gameInstance.isGameOver = true;
-                    gameInstance.statusMessage = await t(i, 'fun_tictactoe_draw');
+                    gameInstance.statusMessage = await t(i, 'fun.tictactoe.draw');
                     collector.stop('draw');
                     const updatedComponents = await buildGameUI(gameInstance);
                     await interaction.editReply({
@@ -333,7 +333,7 @@ module.exports = {
                         // embeds: [
                         //   new EmbedBuilder()
                         //     .setColor(0x95a5a6)
-                        //     .setDescription(`${await t(i, "fun_tictactoe_draw_title")}\n${gameInstance.statusMessage}`)
+                        //     .setDescription(`${await t(i, 'fun.tictactoe.draw.title')}\n${gameInstance.statusMessage}`)
                         // ]
                     });
                     return;
@@ -346,7 +346,7 @@ module.exports = {
                     botMove(gameInstance);
                     if (checkWin(gameInstance.board, 'O')) {
                         gameInstance.isGameOver = true;
-                        gameInstance.statusMessage = await t(i, 'fun_tictactoe_lose');
+                        gameInstance.statusMessage = await t(i, 'fun.tictactoe.lose');
                         collector.stop('lose');
                         const updatedComponents = await buildGameUI(gameInstance);
                         await interaction.editReply({
@@ -354,14 +354,14 @@ module.exports = {
                             // embeds: [
                             //   new EmbedBuilder()
                             //     .setColor(0xe74c3c)
-                            //     .setDescription(`${await t(i, "fun_tictactoe_lose_title")}\n${gameInstance.statusMessage}`)
+                            //     .setDescription(`${await t(i, 'fun.tictactoe.lose.title')}\n${gameInstance.statusMessage}`)
                             // ]
                         });
                         return;
                     }
                     if (checkDraw(gameInstance.board)) {
                         gameInstance.isGameOver = true;
-                        gameInstance.statusMessage = await t(i, 'fun_tictactoe_draw');
+                        gameInstance.statusMessage = await t(i, 'fun.tictactoe.draw');
                         collector.stop('draw');
                         const updatedComponents = await buildGameUI(gameInstance);
                         await interaction.editReply({
@@ -369,7 +369,7 @@ module.exports = {
                             // embeds: [
                             //   new EmbedBuilder()
                             //     .setColor(0x95a5a6)
-                            //     .setDescription(`${await t(i, "fun_tictactoe_draw_title")}\n${gameInstance.statusMessage}`)
+                            //     .setDescription(`${await t(i, 'fun.tictactoe.draw.title')}\n${gameInstance.statusMessage}`)
                             // ]
                         });
                         return;
@@ -387,7 +387,7 @@ module.exports = {
                 if (!gameInstance.isGameOver) {
                     gameInstance.isGameOver = true;
                     if (reason === 'time') {
-                        gameInstance.statusMessage = await t(interaction, 'fun_tictactoe_timeout');
+                        gameInstance.statusMessage = await t(interaction, 'fun.tictactoe.timeout');
                     }
                 }
 
@@ -398,7 +398,7 @@ module.exports = {
                     //   ? [
                     //     new EmbedBuilder()
                     //       .setColor(0x95a5a6)
-                    //       .setDescription(`${await t(interaction, "fun_tictactoe_timeout_title")}\n${gameInstance.statusMessage}`)
+                    //       .setDescription(`${await t(interaction, 'fun.tictactoe.timeout.title')}\n${gameInstance.statusMessage}`)
                     //   ]
                     //   : []
                 });

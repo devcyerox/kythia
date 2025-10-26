@@ -31,28 +31,28 @@ module.exports = {
 
         if (!member) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_mute_user_not_found'),
+                content: await t(interaction, 'core.moderation.mute.user.not.found'),
             });
         }
 
         if (!member.voice.channel) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_mute_user_not_in_voice'),
+                content: await t(interaction, 'core.moderation.mute.user.not.in.voice'),
             });
         }
 
         try {
-            await member.voice.setMute(true, await t(interaction, 'core_moderation_mute_reason'));
+            await member.voice.setMute(true, await t(interaction, 'core.moderation.mute.reason'));
         } catch (e) {
             return interaction.editReply({
-                content: await t(interaction, 'core_moderation_mute_failed'),
+                content: await t(interaction, 'core.moderation.mute.failed'),
             });
         }
 
         const embed = new EmbedBuilder()
             .setColor('Red')
             .setDescription(
-                await t(interaction, 'core_moderation_mute_embed_desc', {
+                await t(interaction, 'core.moderation.mute.embed.desc', {
                     tag: user.tag,
                     moderator: interaction.user.tag,
                 })

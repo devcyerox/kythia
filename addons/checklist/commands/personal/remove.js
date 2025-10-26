@@ -28,8 +28,8 @@ module.exports = {
         if (!index || typeof index !== 'number' || index < 1) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setTitle(await t(interaction, 'checklist_server_toggle_invalid_index_title'))
-                .setDescription(await t(interaction, 'checklist_server_toggle_invalid_index_desc'))
+                .setTitle(await t(interaction, 'checklist.server.toggle.invalid.index.title'))
+                .setDescription(await t(interaction, 'checklist.server.toggle.invalid.index.desc'))
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral: true });
         }
@@ -39,8 +39,8 @@ module.exports = {
 
         if (!checklist || !Array.isArray(items) || items.length === 0) {
             const embed = new EmbedBuilder()
-                .setTitle(await t(interaction, 'checklist_server_toggle_empty_title', { scope: await t(interaction, scopeKey) }))
-                .setDescription(await t(interaction, 'checklist_server_remove_remove_empty_desc'))
+                .setTitle(await t(interaction, 'checklist.server.toggle.empty.title', { scope: await t(interaction, scopeKey) }))
+                .setDescription(await t(interaction, 'checklist.server.remove.remove.empty.desc'))
                 .setColor('Red')
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral });
@@ -48,8 +48,8 @@ module.exports = {
 
         if (index < 1 || index > items.length) {
             const embed = new EmbedBuilder()
-                .setTitle(await t(interaction, 'checklist_server_toggle_invalid_index_title'))
-                .setDescription(await t(interaction, 'checklist_server_toggle_invalid_index_desc'))
+                .setTitle(await t(interaction, 'checklist.server.toggle.invalid.index.title'))
+                .setDescription(await t(interaction, 'checklist.server.toggle.invalid.index.desc'))
                 .setColor('Red')
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral });
@@ -68,8 +68,8 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle(await t(interaction, 'checklist_server_remove_remove_success_title', { scope: await t(interaction, scopeKey) }))
-            .setDescription(await t(interaction, 'checklist_server_remove_remove_success_desc', { item: removed[0]?.text || '-' }))
+            .setTitle(await t(interaction, 'checklist.server.remove.remove.success.title', { scope: await t(interaction, scopeKey) }))
+            .setDescription(await t(interaction, 'checklist.server.remove.remove.success.desc', { item: removed[0]?.text || '-' }))
             .setColor(color)
             .setFooter(await embedFooter(interaction))
             .setTimestamp();

@@ -35,7 +35,7 @@ module.exports = {
         const answer = await t(interaction, answerKeys[randomIndex]);
 
         const thinkingEmbed = new EmbedBuilder()
-            .setDescription(await t(interaction, 'fun_8ball_thinking_desc'))
+            .setDescription(await t(interaction, 'fun.8ball.thinking.desc'))
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
             .setFooter(await embedFooter(interaction))
@@ -47,7 +47,7 @@ module.exports = {
             const resultEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-                .setDescription(await t(interaction, 'fun_8ball_result_desc', { question, answer }))
+                .setDescription(await t(interaction, 'fun.8ball.result.desc', { question, answer }))
                 .setFooter(await embedFooter(interaction))
                 .setTimestamp();
 

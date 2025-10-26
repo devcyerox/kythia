@@ -422,7 +422,7 @@ module.exports = {
         const subcommandGroup = options.getSubcommandGroup(false) || false;
 
         if (!(member instanceof GuildMember) || !member.voice.channel) {
-            return await interaction.reply({ content: await t(interaction, 'music_music_voice_channel_not_found'), ephemeral: true });
+            return await interaction.reply({ content: await t(interaction, 'music.music.voice.channel.not.found'), ephemeral: true });
         }
 
         // Poru: get player by guildId
@@ -441,10 +441,10 @@ module.exports = {
         }
         // Require active player for other commands
         if (!player) {
-            return interaction.reply({ content: await t(interaction, 'music_music_player_not_found'), ephemeral: true });
+            return interaction.reply({ content: await t(interaction, 'music.music.player.not.found'), ephemeral: true });
         }
         if (member.voice.channel.id !== player.voiceChannel) {
-            return interaction.reply({ content: await t(interaction, 'music_music_required'), ephemeral: true });
+            return interaction.reply({ content: await t(interaction, 'music.music.required'), ephemeral: true });
         }
         const everyoneCommandHandlers = {
             nowplaying: handleNowPlaying,
@@ -458,7 +458,7 @@ module.exports = {
 
         if (!hasControlPermission(interaction, player)) {
             return interaction.reply({
-                content: await t(interaction, 'music_helpers_musicManager_music_permission_denied'),
+                content: await t(interaction, 'music.helpers.musicManager.music.permission.denied'),
                 ephemeral: true,
             });
         }
@@ -487,7 +487,7 @@ module.exports = {
         } else if (subcommand === 'back') {
             return handleBack(interaction, player, guildStates);
         } else {
-            return interaction.reply({ content: await t(interaction, 'music_music_subcommand_not_found'), ephemeral: true });
+            return interaction.reply({ content: await t(interaction, 'music.music.subcommand.not.found'), ephemeral: true });
         }
     },
 };

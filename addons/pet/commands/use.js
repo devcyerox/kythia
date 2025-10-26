@@ -31,7 +31,7 @@ module.exports = {
 
         if (!userPet) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_use_no_pet_title')}\n${await t(interaction, 'pet_use_no_pet')}`)
+                .setDescription(`## ${await t(interaction, 'pet.use.no.pet.title')}\n${await t(interaction, 'pet.use.no.pet.desc')}`)
                 .setColor('Red')
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -47,7 +47,7 @@ module.exports = {
                 /* abaikan jika DM gagal */
             }
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_use_dead_title')}\n${await t(interaction, 'pet_use_dead')}`)
+                .setDescription(`## ${await t(interaction, 'pet.use.dead.title')}\n${await t(interaction, 'pet.use.dead.desc')}`)
                 .setColor('Red')
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -57,7 +57,7 @@ module.exports = {
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setDescription(
-                    `## ${await t(interaction, 'pet_use_cooldown_title')}\n${await t(interaction, 'pet_use_cooldown', { time: cooldown.time })}`
+                    `## ${await t(interaction, 'pet.use.cooldown.title')}\n${await t(interaction, 'pet.use.cooldown.desc', { time: cooldown.time })}`
                 )
                 .setColor('Red')
                 .setFooter(await embedFooter(interaction));
@@ -94,7 +94,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_use_success_title')}\n${await t(interaction, 'pet_use_success', {
+                `## ${await t(interaction, 'pet.use.success.title')}\n${await t(interaction, 'pet.use.success.desc', {
                     icon: updatedPet.pet.icon,
                     name: updatedPet.pet.name,
                     rarity: updatedPet.pet.rarity,

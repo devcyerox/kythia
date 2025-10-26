@@ -25,8 +25,8 @@ module.exports = {
 
         if (!checklist || !Array.isArray(items) || items.length === 0) {
             const embed = new EmbedBuilder()
-                .setTitle(await t(interaction, 'checklist_server_toggle_empty_title', { scope: await t(interaction, scopeKey) }))
-                .setDescription(await t(interaction, 'checklist_server_list_list_empty_desc'))
+                .setTitle(await t(interaction, 'checklist.server.toggle.empty.title', { scope: await t(interaction, scopeKey) }))
+                .setDescription(await t(interaction, 'checklist.server.list.list.empty.desc'))
                 .setColor('Red')
                 .setTimestamp();
             return safeReply(interaction, { embeds: [embed], ephemeral });
@@ -48,7 +48,7 @@ module.exports = {
         if (current) descArr.push(current);
 
         const embed = new EmbedBuilder()
-            .setTitle(await t(interaction, 'checklist_server_list_list_title', { scope: await t(interaction, scopeKey) }))
+            .setTitle(await t(interaction, 'checklist.server.list.list.title', { scope: await t(interaction, scopeKey) }))
             .setColor(colorName)
             .setTimestamp()
             .setFooter(await embedFooter(interaction));
@@ -57,8 +57,8 @@ module.exports = {
             embed.addFields({
                 name:
                     descArr.length > 1
-                        ? await t(interaction, 'checklist_server_list_list_field_title_multi', { index: idx + 1 })
-                        : await t(interaction, 'checklist_server_list_list_field_title'),
+                        ? await t(interaction, 'checklist.server.list.list.field.title.multi', { index: idx + 1 })
+                        : await t(interaction, 'checklist.server.list.list.field.title.single'),
                 value: descArr[idx],
             });
         }

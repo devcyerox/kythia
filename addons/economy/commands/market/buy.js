@@ -40,7 +40,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -50,7 +50,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_buy_insufficient_funds_title')}\n${await t(interaction, 'economy_market_buy_insufficient_funds_desc', { amount: amountToSpend.toLocaleString() })}`
+                    `## ${await t(interaction, 'economy.market.buy.insufficient.funds.title')}\n${await t(interaction, 'economy.market.buy.insufficient.funds.desc', { amount: amountToSpend.toLocaleString() })}`
                 )
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
@@ -64,7 +64,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_buy_asset_not_found_title')}\n${await t(interaction, 'economy_market_buy_asset_not_found_desc')}`
+                    `## ${await t(interaction, 'economy.market.buy.asset.not.found.title')}\n${await t(interaction, 'economy.market.buy.asset.not.found.desc')}`
                 )
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
@@ -116,7 +116,7 @@ module.exports = {
             const successEmbed = new EmbedBuilder()
                 .setColor('Green')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_buy_success_title')}\n${await t(interaction, 'economy_market_buy_success_desc', { quantity: quantityToBuy.toFixed(6), asset: assetId.toUpperCase(), amount: amountToSpend.toLocaleString() })}`
+                    `## ${await t(interaction, 'economy.market.buy.success.title')}\n${await t(interaction, 'economy.market.buy.success.desc', { quantity: quantityToBuy.toFixed(6), asset: assetId.toUpperCase(), amount: amountToSpend.toLocaleString() })}`
                 )
                 .setFooter(await embedFooter(interaction));
 
@@ -126,7 +126,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_buy_error_title')}\n${await t(interaction, 'economy_market_buy_error_desc')}`
+                    `## ${await t(interaction, 'economy.market.buy.error.title')}\n${await t(interaction, 'economy.market.buy.error.desc')}`
                 )
                 .setFooter(await embedFooter(interaction));
             await interaction.editReply({ embeds: [embed] });

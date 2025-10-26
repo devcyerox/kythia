@@ -143,12 +143,12 @@ async function updateProgress(interaction, progress) {
     const embed = new EmbedBuilder()
         .setColor(kythia.bot.color)
         .setDescription(
-            `## ${await t(interaction, 'server_server_progress_title')}\n` +
+            `## ${await t(interaction, 'server.server.progress.title')}\n` +
                 `**${progress.label}**\n` +
                 `\`${bar}\` ${percent}%\n` +
                 `(${progress.current}/${progress.total})\n\n` +
                 (progress.extra || '') +
-                `\n${await t(interaction, 'server_server_progress_step', { step: progress.step, totalSteps: progress.totalSteps })}`
+                `\n${await t(interaction, 'server.server.progress.step', { step: progress.step, totalSteps: progress.totalSteps })}`
         )
         .setFooter(await embedFooter(interaction));
     await interaction.editReply({ embeds: [embed] });
@@ -193,7 +193,7 @@ async function runTemplate(interaction, tpl, opts) {
                 totalSteps,
                 current: i,
                 total: totalRoles,
-                label: await t(interaction, 'server_server_progress_creating_roles'),
+                label: await t(interaction, 'server.server.progress.creating.roles'),
             });
         }
         step++;
@@ -218,7 +218,7 @@ async function runTemplate(interaction, tpl, opts) {
             totalSteps,
             current: catIdx,
             total: totalCats,
-            label: await t(interaction, 'server_server_progress_creating_categories'),
+            label: await t(interaction, 'server.server.progress.creating.categories'),
         });
 
         // Channels in this category
@@ -244,7 +244,7 @@ async function runTemplate(interaction, tpl, opts) {
                 totalSteps,
                 current: chIdx,
                 total: cat.channels.length,
-                label: await t(interaction, 'server_server_progress_creating_channels', { category: cat.name }),
+                label: await t(interaction, 'server.server.progress.creating.channels', { category: cat.name }),
             });
         }
     }
@@ -345,7 +345,7 @@ module.exports = {
         await interaction.deferReply();
 
         if (!interaction.guild) {
-            const embed = new EmbedBuilder().setColor('Red').setDescription(`## ${await t(interaction, 'server_server_command_no_guild')}`);
+            const embed = new EmbedBuilder().setColor('Red').setDescription(`## ${await t(interaction, 'server.server.command.no.guild')}`);
             return interaction.editReply({ embeds: [embed], ephemeral: true });
         }
         // AUTOBUILD
@@ -364,7 +364,7 @@ module.exports = {
             if (!tpl) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(`## ${await t(interaction, 'server_server_autobuild_template_not_found', { key })}`);
+                    .setDescription(`## ${await t(interaction, 'server.server.autobuild.template.not.found', { key })}`);
                 return interaction.editReply({ embeds: [embed], ephemeral: true });
             }
 
@@ -382,7 +382,7 @@ module.exports = {
                     embeds: [
                         new EmbedBuilder()
                             .setColor(kythia.bot.color)
-                            .setDescription(`## ${await t(interaction, 'server_server_autobuild_progress_start')}`)
+                            .setDescription(`## ${await t(interaction, 'server.server.autobuild.progress.start')}`)
                             .setFooter(await embedFooter(interaction)),
                     ],
                 });
@@ -391,8 +391,8 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
                     .setDescription(
-                        `## ${await t(interaction, 'server_server_autobuild_success', { name: tpl.meta.display || key })}\n` +
-                            (await t(interaction, 'server_server_autobuild_success_desc', {
+                        `## ${await t(interaction, 'server.server.autobuild.success.title', { name: tpl.meta.display || key })}\n` +
+                            (await t(interaction, 'server.server.autobuild.success.desc', {
                                 mode: dryRun ? 'dry-run' : 'apply',
                                 locale,
                                 voice: includeVoice ? 'on' : 'off',
@@ -412,7 +412,7 @@ module.exports = {
             } catch (e) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(`## ${await t(interaction, 'server_server_autobuild_failed', { error: e.message })}`);
+                    .setDescription(`## ${await t(interaction, 'server.server.autobuild.failed', { error: e.message })}`);
                 return interaction.editReply({ embeds: [embed] });
             }
         }
@@ -425,7 +425,7 @@ module.exports = {
                     if (!guild) {
                         const embed = new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(`## ${await t(interaction, 'server_server_backup_no_guild')}`);
+                            .setDescription(`## ${await t(interaction, 'server.server.backup.no.guild')}`);
                         return interaction.editReply({ embeds: [embed] });
                     }
 
@@ -434,7 +434,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor(kythia.bot.color)
-                                .setDescription(`## ${await t(interaction, 'server_server_backup_progress_start')}`)
+                                .setDescription(`## ${await t(interaction, 'server.server.backup.progress.start')}`)
                                 .setFooter(await embedFooter(interaction)),
                         ],
                     });
@@ -461,7 +461,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_backup_progress_settings')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.backup.progress.settings')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -483,7 +483,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_backup_progress_roles')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.backup.progress.roles')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -511,7 +511,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_backup_progress_channels')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.backup.progress.channels')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -526,7 +526,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_backup_progress_emojis')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.backup.progress.emojis')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -547,7 +547,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_backup_progress_soundboard')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.backup.progress.soundboard')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -574,26 +574,26 @@ module.exports = {
 
                         // Kirim file ke DM user
                         await interaction.user.send({
-                            content: await t(interaction, 'server_server_backup_dm_content', { name: guild.name }),
+                            content: await t(interaction, 'server.server.backup.dm.content', { name: guild.name }),
                             files: [file],
                         });
 
                         // Update reply awal di channel
                         const embed = new EmbedBuilder()
                             .setColor('Green')
-                            .setDescription(`## ${await t(interaction, 'server_server_backup_success')}`);
+                            .setDescription(`## ${await t(interaction, 'server.server.backup.success')}`);
                         await interaction.editReply({ embeds: [embed] });
                     } catch (err) {
                         console.error(err);
                         if (err.code === 50007) {
                             const embed = new EmbedBuilder()
                                 .setColor('Red')
-                                .setDescription(`## ${await t(interaction, 'server_server_backup_dm_failed')}`);
+                                .setDescription(`## ${await t(interaction, 'server.server.backup.dm.failed')}`);
                             return interaction.editReply({ embeds: [embed] });
                         }
                         const embed = new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(`## ${await t(interaction, 'server_server_backup_failed')}`);
+                            .setDescription(`## ${await t(interaction, 'server.server.backup.failed')}`);
                         return interaction.editReply({ embeds: [embed] });
                     }
                     break;
@@ -605,7 +605,7 @@ module.exports = {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor(kythia.bot.color)
-                                .setDescription(`## ${await t(interaction, 'server_server_restore_progress_start')}`)
+                                .setDescription(`## ${await t(interaction, 'server.server.restore.progress.start')}`)
                                 .setFooter(await embedFooter(interaction)),
                         ],
                     });
@@ -627,7 +627,7 @@ module.exports = {
                             if (!file || !file.name.endsWith('.json')) {
                                 const embed = new EmbedBuilder()
                                     .setColor('Red')
-                                    .setDescription(`## ${await t(interaction, 'server_server_restore_file_invalid')}`);
+                                    .setDescription(`## ${await t(interaction, 'server.server.restore.file.invalid')}`);
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             const res = await fetch(file.url);
@@ -639,7 +639,7 @@ module.exports = {
                         if (!backup) {
                             const embed = new EmbedBuilder()
                                 .setColor('Red')
-                                .setDescription(`## ${await t(interaction, 'server_server_restore_data_invalid')}`);
+                                .setDescription(`## ${await t(interaction, 'server.server.restore.data.invalid')}`);
                             return interaction.editReply({ embeds: [embed] });
                         }
 
@@ -649,7 +649,7 @@ module.exports = {
                                 embeds: [
                                     new EmbedBuilder()
                                         .setColor(kythia.bot.color)
-                                        .setDescription(`## ${await t(interaction, 'server_server_restore_clearing')}`)
+                                        .setDescription(`## ${await t(interaction, 'server.server.restore.clearing')}`)
                                         .setFooter(await embedFooter(interaction)),
                                 ],
                             });
@@ -666,7 +666,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_restore_settings')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.restore.settings')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -687,7 +687,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_restore_roles')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.restore.roles.text')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -712,7 +712,7 @@ module.exports = {
                                         new EmbedBuilder()
                                             .setColor(kythia.bot.color)
                                             .setDescription(
-                                                `## ${await t(interaction, 'server_server_restore_roles_progress', { current: roleIdx, total: backup.roles.length })}`
+                                                `## ${await t(interaction, 'server.server.restore.roles.progress', { current: roleIdx, total: backup.roles.length })}`
                                             )
                                             .setFooter(await embedFooter(interaction)),
                                     ],
@@ -725,7 +725,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_restore_channels')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.restore.channels.text')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -746,7 +746,7 @@ module.exports = {
                                         new EmbedBuilder()
                                             .setColor(kythia.bot.color)
                                             .setDescription(
-                                                `## ${await t(interaction, 'server_server_restore_categories_progress', { current: catIdx, total: categories.length })}`
+                                                `## ${await t(interaction, 'server.server.restore.categories.progress', { current: catIdx, total: categories.length })}`
                                             )
                                             .setFooter(await embedFooter(interaction)),
                                     ],
@@ -779,7 +779,7 @@ module.exports = {
                                         new EmbedBuilder()
                                             .setColor(kythia.bot.color)
                                             .setDescription(
-                                                `## ${await t(interaction, 'server_server_restore_channels_progress', { current: chIdx, total: nonCatChannels.length })}`
+                                                `## ${await t(interaction, 'server.server.restore.channels.progress', { current: chIdx, total: nonCatChannels.length })}`
                                             )
                                             .setFooter(await embedFooter(interaction)),
                                     ],
@@ -792,7 +792,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                     .setColor(kythia.bot.color)
-                                    .setDescription(`## ${await t(interaction, 'server_server_restore_assets')}`)
+                                    .setDescription(`## ${await t(interaction, 'server.server.restore.assets')}`)
                                     .setFooter(await embedFooter(interaction)),
                             ],
                         });
@@ -829,14 +829,14 @@ module.exports = {
                         const embed = new EmbedBuilder()
                             .setColor('Green')
                             .setDescription(
-                                `## ${await t(interaction, 'server_server_restore_success', { name: backup.metadata.guildName })}`
+                                `## ${await t(interaction, 'server.server.restore.success', { name: backup.metadata.guildName })}`
                             );
                         return interaction.editReply({ embeds: [embed] });
                     } catch (err) {
                         console.error(err);
                         const embed = new EmbedBuilder()
                             .setColor('Red')
-                            .setDescription(`## ${await t(interaction, 'server_server_restore_failed')}`);
+                            .setDescription(`## ${await t(interaction, 'server.server.restore.failed')}`);
                         return interaction.editReply({ embeds: [embed] });
                     }
                 }
@@ -853,7 +853,7 @@ module.exports = {
 async function resetServer(interaction) {
     const guild = interaction.guild;
     if (!guild) {
-        const embed = new EmbedBuilder().setColor('Red').setDescription(`## ${await t(interaction, 'server_server_reset_no_guild')}`);
+        const embed = new EmbedBuilder().setColor('Red').setDescription(`## ${await t(interaction, 'server.server.reset.no.guild')}`);
         return interaction.editReply({ embeds: [embed] });
     }
 
@@ -862,7 +862,7 @@ async function resetServer(interaction) {
         embeds: [
             new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(`## ${await t(interaction, 'server_server_reset_progress_start')}`)
+                .setDescription(`## ${await t(interaction, 'server.server.reset.progress.start')}`)
                 .setFooter(await embedFooter(interaction)),
         ],
     });
@@ -882,7 +882,7 @@ async function resetServer(interaction) {
                     new EmbedBuilder()
                         .setColor(kythia.bot.color)
                         .setDescription(
-                            `## ${await t(interaction, 'server_server_reset_progress_channels', { current: chIdx, total: channelsArr.length })}`
+                            `## ${await t(interaction, 'server.server.reset.progress.channels', { current: chIdx, total: channelsArr.length })}`
                         )
                         .setFooter(await embedFooter(interaction)),
                 ],
@@ -905,7 +905,7 @@ async function resetServer(interaction) {
                     new EmbedBuilder()
                         .setColor(kythia.bot.color)
                         .setDescription(
-                            `## ${await t(interaction, 'server_server_reset_progress_roles', { current: roleIdx, total: rolesArr.length })}`
+                            `## ${await t(interaction, 'server.server.reset.progress.roles', { current: roleIdx, total: rolesArr.length })}`
                         )
                         .setFooter(await embedFooter(interaction)),
                 ],
@@ -925,7 +925,7 @@ async function resetServer(interaction) {
                     new EmbedBuilder()
                         .setColor(kythia.bot.color)
                         .setDescription(
-                            `## ${await t(interaction, 'server_server_reset_progress_emojis', { current: emojiIdx, total: emojisArr.length })}`
+                            `## ${await t(interaction, 'server.server.reset.progress.emojis', { current: emojiIdx, total: emojisArr.length })}`
                         )
                         .setFooter(await embedFooter(interaction)),
                 ],
@@ -945,7 +945,7 @@ async function resetServer(interaction) {
                         new EmbedBuilder()
                             .setColor(kythia.bot.color)
                             .setDescription(
-                                `## ${await t(interaction, 'server_server_reset_progress_stickers', { current: stickerIdx, total: stickersArr.length })}`
+                                `## ${await t(interaction, 'server.server.reset.progress.stickers', { current: stickerIdx, total: stickersArr.length })}`
                             )
                             .setFooter(await embedFooter(interaction)),
                     ],
@@ -954,6 +954,6 @@ async function resetServer(interaction) {
         }
     }
 
-    const embed = new EmbedBuilder().setColor('Green').setDescription(`${await t(interaction, 'server_server_reset_success')}`);
+    const embed = new EmbedBuilder().setColor('Green').setDescription(`${await t(interaction, 'server.server.reset.success')}`);
     return interaction.editReply({ embeds: [embed] });
 }

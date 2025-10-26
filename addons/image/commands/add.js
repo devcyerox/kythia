@@ -28,7 +28,7 @@ module.exports = {
         const attachment = interaction.options.getAttachment('image');
 
         if (!attachment.contentType.startsWith('image/')) {
-            const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(interaction, 'image_add_invalid_type_desc'));
+            const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(await t(interaction, 'image.add.invalid.type.desc'));
             return interaction.editReply({ embeds: [embed], ephemeral: true });
         }
 
@@ -57,7 +57,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                await t(interaction, 'image_add_success_desc', {
+                await t(interaction, 'image.add.success.desc', {
                     url: `${baseUrl}/files/images/${savedImage.filename}`,
                 })
             )

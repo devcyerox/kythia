@@ -30,7 +30,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -45,7 +45,7 @@ module.exports = {
             const emptyEmbed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_portfolio_empty_title')}\n${await t(interaction, 'economy_market_portfolio_empty_desc')}`
+                    `## ${await t(interaction, 'economy.market.portfolio.empty.title')}\n${await t(interaction, 'economy.market.portfolio.empty.desc')}`
                 )
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [emptyEmbed] });
@@ -66,7 +66,7 @@ module.exports = {
             if (!currentAssetData) {
                 portfolioFields.push({
                     name: `${holding.assetId.toUpperCase()}`,
-                    value: await t(interaction, 'economy_market_portfolio_data_unavailable', { quantity: holding.quantity }),
+                    value: await t(interaction, 'economy.market.portfolio.data.unavailable', { quantity: holding.quantity }),
                     inline: false,
                 });
                 continue;
@@ -97,16 +97,16 @@ module.exports = {
 
             // All info lines with localization
             const lines = [
-                `> **${await t(interaction, 'economy_market_portfolio_field_quantity')}** \`${holding.quantity}\``,
-                `> **${await t(interaction, 'economy_market_portfolio_field_avg_buy_price')}** \`$${holding.avgBuyPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })}\``,
-                `> **${await t(interaction, 'economy_market_portfolio_field_current_price')}** \`$${priceNow.toLocaleString(undefined, { maximumFractionDigits: 8 })}\``,
+                `> **${await t(interaction, 'economy.market.portfolio.field.quantity')}** \`${holding.quantity}\``,
+                `> **${await t(interaction, 'economy.market.portfolio.field.avg.buy.price')}** \`$${holding.avgBuyPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })}\``,
+                `> **${await t(interaction, 'economy.market.portfolio.field.current.price')}** \`$${priceNow.toLocaleString(undefined, { maximumFractionDigits: 8 })}\``,
                 price24h !== null
-                    ? `> **${await t(interaction, 'economy_market_portfolio_field_price_24h_ago')}** \`$${price24h.toLocaleString(undefined, { maximumFractionDigits: 8 })}\``
+                    ? `> **${await t(interaction, 'economy.market.portfolio.field.price.24h.ago')}** \`$${price24h.toLocaleString(undefined, { maximumFractionDigits: 8 })}\``
                     : null,
-                `> **${await t(interaction, 'economy_market_portfolio_field_24h_change')}** \`${change24hEmoji} ${change24hSign}${currentAssetData.usd_24h_change?.toFixed(2) ?? '--'}%\``,
-                `> **${await t(interaction, 'economy_market_portfolio_field_invested')}** \`$${invested.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
-                `> **${await t(interaction, 'economy_market_portfolio_field_market_value')}** \`$${currentValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
-                `> **${await t(interaction, 'economy_market_portfolio_field_pl')}** \`${pnlEmoji} ${pnlSign}$${Math.abs(pnl).toLocaleString(undefined, { maximumFractionDigits: 2 })}\` (${pnlSign}${((pnl / invested) * 100 || 0).toFixed(2)}%)`,
+                `> **${await t(interaction, 'economy.market.portfolio.field.24h.change')}** \`${change24hEmoji} ${change24hSign}${currentAssetData.usd_24h_change?.toFixed(2) ?? '--'}%\``,
+                `> **${await t(interaction, 'economy.market.portfolio.field.invested')}** \`$${invested.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
+                `> **${await t(interaction, 'economy.market.portfolio.field.market.value')}** \`$${currentValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
+                `> **${await t(interaction, 'economy.market.portfolio.field.pl')}** \`${pnlEmoji} ${pnlSign}$${Math.abs(pnl).toLocaleString(undefined, { maximumFractionDigits: 2 })}\` (${pnlSign}${((pnl / invested) * 100 || 0).toFixed(2)}%)`,
             ].filter(Boolean);
 
             portfolioFields.push({
@@ -122,17 +122,17 @@ module.exports = {
 
         // Localized summary
         const summaryLines = [
-            `**${await t(interaction, 'economy_market_portfolio_summary_total_invested')}** \`$${totalInvested.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
-            `**${await t(interaction, 'economy_market_portfolio_summary_market_value')}** \`$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
-            `**${await t(interaction, 'economy_market_portfolio_summary_total_pl')}** \`${totalPnlEmoji} ${totalPnlSign}$${Math.abs(totalPnl).toLocaleString(undefined, { maximumFractionDigits: 2 })}\` (${totalPnlSign}${totalReturnPct}%)`,
-            `**${await t(interaction, 'economy_market_portfolio_summary_unrealized_gains')}** \`📈 +$${totalUnrealizedGain.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
-            `**${await t(interaction, 'economy_market_portfolio_summary_unrealized_losses')}** \`📉 -$${totalUnrealizedLoss.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
+            `**${await t(interaction, 'economy.market.portfolio.summary.total.invested')}** \`$${totalInvested.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
+            `**${await t(interaction, 'economy.market.portfolio.summary.market.value')}** \`$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
+            `**${await t(interaction, 'economy.market.portfolio.summary.total.pl')}** \`${totalPnlEmoji} ${totalPnlSign}$${Math.abs(totalPnl).toLocaleString(undefined, { maximumFractionDigits: 2 })}\` (${totalPnlSign}${totalReturnPct}%)`,
+            `**${await t(interaction, 'economy.market.portfolio.summary.unrealized.gains')}** \`📈 +$${totalUnrealizedGain.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
+            `**${await t(interaction, 'economy.market.portfolio.summary.unrealized.losses')}** \`📉 -$${totalUnrealizedLoss.toLocaleString(undefined, { maximumFractionDigits: 2 })}\``,
         ];
 
         const embed = new EmbedBuilder()
             .setColor(totalPnl >= 0 ? 'Green' : 'Red')
             .setDescription(
-                `## ${await t(interaction, 'economy_market_portfolio_title', { username: interaction.user.username })}\n${summaryLines.join('\n')}`
+                `## ${await t(interaction, 'economy.market.portfolio.title', { username: interaction.user.username })}\n${summaryLines.join('\n')}`
             )
             .addFields(portfolioFields)
             .setThumbnail(interaction.user.displayAvatarURL())

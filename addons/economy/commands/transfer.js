@@ -31,7 +31,7 @@ module.exports = {
             if (!giver) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                    .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -41,7 +41,7 @@ module.exports = {
             if (giver.kythiaBank < amount) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_transfer_transfer_not_enough_bank'))
+                    .setDescription(await t(interaction, 'economy.transfer.transfer.not.enough.bank.text'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -50,7 +50,7 @@ module.exports = {
             if (!receiver) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_transfer_transfer_target_no_account'))
+                    .setDescription(await t(interaction, 'economy.transfer.transfer.target.no.account'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -59,7 +59,7 @@ module.exports = {
             if (giver.userId === receiver.userId) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_transfer_transfer_self'))
+                    .setDescription(await t(interaction, 'economy.transfer.transfer.self'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -72,7 +72,7 @@ module.exports = {
             if (giver.kythiaBank < amount + fee) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_transfer_transfer_not_enough_bank_fee', { fee }))
+                    .setDescription(await t(interaction, 'economy.transfer.transfer.not.enough.bank.fee', { fee }))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -85,7 +85,7 @@ module.exports = {
                 .setColor(kythia.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_transfer_transfer_confirm', {
+                    await t(interaction, 'economy.transfer.transfer.confirm', {
                         amount,
                         target: target.username,
                         fee,
@@ -97,11 +97,11 @@ module.exports = {
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('confirm')
-                    .setLabel(await t(interaction, 'economy_transfer_transfer_btn_confirm'))
+                    .setLabel(await t(interaction, 'economy.transfer.transfer.btn.confirm'))
                     .setStyle(ButtonStyle.Success),
                 new ButtonBuilder()
                     .setCustomId('cancel')
-                    .setLabel(await t(interaction, 'economy_transfer_transfer_btn_cancel'))
+                    .setLabel(await t(interaction, 'economy.transfer.transfer.btn.cancel'))
                     .setStyle(ButtonStyle.Danger)
             );
 
@@ -125,7 +125,7 @@ module.exports = {
                         .setColor(kythia.bot.color)
                         .setThumbnail(interaction.user.displayAvatarURL())
                         .setDescription(
-                            await t(interaction, 'economy_transfer_transfer_success', {
+                            await t(interaction, 'economy.transfer.transfer.success', {
                                 amount,
                                 target: target.username,
                                 fee,
@@ -139,7 +139,7 @@ module.exports = {
                         .setColor(kythia.bot.color)
                         .setThumbnail(interaction.user.displayAvatarURL())
                         .setDescription(
-                            await t(interaction, 'economy_transfer_transfer_received', {
+                            await t(interaction, 'economy.transfer.transfer.received', {
                                 amount,
                                 from: interaction.user.username,
                             })
@@ -152,7 +152,7 @@ module.exports = {
                 } else if (i.customId === 'cancel') {
                     const embed = new EmbedBuilder()
                         .setColor(kythia.bot.color)
-                        .setDescription(await t(interaction, 'economy_transfer_transfer_cancelled'))
+                        .setDescription(await t(interaction, 'economy.transfer.transfer.cancelled'))
                         .setTimestamp()
                         .setFooter(await embedFooter(interaction));
                     await i.update({ embeds: [embed], components: [] });
@@ -163,7 +163,7 @@ module.exports = {
                 if (collected.size === 0) {
                     const embed = new EmbedBuilder()
                         .setColor(kythia.bot.color)
-                        .setDescription(await t(interaction, 'economy_transfer_transfer_timeout'))
+                        .setDescription(await t(interaction, 'economy.transfer.transfer.timeout'))
                         .setTimestamp()
                         .setFooter(await embedFooter(interaction));
                     await interaction.editReply({ embeds: [embed], components: [] });
@@ -173,7 +173,7 @@ module.exports = {
             console.error('Error during transfer command execution:', error);
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_transfer_transfer_error'))
+                .setDescription(await t(interaction, 'economy.transfer.transfer.error'))
                 .setTimestamp()
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });

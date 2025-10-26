@@ -1073,7 +1073,7 @@ class Kythia {
                     }
                     if (!command) {
                         logger.error(`Command not found for key: ${commandKey}`);
-                        return interaction.reply({ content: await t(interaction, 'common_error_command_not_found'), ephemeral: true });
+                        return interaction.reply({ content: await t(interaction, 'common.error.command.not.found'), ephemeral: true });
                     }
 
                     if (interaction.inGuild()) {
@@ -1085,27 +1085,27 @@ class Kythia {
 
                             if (settings && settings.hasOwnProperty(featureFlag) && settings[featureFlag] === false) {
                                 const featureName = category.charAt(0).toUpperCase() + category.slice(1);
-                                const reply = await t(interaction, 'common_error_feature_disabled', { feature: featureName });
+                                const reply = await t(interaction, 'common.error.feature.disabled', { feature: featureName });
                                 return interaction.reply({ content: reply });
                             }
                         }
                     }
 
                     if (command.guildOnly && !interaction.inGuild()) {
-                        return interaction.reply({ content: await t(interaction, 'common_error_guild_only'), ephemeral: true });
+                        return interaction.reply({ content: await t(interaction, 'common.error.guild.only'), ephemeral: true });
                     }
                     if (command.ownerOnly && !isOwner(interaction.user.id)) {
-                        return interaction.reply({ content: await t(interaction, 'common_error_not_owner'), ephemeral: true });
+                        return interaction.reply({ content: await t(interaction, 'common.error.not.owner'), ephemeral: true });
                     }
                     if (command.teamOnly && !isOwner(interaction.user.id)) {
                         const isTeam = await isTeam(interaction.user);
-                        if (!isTeam) return interaction.reply({ content: await t(interaction, 'common_error_not_team'), ephemeral: true });
+                        if (!isTeam) return interaction.reply({ content: await t(interaction, 'common.error.not.team'), ephemeral: true });
                     }
                     if (command.permissions && interaction.inGuild()) {
                         const missingPerms = interaction.member.permissions.missing(command.permissions);
                         if (missingPerms.length > 0)
                             return interaction.reply({
-                                content: await t(interaction, 'common_error_user_missing_perms', { perms: formatPerms(missingPerms) }),
+                                content: await t(interaction, 'common.error.user.missing.perms', { perms: formatPerms(missingPerms) }),
                                 ephemeral: true,
                             });
                     }
@@ -1113,7 +1113,7 @@ class Kythia {
                         const missingPerms = interaction.guild.members.me.permissions.missing(command.botPermissions);
                         if (missingPerms.length > 0)
                             return interaction.reply({
-                                content: await t(interaction, 'common_error_bot_missing_perms', { perms: formatPerms(missingPerms) }),
+                                content: await t(interaction, 'common.error.bot.missing.perms', { perms: formatPerms(missingPerms) }),
                                 ephemeral: true,
                             });
                     }
@@ -1127,7 +1127,7 @@ class Kythia {
                                 convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' })
                             );
                             container.addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(await t(interaction, 'common_error_vote_locked'))
+                                new TextDisplayBuilder().setContent(await t(interaction, 'common.error.vote.locked.text'))
                             );
                             container.addSeparatorComponents(
                                 new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true)
@@ -1136,7 +1136,7 @@ class Kythia {
                                 new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
                                         .setLabel(
-                                            await t(interaction, 'common_error_vote_locked_button', {
+                                            await t(interaction, 'common.error.vote.locked.button', {
                                                 botName: interaction.client.user.username,
                                             })
                                         )
@@ -1148,7 +1148,7 @@ class Kythia {
                                 new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true)
                             );
                             container.addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(await t(interaction, 'common_container_footer'))
+                                new TextDisplayBuilder().setContent(await t(interaction, 'common.container.footer'))
                             );
                             return interaction.reply({
                                 components: [container],
@@ -1176,7 +1176,7 @@ class Kythia {
 
                             if (now < expirationTime) {
                                 const timeLeft = (expirationTime - now) / 1000;
-                                const reply = await t(interaction, 'common_error_cooldown', { time: timeLeft.toFixed(1) });
+                                const reply = await t(interaction, 'common.error.cooldown', { time: timeLeft.toFixed(1) });
                                 return interaction.reply({ content: reply, ephemeral: true });
                             }
                         }
@@ -1231,20 +1231,20 @@ class Kythia {
                     if (!command) return;
 
                     if (command.guildOnly && !interaction.inGuild()) {
-                        return interaction.reply({ content: await t(interaction, 'common_error_guild_only'), ephemeral: true });
+                        return interaction.reply({ content: await t(interaction, 'common.error.guild.only'), ephemeral: true });
                     }
                     if (command.ownerOnly && !isOwner(interaction.user.id)) {
-                        return interaction.reply({ content: await t(interaction, 'common_error_not_owner'), ephemeral: true });
+                        return interaction.reply({ content: await t(interaction, 'common.error.not.owner'), ephemeral: true });
                     }
                     if (command.teamOnly && !isOwner(interaction.user.id)) {
                         const isTeam = await isTeam(interaction.user);
-                        if (!isTeam) return interaction.reply({ content: await t(interaction, 'common_error_not_team'), ephemeral: true });
+                        if (!isTeam) return interaction.reply({ content: await t(interaction, 'common.error.not.team'), ephemeral: true });
                     }
                     if (command.permissions && interaction.inGuild()) {
                         const missingPerms = interaction.member.permissions.missing(command.permissions);
                         if (missingPerms.length > 0)
                             return interaction.reply({
-                                content: await t(interaction, 'common_error_user_missing_perms', { perms: formatPerms(missingPerms) }),
+                                content: await t(interaction, 'common.error.user.missing.perms', { perms: formatPerms(missingPerms) }),
                                 ephemeral: true,
                             });
                     }
@@ -1252,7 +1252,7 @@ class Kythia {
                         const missingPerms = interaction.guild.members.me.permissions.missing(command.botPermissions);
                         if (missingPerms.length > 0)
                             return interaction.reply({
-                                content: await t(interaction, 'common_error_bot_missing_perms', { perms: formatPerms(missingPerms) }),
+                                content: await t(interaction, 'common.error.bot.missing.perms', { perms: formatPerms(missingPerms) }),
                                 ephemeral: true,
                             });
                     }
@@ -1271,7 +1271,7 @@ class Kythia {
                             );
                             container.addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent(
-                                    await t(interaction, 'common_error_not_in_main_guild', { name: mainGuild.name })
+                                    await t(interaction, 'common.error.not.in.main.guild.text', { name: mainGuild.name })
                                 )
                             );
                             container.addSeparatorComponents(
@@ -1280,14 +1280,14 @@ class Kythia {
                             container.addActionRowComponents(
                                 new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
-                                        .setLabel(await t(interaction, 'common_error_not_in_main_guild_button_join'))
+                                        .setLabel(await t(interaction, 'common.error.not.in.main.guild.button.join'))
                                         .setStyle(ButtonStyle.Link)
                                         .setURL(kythia.settings.supportServer)
                                 )
                             );
                             container.addTextDisplayComponents(
                                 new TextDisplayBuilder().setContent(
-                                    await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                                    await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                                 )
                             );
                             return interaction.reply({
@@ -1306,7 +1306,7 @@ class Kythia {
                                 convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' })
                             );
                             container.addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(await t(interaction, 'common_error_vote_locked'))
+                                new TextDisplayBuilder().setContent(await t(interaction, 'common.error.vote.locked.text'))
                             );
                             container.addSeparatorComponents(
                                 new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true)
@@ -1315,7 +1315,7 @@ class Kythia {
                                 new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
                                         .setLabel(
-                                            await t(interaction, 'common_error_vote_locked_button', {
+                                            await t(interaction, 'common.error.vote.locked.button', {
                                                 botName: interaction.client.user.username,
                                             })
                                         )
@@ -1327,7 +1327,7 @@ class Kythia {
                                 new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true)
                             );
                             container.addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(await t(interaction, 'common_container_footer'))
+                                new TextDisplayBuilder().setContent(await t(interaction, 'common.container.footer'))
                             );
                             return interaction.reply({
                                 components: [container],
@@ -1360,17 +1360,17 @@ class Kythia {
                 const components = [
                     new ContainerBuilder()
                         .setAccentColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
-                        .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'common_error_generic')))
+                        .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'common.error.generic')))
                         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
                         .addActionRowComponents(
                             new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Link)
-                                    .setLabel(await t(interaction, 'common_error_button_join_support_server'))
+                                    .setLabel(await t(interaction, 'common.error.button.join.support.server'))
                                     .setURL(kythia.settings.supportServer),
                                 new ButtonBuilder()
                                     .setStyle(ButtonStyle.Link)
-                                    .setLabel(await t(interaction, 'common_error_button_contact_owner'))
+                                    .setLabel(await t(interaction, 'common.error.button.contact.owner'))
                                     .setURL(`discord://-/users/${ownerFirstId}`)
                             )
                         ),
@@ -1431,7 +1431,7 @@ class Kythia {
                         .setDescription(
                             await t(
                                 null,
-                                'common_automod',
+                                'common.automod',
                                 {
                                     ruleName: ruleName,
                                 },
@@ -1440,16 +1440,16 @@ class Kythia {
                         )
                         .addFields(
                             {
-                                name: await t(null, 'common_automod_field_user', {}, locale),
+                                name: await t(null, 'common.automod.field.user', {}, locale),
                                 value: `${execution.user.tag} (${execution.userId})`,
                                 inline: true,
                             },
-                            { name: await t(null, 'common_automod_field_rule_trigger', {}, locale), value: `\`${ruleName}\``, inline: true }
+                            { name: await t(null, 'common.automod.field.rule.trigger', {}, locale), value: `\`${ruleName}\``, inline: true }
                         )
                         .setFooter({
                             text: await t(
                                 null,
-                                'common_embed_footer',
+                                'common.embed.footer',
                                 {
                                     username: execution.guild.client.user.username,
                                 },

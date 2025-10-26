@@ -67,7 +67,7 @@ module.exports = {
             }
 
             return interaction.editReply(
-                await t(interaction, 'core_premium_premium_add_success', {
+                await t(interaction, 'core.premium.premium.add.success', {
                     user: `<@${user.id}>`,
                     days,
                     expires: `<t:${Math.floor(expiresAt.getTime() / 1000)}:R>`,
@@ -79,11 +79,11 @@ module.exports = {
             const user = interaction.options.getUser('user');
             const kythiaUser = await KythiaUser.getCache({ userId: user.id });
             if (!kythiaUser) {
-                return interaction.editReply(await t(interaction, 'core_premium_premium_not_premium'));
+                return interaction.editReply(await t(interaction, 'core.premium.premium.not.premium'));
             }
             await kythiaUser.destroy();
             return interaction.editReply(
-                await t(interaction, 'core_premium_premium_delete_success', {
+                await t(interaction, 'core.premium.premium.delete.success', {
                     user: `<@${user.id}>`,
                 })
             );
@@ -94,13 +94,13 @@ module.exports = {
             const days = interaction.options.getInteger('days');
             const kythiaUser = await KythiaUser.getCache({ userId: user.id });
             if (!kythiaUser) {
-                return interaction.editReply(await t(interaction, 'core_premium_premium_not_premium'));
+                return interaction.editReply(await t(interaction, 'core.premium.premium.not.premium'));
             }
             const expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
             kythiaUser.premiumExpiresAt = expiresAt;
             await kythiaUser.save();
             return interaction.editReply(
-                await t(interaction, 'core_premium_premium_edit_success', {
+                await t(interaction, 'core.premium.premium.edit.success', {
                     user: `<@${user.id}>`,
                     days,
                     expires: `<t:${Math.floor(expiresAt.getTime() / 1000)}:R>`,
@@ -120,18 +120,18 @@ module.exports = {
             });
 
             if (!list.length) {
-                return interaction.editReply(await t(interaction, 'core_premium_premium_list_empty'));
+                return interaction.editReply(await t(interaction, 'core.premium.premium.list.empty'));
             }
 
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setTitle(await t(interaction, 'core_premium_premium_list_title'))
+                .setTitle(await t(interaction, 'core.premium.premium.list.title'))
                 .setDescription(
                     (
                         await Promise.all(
                             list.map(
                                 async (p, i) =>
-                                    await t(interaction, 'core_premium_premium_list_item', {
+                                    await t(interaction, 'core.premium.premium.list.item', {
                                         index: i + 1,
                                         user: `<@${p.userId}>`,
                                         expires: `<t:${Math.floor(new Date(p.premiumExpiresAt).getTime() / 1000)}:R>`,
@@ -150,27 +150,27 @@ module.exports = {
             const kythiaUser = await KythiaUser.getCache({ userId: user.id });
             if (!kythiaUser || !kythiaUser.isPremium || new Date(kythiaUser.premiumExpiresAt) < new Date()) {
                 return interaction.editReply(
-                    await t(interaction, 'core_premium_premium_info_not_active', {
+                    await t(interaction, 'core.premium.premium.info.not.active', {
                         user: `<@${user.id}>`,
                     })
                 );
             }
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setTitle(await t(interaction, 'core_premium_premium_info_title', { tag: user.tag }))
+                .setTitle(await t(interaction, 'core.premium.premium.info.title', { tag: user.tag }))
                 .addFields(
                     {
-                        name: await t(interaction, 'core_premium_premium_info_field_user'),
+                        name: await t(interaction, 'core.premium.premium.info.field.user'),
                         value: `<@${user.id}> (${user.id})`,
                     },
                     {
-                        name: await t(interaction, 'core_premium_premium_info_field_status'),
+                        name: await t(interaction, 'core.premium.premium.info.field.status'),
                         value: kythiaUser.isPremium
-                            ? await t(interaction, 'core_premium_premium_info_status_active')
-                            : await t(interaction, 'core_premium_premium_info_status_inactive'),
+                            ? await t(interaction, 'core.premium.premium.info.status.active')
+                            : await t(interaction, 'core.premium.premium.info.status.inactive'),
                     },
                     {
-                        name: await t(interaction, 'core_premium_premium_info_field_expires'),
+                        name: await t(interaction, 'core.premium.premium.info.field.expires'),
                         value: `<t:${Math.floor(new Date(kythiaUser.premiumExpiresAt).getTime() / 1000)}:F>`,
                         inline: false,
                     }

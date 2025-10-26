@@ -31,7 +31,7 @@ module.exports = {
 
         if (secretKey.length !== 32) {
             return interaction.editReply({
-                content: await t(interaction, 'core_tools_decrypt_invalid_key_length'),
+                content: await t(interaction, 'core.tools.decrypt.invalid.key.length'),
             });
         }
 
@@ -39,7 +39,7 @@ module.exports = {
             // 1. Pisahkan kembali data terenkripsi menjadi 3 bagian
             const parts = encryptedData.split(':');
             if (parts.length !== 3) {
-                return interaction.editReply({ content: await t(interaction, 'core_tools_decrypt_invalid_data_format') });
+                return interaction.editReply({ content: await t(interaction, 'core.tools.decrypt.invalid.data.format') });
             }
 
             const iv = Buffer.from(parts[0], 'hex');
@@ -58,8 +58,8 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setTitle(await t(interaction, 'core_tools_decrypt_success'))
-                .addFields({ name: await t(interaction, 'core_tools_decrypt_decrypted_plaintext'), value: '```' + decrypted + '```' })
+                .setTitle(await t(interaction, 'core.tools.decrypt.success'))
+                .addFields({ name: await t(interaction, 'core.tools.decrypt.decrypted.plaintext'), value: '```' + decrypted + '```' })
                 .setFooter(await embedFooter(interaction));
 
             await interaction.editReply({ embeds: [embed] });
@@ -69,8 +69,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setColor('Red')
-                        .setTitle(await t(interaction, 'core_tools_decrypt_failed'))
-                        .setDescription(await t(interaction, 'core_tools_decrypt_failed_desc')),
+                        .setTitle(await t(interaction, 'core.tools.decrypt.failed.title'))
+                        .setDescription(await t(interaction, 'core.tools.decrypt.failed.desc')),
                 ],
             });
         }

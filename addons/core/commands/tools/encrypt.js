@@ -32,7 +32,7 @@ module.exports = {
         // KUNCI PENTING: Kunci untuk AES-256 HARUS 32 byte (32 karakter).
         if (secretKey.length !== 32) {
             return interaction.editReply({
-                content: await t(interaction, 'core_tools_encrypt_invalid_key_length'),
+                content: await t(interaction, 'core.tools.encrypt.invalid.key.length'),
             });
         }
 
@@ -56,18 +56,18 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setTitle(await t(interaction, 'core_tools_encrypt_success'))
-                .setDescription(await t(interaction, 'core_tools_encrypt_embed_desc'))
+                .setTitle(await t(interaction, 'core.tools.encrypt.success'))
+                .setDescription(await t(interaction, 'core.tools.encrypt.embed.desc'))
                 .addFields(
-                    { name: await t(interaction, 'core_tools_encrypt_secret_key_used'), value: '```' + '*'.repeat(32) + '```' },
-                    { name: await t(interaction, 'core_tools_encrypt_encrypted_data'), value: '```' + encryptedData + '```' }
+                    { name: await t(interaction, 'core.tools.encrypt.secret.key.used'), value: '```' + '*'.repeat(32) + '```' },
+                    { name: await t(interaction, 'core.tools.encrypt.encrypted.data'), value: '```' + encryptedData + '```' }
                 )
                 .setFooter(await embedFooter(interaction));
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
             console.error(error);
-            await interaction.editReply({ content: await t(interaction, 'core_tools_encrypt_error') });
+            await interaction.editReply({ content: await t(interaction, 'core.tools.encrypt.error') });
         }
     },
 };

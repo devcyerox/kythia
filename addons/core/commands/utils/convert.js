@@ -437,16 +437,16 @@ module.exports = {
                 // Removed: console.log(result); -- it won't be reached if there is an error
                 if (result == null) {
                     const embed = new EmbedBuilder()
-                        .setDescription('## ' + (await t(interaction, 'core_utils_convert_currency_failed')))
+                        .setDescription('## ' + (await t(interaction, 'core.utils.convert.currency.failed')))
                         .setColor('Red');
                     return interaction.editReply({ embeds: [embed] });
                 }
                 const embed = new EmbedBuilder()
                     .setDescription(
                         '## ' +
-                            (await t(interaction, 'core_utils_convert_currency_title')) +
+                            (await t(interaction, 'core.utils.convert.currency.title')) +
                             '\n' +
-                            (await t(interaction, 'core_utils_convert_currency_result', {
+                            (await t(interaction, 'core.utils.convert.currency.result', {
                                 amount: amount,
                                 from: from,
                                 result: result.toLocaleString(undefined, { maximumFractionDigits: 4 }),
@@ -460,7 +460,7 @@ module.exports = {
                 // Optional: log the error
                 // eslint-disable-next-line no-console
                 console.error('Currency convert error:', e);
-                const embed = new EmbedBuilder().setDescription(await t(interaction, 'core_utils_convert_currency_error')).setColor('Red');
+                const embed = new EmbedBuilder().setDescription(await t(interaction, 'core.utils.convert.currency.error')).setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
             }
         } else if (sub === 'timezone') {
@@ -470,16 +470,16 @@ module.exports = {
             const converted = convertTimezone(time, from, to);
             if (!converted) {
                 const embed = new EmbedBuilder()
-                    .setDescription('## ' + (await t(interaction, 'core_utils_convert_timezone_failed')))
+                    .setDescription('## ' + (await t(interaction, 'core.utils.convert.timezone.failed')))
                     .setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
             }
             const embed = new EmbedBuilder()
                 .setDescription(
                     '## ' +
-                        (await t(interaction, 'core_utils_convert_timezone_title')) +
+                        (await t(interaction, 'core.utils.convert.timezone.title')) +
                         '\n' +
-                        (await t(interaction, 'core_utils_convert_timezone_result', {
+                        (await t(interaction, 'core.utils.convert.timezone.result', {
                             time: time,
                             from: from,
                             converted: converted.toFormat('yyyy-MM-dd HH:mm'),
@@ -495,16 +495,16 @@ module.exports = {
             const result = convertLength(value, from, to);
             if (result == null) {
                 const embed = new EmbedBuilder()
-                    .setDescription('## ' + (await t(interaction, 'core_utils_convert_length_failed')))
+                    .setDescription('## ' + (await t(interaction, 'core.utils.convert.length.failed')))
                     .setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
             }
             const embed = new EmbedBuilder()
                 .setDescription(
                     '## ' +
-                        (await t(interaction, 'core_utils_convert_length_title')) +
+                        (await t(interaction, 'core.utils.convert.length.title')) +
                         '\n' +
-                        (await t(interaction, 'core_utils_convert_length_result', {
+                        (await t(interaction, 'core.utils.convert.length.result', {
                             value: value,
                             from: from,
                             result: result,
@@ -521,16 +521,16 @@ module.exports = {
             const result = convertMass(value, from, to);
             if (result == null) {
                 const embed = new EmbedBuilder()
-                    .setDescription('## ' + (await t(interaction, 'core_utils_convert_mass_failed')))
+                    .setDescription('## ' + (await t(interaction, 'core.utils.convert.mass.failed')))
                     .setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
             }
             const embed = new EmbedBuilder()
                 .setDescription(
                     '## ' +
-                        (await t(interaction, 'core_utils_convert_mass_title')) +
+                        (await t(interaction, 'core.utils.convert.mass.title')) +
                         '\n' +
-                        (await t(interaction, 'core_utils_convert_mass_result', {
+                        (await t(interaction, 'core.utils.convert.mass.result', {
                             value: value,
                             from: from,
                             result: result,
@@ -547,16 +547,16 @@ module.exports = {
             const result = convertTemperature(value, from, to);
             if (result == null) {
                 const embed = new EmbedBuilder()
-                    .setDescription('## ' + (await t(interaction, 'core_utils_convert_temperature_failed')))
+                    .setDescription('## ' + (await t(interaction, 'core.utils.convert.temperature.failed')))
                     .setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
             }
             const embed = new EmbedBuilder()
                 .setDescription(
                     '## ' +
-                        (await t(interaction, 'core_utils_convert_temperature_title')) +
+                        (await t(interaction, 'core.utils.convert.temperature.title')) +
                         '\n' +
-                        (await t(interaction, 'core_utils_convert_temperature_result', {
+                        (await t(interaction, 'core.utils.convert.temperature.result', {
                             value: value,
                             from: from.toUpperCase(),
                             result: result,
@@ -573,16 +573,16 @@ module.exports = {
             const result = convertData(value, from, to);
             if (result == null) {
                 const embed = new EmbedBuilder()
-                    .setDescription('## ' + (await t(interaction, 'core_utils_convert_data_failed')))
+                    .setDescription('## ' + (await t(interaction, 'core.utils.convert.data.failed')))
                     .setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
             }
             const embed = new EmbedBuilder()
                 .setDescription(
                     '## ' +
-                        (await t(interaction, 'core_utils_convert_data_title')) +
+                        (await t(interaction, 'core.utils.convert.data.title')) +
                         '\n' +
-                        (await t(interaction, 'core_utils_convert_data_result', {
+                        (await t(interaction, 'core.utils.convert.data.result', {
                             value: value,
                             from: from.toUpperCase(),
                             result: result,
@@ -622,7 +622,7 @@ module.exports = {
             return interaction.editReply({ embeds: [embed] });
         } else {
             const embed = new EmbedBuilder()
-                .setDescription('## ' + (await t(interaction, 'core_utils_convert_unknown_subcommand')))
+                .setDescription('## ' + (await t(interaction, 'core.utils.convert.unknown.subcommand')))
                 .setColor('Red');
             return interaction.editReply({ embeds: [embed] });
         }

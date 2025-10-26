@@ -38,7 +38,7 @@ module.exports = {
         if (existingUser) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_account_create_account_create_already_desc'))
+                .setDescription(await t(interaction, 'economy.account.create.account.create.already.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -50,7 +50,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                await t(interaction, 'economy_account_create_account_create_success_desc', { bankType: bankDisplay })
+                await t(interaction, 'economy.account.create.account.create.success.desc', { bankType: bankDisplay })
             )
             .setThumbnail(interaction.user.displayAvatarURL())
             .setFooter(await embedFooter(interaction));

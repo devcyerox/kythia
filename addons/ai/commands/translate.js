@@ -49,7 +49,7 @@ module.exports = {
             if (tokenIdx === -1) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(await t(interaction, 'ai_translate_limit'))
+                    .setDescription(await t(interaction, 'ai.translate.limit'))
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
             }
@@ -87,10 +87,10 @@ module.exports = {
         }
 
         if (success && finalResponse) {
-            const translated = finalResponse.text || finalResponse.response?.text || (await t(interaction, 'ai_translate_no_result'));
+            const translated = finalResponse.text || finalResponse.response?.text || (await t(interaction, 'ai.translate.no.result'));
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'ai_translate_success', { lang, text, translated }))
+                .setDescription(await t(interaction, 'ai.translate.success', { lang, text, translated }))
                 .setFooter(await embedFooter(interaction));
             await interaction.editReply({
                 embeds: [embed],
@@ -99,7 +99,7 @@ module.exports = {
             logger.error('Error in /translate:', lastError);
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'ai_translate_error'))
+                .setDescription(await t(interaction, 'ai.translate.error'))
                 .setFooter(await embedFooter(interaction));
             await interaction.editReply({
                 embeds: [embed],

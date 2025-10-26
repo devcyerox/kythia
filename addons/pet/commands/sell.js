@@ -23,7 +23,7 @@ module.exports = {
         const userPet = await UserPet.getCache({ userId: userId, include: [{ model: Pet, as: 'pet' }] });
         if (!userPet) {
             const embed = new EmbedBuilder()
-                .setDescription(`## ${await t(interaction, 'pet_sell_no_pet_title')}\n${await t(interaction, 'pet_sell_no_pet')}`)
+                .setDescription(`## ${await t(interaction, 'pet.sell.no.pet.title')}\n${await t(interaction, 'pet.sell.no.pet.desc')}`)
                 .setColor("Red")
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -43,7 +43,7 @@ module.exports = {
         await user.saveAndUpdateCache('userId');
         const embed = new EmbedBuilder()
             .setDescription(
-                `## ${await t(interaction, 'pet_sell_success_title')}\n${await t(interaction, 'pet_sell_success', { value: petValue })}`
+                `## ${await t(interaction, 'pet.sell.success.title')}\n${await t(interaction, 'pet.sell.success.desc', { value: petValue })}`
             )
             .setColor(kythia.bot.color)
             .setFooter(await embedFooter(interaction));

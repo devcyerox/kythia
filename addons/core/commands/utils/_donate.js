@@ -37,7 +37,7 @@ module.exports = {
             // Only allow admins to set donate info
             if (!interaction.memberPermissions?.has('Administrator')) {
                 await interaction.reply({
-                    content: await t(interaction, 'core_utils__donate_utils_donate_no_permission', {
+                    content: await t(interaction, 'core.utils..donate.utils.donate.no.permission', {
                         defaultValue: 'You need Administrator permission to set donation info.',
                     }),
                     ephemeral: true,
@@ -51,7 +51,7 @@ module.exports = {
 
             if (!image || !image.contentType?.startsWith('image/')) {
                 await interaction.reply({
-                    content: await t(interaction, 'core_utils__donate_utils_donate_invalid_image', {
+                    content: await t(interaction, 'core.utils..donate.utils.donate.invalid.image', {
                         defaultValue: 'Please provide a valid image attachment.',
                     }),
                     ephemeral: true,
@@ -67,7 +67,7 @@ module.exports = {
             });
 
             await interaction.reply({
-                content: await t(interaction, 'core_utils__donate_utils_donate_set_success', { defaultValue: 'Donation info updated successfully!' }),
+                content: await t(interaction, 'core.utils..donate.utils.donate.set.success', { defaultValue: 'Donation info updated successfully!' }),
                 ephemeral: true,
             });
             return;
@@ -77,7 +77,7 @@ module.exports = {
         const donate = donateData.get(interaction.guildId);
         if (!donate) {
             await interaction.reply({
-                content: await t(interaction, 'core_utils__donate_utils_donate_not_set', {
+                content: await t(interaction, 'core.utils..donate.utils.donate.not.set', {
                     defaultValue: 'Donation information has not been set for this server.',
                 }),
                 ephemeral: true,
@@ -86,7 +86,7 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle(await t(interaction, 'core_utils__donate_utils_donate_embed_title', { defaultValue: 'Support Us with a Donation!' }))
+            .setTitle(await t(interaction, 'core.utils..donate.utils.donate.embed.title', { defaultValue: 'Support Us with a Donation!' }))
             .setDescription(donate.description)
             .setImage(donate.imageURL)
             .setColor(kythia.bot.color);

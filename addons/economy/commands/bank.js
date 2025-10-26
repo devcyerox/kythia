@@ -21,7 +21,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -32,34 +32,34 @@ module.exports = {
 
         const stats = [
             {
-                label: await t(interaction, 'economy_bank_stat_income_bonus'),
+                label: await t(interaction, 'economy.bank.stat.income.bonus'),
                 val: (bank.incomeBonusPercent >= 0 ? '+' : '') + bank.incomeBonusPercent + '%',
             },
             {
-                label: await t(interaction, 'economy_bank_stat_interest_rate'),
+                label: await t(interaction, 'economy.bank.stat.interest.rate'),
                 val: bank.interestRatePercent + '%',
             },
             {
-                label: await t(interaction, 'economy_bank_stat_transfer_fee'),
+                label: await t(interaction, 'economy.bank.stat.transfer.fee'),
                 val: bank.transferFeePercent + '%',
             },
             {
-                label: await t(interaction, 'economy_bank_stat_withdraw_fee'),
+                label: await t(interaction, 'economy.bank.stat.withdraw.fee'),
                 val: bank.withdrawFeePercent + '%',
             },
             {
-                label: await t(interaction, 'economy_bank_stat_rob_bonus'),
+                label: await t(interaction, 'economy.bank.stat.rob.bonus'),
                 val: (bank.robSuccessBonusPercent >= 0 ? '+' : '') + bank.robSuccessBonusPercent + '%',
             },
             {
-                label: await t(interaction, 'economy_bank_stat_rob_penalty'),
-                val: await t(interaction, 'economy_bank_rob_penalty_times', { times: bank.robPenaltyMultiplier }),
+                label: await t(interaction, 'economy.bank.stat.rob.penalty'),
+                val: await t(interaction, 'economy.bank.rob.penalty.times', { times: bank.robPenaltyMultiplier }),
             },
             {
-                label: await t(interaction, 'economy_bank_stat_max_balance'),
+                label: await t(interaction, 'economy.bank.stat.max.balance'),
                 val:
                     bank.maxBalance === Infinity
-                        ? await t(interaction, 'economy_bank_max_balance_unlimited')
+                        ? await t(interaction, 'economy.bank.max.balance.unlimited')
                         : bank.maxBalance.toLocaleString(),
             },
         ];
@@ -69,40 +69,40 @@ module.exports = {
         const pros = [];
         const cons = [];
 
-        if (bank.incomeBonusPercent > defaultBank.incomeBonusPercent) pros.push(await t(interaction, 'economy_bank_pro_income_bonus'));
-        if (bank.incomeBonusPercent < defaultBank.incomeBonusPercent) cons.push(await t(interaction, 'economy_bank_con_income_penalty'));
+        if (bank.incomeBonusPercent > defaultBank.incomeBonusPercent) pros.push(await t(interaction, 'economy.bank.pro.income.bonus'));
+        if (bank.incomeBonusPercent < defaultBank.incomeBonusPercent) cons.push(await t(interaction, 'economy.bank.con.income.penalty'));
 
-        if (bank.interestRatePercent > defaultBank.interestRatePercent) pros.push(await t(interaction, 'economy_bank_pro_interest_high'));
+        if (bank.interestRatePercent > defaultBank.interestRatePercent) pros.push(await t(interaction, 'economy.bank.pro.interest.high'));
 
-        if (bank.transferFeePercent < defaultBank.transferFeePercent) pros.push(await t(interaction, 'economy_bank_pro_transfer_low'));
-        if (bank.transferFeePercent > defaultBank.transferFeePercent) cons.push(await t(interaction, 'economy_bank_con_transfer_high'));
+        if (bank.transferFeePercent < defaultBank.transferFeePercent) pros.push(await t(interaction, 'economy.bank.pro.transfer.low'));
+        if (bank.transferFeePercent > defaultBank.transferFeePercent) cons.push(await t(interaction, 'economy.bank.con.transfer.high'));
 
-        if (bank.robSuccessBonusPercent > defaultBank.robSuccessBonusPercent) pros.push(await t(interaction, 'economy_bank_pro_rob_bonus'));
+        if (bank.robSuccessBonusPercent > defaultBank.robSuccessBonusPercent) pros.push(await t(interaction, 'economy.bank.pro.rob.bonus'));
         if (bank.robSuccessBonusPercent < defaultBank.robSuccessBonusPercent)
-            cons.push(await t(interaction, 'economy_bank_con_rob_penalty'));
+            cons.push(await t(interaction, 'economy.bank.con.rob.penalty'));
 
-        if (bank.maxBalance === Infinity) pros.push(await t(interaction, 'economy_bank_pro_max_unlimited'));
+        if (bank.maxBalance === Infinity) pros.push(await t(interaction, 'economy.bank.pro.max.unlimited'));
 
         const descriptionParts = [
             `## ${bank.emoji} ${bank.name}`,
-            await t(interaction, 'economy_bank_bank_balance_desc', {
+            await t(interaction, 'economy.bank.bank.balance.desc', {
                 username: interaction.user.username,
                 cash: user.kythiaCoin.toLocaleString(),
                 bank: user.kythiaBank.toLocaleString(),
                 bankType: `${bank.emoji} ${bank.name}`,
                 total: (BigInt(user.kythiaCoin) + BigInt(user.kythiaBank)).toLocaleString(),
             }),
-            `### ${await t(interaction, 'economy_bank_bank_stats_title')}`,
+            `### ${await t(interaction, 'economy.bank.bank.stats.title')}`,
             stats.map((s) => `> ${s.label}: **${s.val}**`).join('\n'),
         ];
 
         if (pros.length || cons.length) {
             descriptionParts.push('\n');
             if (pros.length) {
-                descriptionParts.push(`> **${await t(interaction, 'economy_bank_bank_pros')}:** ${pros.map((p) => `+ ${p}`).join(', ')}`);
+                descriptionParts.push(`> **${await t(interaction, 'economy.bank.bank.pros')}:** ${pros.map((p) => `+ ${p}`).join(', ')}`);
             }
             if (cons.length) {
-                descriptionParts.push(`> **${await t(interaction, 'economy_bank_bank_cons')}:** ${cons.map((c) => `- ${c}`).join(', ')}`);
+                descriptionParts.push(`> **${await t(interaction, 'economy.bank.bank.cons')}:** ${cons.map((c) => `- ${c}`).join(', ')}`);
             }
         }
 

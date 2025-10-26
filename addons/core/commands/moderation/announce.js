@@ -23,7 +23,7 @@ module.exports = {
         const channel = interaction.options.getChannel('channel');
         const message = interaction.options.getString('message');
 
-        await channel.send(await t(interaction, 'core_moderation_announce_message_format', { message }));
-        return interaction.editReply(await t(interaction, 'core_moderation_announce_success', { channel: channel.name }));
+        await channel.send(await t(interaction, 'core.moderation.announce.message.format', { message }));
+        return interaction.editReply(await t(interaction, 'core.moderation.announce.success', { channel: channel.name }));
     },
 };

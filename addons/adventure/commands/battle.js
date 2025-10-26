@@ -33,7 +33,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'adventure_no_character'))
+                .setDescription(await t(interaction, 'adventure.no.character'))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
@@ -74,11 +74,11 @@ module.exports = {
             const battleButtons = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('adventure_continue')
-                    .setLabel(await t(interaction, 'adventure_battle_continue_button'))
+                    .setLabel(await t(interaction, 'adventure.battle.continue.button'))
                     .setStyle(ButtonStyle.Primary),
                 new ButtonBuilder()
                     .setCustomId('adventure_use_item')
-                    .setLabel(await t(interaction, 'inventory_use_item_button'))
+                    .setLabel(await t(interaction, 'inventory.use.item.button'))
                     .setStyle(ButtonStyle.Secondary)
                     .setEmoji('🔮')
             );
@@ -101,7 +101,7 @@ module.exports = {
             const continueButton = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('adventure_continue')
-                    .setLabel(await t(interaction, 'adventure_battle_continue_button'))
+                    .setLabel(await t(interaction, 'adventure.battle.continue.button'))
                     .setStyle(ButtonStyle.Primary)
             );
 
@@ -116,7 +116,7 @@ module.exports = {
                         embeds: [
                             embed
                                 .setDescription(
-                                    await t(interaction, 'adventure_battle_revive', {
+                                    await t(interaction, 'adventure.battle.revive', {
                                         hp: user.hp,
                                     })
                                 )
@@ -140,7 +140,7 @@ module.exports = {
                     embeds: [
                         embed
                             .setDescription(
-                                await t(interaction, 'adventure_battle_lose', {
+                                await t(interaction, 'adventure.battle.lose', {
                                     hp: user.hp,
                                 })
                             )
@@ -197,7 +197,7 @@ module.exports = {
                         embeds: [
                             embed
                                 .setDescription(
-                                    await t(interaction, 'adventure_battle_levelup', {
+                                    await t(interaction, 'adventure.battle.levelup', {
                                         level: user.level,
                                         hp: user.hp,
                                         maxHp: user.maxHp,
@@ -215,7 +215,7 @@ module.exports = {
                     embeds: [
                         embed
                             .setDescription(
-                                await t(interaction, 'adventure_battle_win', {
+                                await t(interaction, 'adventure.battle.win', {
                                     monster: monsterName,
                                     gold: goldEarned,
                                     xp: xpEarned,
@@ -234,7 +234,7 @@ module.exports = {
                 embeds: [
                     embed
                         .setDescription(
-                            await t(interaction, 'adventure_battle_round', {
+                            await t(interaction, 'adventure.battle.round', {
                                 user: interaction.user.username,
                                 monster: user.monsterName,
                                 playerDamage,
@@ -244,12 +244,12 @@ module.exports = {
                         .setColor(kythia.bot.color)
                         .addFields(
                             {
-                                name: await t(interaction, 'adventure_battle_hp_you'),
+                                name: await t(interaction, 'adventure.battle.hp.you'),
                                 value: generateHpBar(user.hp, user.maxHp),
                                 inline: false,
                             },
                             {
-                                name: await t(interaction, 'adventure_battle_hp_monster', { monster: user.monsterName }),
+                                name: await t(interaction, 'adventure.battle.hp.monster', { monster: user.monsterName }),
                                 value: generateHpBar(user.monsterHp, monsterMaxHp),
                                 inline: false,
                             }
@@ -324,7 +324,7 @@ module.exports = {
                 const disabledRow = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('adventure_continue')
-                        .setLabel(await t(interaction, 'adventure_battle_continue_button'))
+                        .setLabel(await t(interaction, 'adventure.battle.continue.button'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(true)
                 );

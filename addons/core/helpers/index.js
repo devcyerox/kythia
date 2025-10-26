@@ -77,7 +77,7 @@ async function roleUnprefix(guild, interaction) {
         const isBotSelf = member.id === guild.client.user.id;
 
         if (!member.manageable && !isBotSelf) {
-            const logMsg = await t(interaction, 'core_helpers_index_member_not_manageable', {
+            const logMsg = await t(interaction, 'core.helpers.index.member.not.manageable', {
                 name: member.nickname || member.user.username,
             });
             logger.info(logMsg);
@@ -94,7 +94,7 @@ async function roleUnprefix(guild, interaction) {
                 await member.setNickname(baseName);
                 updated++;
             } catch (err) {
-                const warnMsg = await t(interaction, 'core_helpers_index_failed_nick_update', {
+                const warnMsg = await t(interaction, 'core.helpers.index.failed.nick.update', {
                     tag: member.user.tag,
                     error: err.message,
                 });

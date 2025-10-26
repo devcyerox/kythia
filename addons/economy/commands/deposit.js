@@ -34,7 +34,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -46,7 +46,7 @@ module.exports = {
             if (amount === null) {
                 const embed = new EmbedBuilder()
                     .setColor('Yellow')
-                    .setDescription(await t(interaction, 'economy_deposit_deposit_amount_required'))
+                    .setDescription(await t(interaction, 'economy.deposit.deposit.amount.required'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
@@ -56,7 +56,7 @@ module.exports = {
         if (amount <= 0) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_deposit_deposit_invalid_amount'))
+                .setDescription(await t(interaction, 'economy.deposit.deposit.invalid.amount'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -65,7 +65,7 @@ module.exports = {
         if (user.kythiaCoin < amount) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_deposit_deposit_not_enough_cash'))
+                .setDescription(await t(interaction, 'economy.deposit.deposit.not.enough.cash'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -74,7 +74,7 @@ module.exports = {
         if (amount === 0) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_deposit_deposit_zero_cash'))
+                .setDescription(await t(interaction, 'economy.deposit.deposit.zero.cash'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -86,7 +86,7 @@ module.exports = {
         if (user.kythiaBank + amount > maxBalance) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_deposit_deposit_max_balance', { max: maxBalance.toLocaleString() }))
+                .setDescription(await t(interaction, 'economy.deposit.deposit.max.balance', { max: maxBalance.toLocaleString() }))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -103,7 +103,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL())
-            .setDescription(await t(interaction, 'economy_deposit_deposit_success', { amount }))
+            .setDescription(await t(interaction, 'economy.deposit.deposit.success', { amount }))
             .setFooter(await embedFooter(interaction));
 
         return interaction.editReply({ embeds: [embed] });

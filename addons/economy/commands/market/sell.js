@@ -44,7 +44,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -59,7 +59,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_sell_insufficient_asset_title')}\n${await t(interaction, 'economy_market_sell_insufficient_asset_desc', { asset: assetId.toUpperCase() })}`
+                    `## ${await t(interaction, 'economy.market.sell.insufficient.asset.title')}\n${await t(interaction, 'economy.market.sell.insufficient.asset.desc', { asset: assetId.toUpperCase() })}`
                 )
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
@@ -73,7 +73,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_sell_asset_not_found_title')}\n${await t(interaction, 'economy_market_sell_asset_not_found_desc')}`
+                    `## ${await t(interaction, 'economy.market.sell.asset.not.found.title')}\n${await t(interaction, 'economy.market.sell.asset.not.found.desc')}`
                 )
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
@@ -129,7 +129,7 @@ module.exports = {
             const successEmbed = new EmbedBuilder()
                 .setColor('Yellow')
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_sell_success_title')}\n${await t(interaction, 'economy_market_sell_success_desc', { quantity: sellQuantity.toFixed(6), asset: assetId.toUpperCase(), amount: totalUsdReceived.toLocaleString(undefined, { maximumFractionDigits: 2 }), avgBuyPrice: holding.avgBuyPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), sellPrice: currentPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), pnlEmoji: pnlEmoji, pnlSign: pnlSign, pnl: pnl.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}`
+                    `## ${await t(interaction, 'economy.market.sell.success.title')}\n${await t(interaction, 'economy.market.sell.success.desc', { quantity: sellQuantity.toFixed(6), asset: assetId.toUpperCase(), amount: totalUsdReceived.toLocaleString(undefined, { maximumFractionDigits: 2 }), avgBuyPrice: holding.avgBuyPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), sellPrice: currentPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), pnlEmoji: pnlEmoji, pnlSign: pnlSign, pnl: pnl.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}`
                 )
                 .setFooter(await embedFooter(interaction));
 
@@ -139,7 +139,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
                 .setDescription(
-                    `## ${await t(interaction, 'economy_market_sell_error_title')}\n${await t(interaction, 'economy_market_sell_error_desc')}`
+                    `## ${await t(interaction, 'economy.market.sell.error.title')}\n${await t(interaction, 'economy.market.sell.error.desc')}`
                 )
                 .setFooter(await embedFooter(interaction));
             await interaction.editReply({ embeds: [embed] });

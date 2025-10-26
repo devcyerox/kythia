@@ -27,7 +27,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
-            .setDescription(await t(interaction, 'core_tools_avatar_embed_desc', { url: avatarURL }))
+            .setDescription(await t(interaction, 'core.tools.avatar.embed.desc', { url: avatarURL }))
             .setImage(avatarURL)
             .setFooter(await embedFooter(interaction))
             .setTimestamp();

@@ -109,10 +109,10 @@ async function formatDuration(ms, interaction) {
     const days = Math.floor(ms / (1000 * 60 * 60 * 24));
 
     const parts = [];
-    if (days > 0) parts.push(`${days} ${await t(interaction, 'common_time_days')}`);
-    if (hours > 0) parts.push(`${hours} ${await t(interaction, 'common_time_hours')}`);
-    if (minutes > 0) parts.push(`${minutes} ${await t(interaction, 'common_time_minutes')}`);
-    if (seconds > 0) parts.push(`${seconds} ${await t(interaction, 'common_time_seconds')}`);
+    if (days > 0) parts.push(`${days} ${await t(interaction, 'common.time.days')}`);
+    if (hours > 0) parts.push(`${hours} ${await t(interaction, 'common.time.hours')}`);
+    if (minutes > 0) parts.push(`${minutes} ${await t(interaction, 'common.time.minutes')}`);
+    if (seconds > 0) parts.push(`${seconds} ${await t(interaction, 'common.time.seconds')}`);
 
     return parts.join(', ');
 }

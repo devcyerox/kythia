@@ -20,7 +20,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -31,7 +31,7 @@ module.exports = {
         if (inventoryItems.length === 0) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_inventory_inventory_empty'))
+                .setDescription(await t(interaction, 'economy.inventory.inventory.empty'))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
@@ -43,7 +43,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setDescription(await t(interaction, 'economy_inventory_inventory_title'))
+            .setDescription(await t(interaction, 'economy.inventory.inventory.title'))
             .setTimestamp()
             .setFooter(await embedFooter(interaction));
 
@@ -59,8 +59,8 @@ module.exports = {
                 if (i < itemEntries.length) {
                     const [itemName, count] = itemEntries[i];
                     fields.push({
-                        name: await t(interaction, 'economy_inventory_inventory_item_field_name', { itemName, count }),
-                        value: await t(interaction, 'economy_inventory_inventory_item_field_value', { count }),
+                        name: await t(interaction, 'economy.inventory.inventory.item.field.name', { itemName, count }),
+                        value: await t(interaction, 'economy.inventory.inventory.item.field.value', { count }),
                         inline: true,
                     });
                     i++;

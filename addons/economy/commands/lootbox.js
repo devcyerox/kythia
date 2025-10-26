@@ -24,7 +24,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -34,7 +34,7 @@ module.exports = {
         if (cooldown.remaining) {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
-                .setDescription(await t(interaction, 'economy_lootbox_lootbox_cooldown', { time: cooldown.time }))
+                .setDescription(await t(interaction, 'economy.lootbox.lootbox.cooldown', { time: cooldown.time }))
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -60,9 +60,9 @@ module.exports = {
 
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
-            .setTitle(await t(interaction, 'economy_lootbox_lootbox_title'))
+            .setTitle(await t(interaction, 'economy.lootbox.lootbox.title'))
             .setThumbnail(interaction.user.displayAvatarURL())
-            .setDescription(await t(interaction, 'economy_lootbox_lootbox_success', { amount: randomReward }))
+            .setDescription(await t(interaction, 'economy.lootbox.lootbox.success', { amount: randomReward }))
             .setFooter(await embedFooter(interaction));
         await interaction.editReply({ embeds: [embed] });
     },

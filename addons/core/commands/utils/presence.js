@@ -63,7 +63,7 @@ module.exports = {
             // Validasi URL
             if (!url || (!url.startsWith('https://www.twitch.tv/') && !url.startsWith('https://www.youtube.com/'))) {
                 return interaction.editReply({
-                    content: await t(interaction, 'core_utils_presence_invalid_url'), // Buat terjemahan baru
+                    content: await t(interaction, 'core.utils.presence.invalid.url'), // Buat terjemahan baru
                     ephemeral: true,
                 });
             }
@@ -77,7 +77,7 @@ module.exports = {
             });
 
             return interaction.editReply({
-                content: await t(interaction, 'core_utils_presence_success', {
+                content: await t(interaction, 'core.utils.presence.success', {
                     type,
                     activity: activityName,
                     status,
@@ -86,7 +86,7 @@ module.exports = {
         } catch (err) {
             console.error(err);
             return interaction.editReply({
-                content: await t(interaction, 'core_utils_presence_error'),
+                content: await t(interaction, 'core.utils.presence.error'),
                 ephemeral: true,
             });
         }

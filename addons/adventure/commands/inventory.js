@@ -30,7 +30,7 @@ module.exports = {
         if (!user) {
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'adventure_no_character'))
+                .setDescription(await t(interaction, 'adventure.no.character'))
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         }
@@ -43,7 +43,7 @@ module.exports = {
         if (inventory.length === 0) {
             const embed = new EmbedBuilder()
                 .setColor(kythia.bot.color)
-                .setDescription(await t(interaction, 'adventure_inventory_empty'))
+                .setDescription(await t(interaction, 'adventure.inventory.empty'))
                 .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
                 .setFooter(await embedFooter(interaction));
 
@@ -68,7 +68,7 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                await t(interaction, 'adventure_inventory_list', {
+                await t(interaction, 'adventure.inventory.list', {
                     username: interaction.user.username,
                     items: itemList,
                 })

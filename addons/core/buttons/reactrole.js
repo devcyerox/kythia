@@ -23,7 +23,7 @@ module.exports = {
 
         if (!role) {
             return interaction.reply({
-                content: await t(interaction, 'core_buttons_reactrole_found'),
+                content: await t(interaction, 'core.buttons.reactrole.found'),
                 ephemeral: true,
             });
         }
@@ -31,13 +31,13 @@ module.exports = {
         if (member.roles.cache.has(role.id)) {
             await member.roles.remove(role);
             await interaction.reply({
-                content: await t(interaction, 'core_buttons_reactrole_removed', { roleName: role.name }),
+                content: await t(interaction, 'core.buttons.reactrole.removed', { roleName: role.name }),
                 ephemeral: true,
             });
         } else {
             await member.roles.add(role);
             await interaction.reply({
-                content: await t(interaction, 'core_buttons_reactrole_added', { roleName: role.name }),
+                content: await t(interaction, 'core.buttons.reactrole.added', { roleName: role.name }),
                 ephemeral: true,
             });
         }

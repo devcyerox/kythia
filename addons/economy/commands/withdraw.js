@@ -27,7 +27,7 @@ module.exports = {
             if (!user) {
                 const embed = new EmbedBuilder()
                     .setColor(kythia.bot.color)
-                    .setDescription(await t(interaction, 'economy_withdraw_no_account_desc'))
+                    .setDescription(await t(interaction, 'economy.withdraw.no.account.desc'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -42,7 +42,7 @@ module.exports = {
             if (user.kythiaBank < totalRequired) {
                 const embed = new EmbedBuilder()
                     .setColor('Red')
-                    .setDescription(await t(interaction, 'economy_withdraw_withdraw_not_enough_bank'))
+                    .setDescription(await t(interaction, 'economy.withdraw.withdraw.not.enough.bank'))
                     .setThumbnail(interaction.user.displayAvatarURL())
                     .setTimestamp()
                     .setFooter(await embedFooter(interaction));
@@ -61,7 +61,7 @@ module.exports = {
                 .setColor(kythia.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL())
                 .setDescription(
-                    await t(interaction, 'economy_withdraw_withdraw_success', {
+                    await t(interaction, 'economy.withdraw.withdraw.success', {
                         user: interaction.user.username,
                         amount,
                     })
@@ -73,7 +73,7 @@ module.exports = {
             console.error('Error during withdraw command execution:', error);
             const embed = new EmbedBuilder()
                 .setColor('Red')
-                .setDescription(await t(interaction, 'economy_withdraw_withdraw_error'))
+                .setDescription(await t(interaction, 'economy.withdraw.withdraw.error'))
                 .setTimestamp();
             return interaction.editReply({ embeds: [embed] });
         }

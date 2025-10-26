@@ -27,13 +27,13 @@ module.exports = {
 
         if (!cmd) {
             return interaction.editReply({
-                content: await t(interaction, 'core_utils_commandid_not_found', { commandName }),
+                content: await t(interaction, 'core.utils.commandid.not.found', { commandName }),
             });
         }
 
         const mention = `</${parts.join(' ')}:${cmd.id}>`;
         return interaction.editReply({
-            content: await t(interaction, 'core_utils_commandid_success', { commandId: cmd.id, mention }),
+            content: await t(interaction, 'core.utils.commandid.success', { commandId: cmd.id, mention }),
         });
     },
 };

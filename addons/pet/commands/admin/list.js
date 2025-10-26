@@ -23,7 +23,7 @@ module.exports = {
         if (!pets.length) {
             const embed = new EmbedBuilder()
                 .setDescription(
-                    `## ${await t(interaction, 'pet_admin_list_list_empty_title')}\n${await t(interaction, 'pet_admin_list_list_empty')}`
+                    `## ${await t(interaction, 'pet.admin.list.list.empty.title')}\n${await t(interaction, 'pet.admin.list.list.empty.desc')}`
                 )
                 .setColor('Red')
                 .setFooter(await embedFooter(interaction));
@@ -31,7 +31,7 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setDescription(`## ${await t(interaction, 'pet_admin_list_list_title')}\n${await t(interaction, 'pet_admin_list_list_desc')}`)
+            .setDescription(`## ${await t(interaction, 'pet.admin.list.list.title')}\n${await t(interaction, 'pet.admin.list.list.desc')}`)
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.client.user.displayAvatarURL({ dynamic: true }))
             .setFooter(await embedFooter(interaction));
@@ -40,7 +40,7 @@ module.exports = {
         for (const pet of pets) {
             embed.addFields({
                 name: `> ${pet.icon} ${pet.name}`,
-                value: await t(interaction, 'pet_admin_list_list_field', {
+                value: await t(interaction, 'pet.admin.list.list.field', {
                     rarity: pet.rarity,
                     bonusType: pet.bonusType.toUpperCase(),
                     bonusValue: pet.bonusValue,

@@ -29,7 +29,7 @@ module.exports = {
             const embed = new EmbedBuilder()
                 .setColor('Yellow')
                 .setDescription(
-                    `## ${await t(interaction, 'leveling_profile_leveling_profile_created_title')}\n${await t(interaction, 'leveling_profile_leveling_profile_created')}`
+                    `## ${await t(interaction, 'leveling.profile.leveling.profile.created.title')}\n${await t(interaction, 'leveling.profile.leveling.profile.created.desc')}`
                 )
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
@@ -47,8 +47,8 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setColor(kythia.bot.color)
             .setDescription(
-                `## ${await t(interaction, 'leveling_profile_leveling_profile_title')}\n` +
-                    (await t(interaction, 'leveling_profile_leveling_profile_desc', {
+                `## ${await t(interaction, 'leveling.profile.leveling.profile.title')}\n` +
+                    (await t(interaction, 'leveling.profile.leveling.profile.desc', {
                         username: targetUser.username,
                         level: user.level || 0,
                         xp: user.xp || 0,

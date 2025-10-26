@@ -32,13 +32,13 @@ module.exports = {
                 )
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'core_utils_vote_container_title', { username: interaction.client.user.username })
+                        await t(interaction, 'core.utils.vote.container.title', { username: interaction.client.user.username })
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'core_utils_vote_container_desc', { username: interaction.client.user.username })
+                        await t(interaction, 'core.utils.vote.container.desc', { username: interaction.client.user.username })
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
@@ -46,7 +46,7 @@ module.exports = {
                     new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Link)
-                            .setLabel(await t(interaction, 'core_utils_vote_button_topgg', { username: interaction.client.user.username }))
+                            .setLabel(await t(interaction, 'core.utils.vote.button.topgg', { username: interaction.client.user.username }))
                             .setURL(`https://top.gg/bot/${kythia.bot.clientId}/vote`)
                     )
                 )
@@ -54,7 +54,7 @@ module.exports = {
 
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                        await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 ),
         ];

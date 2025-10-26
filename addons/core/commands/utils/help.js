@@ -168,7 +168,7 @@ module.exports = {
                         allCategories.push({
                             label: categoryName.charAt(0).toUpperCase() + categoryName.slice(1),
                             value: categoryName,
-                            description: await t(interaction, 'core_utils_help_category_desc', { category: categoryName }),
+                            description: await t(interaction, 'core.utils.help.category.desc', { category: categoryName }),
                         });
                         pages[categoryName] = getMarkdownContent(categoryName);
                     }
@@ -204,7 +204,7 @@ module.exports = {
             const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
 
             if (!selectedCategory) {
-                const desc = await t(interaction, 'core_utils_help_main_embed_desc', {
+                const desc = await t(interaction, 'core.utils.help.main.embed.desc', {
                     username: interaction.client.user.username,
                     category_count: currentState.allCategories.length,
                     command_count: currentState.totalCommands,
@@ -215,8 +215,8 @@ module.exports = {
                 const docPages = currentState.pages[selectedCategory];
                 let docContent = docPages?.[docPage];
 
-                if (docContent === null) docContent = await t(interaction, 'core_utils_help_docs_unavailable');
-                if (!docContent) docContent = await t(interaction, 'core_utils_help_content_not_found');
+                if (docContent === null) docContent = await t(interaction, 'core.utils.help.docs.unavailable');
+                if (!docContent) docContent = await t(interaction, 'core.utils.help.content.not.found');
                 let finalContent = docContent.trim();
 
                 if (finalContent.length === 0) {
@@ -240,7 +240,7 @@ module.exports = {
                 .setCustomId('help-select-category')
                 .setPlaceholder(
                     (
-                        await t(interaction, 'core_utils_help_select_menu_placeholder', { username: interaction.client.user.username })
+                        await t(interaction, 'core.utils.help.select.menu.placeholder', { username: interaction.client.user.username })
                     ).replace(/^./, (c) => c.toUpperCase())
                 )
                 .addOptions(categoriesOnPage);
@@ -249,7 +249,7 @@ module.exports = {
             const rowButtons = new ActionRowBuilder();
             const totalCategoryPages = Math.ceil(currentState.allCategories.length / CATEGORIES_PER_PAGE);
 
-            const homeButtonLabel = (await t(interaction, 'core_utils_help_button_go_home')) || '🏠 Home';
+            const homeButtonLabel = (await t(interaction, 'core.utils.help.button.go.home')) || '🏠 Home';
             rowButtons.addComponents(
                 new ButtonBuilder()
                     .setCustomId('help-go-home')
@@ -263,22 +263,22 @@ module.exports = {
                 rowButtons.addComponents(
                     new ButtonBuilder()
                         .setCustomId('help-doc-prev')
-                        .setLabel(await t(interaction, 'core_utils_help_button_doc_prev'))
+                        .setLabel(await t(interaction, 'core.utils.help.button.doc.prev'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(docPage === 0),
                     new ButtonBuilder()
                         .setCustomId('help-doc-next')
-                        .setLabel(await t(interaction, 'core_utils_help_button_doc_next'))
+                        .setLabel(await t(interaction, 'core.utils.help.button.doc.next'))
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(docPage >= totalDocPages - 1),
                     new ButtonBuilder()
                         .setCustomId('help-cat-prev')
-                        .setLabel(await t(interaction, 'core_utils_help_button_cat_prev'))
+                        .setLabel(await t(interaction, 'core.utils.help.button.cat.prev'))
                         .setStyle(ButtonStyle.Secondary)
                         .setDisabled(categoryPage === 0),
                     new ButtonBuilder()
                         .setCustomId('help-cat-next')
-                        .setLabel(await t(interaction, 'core_utils_help_button_cat_next'))
+                        .setLabel(await t(interaction, 'core.utils.help.button.cat.next'))
                         .setStyle(ButtonStyle.Secondary)
                         .setDisabled(categoryPage >= totalCategoryPages - 1)
                 );
@@ -286,12 +286,12 @@ module.exports = {
                 rowButtons.addComponents(
                     new ButtonBuilder()
                         .setCustomId('help-cat-prev')
-                        .setLabel(await t(interaction, 'core_utils_help_button_cat_prev'))
+                        .setLabel(await t(interaction, 'core.utils.help.button.cat.prev'))
                         .setStyle(ButtonStyle.Secondary)
                         .setDisabled(categoryPage === 0),
                     new ButtonBuilder()
                         .setCustomId('help-cat-next')
-                        .setLabel(await t(interaction, 'core_utils_help_button_cat_next'))
+                        .setLabel(await t(interaction, 'core.utils.help.button.cat.next'))
                         .setStyle(ButtonStyle.Secondary)
                         .setDisabled(categoryPage >= totalCategoryPages - 1)
                 );
@@ -304,7 +304,7 @@ module.exports = {
             container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
             container.addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                    await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                 )
             );
 
@@ -321,7 +321,7 @@ module.exports = {
 
         collector.on('collect', async (i) => {
             if (i.user.id !== state.userId) {
-                await i.reply({ content: await t(i, 'common_error_not_your_interaction'), ephemeral: true });
+                await i.reply({ content: await t(i, 'common.error.not.your.interaction'), ephemeral: true });
                 return;
             }
             await i.deferUpdate();

@@ -579,7 +579,7 @@ module.exports = {
             .map(async (stat) => {
                 const channel = interaction.guild.channels.cache.get(stat.channelId);
                 return {
-                    name: `${channel.name} (${stat.enabled ? await t(interaction, 'core_setting_setting_stats_enabled') : await t(interaction, 'core_setting_setting_stats_disabled')})`,
+                    name: `${channel.name} (${stat.enabled ? await t(interaction, 'core.setting.setting.stats.enabled.text') : await t(interaction, 'core.setting.setting.stats.disabled.text')})`,
                     value: channel.id,
                 };
             });
@@ -609,7 +609,7 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setTitle(await t(interaction, 'core_setting_setting_embed_title'))
+            .setTitle(await t(interaction, 'core.setting.setting.embed.title.text'))
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.client.user.displayAvatarURL())
             .setFooter(await embedFooter(interaction))
@@ -630,7 +630,7 @@ module.exports = {
 
         if (sub === 'view') {
             if (!serverSetting || !serverSetting.dataValues) {
-                embed.setDescription(await t(interaction, 'core_setting_setting_no_config'));
+                embed.setDescription(await t(interaction, 'core.setting.setting.no.config'));
                 return interaction.editReply({ embeds: [embed] });
             }
             const settings = serverSetting.dataValues;
@@ -649,7 +649,7 @@ module.exports = {
                     kategori.boolean.push(`${value ? '🟩 ・' + displayKey : '🟥 ・' + displayKey}`);
                 } else if (Array.isArray(value)) {
                     if (value.length === 0) {
-                        kategori.array.push(`🟪 ・${formattedKey} ➜ *${await t(interaction, 'core_setting_setting_empty')}*`);
+                        kategori.array.push(`🟪 ・${formattedKey} ➜ *${await t(interaction, 'core.setting.setting.empty')}*`);
                     } else {
                         let list = '';
                         value.forEach((item) => {
@@ -676,13 +676,13 @@ module.exports = {
                                 displayValue = cleanedValue.map((item) => `\`${item}\``).join(', ');
                             }
                         } else {
-                            displayValue = `*${await t(interaction, 'core_setting_setting_empty')}*`;
+                            displayValue = `*${await t(interaction, 'core.setting.setting.empty')}*`;
                         }
                     } else if (key === 'serverStats') {
                         if (Array.isArray(cleanedValue) && cleanedValue.length > 0) {
                             displayValue = cleanedValue.map((stat) => `\n   └ ${stat.format} ➜ <#${stat.channelId}>`).join('');
                         } else {
-                            displayValue = `*${await t(interaction, 'core_setting_setting_not_set')}*`;
+                            displayValue = `*${await t(interaction, 'core.setting.setting.not.set')}*`;
                         }
                     } else if (
                         key.toLowerCase().includes('channelid') ||
@@ -694,7 +694,7 @@ module.exports = {
                         displayValue = `<@&${value}>`;
                     }
                     kategori.umum.push(
-                        `🟨 ・${formattedKey} ➜ ${displayValue || '*' + (await t(interaction, 'core_setting_setting_not_set')) + '*'}`
+                        `🟨 ・${formattedKey} ➜ ${displayValue || '*' + (await t(interaction, 'core.setting.setting.not.set')) + '*'}`
                     );
                 } else {
                     kategori.lainnya.push(`⬛ ・${formattedKey}`);
@@ -704,25 +704,25 @@ module.exports = {
             const allLines = [];
 
             if (kategori.boolean.length) {
-                allLines.push(`### ⭕ ${await t(interaction, 'core_setting_setting_section_boolean')}`);
+                allLines.push(`### ⭕ ${await t(interaction, 'core.setting.setting.section.boolean')}`);
                 allLines.push(...kategori.boolean);
                 allLines.push('');
             }
 
             if (kategori.umum.length) {
-                allLines.push(`### ⚙️ ${await t(interaction, 'core_setting_setting_section_umum')}`);
+                allLines.push(`### ⚙️ ${await t(interaction, 'core.setting.setting.section.umum')}`);
                 allLines.push(...kategori.umum);
                 allLines.push('');
             }
 
             if (kategori.array.length) {
-                allLines.push(`### 🗃️ ${await t(interaction, 'core_setting_setting_section_array')}`);
+                allLines.push(`### 🗃️ ${await t(interaction, 'core.setting.setting.section.array')}`);
                 allLines.push(...kategori.array);
                 allLines.push('');
             }
 
             if (kategori.lainnya.length) {
-                allLines.push(`### ❓ ${await t(interaction, 'core_setting_setting_section_lainnya')}`);
+                allLines.push(`### ❓ ${await t(interaction, 'core.setting.setting.section.lainnya')}`);
                 allLines.push(...kategori.lainnya);
                 allLines.push('');
             }
@@ -746,19 +746,19 @@ module.exports = {
 
             const buildPageEmbed = async (pageIdx) => {
                 return new EmbedBuilder()
-                    .setTitle(await t(interaction, 'core_setting_setting_embed_title_view'))
+                    .setTitle(await t(interaction, 'core.setting.setting.embed.title.view'))
                     .setColor(kythia.bot.color)
-                    .setDescription(pages[pageIdx] || (await t(interaction, 'core_setting_setting_no_configured')))
+                    .setDescription(pages[pageIdx] || (await t(interaction, 'core.setting.setting.no.configured')))
                     .setFooter({
-                        text: `${await t(interaction, 'common_embed_footer', { username: interaction.client.user.username })} • Page ${pageIdx + 1}/${totalPages}`,
+                        text: `${await t(interaction, 'common.embed.footer', { username: interaction.client.user.username })} • Page ${pageIdx + 1}/${totalPages}`,
                     });
             };
 
             if (pages.length === 1) {
                 embed
-                    .setTitle(await t(interaction, 'core_setting_setting_embed_title_view'))
+                    .setTitle(await t(interaction, 'core.setting.setting.embed.title.view'))
                     .setColor(kythia.bot.color)
-                    .setDescription(pages[0] || (await t(interaction, 'core_setting_setting_no_configured')))
+                    .setDescription(pages[0] || (await t(interaction, 'core.setting.setting.no.configured')))
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
             }
@@ -836,12 +836,12 @@ module.exports = {
                     const cat = interaction.options.getChannel('category');
                     if (!cat || cat.type !== ChannelType.GuildCategory) {
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_stats_category_invalid'),
+                            content: await t(interaction, 'core.setting.setting.stats.category.invalid'),
                         });
                     }
                     serverSetting.serverStatsCategoryId = cat.id;
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_stats_category_set', { category: `<#${cat.id}>` }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.stats.category.set', { category: `<#${cat.id}>` }));
                     return interaction.editReply({ embeds: [embed] });
                 }
             }
@@ -853,7 +853,7 @@ module.exports = {
 
                         if (action === 'add') {
                             if (whitelist.includes(targetId)) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_whitelist_already'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.whitelist.already'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             whitelist.push(targetId);
@@ -864,13 +864,13 @@ module.exports = {
                             const isRole = interaction.guild.roles.cache.has(targetId);
                             embed.setDescription(
                                 isRole
-                                    ? await t(interaction, 'core_setting_setting_whitelist_add_role', { role: `<@&${targetId}>` })
-                                    : await t(interaction, 'core_setting_setting_whitelist_add_user', { user: `<@${targetId}>` })
+                                    ? await t(interaction, 'core.setting.setting.whitelist.add.role', { role: `<@&${targetId}>` })
+                                    : await t(interaction, 'core.setting.setting.whitelist.add.user', { user: `<@${targetId}>` })
                             );
                             return interaction.editReply({ embeds: [embed] });
                         } else if (action === 'remove') {
                             if (!whitelist.includes(targetId)) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_whitelist_notfound'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.whitelist.notfound'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             whitelist = whitelist.filter((id) => id !== targetId);
@@ -881,12 +881,12 @@ module.exports = {
                             const isRole = interaction.guild.roles.cache.has(targetId);
                             embed.setDescription(
                                 isRole
-                                    ? await t(interaction, 'core_setting_setting_whitelist_remove_role', { role: `<@&${targetId}>` })
-                                    : await t(interaction, 'core_setting_setting_whitelist_remove_user', { user: `<@${targetId}>` })
+                                    ? await t(interaction, 'core.setting.setting.whitelist.remove.role', { role: `<@&${targetId}>` })
+                                    : await t(interaction, 'core.setting.setting.whitelist.remove.user', { user: `<@${targetId}>` })
                             );
                             return interaction.editReply({ embeds: [embed] });
                         } else {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_whitelist_invalid_action'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.whitelist.invalid.action'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                     }
@@ -901,7 +901,7 @@ module.exports = {
                         }
                         if (!Array.isArray(whitelist)) whitelist = [];
                         if (whitelist.length === 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_whitelist_empty'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.whitelist.empty'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         const whitelistString = whitelist
@@ -910,10 +910,10 @@ module.exports = {
                                 if (member) return `<@${id}>`;
                                 const role = interaction.guild.roles.cache.get(id);
                                 if (role) return `<@&${id}>`;
-                                return await t(interaction, 'core_setting_setting_invalid_id', { id });
+                                return await t(interaction, 'core.setting.setting.invalid.id', { id });
                             })
                             .join('\n');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_whitelist_list', { list: whitelistString }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.whitelist.list', { list: whitelistString }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'badwords': {
@@ -929,12 +929,12 @@ module.exports = {
                         }
                         const word = interaction.options.getString('word');
                         if (!word) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_word_required'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.word.required'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         if (action === 'add') {
                             if (badwords.includes(word.toLowerCase())) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_badword_already'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.badword.already'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             badwords.push(word.toLowerCase());
@@ -947,18 +947,18 @@ module.exports = {
                                     regexCache.delete(interaction.guild.id);
                                 }
                             } catch {}
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_add', { word }));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.add', { word }));
                             return interaction.editReply({ embeds: [embed] });
                         } else if (action === 'remove') {
                             if (!badwords.includes(word.toLowerCase())) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_badword_notfound'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.badword.notfound'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             badwords = badwords.filter((w) => w !== word.toLowerCase());
                             serverSetting.badwords = badwords;
                             serverSetting.changed('badwords', true);
                             await serverSetting.saveAndUpdateCache('guildId');
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_remove', { word }));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.remove', { word }));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         break;
@@ -974,11 +974,11 @@ module.exports = {
                         }
                         if (!Array.isArray(badwords)) badwords = [];
                         if (badwords.length === 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_empty'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.empty'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         const badwordsString = badwords.map((w) => `• \`${w}\``).join('\n');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_badword_list', { list: badwordsString }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.badword.list', { list: badwordsString }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'badword-whitelist': {
@@ -994,12 +994,12 @@ module.exports = {
                         }
                         const word = interaction.options.getString('word');
                         if (!word) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_word_required'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.word.required'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         if (action === 'add') {
                             if (badwordWhitelist.includes(word.toLowerCase())) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_badword_whitelist_already'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.badword.whitelist.already'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             badwordWhitelist.push(word.toLowerCase());
@@ -1012,18 +1012,18 @@ module.exports = {
                                     regexCache.delete(interaction.guild.id);
                                 }
                             } catch {}
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_whitelist_add', { word }));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.whitelist.add', { word }));
                             return interaction.editReply({ embeds: [embed] });
                         } else if (action === 'remove') {
                             if (!badwordWhitelist.includes(word.toLowerCase())) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_badword_whitelist_notfound'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.badword.whitelist.notfound'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             badwordWhitelist = badwordWhitelist.filter((w) => w !== word.toLowerCase());
                             serverSetting.badwordWhitelist = badwordWhitelist;
                             serverSetting.changed('badwordWhitelist', true);
                             await serverSetting.saveAndUpdateCache('guildId');
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_whitelist_remove', { word }));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.whitelist.remove', { word }));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         break;
@@ -1039,12 +1039,12 @@ module.exports = {
                         }
                         if (!Array.isArray(badwordWhitelist)) badwordWhitelist = [];
                         if (badwordWhitelist.length === 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_badword_whitelist_empty'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.badword.whitelist.empty'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         const badwordWhitelistString = badwordWhitelist.map((w) => `• \`${w}\``).join('\n');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_badword_whitelist_list', { list: badwordWhitelistString })
+                            await t(interaction, 'core.setting.setting.badword.whitelist.list', { list: badwordWhitelistString })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1062,7 +1062,7 @@ module.exports = {
                         }
                         if (action === 'add') {
                             if (ignoredChannels.includes(targetId)) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_exception_channel_already'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.exception.channel.already'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             ignoredChannels.push(targetId);
@@ -1070,12 +1070,12 @@ module.exports = {
                             serverSetting.changed('ignoredChannels', true);
                             await serverSetting.saveAndUpdateCache('guildId');
                             embed.setDescription(
-                                await t(interaction, 'core_setting_setting_exception_channel_add', { channel: `<#${targetId}>` })
+                                await t(interaction, 'core.setting.setting.exception.channel.add', { channel: `<#${targetId}>` })
                             );
                             return interaction.editReply({ embeds: [embed] });
                         } else if (action === 'remove') {
                             if (!ignoredChannels.includes(targetId)) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_exception_channel_notfound'));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.exception.channel.notfound'));
                                 return interaction.editReply({ embeds: [embed] });
                             }
                             ignoredChannels = ignoredChannels.filter((id) => id !== targetId);
@@ -1083,11 +1083,11 @@ module.exports = {
                             serverSetting.changed('ignoredChannels', true);
                             await serverSetting.saveAndUpdateCache('guildId');
                             embed.setDescription(
-                                await t(interaction, 'core_setting_setting_exception_channel_remove', { channel: `<#${targetId}>` })
+                                await t(interaction, 'core.setting.setting.exception.channel.remove', { channel: `<#${targetId}>` })
                             );
                             return interaction.editReply({ embeds: [embed] });
                         } else {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_exception_channel_invalid_action'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.exception.channel.invalid.action'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                     }
@@ -1102,41 +1102,41 @@ module.exports = {
                         }
                         if (!Array.isArray(ignoredChannels)) ignoredChannels = [];
                         if (ignoredChannels.length === 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_exception_channel_empty'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.exception.channel.empty'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         const list = ignoredChannels
                             .map(async (id) => {
                                 const ch = interaction.guild.channels.cache.get(id);
-                                return ch ? `<#${id}>` : await t(interaction, 'core_setting_setting_invalid_id', { id });
+                                return ch ? `<#${id}>` : await t(interaction, 'core.setting.setting.invalid.id', { id });
                             })
                             .join('\n');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_exception_channel_list', { list }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.exception.channel.list', { list }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'mod-log-channel': {
                         const targetChannel = channel;
                         if (!targetChannel.isTextBased()) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_log_channel_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.log.channel.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.modLogChannelId = targetChannel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_mod_log_channel_set', { channel: `<#${targetChannel.id}>` })
+                            await t(interaction, 'core.setting.setting.mod.log.channel.set', { channel: `<#${targetChannel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'audit-log-channel': {
                         const targetChannel = channel;
                         if (!targetChannel.isTextBased()) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_log_channel_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.log.channel.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.auditLogChannelId = targetChannel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_audit_log_channel_set', { channel: `<#${targetChannel.id}>` })
+                            await t(interaction, 'core.setting.setting.audit.log.channel.set', { channel: `<#${targetChannel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1205,7 +1205,7 @@ module.exports = {
                         const hasAllowedPlaceholder = allowedPlaceholders.some((ph) => format.includes(ph));
                         if (!hasAllowedPlaceholder) {
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_format_invalid', {
+                                content: await t(interaction, 'core.setting.setting.stats.format.invalid', {
                                     placeholders: allowedPlaceholders.join(', '),
                                 }),
                             });
@@ -1227,7 +1227,7 @@ module.exports = {
                         const already = serverSetting.serverStats?.find((s) => s.channelId === channel.id);
                         if (already) {
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_already'),
+                                content: await t(interaction, 'core.setting.setting.stats.already'),
                             });
                         }
                         serverSetting.serverStats ??= [];
@@ -1236,7 +1236,7 @@ module.exports = {
                         await serverSetting.saveAndUpdateCache('guildId');
                         await updateStats(interaction, interaction.client, [serverSetting]);
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_stats_add', { channel: `<#${channel.id}>`, format }),
+                            content: await t(interaction, 'core.setting.setting.stats.add', { channel: `<#${channel.id}>`, format }),
                         });
                     }
                     case 'edit': {
@@ -1245,13 +1245,13 @@ module.exports = {
                         let stat = serverSetting.serverStats?.find((s) => s.channelId === statsId);
                         if (!stat)
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_notfound'),
+                                content: await t(interaction, 'core.setting.setting.stats.notfound'),
                             });
                         if (format) stat.format = format;
                         const hasAllowedPlaceholder = allowedPlaceholders.some((ph) => format.includes(ph));
                         if (!hasAllowedPlaceholder) {
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_format_invalid', {
+                                content: await t(interaction, 'core.setting.setting.stats.format.invalid', {
                                     placeholders: allowedPlaceholders.join(', '),
                                 }),
                             });
@@ -1260,7 +1260,7 @@ module.exports = {
                         await serverSetting.saveAndUpdateCache('guildId');
                         await updateStats(interaction, interaction.client, [serverSetting]);
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_stats_edit', { channel: `<#${statsId}>`, format }),
+                            content: await t(interaction, 'core.setting.setting.stats.edit', { channel: `<#${statsId}>`, format }),
                         });
                     }
                     case 'enable': {
@@ -1268,14 +1268,14 @@ module.exports = {
                         let stat = serverSetting.serverStats?.find((s) => s.channelId === statsId);
                         if (!stat)
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_notfound'),
+                                content: await t(interaction, 'core.setting.setting.stats.notfound'),
                             });
                         stat.enabled = true;
                         serverSetting.changed('serverStats', true);
                         await serverSetting.saveAndUpdateCache('guildId');
                         await updateStats(interaction, interaction.client, [serverSetting]);
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_stats_enabled_msg', { channel: `<#${statsId}>` }),
+                            content: await t(interaction, 'core.setting.setting.stats.enabled.msg', { channel: `<#${statsId}>` }),
                         });
                     }
                     case 'disable': {
@@ -1283,14 +1283,14 @@ module.exports = {
                         let stat = serverSetting.serverStats?.find((s) => s.channelId === statsId);
                         if (!stat)
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_stats_notfound'),
+                                content: await t(interaction, 'core.setting.setting.stats.notfound'),
                             });
                         stat.enabled = false;
                         serverSetting.changed('serverStats', true);
                         await serverSetting.saveAndUpdateCache('guildId');
                         await updateStats(interaction, interaction.client, [serverSetting]);
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_stats_disabled_msg', { channel: `<#${statsId}>` }),
+                            content: await t(interaction, 'core.setting.setting.stats.disabled.msg', { channel: `<#${statsId}>` }),
                         });
                     }
                     case 'remove': {
@@ -1308,8 +1308,8 @@ module.exports = {
                         await serverSetting.saveAndUpdateCache('guildId');
                         const msg =
                             before === after
-                                ? await t(interaction, 'core_setting_setting_stats_remove_notfound')
-                                : await t(interaction, 'core_setting_setting_stats_remove_success');
+                                ? await t(interaction, 'core.setting.setting.stats.remove.notfound')
+                                : await t(interaction, 'core.setting.setting.stats.remove.success');
                         await updateStats(interaction, interaction.client, [serverSetting]);
                         return interaction.editReply({ content: msg });
                     }
@@ -1322,7 +1322,7 @@ module.exports = {
                         serverSetting.welcomeInChannelId = targetChannel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_welcome_in_channel_set', { channel: `<#${targetChannel.id}>` })
+                            await t(interaction, 'core.setting.setting.welcome.in.channel.set', { channel: `<#${targetChannel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1331,7 +1331,7 @@ module.exports = {
                         serverSetting.welcomeOutChannelId = targetChannel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_welcome_out_channel_set', { channel: `<#${targetChannel.id}>` })
+                            await t(interaction, 'core.setting.setting.welcome.out.channel.set', { channel: `<#${targetChannel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1340,7 +1340,7 @@ module.exports = {
                         serverSetting.welcomeRoleId = targetRole.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_welcome_role_set', { role: `<@&${targetRole.id}>` })
+                            await t(interaction, 'core.setting.setting.welcome.role.set', { role: `<@&${targetRole.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1348,38 +1348,38 @@ module.exports = {
                         const text = interaction.options.getString('text');
                         serverSetting.welcomeInText = text;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_welcome_in_text_set', { text }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.welcome.in.text.set', { text }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'out-text': {
                         const text = interaction.options.getString('text');
                         serverSetting.welcomeOutText = text;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_welcome_out_text_set', { text }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.welcome.out.text.set', { text }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'in-background': {
                         const background = interaction.options.getString('background');
                         if (!background.startsWith('http')) {
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_welcome_in_background_invalid'),
+                                content: await t(interaction, 'core.setting.setting.welcome.in.background.invalid'),
                             });
                         }
                         serverSetting.welcomeInBackgroundUrl = background;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_welcome_in_background_set', { background }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.welcome.in.background.set', { background }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'out-background': {
                         const background = interaction.options.getString('background');
                         if (!background.startsWith('http')) {
                             return interaction.editReply({
-                                content: await t(interaction, 'core_setting_setting_welcome_out_background_invalid'),
+                                content: await t(interaction, 'core.setting.setting.welcome.out.background.invalid'),
                             });
                         }
                         serverSetting.welcomeOutBackgroundUrl = background;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_welcome_out_background_set', { background }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.welcome.out.background.set', { background }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                 }
@@ -1391,7 +1391,7 @@ module.exports = {
                         serverSetting.levelingChannelId = targetChannel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_leveling_channel_set', { channel: `<#${targetChannel.id}>` })
+                            await t(interaction, 'core.setting.setting.leveling.channel.set', { channel: `<#${targetChannel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1399,14 +1399,14 @@ module.exports = {
                         const cooldown = interaction.options.getInteger('cooldown');
                         serverSetting.levelingCooldown = cooldown * 1000;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_leveling_cooldown_set', { cooldown }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.leveling.cooldown.set', { cooldown }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'xp': {
                         const xp = interaction.options.getInteger('xp');
                         serverSetting.levelingXp = xp;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_leveling_xp_set', { xp }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.leveling.xp.set', { xp }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'rolereward': {
@@ -1418,15 +1418,15 @@ module.exports = {
                             serverSetting.roleRewards = serverSetting.roleRewards.filter((r) => r.level !== level);
                             serverSetting.roleRewards.push({ level, role: role.id });
                             embed.setDescription(
-                                await t(interaction, 'core_setting_setting_leveling_rolereward_add', { role: `<@&${role.id}>`, level })
+                                await t(interaction, 'core.setting.setting.leveling.rolereward.add', { role: `<@&${role.id}>`, level })
                             );
                         } else if (action === 'remove') {
                             const initial = serverSetting.roleRewards.length;
                             serverSetting.roleRewards = serverSetting.roleRewards.filter((r) => r.level !== level);
                             if (serverSetting.roleRewards.length === initial) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_leveling_rolereward_notfound', { level }));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.leveling.rolereward.notfound', { level }));
                             } else {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_leveling_rolereward_remove', { level }));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.leveling.rolereward.remove', { level }));
                             }
                         }
                         serverSetting.changed('roleRewards', true);
@@ -1441,21 +1441,21 @@ module.exports = {
                         const ip = interaction.options.getString('ip');
                         serverSetting.minecraftIp = ip;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_minecraft_ip_set', { ip }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.minecraft.ip.set', { ip }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'port': {
                         const port = interaction.options.getInteger('port');
                         serverSetting.minecraftPort = port;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_minecraft_port_set', { port }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.minecraft.port.set', { port }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'ip-channel': {
                         serverSetting.minecraftIpChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_minecraft_ip_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.minecraft.ip.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1463,7 +1463,7 @@ module.exports = {
                         serverSetting.minecraftPortChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_minecraft_port_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.minecraft.port.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1471,7 +1471,7 @@ module.exports = {
                         serverSetting.minecraftStatusChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_minecraft_status_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.minecraft.status.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1479,7 +1479,7 @@ module.exports = {
                         serverSetting.minecraftPlayersChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_minecraft_players_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.minecraft.players.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1487,7 +1487,7 @@ module.exports = {
                         serverSetting.minecraftPlayersChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_minecraft_players_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.minecraft.players.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
@@ -1498,7 +1498,7 @@ module.exports = {
                     const lang = interaction.options.getString('lang');
                     serverSetting.lang = lang;
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_language_set', { lang }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.language.set', { lang }));
                     return interaction.editReply({ embeds: [embed] });
                 }
             }
@@ -1506,56 +1506,56 @@ module.exports = {
                 switch (sub) {
                     case 'channel': {
                         if (!channel || channel.type !== 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_testimony_channel_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.testimony.channel.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.testimonyChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_testimony_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.testimony.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'feedback-channel': {
                         if (!channel || channel.type !== 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_testimony_channel_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.testimony.channel.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.feedbackChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_testimony_feedback_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.testimony.feedback.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'count-channel': {
                         if (!channel) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_testimony_channel_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.testimony.channel.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.testimonyCountChannelId = channel.id;
                         await serverSetting.saveAndUpdateCache('guildId');
                         embed.setDescription(
-                            await t(interaction, 'core_setting_setting_testimony_count_channel_set', { channel: `<#${channel.id}>` })
+                            await t(interaction, 'core.setting.setting.testimony.count.channel.set', { channel: `<#${channel.id}>` })
                         );
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'count-format': {
                         const format = interaction.options.getString('format');
                         if (!format || !format.includes('{count}')) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_testimony_count_format_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.testimony.count.format.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.testimonyCountFormat = format;
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_testimony_count_format_set', { format }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.testimony.count.format.set', { format }));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     case 'reset-count': {
                         serverSetting.testimonyCount = 0;
                         serverSetting.changed('testimonyCount');
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_testimony_count_reset'));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.testimony.count.reset'));
                         if (serverSetting.testimonyCountChannelId) {
                             try {
                                 const testimonyCountChannel = await interaction.client.channels
@@ -1575,13 +1575,13 @@ module.exports = {
                     case 'count': {
                         const count = interaction.options.getInteger('count');
                         if (typeof count !== 'number' || count < 0) {
-                            embed.setDescription(await t(interaction, 'core_setting_setting_testimony_count_invalid'));
+                            embed.setDescription(await t(interaction, 'core.setting.setting.testimony.count.invalid'));
                             return interaction.editReply({ embeds: [embed] });
                         }
                         serverSetting.testimonyCount = count;
                         serverSetting.changed('testimonyCount');
                         await serverSetting.saveAndUpdateCache('guildId');
-                        embed.setDescription(await t(interaction, 'core_setting_setting_testimony_count_set', { count }));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.testimony.count.set', { count }));
                         if (serverSetting.testimonyCountChannelId) {
                             try {
                                 const testimonyCountChannel = await interaction.client.channels
@@ -1611,15 +1611,15 @@ module.exports = {
                             serverSetting.streakRoleRewards = serverSetting.streakRoleRewards.filter((r) => r.streak !== streak);
                             serverSetting.streakRoleRewards.push({ streak, role: role.id });
                             embed.setDescription(
-                                await t(interaction, 'core_setting_setting_streak_rolereward_add', { role: `<@&${role.id}>`, streak })
+                                await t(interaction, 'core.setting.setting.streak.rolereward.add', { role: `<@&${role.id}>`, streak })
                             );
                         } else if (action === 'remove') {
                             const initial = serverSetting.streakRoleRewards.length;
                             serverSetting.streakRoleRewards = serverSetting.streakRoleRewards.filter((r) => r.streak !== streak);
                             if (serverSetting.streakRoleRewards.length === initial) {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_streak_rolereward_notfound', { streak }));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.streak.rolereward.notfound', { streak }));
                             } else {
-                                embed.setDescription(await t(interaction, 'core_setting_setting_streak_rolereward_remove', { streak }));
+                                embed.setDescription(await t(interaction, 'core.setting.setting.streak.rolereward.remove', { streak }));
                             }
                         }
                         serverSetting.changed('streakRoleRewards', true);
@@ -1633,14 +1633,14 @@ module.exports = {
                     const minimum = interaction.options.getInteger('minimum');
                     serverSetting.streakMinimum = minimum;
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_streak_minimum_set', { minimum }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.streak.minimum.set', { minimum }));
                     return interaction.editReply({ embeds: [embed] });
                 }
                 if (sub === 'emoji') {
                     const emoji = interaction.options.getString('emoji');
                     serverSetting.streakEmoji = emoji;
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_streak_emoji_set', { emoji }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.streak.emoji.set', { emoji }));
                     return interaction.editReply({ embeds: [embed] });
                 }
             }
@@ -1649,14 +1649,14 @@ module.exports = {
                     serverSetting.announcementChannelId = channel.id;
                     await serverSetting.saveAndUpdateCache('guildId');
                     embed.setDescription(
-                        await t(interaction, 'core_setting_setting_announcement_channel_set', { channel: `<#${channel.id}>` })
+                        await t(interaction, 'core.setting.setting.announcement.channel.set', { channel: `<#${channel.id}>` })
                     );
                     return interaction.editReply({ embeds: [embed] });
                 }
                 if (sub === 'invite') {
                     serverSetting.inviteChannelId = channel.id;
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_invite_channel_set', { channel: `<#${channel.id}>` }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.invite.channel.set', { channel: `<#${channel.id}>` }));
                     return interaction.editReply({ embeds: [embed] });
                 }
             }
@@ -1684,7 +1684,7 @@ module.exports = {
                     serverSetting.aiChannelIds = aiChannelIds;
                     serverSetting.changed('aiChannelIds', true);
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_ai_channel_add', { channel: `<#${channel.id}>` }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.ai.channel.add', { channel: `<#${channel.id}>` }));
                     return interaction.editReply({ embeds: [embed] });
                 }
                 if (sub === 'remove-channel') {
@@ -1693,17 +1693,17 @@ module.exports = {
                     serverSetting.aiChannelIds = aiChannelIds;
                     serverSetting.changed('aiChannelIds', true);
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_ai_channel_remove', { channel: `<#${channel.id}>` }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.ai.channel.remove', { channel: `<#${channel.id}>` }));
                     return interaction.editReply({ embeds: [embed] });
                 }
                 if (sub === 'list') {
                     const aiChannelIds = ensureArray(serverSetting.aiChannelIds);
                     if (aiChannelIds.length === 0) {
-                        embed.setDescription(await t(interaction, 'core_setting_setting_ai_channel_empty'));
+                        embed.setDescription(await t(interaction, 'core.setting.setting.ai.channel.empty'));
                         return interaction.editReply({ embeds: [embed] });
                     }
                     const list = aiChannelIds.map((id) => `<#${id}>`).join('\n');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_ai_channel_list', { list }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.ai.channel.list', { list }));
                     return interaction.editReply({ embeds: [embed] });
                 }
             }
@@ -1714,7 +1714,7 @@ module.exports = {
                     const valueStr = interaction.options.getString('value');
                     if (!Object.prototype.hasOwnProperty.call(serverSetting.dataValues, field)) {
                         return interaction.editReply({
-                            content: await t(interaction, 'core_setting_setting_raw_field_invalid', { field }),
+                            content: await t(interaction, 'core.setting.setting.raw.field.invalid', { field }),
                         });
                     }
                     const original = serverSetting.dataValues[field];
@@ -1737,12 +1737,12 @@ module.exports = {
                     serverSetting[field] = parsed;
                     if (Array.isArray(parsed)) serverSetting.changed(field, true);
                     await serverSetting.saveAndUpdateCache('guildId');
-                    embed.setDescription(await t(interaction, 'core_setting_setting_raw_set', { field, value: `\`${valueStr}\`` }));
+                    embed.setDescription(await t(interaction, 'core.setting.setting.raw.set', { field, value: `\`${valueStr}\`` }));
                     return interaction.editReply({ embeds: [embed] });
                 }
             }
             default: {
-                embed.setDescription(await t(interaction, 'core_setting_setting_command_not_found'));
+                embed.setDescription(await t(interaction, 'core.setting.setting.command.not.found'));
                 return interaction.editReply({ embeds: [embed] });
             }
         }

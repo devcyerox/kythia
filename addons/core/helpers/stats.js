@@ -20,27 +20,27 @@ async function getLocalizedTime(locale) {
     if (timeLocaleCache[locale]) return timeLocaleCache[locale];
 
     const days = await Promise.all([
-        t({ locale }, 'core_helpers_stats_days_sunday'),
-        t({ locale }, 'core_helpers_stats_days_monday'),
-        t({ locale }, 'core_helpers_stats_days_tuesday'),
-        t({ locale }, 'core_helpers_stats_days_wednesday'),
-        t({ locale }, 'core_helpers_stats_days_thursday'),
-        t({ locale }, 'core_helpers_stats_days_friday'),
-        t({ locale }, 'core_helpers_stats_days_saturday'),
+        t({ locale }, 'core.helpers.stats.days.sunday'),
+        t({ locale }, 'core.helpers.stats.days.monday'),
+        t({ locale }, 'core.helpers.stats.days.tuesday'),
+        t({ locale }, 'core.helpers.stats.days.wednesday'),
+        t({ locale }, 'core.helpers.stats.days.thursday'),
+        t({ locale }, 'core.helpers.stats.days.friday'),
+        t({ locale }, 'core.helpers.stats.days.saturday'),
     ]);
     const months = await Promise.all([
-        t({ locale }, 'core_helpers_stats_months_january'),
-        t({ locale }, 'core_helpers_stats_months_february'),
-        t({ locale }, 'core_helpers_stats_months_march'),
-        t({ locale }, 'core_helpers_stats_months_april'),
-        t({ locale }, 'core_helpers_stats_months_may'),
-        t({ locale }, 'core_helpers_stats_months_june'),
-        t({ locale }, 'core_helpers_stats_months_july'),
-        t({ locale }, 'core_helpers_stats_months_august'),
-        t({ locale }, 'core_helpers_stats_months_september'),
-        t({ locale }, 'core_helpers_stats_months_october'),
-        t({ locale }, 'core_helpers_stats_months_november'),
-        t({ locale }, 'core_helpers_stats_months_december'),
+        t({ locale }, 'core.helpers.stats.months.january'),
+        t({ locale }, 'core.helpers.stats.months.february'),
+        t({ locale }, 'core.helpers.stats.months.march'),
+        t({ locale }, 'core.helpers.stats.months.april'),
+        t({ locale }, 'core.helpers.stats.months.may'),
+        t({ locale }, 'core.helpers.stats.months.june'),
+        t({ locale }, 'core.helpers.stats.months.july'),
+        t({ locale }, 'core.helpers.stats.months.august'),
+        t({ locale }, 'core.helpers.stats.months.september'),
+        t({ locale }, 'core.helpers.stats.months.october'),
+        t({ locale }, 'core.helpers.stats.months.november'),
+        t({ locale }, 'core.helpers.stats.months.december'),
     ]);
 
     timeLocaleCache[locale] = { days, months };
@@ -67,9 +67,9 @@ async function resolvePlaceholders(str, data, locale) {
         const monthsDiff = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
         const daysDiff = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
         // Use translation for "years", "months", "days" if available
-        let yearsLabel = years > 0 ? await t({ locale }, 'core_helpers_stats_years') : '';
-        let monthsLabel = await t({ locale }, 'core_helpers_stats_months');
-        let daysLabel = await t({ locale }, 'core_helpers_stats_days');
+        let yearsLabel = years > 0 ? await t({ locale }, 'core.helpers.stats.years') : '';
+        let monthsLabel = await t({ locale }, 'core.helpers.stats.months.months');
+        let daysLabel = await t({ locale }, 'core.helpers.stats.days.days');
         guildAge =
             years > 0
                 ? `${years} ${yearsLabel} ${monthsDiff} ${monthsLabel} ${daysDiff} ${daysLabel}`
@@ -78,11 +78,11 @@ async function resolvePlaceholders(str, data, locale) {
 
     // For booleans with translation
     const verifiedStr = data.verified
-        ? await t({ locale }, 'core_helpers_stats_verified_yes')
-        : await t({ locale }, 'core_helpers_stats_verified_no');
+        ? await t({ locale }, 'core.helpers.stats.verified.yes')
+        : await t({ locale }, 'core.helpers.stats.verified.no');
     const partneredStr = data.partnered
-        ? await t({ locale }, 'core_helpers_stats_partnered_yes')
-        : await t({ locale }, 'core_helpers_stats_partnered_no');
+        ? await t({ locale }, 'core.helpers.stats.partnered.yes')
+        : await t({ locale }, 'core.helpers.stats.partnered.no');
 
     // Date/time formatting
     const formatDate = (d) => {

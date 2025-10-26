@@ -27,22 +27,22 @@ async function buildNavButtons(interaction, page, totalPages, allDisabled = fals
     return [
         new ButtonBuilder()
             .setCustomId('leaderboard_first')
-            .setLabel(await t(interaction, 'economy_leaderboard_nav_first'))
+            .setLabel(await t(interaction, 'economy.leaderboard.nav.first'))
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(allDisabled || page <= 1),
         new ButtonBuilder()
             .setCustomId('leaderboard_prev')
-            .setLabel(await t(interaction, 'economy_leaderboard_nav_prev'))
+            .setLabel(await t(interaction, 'economy.leaderboard.nav.prev'))
             .setStyle(ButtonStyle.Primary)
             .setDisabled(allDisabled || page <= 1),
         new ButtonBuilder()
             .setCustomId('leaderboard_next')
-            .setLabel(await t(interaction, 'economy_leaderboard_nav_next'))
+            .setLabel(await t(interaction, 'economy.leaderboard.nav.next'))
             .setStyle(ButtonStyle.Primary)
             .setDisabled(allDisabled || page >= totalPages),
         new ButtonBuilder()
             .setCustomId('leaderboard_last')
-            .setLabel(await t(interaction, 'economy_leaderboard_nav_last'))
+            .setLabel(await t(interaction, 'economy.leaderboard.nav.last'))
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(allDisabled || page >= totalPages),
     ];
@@ -58,7 +58,7 @@ async function generateLeaderboardContainer(interaction, page, topUsers, totalUs
     // Build leaderboard text
     let leaderboardText = '';
     if (pageUsers.length === 0) {
-        leaderboardText = await t(interaction, 'economy_leaderboard_empty');
+        leaderboardText = await t(interaction, 'economy.leaderboard.empty');
     } else {
         const entries = await Promise.all(
             pageUsers.map(async (user, index) => {
@@ -75,7 +75,7 @@ async function generateLeaderboardContainer(interaction, page, topUsers, totalUs
                     username = `Unknown User (${user.userId})`;
                 }
 
-                return await t(interaction, 'economy_leaderboard_entry', {
+                return await t(interaction, 'economy.leaderboard.entry', {
                     medal,
                     username,
                     wealth: BigInt(totalWealth).toLocaleString(),
@@ -94,7 +94,7 @@ async function generateLeaderboardContainer(interaction, page, topUsers, totalUs
         .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                await t(interaction, 'economy_leaderboard_title', {
+                await t(interaction, 'economy.leaderboard.title', {
                     page,
                     totalPages,
                 })
@@ -105,7 +105,7 @@ async function generateLeaderboardContainer(interaction, page, topUsers, totalUs
         .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-                await t(interaction, 'economy_leaderboard_footer', {
+                await t(interaction, 'economy.leaderboard.footer', {
                     totalUsers,
                 })
             )
@@ -158,7 +158,7 @@ module.exports = {
         collector.on('collect', async (i) => {
             if (i.user.id !== interaction.user.id) {
                 return i.reply({
-                    content: await t(i, 'economy_leaderboard_not_your_interaction'),
+                    content: await t(i, 'economy.leaderboard.not.your.interaction'),
                     ephemeral: true,
                 });
             }

@@ -55,17 +55,17 @@ module.exports = {
                 try {
                     const sticker = await interaction.client.fetchSticker(stickerId);
                     if (!sticker) {
-                        return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_not_found') });
+                        return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.not.found') });
                     }
                     // Try to add sticker to guild
                     if (!interaction.guild?.stickers?.create) {
-                        return interaction.editReply({ content: await t(interaction, 'core_utils_steal_no_perm_sticker') });
+                        return interaction.editReply({ content: await t(interaction, 'core.utils.steal.no.perm.sticker') });
                     }
                     // Discord API only allows PNG/Lottie/Apng stickers, and only for Boosted servers
                     // We'll just send the sticker file for manual upload if not possible
                     let url = sticker.url || sticker.asset;
                     if (!url) {
-                        return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_no_url') });
+                        return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.no.url') });
                     }
                     // Try to upload (if possible)
                     try {
@@ -75,17 +75,17 @@ module.exports = {
                             tags: sticker.tags || 'stolen',
                         });
                         return interaction.editReply({
-                            content: await t(interaction, 'core_utils_steal_sticker_success', { name: created.name }),
+                            content: await t(interaction, 'core.utils.steal.sticker.success', { name: created.name }),
                         });
                     } catch (e) {
                         // Fallback: send sticker file for manual upload
                         return interaction.editReply({
-                            content: await t(interaction, 'core_utils_steal_sticker_manual'),
+                            content: await t(interaction, 'core.utils.steal.sticker.manual'),
                             files: [url],
                         });
                     }
                 } catch (err) {
-                    return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_error') });
+                    return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.error') });
                 }
             } else if (sub === 'emoji') {
                 await interaction.deferReply({ ephemeral: true });
@@ -93,7 +93,7 @@ module.exports = {
                 // Parse custom emoji: <a:name:id> or <name:id>
                 const match = emojiInput.match(/<?a?:?(\w+):(\d+)>?/);
                 if (!match) {
-                    return interaction.editReply({ content: await t(interaction, 'core_utils_steal_emoji_invalid') });
+                    return interaction.editReply({ content: await t(interaction, 'core.utils.steal.emoji.invalid') });
                 }
                 const [, name, id] = match;
                 const isAnimated = emojiInput.startsWith('<a:');
@@ -101,16 +101,16 @@ module.exports = {
                 try {
                     // Try to add emoji to guild
                     if (!interaction.guild?.emojis?.create) {
-                        return interaction.editReply({ content: await t(interaction, 'core_utils_steal_no_perm_emoji') });
+                        return interaction.editReply({ content: await t(interaction, 'core.utils.steal.no.perm.emoji') });
                     }
                     const created = await interaction.guild.emojis.create({ attachment: url, name });
                     return interaction.editReply({
-                        content: await t(interaction, 'core_utils_steal_emoji_success', { name: created.name }),
+                        content: await t(interaction, 'core.utils.steal.emoji.success', { name: created.name }),
                     });
                 } catch (e) {
                     // Fallback: send emoji file for manual upload
                     return interaction.editReply({
-                        content: await t(interaction, 'core_utils_steal_emoji_manual'),
+                        content: await t(interaction, 'core.utils.steal.emoji.manual'),
                         files: [url],
                     });
                 }
@@ -125,11 +125,11 @@ module.exports = {
             if (message && message.stickers && message.stickers.size > 0) {
                 const sticker = message.stickers.first();
                 if (!sticker) {
-                    return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_not_found') });
+                    return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.not.found') });
                 }
                 let url = sticker.url || sticker.asset;
                 if (!url) {
-                    return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_no_url') });
+                    return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.no.url') });
                 }
                 // Try to upload (if possible)
                 try {
@@ -139,11 +139,11 @@ module.exports = {
                         name: sticker.name || `stolen_sticker_${sticker.id}`,
                         tags: sticker.tags || 'stolen',
                     });
-                    return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_success', { name: created.name }) });
+                    return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.success', { name: created.name }) });
                 } catch (e) {
                     // Fallback: send sticker file for manual upload
                     return interaction.editReply({
-                        content: await t(interaction, 'core_utils_steal_sticker_manual'),
+                        content: await t(interaction, 'core.utils.steal.sticker.manual'),
                         files: [url],
                     });
                 }
@@ -156,29 +156,29 @@ module.exports = {
                 // Use the first found emoji
                 const emojiData = parseCustomEmoji(found[0]);
                 if (!emojiData) {
-                    return interaction.editReply({ content: await t(interaction, 'core_utils_steal_emoji_invalid') });
+                    return interaction.editReply({ content: await t(interaction, 'core.utils.steal.emoji.invalid') });
                 }
                 const { name, id, isAnimated } = emojiData;
                 const url = `https://cdn.discordapp.com/emojis/${id}.${isAnimated ? 'gif' : 'png'}?v=1`;
                 try {
                     if (!interaction.guild?.emojis?.create) {
-                        return interaction.editReply({ content: await t(interaction, 'core_utils_steal_no_perm_emoji') });
+                        return interaction.editReply({ content: await t(interaction, 'core.utils.steal.no.perm.emoji') });
                     }
                     const created = await interaction.guild.emojis.create({ attachment: url, name });
                     return interaction.editReply({
-                        content: await t(interaction, 'core_utils_steal_emoji_success', { name: created.name }),
+                        content: await t(interaction, 'core.utils.steal.emoji.success', { name: created.name }),
                     });
                 } catch (e) {
                     // Fallback: send emoji file for manual upload
                     return interaction.editReply({
-                        content: await t(interaction, 'core_utils_steal_emoji_manual'),
+                        content: await t(interaction, 'core.utils.steal.emoji.manual'),
                         files: [url],
                     });
                 }
             }
 
             // 3. If neither, reply not found
-            return interaction.editReply({ content: await t(interaction, 'core_utils_steal_sticker_or_emoji_not_found') });
+            return interaction.editReply({ content: await t(interaction, 'core.utils.steal.sticker.or.emoji.not.found') });
         }
     },
 };

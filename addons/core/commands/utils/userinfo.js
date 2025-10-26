@@ -50,7 +50,7 @@ module.exports = {
 
         if (!member && !interaction.guild) {
             return interaction.editReply({
-                content: await t(interaction, 'core_utils_userinfo_user_not_found'),
+                content: await t(interaction, 'core.utils.userinfo.user.not.found'),
             });
         }
 
@@ -68,23 +68,23 @@ module.exports = {
         const avatarUrl = user.displayAvatarURL ? user.displayAvatarURL({ extension: 'png', size: 256 }) : defaultAvatar;
 
         // Joined at
-        let joinedAt = await t(interaction, 'core_utils_userinfo_field_joined_unknown');
+        let joinedAt = await t(interaction, 'core.utils.userinfo.field.joined.unknown');
         if (member?.joinedTimestamp) {
             joinedAt = `<t:${Math.floor(member.joinedTimestamp / 1000)}:F>`;
         }
 
         // Make General Content
         const generalSection =
-            `### ${await t(interaction, 'core_utils_userinfo_field_username')}\n${user.username}\n` +
-            `### ${await t(interaction, 'core_utils_userinfo_field_userid')}\n${user.id}\n`;
+            `### ${await t(interaction, 'core.utils.userinfo.field.username')}\n${user.username}\n` +
+            `### ${await t(interaction, 'core.utils.userinfo.field.userid')}\n${user.id}\n`;
 
         const datesSection =
-            `### ${await t(interaction, 'core_utils_userinfo_field_created')}\n<t:${Math.floor(user.createdTimestamp / 1000)}:F>\n` +
-            `### ${await t(interaction, 'core_utils_userinfo_field_joined')}\n${joinedAt}\n`;
+            `### ${await t(interaction, 'core.utils.userinfo.field.created')}\n<t:${Math.floor(user.createdTimestamp / 1000)}:F>\n` +
+            `### ${await t(interaction, 'core.utils.userinfo.field.joined.text')}\n${joinedAt}\n`;
 
         const rolesSection =
-            `### ${await t(interaction, 'core_utils_userinfo_field_roles')}\n` +
-            (roles || (await t(interaction, 'core_utils_userinfo_value_no_roles')));
+            `### ${await t(interaction, 'core.utils.userinfo.field.roles')}\n` +
+            (roles || (await t(interaction, 'core.utils.userinfo.value.no.roles')));
 
         let marriageBlock = null;
         let marriage = null;
@@ -111,19 +111,19 @@ module.exports = {
                 partner = await interaction.client.users.fetch(partnerId);
             } catch {}
 
-            const partnerLabel = (await t(interaction, 'fun_marry_profile_partner_label', {}, null)) || 'Partner';
+            const partnerLabel = (await t(interaction, 'fun.marry.profile.partner.label', {}, null)) || 'Partner';
 
             // Avatar
             const partnerAvatar = partner?.displayAvatarURL ? partner.displayAvatarURL({ extension: 'png', size: 256 }) : defaultAvatar;
 
             marriageBlock =
-                `${(await t(interaction, 'fun_marry_profile_title', {}, null)) || 'Marriage'}\n` +
+                `${(await t(interaction, 'fun.marry.profile.title', {}, null)) || 'Marriage'}\n` +
                 `-# **${partnerLabel}**\n### ${partner?.username || 'Unknown'}\n\n` +
-                `${(await t(interaction, 'fun_marry_profile_married_since', {}, null)) || 'Married Since'}\n${marriedAtDate}\n` +
+                `${(await t(interaction, 'fun.marry.profile.married.since', {}, null)) || 'Married Since'}\n${marriedAtDate}\n` +
                 (marriedFor !== null
-                    ? `${(await t(interaction, 'fun_marry_profile_days_married', {}, null)) || 'Days Together'}\n${marriedFor} days\n`
+                    ? `${(await t(interaction, 'fun.marry.profile.days.married', {}, null)) || 'Days Together'}\n${marriedFor} days\n`
                     : '') +
-                `${(await t(interaction, 'fun_marry_profile_love_score', {}, null)) || 'Love Score'}\n${marriage.loveScore} ❤️`;
+                `${(await t(interaction, 'fun.marry.profile.love.score', {}, null)) || 'Love Score'}\n${marriage.loveScore} ❤️`;
 
             marriageBlock = {
                 content: marriageBlock,
@@ -132,16 +132,16 @@ module.exports = {
             };
         }
 
-        const footerText = `${await t(interaction, 'common_container_footer', { username: interaction.client.user.username })}`;
+        const footerText = `${await t(interaction, 'common.container.footer', { username: interaction.client.user.username })}`;
 
         // Build container
         let containerBuilder = new ContainerBuilder()
             .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    `## ${await t(interaction, 'core_utils_userinfo_embed_title')}\n${await t(
+                    `## ${await t(interaction, 'core.utils.userinfo.embed.title')}\n${await t(
                         interaction,
-                        'core_utils_userinfo_embed_desc',
+                        'core.utils.userinfo.embed.desc',
                         { tag: user.tag }
                     )}`
                 )

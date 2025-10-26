@@ -26,7 +26,7 @@ module.exports = {
             images = Array.isArray(images?.rows) ? images.rows : [];
         }
         if (!images.length) {
-            return interaction.editReply(await t(interaction, 'image_commands_list_empty'));
+            return interaction.editReply(await t(interaction, 'image.commands.list.empty'));
         }
         const baseUrl = kythia.addons.dashboard.url || 'https://localhost:3000';
 
@@ -45,8 +45,8 @@ module.exports = {
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
                         i === 0
-                            ? await t(interaction, 'image_commands_list_title')
-                            : await t(interaction, 'image_commands_list_title_contd')
+                            ? await t(interaction, 'image.commands.list.title')
+                            : await t(interaction, 'image.commands.list.title.contd')
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
@@ -54,7 +54,7 @@ module.exports = {
             for (const img of pageItems) {
                 container.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'image_commands_list_item', { code: img.code, url: img.url })
+                        await t(interaction, 'image.commands.list.item', { code: img.code, url: img.url })
                     )
                 );
                 container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(false));
@@ -64,7 +64,7 @@ module.exports = {
                 container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
                 container.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, "image_commands_list_footer_help")
+                        await t(interaction, 'image.commands.list.footer.help')
                     )
                 );
             }
@@ -72,7 +72,7 @@ module.exports = {
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        await t(interaction, 'common_container_footer', { username: interaction.client.user.username })
+                        await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
 

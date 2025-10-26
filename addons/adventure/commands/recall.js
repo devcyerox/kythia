@@ -23,7 +23,7 @@ module.exports = {
         const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
         if (!user) {
-            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'adventure_no_character'));
+            const embed = new EmbedBuilder().setColor('Red').setDescription(await t(interaction, 'adventure.no.character'));
             return interaction.editReply({ embeds: [embed] });
         }
 
@@ -35,7 +35,7 @@ module.exports = {
         user.monsterXpDrop = 0;
         await user.saveAndUpdateCache();
         const embed = new EmbedBuilder()
-            .setDescription(await t(interaction, 'adventure_recall_recalled'))
+            .setDescription(await t(interaction, 'adventure.recall.recalled'))
             .setColor(kythia.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
             .setFooter(await embedFooter(interaction));
