@@ -7,7 +7,6 @@
  */
 
 const { SlashCommandBuilder, PermissionFlagsBits, InteractionContextType, EmbedBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,6 +21,8 @@ module.exports = {
     voteLocked: true,
     guildOnly: true,
     async execute(interaction, container) {
+        const ServerSetting = container.sequelize.models.ServerSetting;
+        const t = container.t;
         await interaction.deferReply();
 
         const channelId = interaction.channel.id;
@@ -54,7 +55,7 @@ module.exports = {
             setting.aiChannelIds = aiChannelIds;
             setting.changed('aiChannelIds', true);
             await setting.save();
-            
+
             const embed = new EmbedBuilder().setColor('Orange').setDescription(await t(interaction, 'ai.ai.manage.disable.success'));
             return interaction.editReply({ embeds: [embed] });
         }
