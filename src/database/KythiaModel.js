@@ -4,7 +4,7 @@
  * @file src/database/KythiaModel.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 1.0.0
+ * @version 0.9.10-beta
  *
  * @description
  * The ultimate, high-availability caching layer. It prioritizes a central Redis cache for speed and

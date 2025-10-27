@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.9-beta-rc.5
+ * @version 0.9.10-beta
  */
 
 /**
@@ -15,7 +15,7 @@
  * Note: relies on global `kythia` for owner and token references.
  *
  * @copyright © 2025 kenndeclouv
- * @version 0.9.9-beta-rc.5
+ * @version 0.9.10-beta
  */
 
 const KythiaUser = require('@coreModels/KythiaUser');

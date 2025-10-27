@@ -4,7 +4,7 @@
  * @file scripts/audit_permissions.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.9-beta-rc.5
+ * @version 0.9.10-beta
  *
  * @description
  * Script to read Kythia's addon architecture

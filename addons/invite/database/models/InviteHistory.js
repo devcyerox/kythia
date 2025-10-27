@@ -3,7 +3,7 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.9-beta-rc.5
+ * @version 0.9.10-beta
  */
 
 // file: src/database/models/InviteHistory.js
