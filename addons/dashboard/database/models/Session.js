@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class Session extends KythiaModel {
@@ -33,7 +33,7 @@ class Session extends KythiaModel {
     }
 }
 
-Session.init(sequelize);
+// Session.init(sequelize);
 // Session.initializeCacheHooks();
 
 module.exports = Session;

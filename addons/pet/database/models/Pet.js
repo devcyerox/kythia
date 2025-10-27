@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class Pet extends KythiaModel {
@@ -40,6 +40,6 @@ class Pet extends KythiaModel {
 }
 
 // Properly initialize the model with the imported sequelize instance
-Pet.init(sequelize);
+// Pet.init(sequelize);
 
 module.exports = Pet;

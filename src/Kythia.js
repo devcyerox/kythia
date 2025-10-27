@@ -37,7 +37,7 @@ class Kythia {
      * Initializes the Discord client, REST API, and dependency container.
      * Sets up manager instances (but doesn't start them yet).
      */
-    constructor({ config, logger, translator, sentry, models, helpers, utils }) {
+    constructor({ config, logger, redis, translator, models, helpers, utils }) {
         const missingDeps = [];
         if (!config) missingDeps.push('config');
         if (!logger) missingDeps.push('logger');
@@ -61,6 +61,8 @@ class Kythia {
         this.helpers = helpers;
         this.utils = utils;
 
+        this.redis = redis;
+
         this.logger = logger;
         this.translator = translator;
         this.container = {
@@ -68,7 +70,7 @@ class Kythia {
             sequelize: null,
             logger: this.logger,
             t: this.translator.t,
-            redis: null,
+            redis: this.redis,
             kythiaConfig: this.kythiaConfig,
             translator: this.translator,
 
@@ -373,7 +375,7 @@ class Kythia {
 
             // 1. Initialize Redis cache
             this.logger.info('▬▬▬▬▬▬▬▬▬▬▬▬▬▬[ Initialize Cache ]▬▬▬▬▬▬▬▬▬▬▬▬▬▬');
-            this.container.redis = KythiaModel.initialize(this.kythiaConfig.db.redis);
+            // this.container.redis = KythiaModel.initialize(this.kythiaConfig.db.redis);
 
             // 2. Create AddonManager and load addons
             this.logger.info('▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬[ Kythia Addons ]▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬');
@@ -382,7 +384,10 @@ class Kythia {
 
             // 3. Initialize database (will use dbReadyHooks that were populated during addon loading)
             this.logger.info('▬▬▬▬▬▬▬▬▬▬▬▬▬▬[ Load KythiaORM ]▬▬▬▬▬▬▬▬▬▬▬▬▬▬');
-            const sequelize = await KythiaORM(this);
+            const sequelize = await KythiaORM({
+                kythiaInstance: this,
+                ...this.dbDependencies, // <-- Oper semua (sequelize, KythiaModel, logger, config)
+            });
             this.container.sequelize = sequelize;
 
             // 5. Create and initialize EventManager

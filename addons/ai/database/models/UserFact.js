@@ -8,7 +8,7 @@
 
 const { DataTypes } = require('sequelize');
 const KythiaModel = require('@src/database/KythiaModel');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 
 class UserFact extends KythiaModel {
     static CACHE_KEYS = [['userId']];
@@ -52,5 +52,5 @@ class UserFact extends KythiaModel {
     }
 }
 
-UserFact.init(sequelize);
+// UserFact.init(sequelize);
 module.exports = UserFact;

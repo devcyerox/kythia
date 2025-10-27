@@ -45,7 +45,7 @@ class InteractionManager {
         this.commandCategoryMap = handlers.commandCategoryMap;
         this.categoryToFeatureMap = handlers.categoryToFeatureMap;
 
-        this.kythiaConfig = this.container.config;
+        this.kythiaConfig = this.container.kythiaConfig;
         this.models = this.container.models;
         this.helpers = this.container.helpers;
 

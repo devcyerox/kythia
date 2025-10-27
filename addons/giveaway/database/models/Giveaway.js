@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize'); // Adjust connection string
+// const sequelize = require('@src/database/KythiaSequelize'); // Adjust connection string
 const KythiaModel = require('@src/database/KythiaModel'); // Import KythiaModel
 
 // Extend Giveaway dengan KythiaModel
@@ -40,6 +40,6 @@ class Giveaway extends KythiaModel {
     }
 }
 
-Giveaway.init(sequelize);
+// Giveaway.init(sequelize);
 
 module.exports = Giveaway;

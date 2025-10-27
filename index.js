@@ -85,6 +85,17 @@ const translator = require('@coreHelpers/translator');
 const { isTeam, isOwner } = require('@coreHelpers/discord');
 const ServerSetting = require('@coreModels/ServerSetting');
 const KythiaVoter = require('@coreModels/KythiaVoter');
+
+const Redis = require('ioredis');
+// const redisClient = kythiaConfig.db.redis ? new Redis(kythiaConfig.db.redis, { lazyConnect: true }) : null;
+const redisClient = new Redis(kythiaConfig.db.redis, { lazyConnect: true });
+
+const createSequelizeInstance = require('@src/database/KythiaSequelize');
+const sequelize = createSequelizeInstance(kythiaConfig, logger); // <-- Suntik config & logger
+
+const KythiaModel = require('./src/database/KythiaModel');
+KythiaModel.setDependencies({ logger, config: kythiaConfig, redis: redisClient });
+
 // 3. Load Kelas Utama
 const Kythia = require('./src/Kythia');
 
@@ -92,6 +103,7 @@ const dependencies = {
     config: kythiaConfig,
     logger: logger,
     translator: translator,
+    redis: redisClient,
     models: { ServerSetting, KythiaVoter },
     helpers: {
         discord: { isTeam, isOwner },
@@ -101,6 +113,12 @@ const dependencies = {
 // 5. Jalankan Aplikasi
 try {
     const kythiaInstance = new Kythia(dependencies);
+    kythiaInstance.dbDependencies = {
+        sequelize,
+        KythiaModel,
+        logger,
+        config: kythiaConfig,
+    };
     kythiaInstance.start();
 } catch (error) {
     const log = logger || console;

@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class KythiaSetting extends KythiaModel {
@@ -27,6 +27,6 @@ class KythiaSetting extends KythiaModel {
     }
 }
 
-KythiaSetting.init(sequelize);
+// KythiaSetting.init(sequelize);
 
 module.exports = KythiaSetting;

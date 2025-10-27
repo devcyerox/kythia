@@ -7,11 +7,12 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class User extends KythiaModel {
     static CACHE_KEYS = [['userId', 'guildId']];
+    static customInvalidationTags = ['User:leaderboard'];
     static init(sequelize) {
         super.init(
             {
@@ -35,6 +36,6 @@ class User extends KythiaModel {
     }
 }
 
-User.init(sequelize);
+// User.init(sequelize);
 
 module.exports = User;

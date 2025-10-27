@@ -4,7 +4,7 @@
  * @file src/database/KythiaORM.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.9-beta-rc.5
+ * @version 1.0.0
  *
  * @description
  * A utility for intelligent, hash-based syncing of Sequelize models.
@@ -17,9 +17,6 @@
  * - No destructive operations; only additive/compatible changes are auto-applied.
  * - Detailed logging for each sync operation.
  */
-const sequelize = require('./KythiaSequelize');
-const KythiaModel = require('./KythiaModel');
-const logger = require('@coreHelpers/logger');
 const readline = require('readline');
 const crypto = require('crypto');
 const path = require('path');
@@ -76,15 +73,15 @@ function generateModelHash(model) {
         })
         .join(',');
 
-    const associations = Object.values(model.associations)
-        .sort((a, b) => a.as.localeCompare(b.as))
+    const associations = Object.values(model.associations || {})
+        .sort((a, b) => (a.as || '').localeCompare(b.as || ''))
         .map((assoc) => `${assoc.associationType}:${assoc.as}:${assoc.target.name}:${assoc.foreignKey}`)
         .join(',');
 
     const indexes = (model.options.indexes || [])
         .sort((a, b) => (a.name || '').localeCompare(b.name || ''))
         .map((idx) => {
-            const fields = idx.fields.join(',');
+            const fields = Array.isArray(idx.fields) ? idx.fields.join(',') : '';
             return `${idx.name || fields}:${fields}:${!!idx.unique}`;
         })
         .join(',');
@@ -114,8 +111,10 @@ function generateModelHash(model) {
  *   This allows the system to support modular, pluggable features (addons) with their own database models.
  *
  * @param {string} rootDir - The root directory of the project.
+ * @param {Object} sequelize - Sequelize instance
+ * @param {Object} logger - Logger instance
  */
-function loadAllAddonModels(rootDir) {
+function loadAllAddonModels(rootDir, sequelize, logger) {
     const addonsDir = path.join(rootDir, 'addons');
     if (!fs.existsSync(addonsDir)) return;
 
@@ -131,8 +130,17 @@ function loadAllAddonModels(rootDir) {
             const files = fs.readdirSync(modelsDir).filter((file) => file.endsWith('.js'));
             for (const file of files) {
                 const modelPath = path.join(modelsDir, file);
-                logger.info(`  └─> Initializing model: ${file}`);
-                require(modelPath);
+                try {
+                    const modelClass = require(modelPath);
+                    if (modelClass && typeof modelClass.init === 'function') {
+                        modelClass.init(sequelize);
+                        logger.info(`  └─> Initialized model: ${file}`);
+                    } else {
+                        logger.warn(`  └─> File ${file} is not a valid model, skipping init.`);
+                    }
+                } catch (err) {
+                    logger.error(`  └─> ❌ Failed to load or init model: ${file}`, err);
+                }
             }
         }
     }
@@ -140,20 +148,24 @@ function loadAllAddonModels(rootDir) {
 
 /**
  * Helper: Interactive prompt for production force sync
+ * @param {Array<string>} changedModels - Array of model names that will be synced
+ * @param {Object} logger - Logger instance
  * @returns {Promise<boolean>}
  */
-function askForProductionSyncConfirmation(changedModels) {
-    return new Promise((resolve) => {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
+async function askForProductionSyncConfirmation(changedModels, logger) {
+    const readline = require('readline');
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
 
+    return new Promise((resolve) => {
         logger.warn('\n==================== 🚨 PRODUCTION WARNING 🚨 ====================');
-        logger.warn(`Database schema for [${changedModels}] is OUT OF DATE.`);
+        logger.warn(`Database schema for [${changedModels.join(', ')}] is OUT OF DATE.`);
         logger.warn('You are about to ALTER tables in PRODUCTION.');
         logger.warn('This operation may be risky. Please ensure you have a backup.');
         logger.warn('==================================================================');
+
         rl.question('Do you want to continue with force sync? (y/N): ', (answer) => {
             rl.close();
             const normalized = answer.trim().toLowerCase();
@@ -169,15 +181,19 @@ function askForProductionSyncConfirmation(changedModels) {
 
 /**
  * Helper: Interactive prompt for destructive changes (column removal)
+ * @param {string} modelName - Name of the model with potential destructive changes
+ * @param {Array<string>} droppedColumns - Array of column names that would be dropped
+ * @param {Object} logger - Logger instance
  * @returns {Promise<boolean>}
  */
-function askForDestructiveChangeConfirmation(modelName, droppedColumns) {
-    return new Promise((resolve) => {
-        const rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout,
-        });
+async function askForDestructiveChangeConfirmation(modelName, droppedColumns, logger) {
+    const readline = require('readline');
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+    });
 
+    return new Promise((resolve) => {
         logger.error(`\n==================== ⚠️ DANGEROUS CHANGE WARNING ⚠️ ====================`);
         logger.error(`Model '${modelName}' detected potential COLUMN REMOVAL:`);
         logger.error(` -> ${droppedColumns.join(', ')}`);
@@ -187,6 +203,7 @@ function askForDestructiveChangeConfirmation(modelName, droppedColumns) {
         logger.error('1. If this is a mistake, fix your model file to include these columns.');
         logger.error('2. If you are SURE you want to remove these columns, you can continue, but data will be lost.');
         logger.error('================================================================================\n');
+
         rl.question('Do you want to continue with this destructive change? (y/N): ', (answer) => {
             rl.close();
             const normalized = answer.trim().toLowerCase();
@@ -209,41 +226,110 @@ function askForDestructiveChangeConfirmation(modelName, droppedColumns) {
  * proses akan berhenti dengan pesan error yang jelas, atau bertanya ke user jika di production.
  *
  * @param {import('sequelize').ModelCtor} model - Model Sequelize yang akan dicek.
+ * @param {Object} sequelize - Sequelize instance
+ * @param {Object} logger - Logger instance
+ * @param {Object} config - Application config
  * @returns {Promise<boolean>} - true jika aman lanjut, false jika user abort.
  */
-async function checkForDestructiveChanges(model) {
-    const isProduction = kythia.env === 'production';
+// async function checkForDestructiveChanges(model, sequelize, logger, config) {
+//     const queryInterface = sequelize.getQueryInterface();
+//     const tableName = model.getTableName();
+//     const tableNameStr = typeof tableName === 'string' ? tableName : tableName.tableName;
+
+//     try {
+//         // Dapatkan daftar kolom dari database
+//         const [dbColumns] = await queryInterface.describeTable(tableNameStr);
+//         const dbColumnNames = Object.keys(dbColumns);
+
+//         // Dapatkan daftar kolom dari model
+//         const modelColumnNames = Object.keys(model.rawAttributes);
+
+//         // Cek kolom yang ada di DB tapi tidak ada di model
+//         const droppedColumns = dbColumnNames.filter(col => !modelColumnNames.includes(col));
+
+//         if (droppedColumns.length > 0) {
+//             // Di production, tanyakan konfirmasi
+//             if (config.env === 'production') {
+//                 return await askForDestructiveChangeConfirmation(model.name, droppedColumns, logger);
+//             } else {
+//                 // Di development, tampilkan peringatan tapi lanjutkan
+//                 logger.warn(`\n⚠️  WARNING: Model '${model.name}' has ${droppedColumns.length} columns in DB that are not in the model.`);
+//                 logger.warn('This could cause data loss if columns are removed. Columns:', droppedColumns.join(', '));
+//                 return true;
+//             }
+//         }
+
+//         return true; // Aman untuk lanjut
+//     } catch (error) {
+//         // Tabel belum ada, tidak ada perubahan destruktif yang perlu dikhawatirkan
+//         if (error.name === 'SequelizeDatabaseError' && error.original?.code === '42P01') {
+//             logger.info(` -> Table '${tableNameStr}' not found, will be created.`);
+//             return true;
+//         }
+
+//         // Error lainnya, log dan hentikan
+//         logger.error(`❌ Error checking for destructive changes on ${model.name}:`, error);
+//         return false;
+//     }
+// }
+/**
+ * 🚨 Safety Net: Pengecekan Perubahan Destruktif
+ *
+ * (Deskripsi biarin aja)
+ *
+ * @param {import('sequelize').ModelCtor} model - Model Sequelize yang akan dicek.
+ * @param {Object} sequelize - Sequelize instance
+ * @param {Object} logger - Logger instance
+ * @param {Object} config - Application config
+ * @returns {Promise<boolean>} - true jika aman lanjut, false jika user abort.
+ */
+async function checkForDestructiveChanges(model, sequelize, logger, config) {
     const queryInterface = sequelize.getQueryInterface();
     const tableName = model.getTableName();
+    const tableNameStr = typeof tableName === 'string' ? tableName : tableName.tableName;
 
     try {
-        const dbSchema = await queryInterface.describeTable(tableName);
-        const dbColumns = Object.keys(dbSchema);
-        const modelColumns = new Set(Object.keys(model.rawAttributes));
-        const droppedColumns = dbColumns.filter((col) => !modelColumns.has(col));
+        // Dapatkan daftar kolom dari database
+        // ⬇️ FIX 1: Hapus destructuring array '[]'
+        const dbSchema = await queryInterface.describeTable(tableNameStr);
+        const dbColumnNames = Object.keys(dbSchema);
 
-        if (isProduction && droppedColumns.length > 0) {
-            const proceed = await askForDestructiveChangeConfirmation(model.name, droppedColumns);
-            if (!proceed) {
-                process.exit(1);
+        // Dapatkan daftar kolom dari model
+        const modelColumnNames = Object.keys(model.rawAttributes);
+
+        // Cek kolom yang ada di DB tapi tidak ada di model
+        const droppedColumns = dbColumnNames.filter((col) => !modelColumnNames.includes(col));
+
+        if (droppedColumns.length > 0) {
+            // Di production, tanyakan konfirmasi
+            if (config.env === 'production') {
+                logger.warn(`PERINGATAN PRODUKSI: Terdeteksi potensi penghapusan kolom di model ${model.name}.`);
+                return await askForDestructiveChangeConfirmation(model.name, droppedColumns, logger);
+            } else {
+                // Di development, tampilkan peringatan tapi lanjutkan
+                logger.warn(`\n⚠️  WARNING: Model '${model.name}' has ${droppedColumns.length} columns in DB that are not in the model.`);
+                logger.warn('This could cause data loss if columns are removed. Columns:', droppedColumns.join(', '));
+                return true;
             }
         }
 
-        return true;
+        return true; // Aman untuk lanjut
     } catch (error) {
+        // ⬇️ FIX 2: Bikin logic 'catch' yang bener buat MySQL dan Postgres
         const isTableNotFoundError =
-            (error.name === 'SequelizeDatabaseError' && error.original && error.original.code === 'ER_NO_SUCH_TABLE') ||
-            (typeof error.message === 'string' && error.message.match(/table.*?doesn't exist/i)) ||
-            (typeof error.message === 'string' && error.message.match(/^No description found for/i));
+            (error.name === 'SequelizeDatabaseError' && error.original?.code === 'ER_NO_SUCH_TABLE') || // MySQL
+            (error.name === 'SequelizeDatabaseError' && error.original?.code === '42P01') || // Postgres
+            (typeof error.message === 'string' && error.message.match(/table.*?doesn't exist/i)) || // SQLite/Generic
+            (typeof error.message === 'string' && error.message.match(/^No description found for/i)); // Error Sequelize lain
 
         if (isTableNotFoundError) {
-            logger.info(` -> Table '${tableName}' not found, will be created.`);
-
+            logger.info(` -> Table '${tableNameStr}' not found, will be created.`);
             return true;
         }
 
-        logger.error(`❌ Error when checking for destructive changes in model '${model.name}':`, error);
-        throw error;
+        // Error lainnya, log dan hentikan
+        logger.error(`❌ Error checking for destructive changes on ${model.name}:`, error.message);
+        return false; // Ini yang bikin "Aborting sync"
     }
 }
 
@@ -272,48 +358,65 @@ async function checkForDestructiveChanges(model) {
  * - **Why:**
  *   This approach minimizes risk in production, speeds up development, and makes schema management more robust.
  *
- * @param {object} [options] - Options for the sync.
- * @param {boolean} [options.force=false] - Force sync in production mode.
+ * @param {Object} params - Parameters
+ * @param {Object} params.kythiaInstance - The main Kythia instance
+ * @param {Object} params.sequelize - Sequelize instance
+ * @param {Object} params.KythiaModel - KythiaModel class
+ * @param {Object} params.logger - Logger instance
+ * @param {Object} params.config - Application config
+ * @param {Object} [options] - Options for the sync
+ * @param {boolean} [options.force=false] - Force sync in production mode
+ * @returns {Promise<Object>} - Sequelize instance
  */
-async function KythiaORM(kythiaInstance, options = {}) {
+async function KythiaORM({ kythiaInstance, sequelize, KythiaModel, logger, config }, options = {}) {
     try {
         const rootDir = path.join(__dirname, '..', '..');
-        loadAllAddonModels(rootDir);
+
+        // Load all addon models with dependency injection
+        loadAllAddonModels(rootDir, sequelize, logger);
 
         logger.info('↔️ Performing model associations from ready hooks...');
 
-        for (const hook of kythiaInstance.dbReadyHooks) {
-            try {
-                hook(sequelize);
-            } catch (error) {
-                logger.error('Failed to execute an association hook:', error);
+        // Run any registered dbReadyHooks
+        if (Array.isArray(kythiaInstance?.dbReadyHooks)) {
+            for (const hook of kythiaInstance.dbReadyHooks) {
+                if (typeof hook === 'function') {
+                    await hook(sequelize);
+                }
             }
         }
-        logger.info('✅ All model associations performed.');
 
-        KythiaModel.attachHooksToAllModels(sequelize, kythiaInstance.client);
+        // Attach hooks to all models that extend KythiaModel
+        if (kythiaInstance?.client) {
+            KythiaModel.attachHooksToAllModels(sequelize, kythiaInstance.client);
+        } else {
+            logger.warn('🟠 No client instance provided, skipping model hooks attachment');
+        }
 
-        const isProduction = kythia.env === 'production';
+        const isProduction = config.env === 'production';
         const shouldReset = process.argv.includes('--db-reset');
 
         // --- CHECK AND CREATE DATABASE IF NOT EXISTS ---
         try {
-            // Only do this check for MySQL or MariaDB; for SQLite this is not needed.
-            const dialect = (kythia.db.driver || '').toLowerCase();
+            const dialect = (config.db?.driver || '').toLowerCase();
             if (dialect === 'mysql' || dialect === 'mariadb') {
-                const dbName = kythia.db.name;
-                // Create a temporary connection to MySQL WITHOUT selecting the database
+                const dbName = config.db?.name || process.env.DB_NAME;
                 const { Sequelize } = require('sequelize');
-                const tempSequelize = new Sequelize('', kythia.db.user, kythia.db.password, {
-                    host: kythia.db.host,
-                    port: kythia.db.port,
-                    dialect,
-                    logging: false,
-                    dialectOptions: kythia.db.dialectOptions,
-                    socketPath: kythia.db.socketPath,
-                });
+                const tempSequelize = new Sequelize(
+                    '',
+                    config.db?.user || process.env.DB_USER,
+                    config.db?.password || process.env.DB_PASSWORD,
+                    {
+                        host: config.db?.host || process.env.DB_HOST,
+                        port: config.db?.port || process.env.DB_PORT,
+                        dialect,
+                        logging: false,
+                        dialectOptions:
+                            config.db?.dialectOptions || (process.env.DB_DIALECT_OPTIONS ? JSON.parse(process.env.DB_DIALECT_OPTIONS) : {}),
+                        socketPath: config.db?.socketPath || process.env.DB_SOCKET_PATH,
+                    }
+                );
 
-                // Try to create the database if it does not exist
                 await tempSequelize.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
                 await tempSequelize.close();
                 logger.info(`🗄️ Ensured database "${dbName}" exists.`);
@@ -322,103 +425,114 @@ async function KythiaORM(kythiaInstance, options = {}) {
             logger.error('❌ Failed to create/check database existence:', dbCreateError);
             throw dbCreateError;
         }
-        // --- END CHECK AND CREATE DATABASE IF NOT EXISTS ---
 
-        // --- INI DIA KUNCI PENGAMANNYA ---
-        if (!isProduction && shouldReset) {
-            logger.warn('==================== 🔥 DATABASE RESET 🔥 ====================');
-            logger.warn('`--db-reset` flag detected in development mode.');
-            logger.warn('ALL TABLES will be dropped and recreated.');
-            logger.warn('===============================================================');
-
-            // Tanya konfirmasi sekali lagi biar aman
-            const proceed = await new Promise((resolve) => {
-                const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
-                rl.question('Are you sure you want to reset the database? (y/N): ', (answer) => {
-                    rl.close();
-                    resolve(answer.toLowerCase() === 'y');
-                });
-            });
-
-            if (proceed) {
-                logger.info('☢️ Dropping all tables and recreating schema...');
-                await sequelize.sync({ force: true });
-                logger.info('✅ Database has been completely reset.');
-            } else {
-                logger.error('❌ Database reset aborted by user.');
-                process.exit(0);
+        // --- RESET LOGIC (if --db-reset flag is passed) ---
+        if (shouldReset) {
+            if (isProduction && !options.force) {
+                logger.error('❌ Cannot reset database in production without --force flag');
+                process.exit(1);
             }
+
+            logger.warn('🔄 Resetting database...');
+            await sequelize.sync({ force: true });
+            logger.info('✅ Database reset complete.');
+            return sequelize;
         }
-        // --- SELESAI BLOK PENGAMAN ---
 
-        const versionTable = 'model_versions';
+        // --- VERSIONED SYNC LOGIC ---
+        const versionTableName = 'model_versions';
+        const versionTableExists = await sequelize
+            .getQueryInterface()
+            .showAllTables()
+            .then((tables) => tables.includes(versionTableName));
 
-        await sequelize.query(`CREATE TABLE IF NOT EXISTS ${versionTable} (
-            model_name VARCHAR(255) PRIMARY KEY,
-            hash VARCHAR(50) NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )`);
+        if (!versionTableExists) {
+            logger.info('🆕 Creating model_versions table...');
+            await sequelize.getQueryInterface().createTable(versionTableName, {
+                model_name: {
+                    type: sequelize.Sequelize.STRING,
+                    primaryKey: true,
+                },
+                version_hash: {
+                    type: sequelize.Sequelize.STRING(10),
+                    allowNull: false,
+                },
+                updated_at: {
+                    type: sequelize.Sequelize.DATE,
+                    allowNull: false,
+                    defaultValue: sequelize.Sequelize.literal('CURRENT_TIMESTAMP'),
+                },
+            });
+        }
 
-        const [dbVersions] = await sequelize.query(`SELECT model_name, hash FROM ${versionTable}`);
-        const dbVersionsMap = new Map(dbVersions.map((row) => [row.model_name, row.hash]));
+        // Get stored versions for each model
+        const dbVersions = await sequelize.query(
+            `SELECT model_name, version_hash FROM ${versionTableName}`,
+            { type: sequelize.QueryTypes.SELECT }
+        );
 
-        const modelsToSync = [];
+        const dbVersionsMap = new Map(dbVersions?.map((v) => [v.model_name, v.version_hash]) || []);
         const allModels = Object.values(sequelize.models);
+        const modelsToSync = [];
+        const changedModels = [];
 
+        // Check each model for changes
         for (const model of allModels) {
             const newHash = generateModelHash(model);
             const currentHash = dbVersionsMap.get(model.name);
 
             if (newHash !== currentHash) {
-                const safe = await checkForDestructiveChanges(model);
+                // Check for destructive changes
+                const safe = await checkForDestructiveChanges(model, sequelize, logger, config);
                 if (!safe) {
-                    continue;
+                    logger.error(`❌ Aborting sync due to destructive changes in ${model.name}`);
+                    process.exit(1);
                 }
                 modelsToSync.push({ model, newHash });
+                changedModels.push(model.name);
             }
         }
 
         if (modelsToSync.length > 0) {
-            const changedModels = modelsToSync.map((m) => m.model.name).join(', ');
-            logger.warn(`🔄  Schema change detected for models: ${changedModels}`);
+            logger.info(`🔄 ${changedModels.length} models need sync: ${changedModels.join(', ')}`);
 
+            // In production, require confirmation
             if (isProduction && !options.force) {
-                const proceed = await askForProductionSyncConfirmation(changedModels);
+                const proceed = await askForProductionSyncConfirmation(changedModels, logger);
                 if (!proceed) {
                     process.exit(1);
                 }
             }
 
-            logger.info(
-                `[${isProduction ? (options.force ? 'FORCED SYNC' : 'PRODUCTION SYNC') : 'DEV MODE'}] Syncing ${modelsToSync.length} model(s)...`
-            );
-
+            // Sync each changed model
             for (const { model, newHash } of modelsToSync) {
-                logger.info(`  -> Syncing ${model.name}...`);
+                logger.info(`🔄 Syncing model: ${model.name}...`);
                 await model.sync({ alter: true });
 
+                // Update hash in database
                 await sequelize.query(
-                    `INSERT INTO ${versionTable} (model_name, hash) VALUES (?, ?)
-                     ON DUPLICATE KEY UPDATE hash = ?`,
-                    { replacements: [model.name, newHash, newHash] }
+                    `INSERT INTO ${versionTableName} (model_name, version_hash, updated_at) 
+                        VALUES (?, ?, CURRENT_TIMESTAMP) 
+                        ON DUPLICATE KEY UPDATE 
+                        version_hash = VALUES(version_hash), updated_at = CURRENT_TIMESTAMP`,
+                    {
+                        replacements: [model.name, newHash],
+                        type: sequelize.QueryTypes.INSERT,
+                    }
                 );
+
+                logger.info(`✅ Synced model: ${model.name} (${newHash})`);
             }
-            logger.info('✅ Database successfully synced!');
+
+            logger.info('✨ Database sync completed successfully!');
         } else {
             logger.info('💾 All model schemas are up to date.');
         }
 
         return sequelize;
     } catch (err) {
-        if (err && typeof err.message === 'string' && err.message.match(/^No description found for "?(.+?)"? table/i)) {
-            logger.error(
-                '❌ An error occurred during the smart sync process: ' +
-                    err.message +
-                    ' Check the table name and schema; remember, they _are_ case sensitive.'
-            );
-        } else {
-            logger.error('❌ An error occurred during the smart sync process:', err);
-        }
+        logger.error('❌ Error during database sync:', err);
+        throw err;
     }
 }
 

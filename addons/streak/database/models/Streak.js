@@ -7,10 +7,11 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class Streak extends KythiaModel {
+    static customInvalidationTags = ['Streak:leaderboard'];
     static init(sequelize) {
         super.init(
             {
@@ -33,6 +34,6 @@ class Streak extends KythiaModel {
     }
 }
 
-Streak.init(sequelize);
+// Streak.init(sequelize);
 
 module.exports = Streak;

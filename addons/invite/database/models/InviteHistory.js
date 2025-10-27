@@ -8,7 +8,7 @@
 
 // file: src/database/models/InviteHistory.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class InviteHistory extends KythiaModel {
@@ -34,5 +34,5 @@ class InviteHistory extends KythiaModel {
     }
 }
 
-InviteHistory.init(sequelize);
+// InviteHistory.init(sequelize);
 module.exports = InviteHistory;

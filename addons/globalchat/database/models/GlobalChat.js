@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class GlobalChat extends KythiaModel {
@@ -31,6 +31,6 @@ class GlobalChat extends KythiaModel {
     }
 }
 
-GlobalChat.init(sequelize);
+// GlobalChat.init(sequelize);
 
 module.exports = GlobalChat;

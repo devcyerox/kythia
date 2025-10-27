@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize');
+// const sequelize = require('@src/database/KythiaSequelize');
 const KythiaModel = require('@src/database/KythiaModel');
 
 class MarketOrder extends KythiaModel {
@@ -35,5 +35,5 @@ class MarketOrder extends KythiaModel {
     }
 }
 
-MarketOrder.init(sequelize);
+// MarketOrder.init(sequelize);
 module.exports = MarketOrder;

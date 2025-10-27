@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('@src/database/KythiaSequelize'); // Adjust connection string
+// const sequelize = require('@src/database/KythiaSequelize'); // Adjust connection string
 const KythiaModel = require('@src/database/KythiaModel'); // Import KythiaModel
 
 // Extend Marriage dengan KythiaModel
@@ -35,6 +35,6 @@ class Marriage extends KythiaModel {
     }
 }
 
-Marriage.init(sequelize);
+// Marriage.init(sequelize);
 
 module.exports = Marriage;
