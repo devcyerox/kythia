@@ -31,7 +31,7 @@ const EXCLUDED_CORE_CATEGORIES = [];
 const CATEGORIES_PER_PAGE = 25;
 
 module.exports = {
-    aliases: ['h'],
+    aliases: ['h','ℹ️'],
     data: new SlashCommandBuilder().setName('help').setDescription('💡 Displays a list of bot commands with complete details.'),
 
     async execute(interaction) {

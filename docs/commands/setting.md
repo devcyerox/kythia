@@ -10,7 +10,8 @@
 `/set automod badwords <action> <word>`
 `/set automod badword-whitelist <action> <word>`
 `/set automod exception-channel <action> <channel>`
-`/set automod log-channel <channel>`
+`/set automod mod-log-channel <channel>`
+`/set automod audit-log-channel <channel>`
 `/set automod badwords-list`
 `/set automod badwords-whitelist-list`
 `/set automod exception-channel-list`
@@ -63,6 +64,9 @@
 `/set features anti-spam <status>`
 `/set features anti-badwords <status>`
 `/set features anti-mention <status>`
+`/set features anti-all-caps <status>`
+`/set features anti-emoji-spam <status>`
+`/set features anti-zalgo <status>`
 `/set features server-stats <status>`
 `/set features leveling <status>`
 `/set features adventure <status>`
@@ -120,12 +124,19 @@
 - **`channel*`**
   - **Description:** Channel for exception
   - **Type:** Channel
-**`/set automod log-channel <channel>`**
+**`/set automod mod-log-channel <channel>`**
 > 🔄 Channel to be used for automod logs
 
 **Options for this subcommand:**
 - **`channel*`**
   - **Description:** Select channel for automod logs
+  - **Type:** Channel
+**`/set automod audit-log-channel <channel>`**
+> 🔄 Channel to be used for audit logs
+
+**Options for this subcommand:**
+- **`channel*`**
+  - **Description:** Select channel for audit logs
   - **Type:** Channel
 **`/set automod badwords-list`**
 > View bad words list
@@ -335,6 +346,7 @@
 - **`lang*`**
   - **Description:** Choose language
   - **Type:** Text
+  - **Choices:** `en` (`en`)
 **`/set testimony testimony-channel <channel>`**
 > 💬 Set channel to send testimonies
 
@@ -496,6 +508,30 @@
   - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
 **`/set features anti-mention <status>`**
 > Enable or disable the Anti-Mention feature
+
+**Options for this subcommand:**
+- **`status*`**
+  - **Description:** Select status
+  - **Type:** Text
+  - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
+**`/set features anti-all-caps <status>`**
+> Enable or disable the Anti-All Caps feature
+
+**Options for this subcommand:**
+- **`status*`**
+  - **Description:** Select status
+  - **Type:** Text
+  - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
+**`/set features anti-emoji-spam <status>`**
+> Enable or disable the Anti-Emoji Spam feature
+
+**Options for this subcommand:**
+- **`status*`**
+  - **Description:** Select status
+  - **Type:** Text
+  - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
+**`/set features anti-zalgo <status>`**
+> Enable or disable the Anti-Zalgo feature
 
 **Options for this subcommand:**
 - **`status*`**

@@ -22,6 +22,7 @@ const { t } = require('@coreHelpers/translator');
 const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
+    aliases: ['abt','🌸'],
     data: new SlashCommandBuilder().setName('about').setDescription(`😋 A brief introduction about ${kythia.bot.name}`),
     async execute(interaction) {
         const components = [

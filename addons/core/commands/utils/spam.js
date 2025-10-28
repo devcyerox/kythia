@@ -12,10 +12,10 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('spam')
         .setDescription('💬 Mass send messages to this channel.')
-        .addStringOption((opt) => opt.setName('pesan').setDescription('Message to send').setRequired(true))
+        .addStringOption((opt) => opt.setName('text').setDescription('Message to send').setRequired(true))
         .addIntegerOption((opt) =>
             opt
-                .setName('jumlah')
+                .setName('count')
                 .setDescription('How many times to send the message (max 20)')
                 .setMinValue(1)
                 .setMaxValue(20)
@@ -35,21 +35,21 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply({ ephemeral: true });
 
-        const pesan = interaction.options.getString('pesan');
-        const jumlah = interaction.options.getInteger('jumlah');
+        const text = interaction.options.getString('text');
+        const count = interaction.options.getInteger('count');
         const delay = interaction.options.getInteger('delay') ?? 1000;
 
-        if (pesan.length > 2000) {
+        if (text.length > 2000) {
             return interaction.editReply({ content: await t(interaction, 'core.utils.spam.too.long', { max: 2000 }) });
         }
-        if (jumlah > 20) {
+        if (count > 20) {
             return interaction.editReply({ content: await t(interaction, 'core.utils.spam.too.many', { max: 20 }) });
         }
         if (delay < 250) {
             return interaction.editReply({ content: await t(interaction, 'core.utils.spam.too.fast', { min: 250 }) });
         }
 
-        // Kirim pesan ke channel tempat command dipanggil
+        // Kirim text ke channel tempat command dipanggil
         let sent = 0;
         const channel = interaction.channel;
 
@@ -61,13 +61,13 @@ module.exports = {
             return interaction.editReply({ content: await t(interaction, 'core.utils.spam.no.permission') });
         }
 
-        await interaction.editReply({ content: await t(interaction, 'core.utils.spam.start', { jumlah, delay }) });
+        await interaction.editReply({ content: await t(interaction, 'core.utils.spam.start', { count, delay }) });
 
-        for (let i = 0; i < jumlah; i++) {
+        for (let i = 0; i < count; i++) {
             try {
-                await channel.send(pesan);
+                await channel.send(text);
                 sent++;
-                if (i < jumlah - 1) await sleep(delay);
+                if (i < count - 1) await sleep(delay);
             } catch (err) {
                 break;
             }

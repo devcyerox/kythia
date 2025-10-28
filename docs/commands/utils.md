@@ -218,14 +218,14 @@
 
 ### 💻 Usage
 
-`/spam <pesan> <jumlah> [delay]`
+`/spam <text> <count> [delay]`
 
 ### ⚙️ Options
 
-- **`pesan*`**
+- **`text*`**
   - **Description:** Message to send
   - **Type:** Text
-- **`jumlah*`**
+- **`count*`**
   - **Description:** How many times to send the message (max 20)
   - **Type:** Integer
 - **`delay`**
@@ -285,28 +285,13 @@
   - **Type:** User
 
 
-### 💾 `/donate`
+### 💾 `/vote`
 
-**Description:** 💸 Show donation information or set it (admin only).
+**Description:** ❤️ Vote for Kythia on top.gg!
 
 ### 💻 Usage
 
-`/donate set <description> <image> [role]`
+`/vote`
 
-### 🔧 Subcommands
-
-**`/donate set <description> <image> [<role>]`**
-> Set the donation information (admin only).
-
-**Options for this subcommand:**
-- **`description*`**
-  - **Description:** Donation description or instructions.
-  - **Type:** Text
-- **`image*`**
-  - **Description:** Donation image (QR code, banner, etc).
-  - **Type:** Attachment
-- **`role`**
-  - **Description:** Role to mention for donations (optional).
-  - **Type:** Role
 
 

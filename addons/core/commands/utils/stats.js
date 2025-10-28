@@ -34,13 +34,12 @@ function getGitCommitId() {
                 return head.substring(0, 7);
             }
         }
-    } catch (e) {
-        // ignore errors, just return undefined
-    }
+    } catch (e) {}
     return undefined;
 }
 
 module.exports = {
+    aliases: ['s','📊'],
     data: new SlashCommandBuilder().setName('stats').setDescription(`📊 Displays ${kythia.bot.name} statistics.`),
     async execute(interaction) {
         const { client } = interaction;
@@ -50,7 +49,14 @@ module.exports = {
         const memory = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2);
         const guilds = client.guilds.cache.size;
         const users = client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
-        const node = process.version;
+        let runtimeDisplay;
+        if (process.versions.bun) {
+            runtimeDisplay = `**Bun:** \`${process.versions.bun}\``;
+        } else if (process.versions.deno) {
+            runtimeDisplay = `**Deno:** \`${process.versions.deno}\``;
+        } else {
+            runtimeDisplay = `**Node.js:** \`${process.version}\``;
+        }
         const djs = version;
         const cpu = os.cpus()[0].model;
 
@@ -66,7 +72,7 @@ module.exports = {
             memory,
             guilds,
             users,
-            node,
+            runtime: runtimeDisplay,
             djs,
             cpu,
             botLatency,

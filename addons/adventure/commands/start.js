@@ -34,7 +34,7 @@ module.exports = {
                     )
             );
     },
-    async execute(interaction) {
+    async execute(interaction, container) {
         // Dependency
         const t = container.t;
         const { UserAdventure } = container.sequelize.models;

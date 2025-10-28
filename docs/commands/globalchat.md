@@ -6,12 +6,12 @@
 
 ### 💻 Usage
 
-`/globalchat unset`
+`/globalchat remove`
 `/globalchat setup [channel]`
 
 ### 🔧 Subcommands
 
-**`/globalchat unset`**
+**`/globalchat remove`**
 > Remove this server from the global chat network
 
 

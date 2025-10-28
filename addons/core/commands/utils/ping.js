@@ -236,7 +236,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription("🔍 Checks the bot's, Discord API's, database and cache/redis connection speed."),
-    aliases: ['p', 'pong'],
+    aliases: ['p', 'pong', '🏓'],
     async execute(interaction, container) {
         const { embedContainer, botLatency, apiLatency } = await buildPingEmbed(interaction, container);
 

@@ -22,7 +22,7 @@
 `/music back`
 `/music loop <mode>`
 `/music volume <level>`
-`/music autoplay`
+`/music autoplay [status]`
 `/music filter`
 `/music remove <position>`
 `/music move <from> <to>`
@@ -101,10 +101,14 @@
 - **`level*`**
   - **Description:** Volume level (1-1000)
   - **Type:** Integer
-**`/music autoplay`**
+**`/music autoplay [<status>]`**
 > 🔄 Enable or disable autoplay
 
-
+**Options for this subcommand:**
+- **`status`**
+  - **Description:** Enable or disable autoplay
+  - **Type:** Text
+  - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
 **`/music filter`**
 > 🎧 Apply audio filter (equalizer)
 
