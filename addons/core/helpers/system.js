@@ -7,7 +7,7 @@
  */
 
 const ModLog = require('@coreModels/ModLog');
-const convertColor = require('@src/utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 const { t } = require('@coreHelpers/translator');
 
 async function sendLogsWarning(message, reason, originalContent = null, setting, userId = message.author.id) {

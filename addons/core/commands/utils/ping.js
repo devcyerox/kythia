@@ -18,7 +18,7 @@ const {
     SeparatorSpacingSize,
 } = require('discord.js');
 const { t } = require('@coreHelpers/translator');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 /**
  * Get Lavalink nodes ping/latency information

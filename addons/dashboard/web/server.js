@@ -11,8 +11,8 @@ require('module-alias/register');
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const DiscordStrategy = require('passport-discord').Strategy;
-const CachedSessionStore = require('@utils/session');
-// const sequelize = require('@src/database/KythiaSequelize'); // <--- Hapus, ambil dari container
+const CachedSessionStore = require('./helpers/session');
+// <--- Hapus, ambil dari container
 // const logger = require('@coreHelpers/logger'); // Idealnya dihapus, tapi kita biarin dulu import bawah
 const { Server } = require('socket.io');
 const passport = require('passport');

@@ -7,8 +7,8 @@
  */
 
 const { DataTypes } = require('sequelize');
-// const sequelize = require('@src/database/KythiaSequelize');
-const KythiaModel = require('@src/database/KythiaModel');
+
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 const Playlist = require('./Playlist');
 
 class PlaylistTrack extends KythiaModel {

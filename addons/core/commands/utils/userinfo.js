@@ -20,7 +20,7 @@ const {
 } = require('discord.js');
 const Marriage = require('@addons/fun/database/models/Marriage');
 const { embedFooter } = require('@coreHelpers/discord');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 const { t } = require('@coreHelpers/translator');
 const { Op } = require('sequelize');
 

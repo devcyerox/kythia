@@ -7,8 +7,8 @@
  */
 
 const { DataTypes } = require('sequelize');
-// const sequelize = require('@src/database/KythiaSequelize'); // Adjust connection string
-const KythiaModel = require('@src/database/KythiaModel'); // Import KythiaModel
+// Adjust connection string
+const { KythiaModel } = require('@kenndeclouv/kythia-core'); // Import KythiaModel
 
 // Extend Marriage dengan KythiaModel
 class Marriage extends KythiaModel {

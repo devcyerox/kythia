@@ -7,8 +7,8 @@
  */
 
 const { DataTypes } = require('sequelize');
-// const sequelize = require('@src/database/KythiaSequelize');
-const KythiaModel = require('@src/database/KythiaModel');
+
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 
 class KythiaUser extends KythiaModel {
     static CACHE_KEYS = [['userId']];
@@ -25,7 +25,7 @@ class KythiaUser extends KythiaModel {
 
                 kythiaCoin: { type: DataTypes.BIGINT, defaultValue: 0 },
                 kythiaRuby: { type: DataTypes.BIGINT, defaultValue: 0 },
-                
+
                 kythiaBank: { type: DataTypes.BIGINT, defaultValue: 0 },
                 bankType: { type: DataTypes.STRING, defaultValue: 'solara_mutual' },
                 hackMastered: { type: DataTypes.INTEGER, defaultValue: 10, max: 100 },

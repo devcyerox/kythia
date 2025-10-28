@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const KythiaModel = require('@src/database/KythiaModel');
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 
 class UserFact extends KythiaModel {
     static CACHE_KEYS = [['userId']];

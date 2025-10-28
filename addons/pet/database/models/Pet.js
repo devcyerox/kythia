@@ -7,8 +7,8 @@
  */
 
 const { DataTypes } = require('sequelize');
-// const sequelize = require('@src/database/KythiaSequelize');
-const KythiaModel = require('@src/database/KythiaModel');
+
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 
 class Pet extends KythiaModel {
     static init(sequelizeInstance) {
@@ -20,7 +20,7 @@ class Pet extends KythiaModel {
                     type: DataTypes.ENUM('common', 'rare', 'epic', 'legendary'),
                     defaultValue: 'common',
                 },
-                bonusType: { type: DataTypes.ENUM('coin','ruby'), defaultValue: 'coin' },
+                bonusType: { type: DataTypes.ENUM('coin', 'ruby'), defaultValue: 'coin' },
                 bonusValue: { type: DataTypes.INTEGER, defaultValue: 0 },
             },
             {

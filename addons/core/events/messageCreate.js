@@ -23,7 +23,7 @@ const {
 const StickyMessage = require('@coreModels/StickyMessage');
 const { automodSystem } = require('../helpers/automod');
 const { formatDuration } = require('@coreHelpers/time');
-const convertColor = require('@src/utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 const { isOwner } = require('@coreHelpers/discord');
 const AFK = require('@coreModels/UserAFK');
 const { t } = require('@coreHelpers/translator');

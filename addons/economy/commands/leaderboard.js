@@ -17,7 +17,7 @@ const {
 } = require('discord.js');
 const KythiaUser = require('@coreModels/KythiaUser');
 const { t } = require('@coreHelpers/translator');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 const USERS_PER_PAGE = 10;
 const MAX_USERS = 100;

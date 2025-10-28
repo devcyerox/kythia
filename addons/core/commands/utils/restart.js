@@ -19,7 +19,7 @@ const {
     InteractionContextType,
 } = require('discord.js');
 const { t } = require('@coreHelpers/translator');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
     data: new SlashCommandBuilder().setName('restart').setDescription('🔁 Restarts the bot.').setContexts(InteractionContextType.BotDM),

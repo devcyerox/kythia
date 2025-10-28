@@ -1,6 +1,6 @@
 /**
- * @namespace: src/utils/fonts.js
- * @type: Module
+ * @namespace: addons/core/helpers/fonts.js
+ * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
  * @version 0.9.10-beta
@@ -15,7 +15,7 @@ const fs = require('fs');
  * Safely no-ops when the directory or font files are not present.
  */
 function loadFonts(logger) {
-    const fontsDir = path.join(__dirname, '..', '..', 'addons', 'core', 'assets', 'fonts');
+    const fontsDir = path.join(__dirname, '..', 'assets', 'fonts');
     if (!fs.existsSync(fontsDir)) {
         logger.warn(`🔠 Font directory not found: ${fontsDir}`);
         return;

@@ -7,8 +7,8 @@
  */
 
 const { DataTypes } = require('sequelize');
-// const sequelize = require('@src/database/KythiaSequelize');
-const KythiaModel = require('@src/database/KythiaModel');
+
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 
 class KythiaVoter extends KythiaModel {
     static init(sequelize) {

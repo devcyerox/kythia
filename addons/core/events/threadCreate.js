@@ -8,7 +8,7 @@
 
 const { AuditLogEvent, EmbedBuilder, ChannelType } = require('discord.js');
 const ServerSetting = require('@coreModels/ServerSetting');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 // Human readable channel types
 const channelTypeNames = {

@@ -19,7 +19,7 @@ const {
     MediaGalleryBuilder,
 } = require('discord.js');
 const { t } = require('@coreHelpers/translator');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
     data: new SlashCommandBuilder().setName('about').setDescription(`😋 A brief introduction about ${kythia.bot.name}`),

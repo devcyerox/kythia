@@ -15,7 +15,7 @@ const logger = require('@coreHelpers/logger');
 const fs = require('fs');
 const path = require('path');
 
-const langDir = path.join(__dirname, '../../../src/lang');
+const langDir = path.join(__dirname, '../../lang');
 let availableLanguages = [];
 
 try {

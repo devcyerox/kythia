@@ -14,7 +14,7 @@ const path = require('path');
  * @returns {Array} Array of language objects with name and value
  */
 function getAvailableLanguages() {
-    const langDir = path.join(__dirname, '../../../src/lang');
+    const langDir = path.join(__dirname, '../../core/lang');
     let availableLanguages = [];
 
     try {
@@ -36,11 +36,9 @@ function getAvailableLanguages() {
                     };
                 }
             });
+            console.log(availableLanguages);
     } catch (e) {
-        availableLanguages = [
-            { name: 'English', value: 'en' },
-            { name: 'Indonesian', value: 'id' },
-        ];
+        availableLanguages = [{ name: 'English', value: 'en' }];
     }
 
     return availableLanguages;

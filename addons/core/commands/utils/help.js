@@ -24,7 +24,7 @@ const {
 const fs = require('fs');
 const path = require('path');
 const { t } = require('@coreHelpers/translator');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 const EXCLUDED_ADDONS = [];
 const EXCLUDED_CORE_CATEGORIES = [];

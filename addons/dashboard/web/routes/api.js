@@ -11,9 +11,9 @@ const { ChannelType, MessageFlags, EmbedBuilder } = require('discord.js');
 const parseDiscordMarkdown = require('../helpers/parser');
 const KythiaVoter = require('@coreModels/KythiaVoter');
 const KythiaUser = require('@coreModels/KythiaUser');
-const convertColor = require('@src/utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 const logger = require('@coreHelpers/logger');
-const client = require('@src/KythiaClient');
+const client = require('@kenndeclouv/kythia-core').KythiaClient;
 
 router.get('/api/guilds/:guildId/channels', async (req, res) => {
     try {

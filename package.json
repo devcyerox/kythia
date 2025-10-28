@@ -3,7 +3,10 @@
     "version": "0.9.10-beta",
     "description": "Kythia Hye-Jin! Your sweet, cute, and beautiful companion! ",
     "main": "index.js",
-    "author": "kenndeclouv",
+    "author": {
+        "name": "kenndeclouv",
+        "mail": "kenndeclouv@gmail.com"
+    },
     "license": "EULA",
     "bin": {
         "kythia": "./kythia-cli.js"
@@ -14,6 +17,7 @@
     },
     "dependencies": {
         "@google/genai": "^1.20.0",
+        "@kenndeclouv/kythia-core": "^0.9.0-beta",
         "@sentry/node": "^10.10.0",
         "@sentry/profiling-node": "^10.12.0",
         "async-exit-hook": "^2.0.1",

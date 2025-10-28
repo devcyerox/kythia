@@ -7,8 +7,8 @@
  */
 
 const { DataTypes } = require('sequelize');
-// const sequelize = require('@src/database/KythiaSequelize'); // koneksi sequelize
-const KythiaModel = require('@src/database/KythiaModel');
+// koneksi sequelize
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 
 class ServerSetting extends KythiaModel {
     static CACHE_KEYS = [['guildId']];

@@ -21,7 +21,7 @@ const {
 } = require('discord.js');
 
 const itemsDataFile = require('../helpers/items');
-const convertColor = require('../../../src/utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 const shopData = itemsDataFile.items;
 const allItems = Object.values(shopData).flat();

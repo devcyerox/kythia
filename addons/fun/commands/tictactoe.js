@@ -19,7 +19,7 @@ const {
     MessageFlags,
     EmbedBuilder,
 } = require('discord.js');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 const { t } = require('@coreHelpers/translator');
 
 // ===============================

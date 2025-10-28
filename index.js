@@ -60,34 +60,31 @@
 require('dotenv').config(); // Loads ENV vars to process.env
 const kythiaConfig = require('./kythia.config.js'); // Unified configuration object
 require('module-alias/register'); // Enables @src, @utils, etc. path aliases
+const { Kythia, KythiaModel, createSequelizeInstance } = require('@kenndeclouv/kythia-core');
 
 // ===== 2. Load Core Helpers & Utilities with Meaningful Descriptions =====
 const logger = require('@coreHelpers/logger'); // Logging system (console and ext. sinks)
 const translator = require('@coreHelpers/translator'); // I18n (Internationalization) manager
 const { isTeam, isOwner, embedFooter } = require('@coreHelpers/discord'); // Discord helper funcs for permissions/identity
-
+const { loadFonts } = require('@coreHelpers/fonts');
 // ===== 3. Load Database Models: Sequelize Models =====
-const ServerSetting = require('@coreModels/ServerSetting'); // Guild/server config model
-const KythiaVoter = require('@coreModels/KythiaVoter'); // User voter model (e.g. from Top.gg votes)
+// const ServerSetting = require('@coreModels/ServerSetting'); // Guild/server config model
+// const KythiaVoter = require('@coreModels/KythiaVoter'); // User voter model (e.g. from Top.gg votes)
 
 // ===== 4. Setup Redis Client for caching, queueing, etc =====
 const Redis = require('ioredis');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 // We create a Redis client instance, using the URL in config, in lazy mode (connect on use).
 const redisClient = new Redis(kythiaConfig.db.redis, { lazyConnect: true });
 
 // ===== 5. Setup Sequelize ORM Instance for Relational Database Access =====
-const createSequelizeInstance = require('@src/database/KythiaSequelize');
 // Create a Sequelize instance, provided with config and logger for flex diagnostics
 const sequelize = createSequelizeInstance(kythiaConfig, logger);
 
 // ===== 6. Set Up Models' Internal Dependencies =====
-const KythiaModel = require('./src/database/KythiaModel'); // Main flexible data model
 KythiaModel.setDependencies({ logger, config: kythiaConfig, redis: redisClient }); // Inject utility deps
 
-// ===== 7. Import the Main Kythia Class (the bot's brain/engine) =====
-const Kythia = require('./src/Kythia');
-
-// ===== 8. Collect All Service/Model Deps for Containerized Injection =====
+// ===== 7. Collect All Service/Model Deps for Containerized Injection =====
 /**
  * dependencies:
  *  - config:       Entire config object tree needed by bot internals
@@ -104,13 +101,16 @@ const dependencies = {
     translator: translator,
     redis: redisClient,
     sequelize: sequelize,
-    models: { ServerSetting, KythiaVoter },
+    models: {},
     helpers: {
         discord: { isTeam, isOwner, embedFooter },
+        fonts: { loadFonts },
+        color: { convertColor }
     },
+    appRoot: __dirname,
 };
 
-// ===== 9. Actual Boot Process: Instantiate and Start the Bot =====
+// ===== 8. Actual Boot Process: Instantiate and Start the Bot =====
 try {
     /**
      * kythiaInstance: The live bot instance, receives all dependencies for DI via constructor.

@@ -10,7 +10,7 @@ const { t } = require('@coreHelpers/translator');
 const { embedFooter } = require('@coreHelpers/discord');
 const Marriage = require('../database/models/Marriage');
 const { ContainerBuilder, TextDisplayBuilder, SeparatorBuilder } = require('discord.js');
-const convertColor = require('@utils/color');
+const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
     execute: async (interaction) => {

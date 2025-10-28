@@ -7,7 +7,7 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder, InteractionContextType } = require('discord.js');
-const KythiaModel = require('@src/database/KythiaModel');
+const { KythiaModel } = require('@kenndeclouv/kythia-core');
 const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {

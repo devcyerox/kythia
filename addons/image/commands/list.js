@@ -8,14 +8,18 @@
 
 const { ContainerBuilder, TextDisplayBuilder, SeparatorBuilder, SeparatorSpacingSize, MessageFlags } = require('discord.js');
 
-const convertColor = require('@utils/color');
-const Image = require('../database/models/Image');
-const { t } = require('@coreHelpers/translator');
+// const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+// const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     subcommand: true,
     data: (subcommand) => subcommand.setName('list').setDescription('List all your uploaded images'),
     async execute(interaction) {
+        const { models, helpers, translator, kythiaConfig } = interaction.client.container;
+        const { Image } = models;
+        const { convertColor } = helpers.color;
+        const { t } = translator;
+
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         let images = await Image.getAllCache({
@@ -28,13 +32,13 @@ module.exports = {
         if (!images.length) {
             return interaction.editReply(await t(interaction, 'image.commands.list.empty'));
         }
-        const baseUrl = kythia.addons.dashboard.url || 'https://localhost:3000';
+        const baseUrl = kythiaConfig.addons.dashboard.url || 'https://localhost:3000';
 
         const items = images.map((img) => ({
             code: img.filename,
             url: `${baseUrl}/files/${img.storagePath}`,
         }));
-        const color = convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' });
+        const color = convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' });
 
         const chunkSize = 25;
         for (let i = 0; i < items.length; i += chunkSize) {

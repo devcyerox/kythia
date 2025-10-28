@@ -1,6 +1,6 @@
 /**
- * @namespace: src/utils/session.js
- * @type: Module
+ * @namespace: addons/dashboard/web/helpers/session.js
+ * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
  * @version 0.9.10-beta

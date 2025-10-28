@@ -14,7 +14,7 @@
  */
 const ServerSetting = require('@coreModels/ServerSetting');
 const { Collection } = require('discord.js');
-const logger = require('@coreHelpers/logger');
+const logger = require('./logger');
 const path = require('path');
 const fs = require('fs');
 
@@ -36,7 +36,7 @@ function getLocales() {
  * Loads all JSON language files from `src/lang` into memory.
  */
 function loadLocales() {
-    const langDir = path.join(process.cwd(), 'src', 'lang');
+    const langDir = path.join(__dirname, '..', 'lang');
 
     try {
         if (!fs.existsSync(langDir)) {

@@ -8,9 +8,8 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const Image = require('../database/models/Image');
 const { EmbedBuilder, MessageFlags } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
+// const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     subcommand: true,
@@ -20,6 +19,11 @@ module.exports = {
             .setDescription('Delete an image by its code')
             .addStringOption((option) => option.setName('code').setDescription('The code of the image to delete').setRequired(true)),
     async execute(interaction) {
+        const { models, helpers, translator, kythiaConfig } = interaction.client.container;
+        const { Image } = models;
+        const { convertColor } = helpers.color;
+        const { t } = translator;
+
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         const code = interaction.options.getString('code');
@@ -31,7 +35,7 @@ module.exports = {
 
         if (!image) {
             const embed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setDescription(`${await t(interaction, 'image.delete.not.found.desc')}`);
             return await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
@@ -42,7 +46,7 @@ module.exports = {
         } catch (err) {
             if (err.code !== 'ENOENT') {
                 const embed = new EmbedBuilder()
-                    .setColor(kythia.bot.color)
+                    .setColor(kythiaConfig.bot.color)
                     .setDescription(`${await t(interaction, 'image.delete.error.desc')}`);
                 return await interaction.editReply({ embeds: [embed], ephemeral: true });
             }
@@ -50,7 +54,9 @@ module.exports = {
 
         await image.destroy();
 
-        const embed = new EmbedBuilder().setColor(kythia.bot.color).setDescription(`${await t(interaction, 'image.delete.success.desc')}`);
+        const embed = new EmbedBuilder()
+            .setColor(kythiaConfig.bot.color)
+            .setDescription(`${await t(interaction, 'image.delete.success.desc')}`);
         await interaction.editReply({ embeds: [embed], ephemeral: true });
     },
 };
