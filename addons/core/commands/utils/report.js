@@ -13,9 +13,6 @@ const {
     ApplicationCommandType,
     InteractionContextType,
 } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
-const ServerSetting = require('@coreModels/ServerSetting');
 
 module.exports = {
     slashCommand: new SlashCommandBuilder()
@@ -32,7 +29,11 @@ module.exports = {
 
     contextMenuDescription: '🚨 Report a user to the moderators.',
     guildOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers, models } = container;
+        const { embedFooter } = helpers.discord;
+        const { ServerSetting } = models;
+
         await interaction.deferReply({ ephemeral: true });
         const user = interaction.options.getUser('user') || interaction.targetUser || interaction.user;
         const reason = interaction.options.getString('reason') || (await t(interaction, 'core.utils.report.reason'));

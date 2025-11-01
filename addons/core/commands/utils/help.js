@@ -23,24 +23,24 @@ const {
 } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { t } = require('@coreHelpers/translator');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 const EXCLUDED_ADDONS = [];
 const EXCLUDED_CORE_CATEGORIES = [];
 const CATEGORIES_PER_PAGE = 25;
 
 module.exports = {
-    aliases: ['h','ℹ️'],
+    aliases: ['h', 'ℹ️'],
     data: new SlashCommandBuilder().setName('help').setDescription('💡 Displays a list of bot commands with complete details.'),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { convertColor } = helpers.color;
+
         const rootDir = path.join(__dirname, '..', '..', '..', '..');
         const addonsDir = path.join(rootDir, 'addons');
         const allCategories = [];
         const pages = {};
 
-        let kythiaConfig = kythia;
         const configAddons = kythiaConfig?.addons || {};
 
         function isAddonActive(addonName) {

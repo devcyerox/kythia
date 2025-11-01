@@ -18,19 +18,20 @@ const {
     MessageFlags,
     InteractionContextType,
 } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
     data: new SlashCommandBuilder().setName('restart').setDescription('🔁 Restarts the bot.').setContexts(InteractionContextType.BotDM),
     ownerOnly: true,
-    async execute(interaction) {
-        const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
-        container.addTextDisplayComponents(
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { convertColor } = helpers.color;
+
+        const restartContainer = new ContainerBuilder().setAccentColor(convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }));
+        restartContainer.addTextDisplayComponents(
             new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.confirm.desc'))
         );
-        container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-        container.addActionRowComponents(
+        restartContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+        restartContainer.addActionRowComponents(
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('confirm_restart')
@@ -43,7 +44,7 @@ module.exports = {
             )
         );
 
-        await interaction.reply({ components: [container], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
+        await interaction.reply({ components: [restartContainer], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
 
         const collector = interaction.channel.createMessageComponentCollector({
             filter: (i) => i.user.id === interaction.user.id,
@@ -55,34 +56,38 @@ module.exports = {
             collector.stop('handled');
 
             if (i.customId === 'cancel_restart') {
-                const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
-                container.addTextDisplayComponents(
+                const restartContainer = new ContainerBuilder().setAccentColor(
+                    convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' })
+                );
+                restartContainer.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.cancelled.desc'))
                 );
-                container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-                container.addTextDisplayComponents(
+                restartContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+                restartContainer.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
                         await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
                 try {
-                    await i.update({ components: [container], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
+                    await i.update({ components: [restartContainer], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
                 } catch (err) {
                     // Ignore if already acknowledged
                 }
             } else if (i.customId === 'confirm_restart') {
-                const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
-                container.addTextDisplayComponents(
+                const restartContainer = new ContainerBuilder().setAccentColor(
+                    convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' })
+                );
+                restartContainer.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.restarting.desc'))
                 );
-                container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-                container.addTextDisplayComponents(
+                restartContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+                restartContainer.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
                         await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
                 try {
-                    await i.update({ components: [container], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
+                    await i.update({ components: [restartContainer], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
                 } catch (err) {
                     // Ignore if already acknowledged
                 }
@@ -92,17 +97,19 @@ module.exports = {
 
         collector.on('end', async (collected, reason) => {
             if (reason === 'time') {
-                const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
-                container.addTextDisplayComponents(
+                const restartContainer = new ContainerBuilder().setAccentColor(
+                    convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' })
+                );
+                restartContainer.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.restart.embed.timeout.desc'))
                 );
-                container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-                container.addTextDisplayComponents(
+                restartContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+                restartContainer.addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
                         await t(interaction, 'common.container.footer', { username: interaction.client.user.username })
                     )
                 );
-                await interaction.editReply({ components: [container], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
+                await interaction.editReply({ components: [restartContainer], flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2 });
             }
         });
     },

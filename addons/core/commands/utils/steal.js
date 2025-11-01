@@ -6,8 +6,7 @@
  * @version 0.9.11-beta
  */
 
-const { SlashCommandBuilder, ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
+const { SlashCommandBuilder, ContextMenuCommandBuilder, ApplicationCommandType, PermissionFlagsBits } = require('discord.js');
 
 function parseCustomEmoji(str) {
     // <a:name:id> or <name:id>
@@ -45,7 +44,9 @@ module.exports = {
     permissions: PermissionFlagsBits.ManageEmojisAndStickers,
     botPermissions: PermissionFlagsBits.ManageEmojisAndStickers,
     voteLocked: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t } = container;
+
         // Handle slash command
         if (interaction.isChatInputCommand?.() && interaction.commandName === 'steal') {
             const sub = interaction.options.getSubcommand();

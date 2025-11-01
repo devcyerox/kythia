@@ -7,17 +7,18 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder, InteractionContextType } = require('discord.js');
-const { KythiaModel } = require('@kenndeclouv/kythia-core');
-const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
     data: new SlashCommandBuilder().setName('cache').setDescription('Shows cache statistics.').setContexts(InteractionContextType.BotDM),
     ownerOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         const stats = KythiaModel.cacheStats;
         const embed = new EmbedBuilder()
             .setDescription('## 📊 Cache Engine Statistics')
-            .setColor(kythia.bot.color)
+            .setColor(kythiaConfig.bot.color)
             .addFields(
                 { name: 'Redis Hits', value: stats.redisHits.toString(), inline: false },
                 { name: 'In-Memory Hits', value: stats.mapHits.toString(), inline: false },

@@ -7,7 +7,6 @@
  */
 const { createMockEventArgs } = require('@coreHelpers/events');
 const { SlashCommandBuilder } = require('discord.js');
-const logger = require('@coreHelpers/logger');
 
 const ALL_EVENTS = [
     'messageCreate',
@@ -58,7 +57,9 @@ module.exports = {
                 )
         ),
     ownerOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { logger } = container;
+
         await interaction.deferReply({ ephemeral: true });
 
         const eventName = interaction.options.getString('event');

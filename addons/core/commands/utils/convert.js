@@ -7,11 +7,9 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 const { DateTime } = require('luxon');
 const fetch = require('node-fetch');
-// --- Helper conversion functions (detailed) ---
+
 const lengthUnits = {
     m: 1,
     km: 1000,
@@ -21,9 +19,9 @@ const lengthUnits = {
     cm: 0.01,
     mm: 0.001,
     yd: 0.9144,
-    nm: 1852, // Nautical mile
-    au: 1.496e11, // Astronomical unit
-    ly: 9.461e15, // Light year
+    nm: 1852,
+    au: 1.496e11,
+    ly: 9.461e15,
 };
 
 const massUnits = {
@@ -33,12 +31,12 @@ const massUnits = {
     oz: 0.0283495,
     mg: 0.000001,
     ton: 1000,
-    st: 6.35029, // Stone
-    ct: 0.0002, // Carat
+    st: 6.35029,
+    ct: 0.0002,
     slug: 14.5939,
 };
 
-const tempUnits = ['c', 'f', 'k', 'r', 're']; // Added Rankine and Réaumur
+const tempUnits = ['c', 'f', 'k', 'r', 're'];
 
 const dataUnits = {
     b: 1,
@@ -93,14 +91,14 @@ function convertTemperature(value, from, to) {
     to = to.toLowerCase();
     if (!tempUnits.includes(from) || !tempUnits.includes(to)) return null;
     let c;
-    // Convert from any to Celsius
+
     if (from === 'c') c = value;
     else if (from === 'f') c = ((value - 32) * 5) / 9;
     else if (from === 'k') c = value - 273.15;
     else if (from === 'r') c = ((value - 491.67) * 5) / 9;
     else if (from === 're') c = value * 1.25;
     else return null;
-    // Convert from Celsius to any
+
     let result;
     if (to === 'c') result = c;
     else if (to === 'f') result = (c * 9) / 5 + 32;
@@ -132,7 +130,6 @@ function convertVolume(value, from, to) {
     return value * (volumeUnits[from] / volumeUnits[to]);
 }
 
-// --- Currency conversion (API) ---
 async function convertCurrency(amount, from, to) {
     const accessKey = kythia?.addons?.core?.exchangerateApi;
     const url = `https://api.exchangerate.host/convert?access_key=${encodeURIComponent(accessKey)}&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&amount=${amount}`;
@@ -141,27 +138,22 @@ async function convertCurrency(amount, from, to) {
         res = await fetch(url);
         if (!res.ok) return null;
         data = await res.json();
-        // The valid response must have .result (a number) and optionally .success (true).
+
         if (typeof data.result !== 'number') return null;
         return data.result;
     } catch (err) {
-        // Log error in case there is a bug
-        // eslint-disable-next-line no-console
         console.error('Currency API error:', err);
         return null;
     }
 }
 
-// --- Timezone conversion ---
 function convertTimezone(time, from, to) {
-    // Accepts "10:00", "2024-06-01 10:00", etc.
     let dt = DateTime.fromFormat(time, 'HH:mm', { zone: from });
     if (!dt.isValid) dt = DateTime.fromISO(time, { zone: from });
     if (!dt.isValid) return null;
     return dt.setZone(to);
 }
 
-// --- Supported units for choices ---
 const lengthChoices = [
     { name: 'Meter (m)', value: 'm' },
     { name: 'Kilometer (km)', value: 'km' },
@@ -229,7 +221,6 @@ const volumeChoices = [
     { name: 'Teaspoon (tsp)', value: 'tsp' },
 ];
 
-// --- Timezone choices (partial, for demo) ---
 const timezoneChoices = [
     { name: 'WIB (Asia/Jakarta)', value: 'Asia/Jakarta' },
     { name: 'WITA (Asia/Makassar)', value: 'Asia/Makassar' },
@@ -241,7 +232,6 @@ const timezoneChoices = [
     { name: 'JST (Asia/Tokyo)', value: 'Asia/Tokyo' },
 ];
 
-// --- Currency choices (partial, for demo) ---
 const currencyChoices = [
     { name: 'IDR', value: 'IDR' },
     { name: 'USD', value: 'USD' },
@@ -256,7 +246,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('convert')
         .setDescription('🔄 Convert between units, currencies, timezones, etc.')
-        // Currency
+
         .addSubcommand((sub) =>
             sub
                 .setName('currency')
@@ -277,7 +267,7 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('amount').setDescription('Amount to convert').setRequired(true))
         )
-        // Timezone
+
         .addSubcommand((sub) =>
             sub
                 .setName('timezone')
@@ -298,7 +288,7 @@ module.exports = {
                 )
                 .addStringOption((opt) => opt.setName('time').setDescription('Time (e.g. 10:00 or 2024-06-01 10:00)').setRequired(true))
         )
-        // Length
+
         .addSubcommand((sub) =>
             sub
                 .setName('length')
@@ -319,7 +309,7 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('value').setDescription('Value to convert').setRequired(true))
         )
-        // Mass
+
         .addSubcommand((sub) =>
             sub
                 .setName('mass')
@@ -340,7 +330,7 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('value').setDescription('Value to convert').setRequired(true))
         )
-        // Temperature
+
         .addSubcommand((sub) =>
             sub
                 .setName('temperature')
@@ -361,7 +351,7 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('value').setDescription('Value to convert').setRequired(true))
         )
-        // Data Storage
+
         .addSubcommand((sub) =>
             sub
                 .setName('data')
@@ -382,7 +372,7 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('value').setDescription('Value to convert').setRequired(true))
         )
-        // Area
+
         .addSubcommand((sub) =>
             sub
                 .setName('area')
@@ -403,7 +393,7 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('value').setDescription('Value to convert').setRequired(true))
         )
-        // Volume
+
         .addSubcommand((sub) =>
             sub
                 .setName('volume')
@@ -424,7 +414,11 @@ module.exports = {
                 )
                 .addNumberOption((opt) => opt.setName('value').setDescription('Value to convert').setRequired(true))
         ),
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { convertColor } = helpers.color;
+        const { embedFooter } = helpers.discord;
+
         const sub = interaction.options.getSubcommand();
         await interaction.deferReply();
 
@@ -452,12 +446,10 @@ module.exports = {
                                 to: to,
                             }))
                     )
-                    .setColor(kythia.bot.color)
+                    .setColor(kythiaConfig.bot.color)
                     .setFooter(await embedFooter(interaction));
                 return interaction.editReply({ embeds: [embed] });
             } catch (e) {
-                // Optional: log the error
-                // eslint-disable-next-line no-console
                 console.error('Currency convert error:', e);
                 const embed = new EmbedBuilder().setDescription(await t(interaction, 'core.utils.convert.currency.error')).setColor('Red');
                 return interaction.editReply({ embeds: [embed] });
@@ -485,7 +477,7 @@ module.exports = {
                             to: to,
                         }))
                 )
-                .setColor(kythia.bot.color);
+                .setColor(kythiaConfig.bot.color);
             return interaction.editReply({ embeds: [embed] });
         } else if (sub === 'length') {
             const value = interaction.options.getNumber('value');
@@ -510,7 +502,7 @@ module.exports = {
                             to: to,
                         }))
                 )
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else if (sub === 'mass') {
@@ -536,7 +528,7 @@ module.exports = {
                             to: to,
                         }))
                 )
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else if (sub === 'temperature') {
@@ -562,7 +554,7 @@ module.exports = {
                             to: to.toUpperCase(),
                         }))
                 )
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else if (sub === 'data') {
@@ -588,7 +580,7 @@ module.exports = {
                             to: to.toUpperCase(),
                         }))
                 )
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else if (sub === 'area') {
@@ -602,7 +594,7 @@ module.exports = {
             }
             const embed = new EmbedBuilder()
                 .setDescription('## Area Conversion\n' + `${value} ${from} = ${result} ${to}`)
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else if (sub === 'volume') {
@@ -616,7 +608,7 @@ module.exports = {
             }
             const embed = new EmbedBuilder()
                 .setDescription('## Volume Conversion\n' + `${value} ${from} = ${result} ${to}`)
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setFooter(await embedFooter(interaction));
             return interaction.editReply({ embeds: [embed] });
         } else {

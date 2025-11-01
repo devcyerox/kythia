@@ -7,8 +7,6 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const KythiaTeam = require('@coreModels/KythiaTeam');
-const logger = require('@coreHelpers/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -38,7 +36,11 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     ownerOnly: true,
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers, logger, models } = container;
+        const { convertColor } = helpers.color;
+        const { KythiaTeam } = models;
+        
         await interaction.deferReply();
 
         const subcommandGroup = interaction.options.getSubcommandGroup();

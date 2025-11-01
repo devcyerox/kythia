@@ -5,24 +5,19 @@
  * @assistant chaa & graa
  * @version 0.9.11-beta
  */
-const { EmbedBuilder, version, MessageFlags } = require('discord.js');
+const { EmbedBuilder, version } = require('discord.js');
 const { SlashCommandBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const { formatDuration } = require('@coreHelpers/time');
-const { embedFooter } = require('@coreHelpers/discord');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
 function getKythiaCoreVersion() {
     try {
-        
         const corePkgPath = require.resolve('@kenndeclouv/kythia-core/package.json');
         const pkg = JSON.parse(fs.readFileSync(corePkgPath, 'utf8'));
         return pkg.version;
     } catch {
         try {
-            
             const mainPkgPath = path.join(process.cwd(), 'package.json');
             if (fs.existsSync(mainPkgPath)) {
                 const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, 'utf8'));
@@ -38,10 +33,9 @@ function getKythiaCoreVersion() {
 }
 
 function getGitCommitId() {
-    
     if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA.substring(0, 7);
     if (process.env.COMMIT_SHA) return process.env.COMMIT_SHA.substring(0, 7);
-    
+
     try {
         const gitHeadPath = path.join(process.cwd(), '.git', 'HEAD');
         if (fs.existsSync(gitHeadPath)) {
@@ -63,8 +57,12 @@ function getGitCommitId() {
 
 module.exports = {
     aliases: ['s', '📊'],
-    data: new SlashCommandBuilder().setName('stats').setDescription(`📊 Displays ${kythia.bot.name} statistics.`),
-    async execute(interaction) {
+    data: new SlashCommandBuilder().setName('stats').setDescription(`📊 Displays kythia statistics.`),
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { formatDuration } = helpers.time;
+        const { embedFooter } = helpers.discord;
+
         const { client } = interaction;
 
         const username = interaction.client.user.username;
@@ -85,8 +83,8 @@ module.exports = {
 
         const botLatency = Math.max(0, Date.now() - interaction.createdTimestamp);
         const apiLatency = Math.round(client.ws.ping);
-        const owner = `${kythia.owner.names} (${kythia.owner.ids})`;
-        const kythiaVersion = kythia.version;
+        const owner = `${kythiaConfig.owner.names} (${kythiaConfig.owner.ids})`;
+        const kythiaVersion = kythiaConfig.version;
         const kythiaCoreVersion = getKythiaCoreVersion() || 'N/A';
         const githubCommit = getGitCommitId();
 
@@ -108,7 +106,7 @@ module.exports = {
         });
 
         const embed = new EmbedBuilder()
-            .setColor(kythia.bot.color)
+            .setColor(kythiaConfig.bot.color)
             .setDescription(desc)
             .setThumbnail(client.user.displayAvatarURL())
             .setFooter(await embedFooter(interaction));

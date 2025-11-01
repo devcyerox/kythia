@@ -16,10 +16,7 @@ const {
     PermissionFlagsBits,
     InteractionContextType,
 } = require('discord.js');
-const ServerSetting = require('@coreModels/ServerSetting');
-const logger = require('@coreHelpers/logger');
 
-// Helper function for delay
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = {
@@ -30,11 +27,13 @@ module.exports = {
         .addSubcommand((sub) => sub.setName('container').setDescription('Send a complex announcement by pasting a JSON payload.'))
         .setContexts(InteractionContextType.BotDM),
     ownerOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, models, logger } = container;
+        const { ServerSetting } = models;
+
         const subcommand = interaction.options.getSubcommand();
 
         if (subcommand === 'embed') {
-            // --- FLOW FOR EMBED ---
             const modal = new ModalBuilder()
                 .setCustomId(`announcement-modal-embed_${interaction.user.id}`)
                 .setTitle('📝 Create Embed Announcement');
@@ -78,7 +77,6 @@ module.exports = {
             };
             await this.sendToAllGuilds(modalSubmit, payload);
         } else if (subcommand === 'container') {
-            // --- FLOW FOR CONTAINER (PASTE JSON) ---
             const modal = new ModalBuilder()
                 .setCustomId(`announcement-modal-container_${interaction.user.id}`)
                 .setTitle('📝 Create Container Announcement');

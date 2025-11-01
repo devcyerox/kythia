@@ -6,7 +6,6 @@
  * @version 0.9.11-beta
  */
 const { SlashCommandBuilder, ActivityType, InteractionContextType } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 
 const STATUS_OPTIONS = [
     { name: 'Online', value: 'online' },
@@ -45,7 +44,9 @@ module.exports = {
         )
         .setContexts(InteractionContextType.BotDM),
     ownerOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t } = container;
+
         await interaction.deferReply({ ephemeral: true });
 
         const status = interaction.options.getString('status');

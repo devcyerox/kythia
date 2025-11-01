@@ -6,7 +6,6 @@
  * @version 0.9.11-beta
  */
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,7 +14,9 @@ module.exports = {
         .addStringOption((opt) => opt.setName('name').setDescription('The name of the command to look up').setRequired(true))
         .setContexts(InteractionContextType.BotDM),
     ownerOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t } = container;
+
         await interaction.deferReply({ ephemeral: true });
 
         const input = interaction.options.getString('name');

@@ -14,8 +14,6 @@ const {
     ChannelType,
     InteractionContextType,
 } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,7 +21,10 @@ module.exports = {
         .setDescription('📰 Displays detailed information about the server.')
         .setContexts(InteractionContextType.Guild),
     guildOnly: true,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         const guild = interaction.guild;
 
         // Fetch all data to ensure up-to-date info

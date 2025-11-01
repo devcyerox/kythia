@@ -17,8 +17,6 @@ const {
     SeparatorBuilder,
     SeparatorSpacingSize,
 } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 /**
  * Get Lavalink nodes ping/latency information
@@ -28,7 +26,7 @@ const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 async function getLavalinkNodesPing(client) {
     const nodes = [];
 
-    if (!client.poru || !kythia.addons.music) {
+    if (!client.poru) {
         return nodes;
     }
 
@@ -149,13 +147,15 @@ async function getRedisPing(container) {
 }
 
 async function buildPingEmbed(interaction, container) {
+    const { t, kythiaConfig, helpers } = container;
+    const { convertColor } = helpers.color;
     const botLatency = Math.max(0, Date.now() - interaction.createdTimestamp);
     const apiLatency = Math.round(interaction.client.ws.ping);
     const lavalinkNodes = await getLavalinkNodesPing(interaction.client);
     const dbPingInfo = await getDbPing(container);
     const redisPingInfo = await getRedisPing(container);
 
-    const embedContainer = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
+    const embedContainer = new ContainerBuilder().setAccentColor(convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }));
 
     embedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'core.utils.ping.embed.title')));
     embedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));

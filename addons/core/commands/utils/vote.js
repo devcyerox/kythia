@@ -18,18 +18,19 @@ const {
     MediaGalleryItemBuilder,
     MediaGalleryBuilder,
 } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
     aliases: ['v'],
-    data: new SlashCommandBuilder().setName('vote').setDescription(`❤️ Vote for ${kythia.bot.name} on top.gg!`),
-    async execute(interaction) {
+    data: new SlashCommandBuilder().setName('vote').setDescription(`❤️ Vote for kythia on top.gg!`),
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { convertColor } = helpers.color;
+
         const components = [
             new ContainerBuilder()
-                .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
+                .setAccentColor(convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }))
                 .addMediaGalleryComponents(
-                    new MediaGalleryBuilder().addItems([new MediaGalleryItemBuilder().setURL(kythia.settings.bannerImage)])
+                    new MediaGalleryBuilder().addItems([new MediaGalleryItemBuilder().setURL(kythiaConfig.settings.bannerImage)])
                 )
                 .addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
@@ -48,7 +49,7 @@ module.exports = {
                         new ButtonBuilder()
                             .setStyle(ButtonStyle.Link)
                             .setLabel(await t(interaction, 'core.utils.vote.button.topgg', { username: interaction.client.user.username }))
-                            .setURL(`https://top.gg/bot/${kythia.bot.clientId}/vote`)
+                            .setURL(`https://top.gg/bot/${kythiaConfig.bot.clientId}/vote`)
                     )
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))

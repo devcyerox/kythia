@@ -18,10 +18,6 @@ const {
     ThumbnailBuilder,
     MessageFlags,
 } = require('discord.js');
-const Marriage = require('@addons/fun/database/models/Marriage');
-const { embedFooter } = require('@coreHelpers/discord');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
-const { t } = require('@coreHelpers/translator');
 const { Op } = require('sequelize');
 
 module.exports = {
@@ -37,7 +33,11 @@ module.exports = {
         .setContexts(InteractionContextType.Guild),
 
     contextMenuDescription: '📄 Displays information about a user.',
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers, models } = container;
+        const { convertColor } = helpers.color;
+        const { Marriage } = models;
+
         await interaction.deferReply();
 
         const user = interaction.options.getUser?.('user') || interaction.targetUser || interaction.user;
@@ -136,7 +136,7 @@ module.exports = {
 
         // Build container
         let containerBuilder = new ContainerBuilder()
-            .setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }))
+            .setAccentColor(convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }))
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
                     `## ${await t(interaction, 'core.utils.userinfo.embed.title')}\n${await t(
