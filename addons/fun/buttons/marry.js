@@ -6,14 +6,15 @@
  * @version 0.9.11-beta
  */
 
-const { t } = require('@coreHelpers/translator');
-const { embedFooter } = require('@coreHelpers/discord');
-const Marriage = require('../database/models/Marriage');
 const { ContainerBuilder, TextDisplayBuilder, SeparatorBuilder } = require('discord.js');
+const { t } = require('@coreHelpers/translator');
+const Marriage = require('../database/models/Marriage');
 const convertColor = require('@kenndeclouv/kythia-core').utils.color;
 
 module.exports = {
     execute: async (interaction) => {
+        const container = interaction.client.container;
+        const{t, helpers, models} = container;
         const [prefix, actionType, marriageId] = interaction.customId.split('_');
         if (prefix !== 'marry' || !actionType || !marriageId) return;
 

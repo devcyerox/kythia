@@ -17,14 +17,13 @@ const {
     TextInputBuilder,
     TextInputStyle,
 } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 
-// ... (WORD_LIST, EMOJI, dan fungsi checkGuess & renderGuessRow tetap sama persis)
 const WORD_LIST = kythia.addons.fun.wordle.words;
 const EMOJI_CORRECT = '🟩';
 const EMOJI_PRESENT = '🟨';
 const EMOJI_ABSENT = '⬛';
 const games = {};
+
 function pickRandomWord() {
     return WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
 }
@@ -65,24 +64,22 @@ function renderGuessRow(guess, feedback) {
     return row;
 }
 
-// [DIUBAH] Render board sekarang lebih simpel
 function renderBoard(guesses, answer) {
     let lines = [];
     for (const guess of guesses) {
         const feedback = checkGuess(guess, answer);
         lines.push(renderGuessRow(guess, feedback));
     }
-    // Isi sisa baris yang kosong
+
     while (lines.length < 6) {
         lines.push(`${EMOJI_ABSENT.repeat(5)}  \`     \``);
     }
     return lines.join('\n');
 }
 
-// [BARU] Fungsi untuk membuat embed yang dinamis
 async function buildGameEmbed(interaction, game) {
     let description = renderBoard(game.guesses, game.answer);
-
+    const { t } = interaction.client.container;
     if (game.isOver) {
         if (game.win) {
             description += `\n\n${await t(interaction, 'fun.wordle.win', { answer: game.answer.toUpperCase() })}`;
@@ -102,10 +99,11 @@ async function buildGameEmbed(interaction, game) {
 module.exports = {
     data: new SlashCommandBuilder().setName('wordle').setDescription('🔡 Play Wordle! Guess the 5-letter word in 6 tries.'),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t } = container;
+
         const userId = interaction.user.id;
 
-        // Cek jika sudah ada game berjalan
         if (games[userId] && !games[userId].isOver) {
             const embed = new EmbedBuilder().setColor('#e67e22').setDescription(await t(interaction, 'fun.wordle.already.playing'));
             return interaction.reply({ embeds: [embed], ephemeral: true });
@@ -155,7 +153,6 @@ module.exports = {
                 const modalSubmit = await i.awaitModalSubmit({ time: 60_000 });
                 const guess = modalSubmit.fields.getTextInputValue('wordle_input').toLowerCase();
 
-                // Validasi input
                 if (!isValidWord(guess)) {
                     const embed = new EmbedBuilder()
                         .setColor('#e74c3c')
@@ -172,7 +169,6 @@ module.exports = {
                 await modalSubmit.deferUpdate();
                 game.guesses.push(guess);
 
-                // Cek kondisi menang/kalah
                 if (guess === game.answer) {
                     game.isOver = true;
                     game.win = true;
@@ -182,18 +178,15 @@ module.exports = {
                     collector.stop('lose');
                 }
 
-                // Update embed setelah tebakan
                 const updatedEmbed = await buildGameEmbed(interaction, game);
                 await interaction.editReply({ embeds: [updatedEmbed] });
-            } catch (err) {
-                // User tidak submit modal atau timeout
-            }
+            } catch (err) {}
         });
 
         collector.on('end', async (collected, reason) => {
-            if (!game.isOver) game.isOver = true; // Jika timeout
+            if (!game.isOver) game.isOver = true;
 
-            delete games[userId]; // Hapus game dari memori
+            delete games[userId];
 
             const finalEmbed = await buildGameEmbed(interaction, game);
             const finalRow = new ActionRowBuilder().addComponents(

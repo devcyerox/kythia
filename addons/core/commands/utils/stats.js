@@ -14,11 +14,34 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
+function getKythiaCoreVersion() {
+    try {
+        
+        const corePkgPath = require.resolve('@kenndeclouv/kythia-core/package.json');
+        const pkg = JSON.parse(fs.readFileSync(corePkgPath, 'utf8'));
+        return pkg.version;
+    } catch {
+        try {
+            
+            const mainPkgPath = path.join(process.cwd(), 'package.json');
+            if (fs.existsSync(mainPkgPath)) {
+                const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, 'utf8'));
+                return (
+                    (mainPkg.dependencies && mainPkg.dependencies['@kenndeclouv/kythia-core']) ||
+                    (mainPkg.devDependencies && mainPkg.devDependencies['@kenndeclouv/kythia-core']) ||
+                    null
+                );
+            }
+        } catch {}
+    }
+    return null;
+}
+
 function getGitCommitId() {
-    // Try to get commit id from environment variable (e.g., set by CI/CD)
+    
     if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA.substring(0, 7);
     if (process.env.COMMIT_SHA) return process.env.COMMIT_SHA.substring(0, 7);
-    // Try to read from .git/HEAD and refs
+    
     try {
         const gitHeadPath = path.join(process.cwd(), '.git', 'HEAD');
         if (fs.existsSync(gitHeadPath)) {
@@ -39,7 +62,7 @@ function getGitCommitId() {
 }
 
 module.exports = {
-    aliases: ['s','📊'],
+    aliases: ['s', '📊'],
     data: new SlashCommandBuilder().setName('stats').setDescription(`📊 Displays ${kythia.bot.name} statistics.`),
     async execute(interaction) {
         const { client } = interaction;
@@ -64,6 +87,7 @@ module.exports = {
         const apiLatency = Math.round(client.ws.ping);
         const owner = `${kythia.owner.names} (${kythia.owner.ids})`;
         const kythiaVersion = kythia.version;
+        const kythiaCoreVersion = getKythiaCoreVersion() || 'N/A';
         const githubCommit = getGitCommitId();
 
         const desc = await t(interaction, 'core.utils.stats.embed.desc', {
@@ -79,6 +103,7 @@ module.exports = {
             apiLatency,
             owner,
             kythiaVersion,
+            kythiaCoreVersion,
             githubCommit: githubCommit || 'N/A',
         });
 

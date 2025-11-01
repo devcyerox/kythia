@@ -13,6 +13,7 @@
     },
     "scripts": {
         "start": "node index.js --deploy",
+        "start:bun": "bun index.js --deploy",
         "kythia": "node kythia-cli.js"
     },
     "dependencies": {

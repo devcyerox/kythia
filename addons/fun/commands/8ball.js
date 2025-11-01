@@ -6,8 +6,6 @@
  * @version 0.9.11-beta
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,7 +13,10 @@ module.exports = {
         .setDescription('🔮 Ask the magic 8 ball anything')
         .addStringOption((option) => option.setName('question').setDescription('What do you want to ask?').setRequired(true)),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         const question = interaction.options.getString('question');
 
         // All answers are now keys for translation
@@ -36,7 +37,7 @@ module.exports = {
 
         const thinkingEmbed = new EmbedBuilder()
             .setDescription(await t(interaction, 'fun.8ball.thinking.desc'))
-            .setColor(kythia.bot.color)
+            .setColor(kythiaConfig.bot.color)
             .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
             .setFooter(await embedFooter(interaction))
             .setTimestamp();
@@ -45,7 +46,7 @@ module.exports = {
 
         setTimeout(async () => {
             const resultEmbed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
                 .setDescription(await t(interaction, 'fun.8ball.result.desc', { question, answer }))
                 .setFooter(await embedFooter(interaction))

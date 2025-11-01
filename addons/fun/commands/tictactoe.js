@@ -19,12 +19,6 @@ const {
     MessageFlags,
     EmbedBuilder,
 } = require('discord.js');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
-const { t } = require('@coreHelpers/translator');
-
-// ===============================
-// Tic Tac Toe Game State & Logic
-// ===============================
 
 function createGame(interaction, opponent, mode) {
     const playerX = interaction.user;
@@ -47,6 +41,9 @@ function createGame(interaction, opponent, mode) {
 async function buildGameUI(game) {
     const { board, currentPlayer, isGameOver, statusMessage, playerX, playerO, interaction } = game;
     const client = interaction.client;
+    const container = interaction.client.container;
+    const { t, helpers } = container;
+    const { convertColor } = helpers.color;
 
     const turnText = isGameOver
         ? `**${statusMessage}**`
@@ -55,7 +52,7 @@ async function buildGameUI(game) {
               symbol: game.symbols[currentPlayer.id] === 'X' ? '❌' : '⭕',
           });
 
-    const container = new ContainerBuilder()
+    const gameContainer = new ContainerBuilder()
         .setAccentColor(convertColor(isGameOver ? '#2ecc71' : '#3498db', { from: 'hex', to: 'decimal' }))
         .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
@@ -88,16 +85,16 @@ async function buildGameUI(game) {
                     .setDisabled(cell !== null || isGameOver)
             );
         }
-        container.addActionRowComponents(row);
+        gameContainer.addActionRowComponents(row);
     }
 
-    container.addTextDisplayComponents(new TextDisplayBuilder().setContent(turnText));
-    container.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-    container.addTextDisplayComponents(
+    gameContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(turnText));
+    gameContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+    gameContainer.addTextDisplayComponents(
         new TextDisplayBuilder().setContent(await t(interaction, 'common.container.footer', { username: client.user.username }))
     );
 
-    return [container];
+    return [gameContainer];
 }
 
 function checkWin(board, playerSymbol) {
@@ -232,7 +229,10 @@ module.exports = {
                 )
         ),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, helpers } = container;
+        const { convertColor } = helpers.color;
+
         const opponent = interaction.options.getUser('opponent');
         let mode = 'player';
 
