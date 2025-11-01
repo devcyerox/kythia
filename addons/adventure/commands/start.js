@@ -36,9 +36,9 @@ module.exports = {
     },
     async execute(interaction, container) {
         // Dependency
-        const t = container.t;
-        const { UserAdventure } = container.sequelize.models;
-        const embedFooter = container.helpers.discord.embedFooter;
+        const { t, models, kythiaConfig, helpers } = container;
+        const { UserAdventure, InventoryAdventure } = models;
+        const { embedFooter } = helpers.discord;
 
         await interaction.deferReply();
 
@@ -46,7 +46,7 @@ module.exports = {
 
         if (existing) {
             const alreadyEmbed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setDescription(await t(interaction, 'adventure.start.already.have'))
                 .setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
                 .setFooter(await embedFooter(interaction));
@@ -92,7 +92,7 @@ module.exports = {
         });
 
         const embed = new EmbedBuilder()
-            .setColor(kythia.bot.color)
+            .setColor(kythiaConfig.bot.color)
             .setTitle(await t(interaction, 'adventure.start.success.title'))
             .setDescription(
                 [

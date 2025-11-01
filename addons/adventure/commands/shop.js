@@ -21,19 +21,19 @@ const {
 } = require('discord.js');
 
 const itemsDataFile = require('../helpers/items');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
-
 const shopData = itemsDataFile.items;
 const allItems = Object.values(shopData).flat();
 
+// Human-friendly number display for gold
 function safeLocaleString(value, fallback = '0') {
     return typeof value === 'number' && isFinite(value) ? value.toLocaleString() : fallback;
 }
 
+// UI container with header, paged items, and gold display
 async function generateShopContainer(interaction, user, category, page, pageItems, componentsBelow = []) {
     const container = interaction.client.container;
-    const t = container.t;
-    const kythiaConfig = container.kythiaConfig;
+    const { t, kythiaConfig, helpers } = container;
+    const { convertColor } = helpers.color;
 
     let goldDisplay = '0';
     if (user && typeof user.gold !== 'undefined' && user.gold !== null) {
@@ -95,6 +95,7 @@ async function generateShopContainer(interaction, user, category, page, pageItem
     };
 }
 
+// Generate dropdowns/buttons for shop UI
 async function generateShopComponentRows(interaction, page, totalPages, category, pageItems) {
     const t = interaction.client.container.t;
 
@@ -162,6 +163,7 @@ async function generateShopComponentRows(interaction, page, totalPages, category
     return rows;
 }
 
+// Get list of buyable items in a category and page for display
 function getItemsInCategory(category, page = 1, itemsPerPage = 5) {
     const items = category === 'all' ? allItems.filter((item) => item.buyable) : (shopData[category] || []).filter((item) => item.buyable);
 
@@ -202,10 +204,11 @@ module.exports = {
             ),
 
     async execute(interaction, container) {
-        const t = container.t;
-        const { UserAdventure } = container.sequelize.models;
-        const embedFooter = container.helpers.discord.embedFooter;
-        const kythiaConfig = container.kythiaConfig;
+        // Dependency
+        const { t, models, kythiaConfig, helpers } = container;
+        const { UserAdventure, InventoryAdventure } = models;
+        const { embedFooter } = helpers.discord;
+        const { convertColor } = helpers.color;
 
         await interaction.deferReply();
         const user = await UserAdventure.getCache({ userId: interaction.user.id });
@@ -222,7 +225,6 @@ module.exports = {
         let currentPage = 1;
         const { items: pageItems, totalPages } = getItemsInCategory(category, currentPage, 5);
 
-        // --- PERBAIKAN UTAMA DI SINI ---
         const components = await generateShopComponentRows(interaction, currentPage, totalPages, category, pageItems);
         const { shopContainer } = await generateShopContainer(interaction, user, category, currentPage, pageItems, components);
 
@@ -231,7 +233,6 @@ module.exports = {
             flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
             fetchReply: true,
         });
-        // --- SELESAI PERBAIKAN AWAL ---
 
         const filter = (i) => i.user.id === interaction.user.id;
         const collector = replyMessage.createMessageComponentCollector({ filter, time: 300000 });
@@ -269,10 +270,8 @@ module.exports = {
                             });
                         }
 
+                        // Deduct gold and add inventory
                         userForUpdate.gold -= item.price;
-
-                        // Tidak perlu manual save, Inventory.create() (jika pakai hooks) bisa update
-                        const InventoryAdventure = container.sequelize.models.InventoryAdventure;
                         await InventoryAdventure.create({ userId: userForUpdate.userId, itemName: item.nameKey });
 
                         await i.followUp({
@@ -287,16 +286,13 @@ module.exports = {
                         currentPage = 1;
                     }
                 } else if (i.isButton()) {
-                    // Perbaiki: Gunakan state saat ini!
                     if (i.customId === 'adventure_shop_page_prev') {
                         currentPage = Math.max(1, currentPage - 1);
                     } else if (i.customId === 'adventure_shop_page_next') {
                         currentPage = currentPage + 1;
                     }
-                    // currentCategory tetap dari scope unless user ganti kategori via select menu
                 }
 
-                // --- BAGIAN UPDATE TAMPILAN ---
                 const { items: newPageItems, totalPages: newTotalPages } = getItemsInCategory(currentCategory, currentPage, 5);
                 currentPage = Math.max(1, Math.min(currentPage, newTotalPages));
 
@@ -320,7 +316,6 @@ module.exports = {
                     components: [newContainer],
                     flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
                 });
-                // --- END UPDATE ---
             } catch (error) {
                 console.error('Error in shop interaction:', error);
                 try {

@@ -72,7 +72,7 @@ module.exports = {
         const color = checked
             ? convertColor('Green', { from: 'discord', to: 'decimal' })
             : convertColor('Yellow', { from: 'discord', to: 'decimal' });
-        const statusKey = checked ? 'checklist_status_done' : 'checklist_status_undone';
+        const statusKey = checked ? 'checklist.status.done' : 'checklist.status.undone';
 
         const embed = new EmbedBuilder()
             .setTitle(await t(interaction, 'checklist.server.toggle.toggle.success.title', { scope: await t(interaction, scopeKey) }))

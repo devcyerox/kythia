@@ -8,13 +8,15 @@
 
 const { getChecklistAndItems, getScopeMeta, safeReply } = require('../../helpers');
 const { EmbedBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     subcommand: true,
     data: (subcommand) => subcommand.setName('clear').setDescription('Clear all personal checklist'),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        // Dependency
+        const t = container.t;
+        
         const guildId = interaction.guild?.id;
         const userId = interaction.user.id; // Personal scope
         const group = 'personal';

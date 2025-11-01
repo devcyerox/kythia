@@ -8,8 +8,6 @@
 
 const { getChecklistAndItems, getScopeMeta, safeReply } = require('../../helpers');
 const { EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     subcommand: true,
@@ -19,7 +17,14 @@ module.exports = {
             .setDescription('Add item to server checklist')
             .addStringOption((option) => option.setName('item').setDescription('Checklist item').setRequired(true)),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        // Dependency
+        const t = container.t;
+        const logger = container.logger;
+        const { embedFooter } = container.helpers.discord;
+        const kythiaConfig = container.kythiaConfig;
+        const { convertColor } = container.helpers.color;
+
         const guildId = interaction.guild?.id;
         const userId = null; // Server scope
         const group = 'server';

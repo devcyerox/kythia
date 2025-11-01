@@ -15,10 +15,9 @@ module.exports = {
 
     async execute(interaction, container) {
         // Dependency
-        const t = container.t;
-        const { UserAdventure, InventoryAdventure } = container.sequelize.models;
-        const embedFooter = container.helpers.discord.embedFooter;
-
+        const { t, models, kythiaConfig, helpers } = container;
+        const { UserAdventure, InventoryAdventure } = models;
+        const { embedFooter } = helpers.discord;
         const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
         if (!user) {

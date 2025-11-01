@@ -136,3 +136,5 @@ private_key.pem
 temp/
 
 storage/
+.yalc/
+yalc.lock

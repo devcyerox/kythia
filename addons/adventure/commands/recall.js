@@ -17,10 +17,9 @@ module.exports = {
             .setDescriptionLocalizations({ id: '🏙️ kembali ke kota', fr: '🏙️ Retourne en ville !', ja: '🏙️ 街へ戻ろう！' }),
     async execute(interaction, container) {
         // Dependency
-        const t = container.t;
-        const { UserAdventure } = container.sequelize.models;
-        const embedFooter = container.helpers.discord.embedFooter;
-        const kythiaConfig = container.kythiaConfig;
+        const { t, models, kythiaConfig, helpers } = container;
+        const { UserAdventure, InventoryAdventure } = models;
+        const { embedFooter } = helpers.discord;
 
         await interaction.deferReply();
         const user = await UserAdventure.getCache({ userId: interaction.user.id });

@@ -23,9 +23,8 @@ module.exports = {
     isInMainGuild: true,
     async execute(interaction, container) {
         // Dependency
-        const t = container.t;
-        const embedFooter = container.helpers.discord.embedFooter;
-        const kythiaConfig = container.kythiaConfig;
+        const { t, kythiaConfig, helpers, logger } = container;
+        const { embedFooter } = helpers.discord;
 
         const text = interaction.options?.getString('text') || interaction.targetMessage?.content;
         const lang = interaction.options?.getString('lang') || 'en';
@@ -65,7 +64,9 @@ module.exports = {
                     contents: prompt,
                 });
 
-                finalResponse = response;
+                let rawText = response.text || response.response?.text || '';
+                rawText = rawText.replace(/[`]/g, '');
+                finalResponse = { ...response, text: rawText };
                 success = true;
                 logger.debug(`✅ AI translate request successful on attempt ${attempt + 1}`);
                 break;

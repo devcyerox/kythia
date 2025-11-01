@@ -22,10 +22,9 @@ module.exports = {
     guildOnly: true,
     async execute(interaction, container) {
         // Dependency
-        const t = container.t;
-        const { ServerSetting } = container.sequelize.models;
-        const embedFooter = container.helpers.discord.embedFooter;
-        const kythiaConfig = container.kythiaConfig;
+        const { t, models, kythiaConfig, helpers } = container;
+        const { ServerSetting } = models;
+        const { embedFooter } = helpers.discord;
 
         await interaction.deferReply();
 

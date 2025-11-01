@@ -8,9 +8,6 @@
 
 const { getChecklistAndItems, getScopeMeta, safeReply } = require('../../helpers');
 const { EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
     subcommand: true,
@@ -20,7 +17,12 @@ module.exports = {
             .setDescription('Toggle personal checklist item complete/incomplete')
             .addIntegerOption((option) => option.setName('index').setDescription('Item number to toggle').setRequired(true)),
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        // Dependency
+        const t = container.t;
+        const { embedFooter } = container.helpers.discord;
+        const { convertColor } = container.helpers.color;
+
         const guildId = interaction.guild?.id;
         const userId = interaction.user.id; // Personal scope
         const group = 'personal';
@@ -72,7 +74,7 @@ module.exports = {
         const color = checked
             ? convertColor('Green', { from: 'discord', to: 'decimal' })
             : convertColor('Yellow', { from: 'discord', to: 'decimal' });
-        const statusKey = checked ? 'checklist_status_done' : 'checklist_status_undone';
+        const statusKey = checked ? 'checklist.status.done' : 'checklist.status.undone';
 
         const embed = new EmbedBuilder()
             .setTitle(await t(interaction, 'checklist.server.toggle.toggle.success.title', { scope: await t(interaction, scopeKey) }))
