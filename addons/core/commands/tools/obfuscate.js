@@ -8,7 +8,6 @@
 
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const JavaScriptObfuscator = require('javascript-obfuscator');
-const { t } = require('@coreHelpers/translator');
 const axios = require('axios');
 
 module.exports = {
@@ -23,7 +22,9 @@ module.exports = {
                 .addChoices({ name: 'javascript', value: 'javascript' }, { name: 'lua', value: 'lua' })
         )
         .addAttachmentOption((option) => option.setName('file').setDescription('The script file to obfuscate').setRequired(true)),
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t } = container;
+
         await interaction.deferReply({ ephemeral: true });
 
         const type = interaction.options.getString('type');
@@ -33,7 +34,6 @@ module.exports = {
             return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.no.file'), ephemeral: true });
         }
 
-        // Download the file content
         let scriptText;
         try {
             const res = await axios.get(file.url);
@@ -60,7 +60,7 @@ module.exports = {
                     { script: scriptText },
                     { headers: { 'Content-Type': 'application/json' } }
                 );
-                // The API returns an object with { success, obfuscated }
+
                 if (
                     !response.data ||
                     typeof response.data !== 'object' ||
@@ -71,7 +71,7 @@ module.exports = {
                     console.error('Unexpected response from Lua obfuscator:', response.data);
                     return interaction.editReply({ content: await t(interaction, 'core.tools.obfuscate.failed.lua'), ephemeral: true });
                 }
-                // Replace the version comment with "by kenndeclouv"
+
                 obfuscated = response.data.obfuscated.replace(
                     /--\[\[\s*v\d+\.\d+\.\d+\s+https:\/\/wearedevs\.net\/obfuscator\s*\]\]/g,
                     '--[[ obfuscated with kythia bot by kenndeclouv ]]'

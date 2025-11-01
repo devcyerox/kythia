@@ -6,7 +6,6 @@
  * @version 0.9.11-beta
  */
 const { SlashCommandBuilder, PermissionFlagsBits, InteractionContextType } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 const { rolePrefix, roleUnprefix } = require('../../helpers');
 
 module.exports = {
@@ -21,8 +20,9 @@ module.exports = {
     guildOnly: true,
     permissions: PermissionFlagsBits.ManageNicknames,
     botPermissions: PermissionFlagsBits.ManageNicknames,
-    async execute(interaction) {
-        // deferReply dibuat ephemeral karena balasannya hanya konfirmasi singkat
+    async execute(interaction, container) {
+        const { t } = container;
+
         await interaction.deferReply({ ephemeral: true });
 
         const subcommand = interaction.options.getSubcommand();

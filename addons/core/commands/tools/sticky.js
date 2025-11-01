@@ -6,9 +6,6 @@
  * @version 0.9.11-beta
  */
 const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, InteractionContextType } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const StickyMessage = require('@coreModels/StickyMessage');
-const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -27,7 +24,11 @@ module.exports = {
     guildOnly: true,
     permissions: PermissionFlagsBits.ManageMessages,
     botPermissions: PermissionFlagsBits.ManageMessages,
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers, models } = container;
+        const { embedFooter } = helpers.discord;
+        const { StickyMessage } = models;
+
         const sub = interaction.options.getSubcommand();
         const channelId = interaction.channel.id;
 
@@ -42,8 +43,8 @@ module.exports = {
 
                 const stickyEmbed = new EmbedBuilder()
                     .setTitle(await t(interaction, 'core.tools.sticky.embed.title'))
-                    .setDescription(pesan) // Pesan dari user tidak perlu di-translate
-                    .setColor(kythia.bot.color)
+                    .setDescription(pesan)
+                    .setColor(kythiaConfig.bot.color)
                     .setFooter(await embedFooter(interaction));
 
                 const message = await interaction.channel.send({ embeds: [stickyEmbed] });

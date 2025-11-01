@@ -8,8 +8,6 @@
 
 const { SlashCommandBuilder, MessageFlags, EmbedBuilder } = require('discord.js');
 const crypto = require('crypto');
-const { t } = require('@coreHelpers/translator');
-const { embedFooter } = require('@coreHelpers/discord');
 
 const SUPPORTED_ALGOS = [
     { name: 'MD5', value: 'md5' },
@@ -35,7 +33,10 @@ module.exports = {
                 .addChoices(...SUPPORTED_ALGOS)
         )
         .addStringOption((option) => option.setName('text').setDescription('The text to hash').setRequired(true)),
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         await interaction.deferReply({ ephemeral: true });
 
         const algorithm = interaction.options.getString('algorithm');
@@ -45,7 +46,6 @@ module.exports = {
             return interaction.editReply({ content: await t(interaction, 'core.tools.hash.invalid.text') });
         }
 
-        // Validate algorithm
         const algoObj = SUPPORTED_ALGOS.find((a) => a.value === algorithm);
         if (!algoObj) {
             return interaction.editReply({ content: await t(interaction, 'core.tools.hash.invalid.algorithm') });
@@ -59,7 +59,7 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder()
-            .setColor(kythia.bot.color)
+            .setColor(kythiaConfig.bot.color)
             .setDescription(await t(interaction, 'core.tools.hash.result'))
             .addFields(
                 { name: await t(interaction, 'core.tools.hash.algorithm'), value: algoObj.name, inline: true },

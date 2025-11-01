@@ -5,12 +5,10 @@
  * @assistant chaa & graa
  * @version 0.9.11-beta
  */
+
 const { SlashCommandBuilder, EmbedBuilder, ApplicationCommandType, ContextMenuCommandBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
-    // COMMAND 1: Slash Command Builder
     slashCommand: new SlashCommandBuilder()
         .setName('avatar')
         .setDescription('🖼️ Show user avatar.')
@@ -19,13 +17,16 @@ module.exports = {
     contextMenuCommand: new ContextMenuCommandBuilder().setName('User Avatar').setType(ApplicationCommandType.User),
 
     contextMenuDescription: '🖼️ Show user avatar.',
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         const user = interaction.options.getUser('user') || interaction.targetUser || interaction.user;
 
         const avatarURL = user.displayAvatarURL({ dynamic: true, size: 1024 });
 
         const embed = new EmbedBuilder()
-            .setColor(kythia.bot.color)
+            .setColor(kythiaConfig.bot.color)
             .setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
             .setDescription(await t(interaction, 'core.tools.avatar.embed.desc', { url: avatarURL }))
             .setImage(avatarURL)

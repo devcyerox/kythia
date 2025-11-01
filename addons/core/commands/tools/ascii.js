@@ -7,11 +7,8 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 const figlet = require('figlet');
 
-// Menghapus duplikat dan membuat array unik
 const figletFonts = [
     ...new Set([
         '1Row',
@@ -322,13 +319,15 @@ module.exports = {
     cooldown: 15,
     voteLocked: true,
     async autocomplete(interaction) {
-        // Logika lebih ringkas dengan optional chaining (?.)
         const focusedValue = interaction.options.getFocused(true)?.value || '';
         const filteredFonts = figletFonts.filter((font) => font.toLowerCase().includes(focusedValue.toLowerCase()));
         await interaction.respond(filteredFonts.slice(0, 25).map((font) => ({ name: font, value: font })));
     },
 
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         await interaction.deferReply();
 
         const text = interaction.options.getString('text');
@@ -336,7 +335,6 @@ module.exports = {
         const allFonts = interaction.options.getBoolean('allfonts') || false;
 
         if (!text || text.length > 20) {
-            // Kurangi batas panjang teks untuk allfonts biar ngga terlalu gede
             return interaction.editReply({ content: await t(interaction, 'core.tools.ascii.invalid.text.allfonts') });
         }
 
@@ -361,26 +359,19 @@ module.exports = {
                     const asciiArt = '```' + data + '```';
                     const block = `**${f}**\n${asciiArt}`;
 
-                    // Batas aman untuk deskripsi embed
                     if (block.length > 4000) continue;
 
-                    // Cek apakah penambahan embed baru akan melebihi batas
-                    if (
-                        embedsForCurrentMessage.length === 10 || // Maksimal 10 embed per pesan
-                        totalCharsInCurrentMessage + block.length > 5500 // Batas aman total karakter
-                    ) {
-                        // Kirim batch yang sudah terkumpul
+                    if (embedsForCurrentMessage.length === 10 || totalCharsInCurrentMessage + block.length > 5500) {
                         if (embedsForCurrentMessage.length > 0) {
                             await interaction.followUp({ embeds: embedsForCurrentMessage });
                         }
-                        // Reset untuk batch berikutnya
+
                         embedsForCurrentMessage = [];
                         totalCharsInCurrentMessage = 0;
                     }
 
-                    // Buat dan tambahkan embed baru ke batch saat ini
                     const embed = new EmbedBuilder()
-                        .setColor(kythia.bot.color)
+                        .setColor(kythiaConfig.bot.color)
                         .setDescription(block)
                         .setFooter(await embedFooter(interaction));
 
@@ -389,12 +380,10 @@ module.exports = {
                 }
             }
 
-            // Kirim sisa embed di batch terakhir
             if (embedsForCurrentMessage.length > 0) {
                 await interaction.followUp({ embeds: embedsForCurrentMessage });
             }
         } else {
-            // Logika untuk satu font (sudah oke)
             figlet.text(text, { font }, async (err, data) => {
                 if (err || !data) {
                     return interaction.editReply({ content: await t(interaction, 'core.tools.ascii.failed') });
@@ -402,11 +391,10 @@ module.exports = {
                 const asciiArt = '```' + data + '```';
 
                 if (asciiArt.length > 4096) {
-                    // Batas deskripsi embed adalah 4096
                     return interaction.editReply({ content: await t(interaction, 'core.tools.ascii.too.long') });
                 }
                 const embed = new EmbedBuilder()
-                    .setColor(kythia.bot.color)
+                    .setColor(kythiaConfig.bot.color)
                     .setDescription(await t(interaction, 'core.tools.ascii.embed.desc', { asciiArt, font }))
                     .setFooter(await embedFooter(interaction));
                 await interaction.editReply({ embeds: [embed] });

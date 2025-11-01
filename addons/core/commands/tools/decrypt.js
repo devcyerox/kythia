@@ -7,8 +7,6 @@
  */
 
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 const crypto = require('crypto');
 
 const ALGORITHM = 'aes-256-gcm';
@@ -23,7 +21,10 @@ module.exports = {
         .addStringOption((option) =>
             option.setName('secret-key').setDescription('The 32-character secret key used for encryption').setRequired(true)
         ),
-    async execute(interaction) {
+    async execute(interaction, container) {
+        const { t, kythiaConfig, helpers } = container;
+        const { embedFooter } = helpers.discord;
+
         await interaction.deferReply({ ephemeral: true });
 
         const encryptedData = interaction.options.getString('encrypted-data');
@@ -36,7 +37,6 @@ module.exports = {
         }
 
         try {
-            // 1. Pisahkan kembali data terenkripsi menjadi 3 bagian
             const parts = encryptedData.split(':');
             if (parts.length !== 3) {
                 return interaction.editReply({ content: await t(interaction, 'core.tools.decrypt.invalid.data.format') });
@@ -46,25 +46,21 @@ module.exports = {
             const authTag = Buffer.from(parts[1], 'hex');
             const encryptedText = parts[2];
 
-            // 2. Buat "Decipher" (mesin dekripsi)
             const decipher = crypto.createDecipheriv(ALGORITHM, Buffer.from(secretKey), iv);
 
-            // 3. Set Auth Tag untuk verifikasi (kalau data diubah, di sini akan error)
             decipher.setAuthTag(authTag);
 
-            // 4. Dekripsi teksnya
             let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
 
             const embed = new EmbedBuilder()
-                .setColor(kythia.bot.color)
+                .setColor(kythiaConfig.bot.color)
                 .setTitle(await t(interaction, 'core.tools.decrypt.success'))
                 .addFields({ name: await t(interaction, 'core.tools.decrypt.decrypted.plaintext'), value: '```' + decrypted + '```' })
                 .setFooter(await embedFooter(interaction));
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
-            // Error ini paling sering terjadi jika KUNCI SALAH atau DATA RUSAK
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
