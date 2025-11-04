@@ -60,7 +60,7 @@
 require('dotenv').config(); // Loads ENV vars to process.env
 const kythiaConfig = require('./kythia.config.js'); // Unified configuration object
 require('module-alias/register'); // Enables @src, @utils, etc. path aliases
-const { Kythia, KythiaModel, createSequelizeInstance } = require('@kenndeclouv/kythia-core');
+const { Kythia, KythiaModel, createSequelizeInstance } = require('kythia-core');
 
 // ===== 2. Load Core Helpers & Utilities with Meaningful Descriptions =====
 const logger = require('@coreHelpers/logger'); // Logging system (console and ext. sinks)
@@ -75,7 +75,7 @@ const { checkCooldown, formatDuration } = require('@coreHelpers/time');
 
 // ===== 4. Setup Redis Client for caching, queueing, etc =====
 const Redis = require('ioredis');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+const convertColor = require('kythia-core').utils.color;
 // We create a Redis client instance, using the URL in config, in lazy mode (connect on use).
 
 // ===== 5. Setup Sequelize ORM Instance for Relational Database Access =====

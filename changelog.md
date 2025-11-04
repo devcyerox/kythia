@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠️ BREAKING CHANGES
 
-* **core:** The core functionalities located in the 'src/' directory have been moved to a separate NPM package '@kenndeclouv/kythia-core'. The main bot project now depends on this package.
+* **core:** The core functionalities located in the 'src/' directory have been moved to a separate NPM package 'kythia-core'. The main bot project now depends on this package.
 
 This refactor includes several key changes:
 - Moved core classes (Kythia, KythiaClient, managers, utils, database helpers) to the new package.
@@ -23,7 +23,7 @@ This refactor includes several key changes:
 * **ai:** translation and server settings using DI ([b1a7ce2](https://github.com/kythia/kythia/commit/b1a7ce2627f8f01249db349e653d89f254db1a9a))
 * **ai:** update AI addon to use dependency injection for configuration and logging, enhance command handling, and improve overall structure, ADVENTURE ADDON READY v1.0.0 ([b10551a](https://github.com/kythia/kythia/commit/b10551a1ee841de521c25e08be8a027418468046))
 * **core:** Enhance Kythia initialization and dependency management ([b838bbf](https://github.com/kythia/kythia/commit/b838bbfb251154427c6ed9f49e9d82f6f4a978fe))
-* **core:** Extract core engine into @kenndeclouv/kythia-core package ([0125a6b](https://github.com/kythia/kythia/commit/0125a6b6b6d3a1e46a4360407bbb7b0f0504d35b))
+* **core:** Extract core engine into kythia-core package ([0125a6b](https://github.com/kythia/kythia/commit/0125a6b6b6d3a1e46a4360407bbb7b0f0504d35b))
 * remove unused files and move src/utils/time to addons/core/helpers ([ed04be7](https://github.com/kythia/kythia/commit/ed04be7a78cd292c5765eb72ff2a5e7cecc23f31))
 
 ### [0.9.10-beta](https://github.com/kythia/kythia/compare/v0.9.9-beta-rc.5...v0.9.10-beta) (2025-10-27)

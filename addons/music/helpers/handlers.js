@@ -25,7 +25,7 @@ const {
 const PlaylistTrack = require('../database/models/PlaylistTrack');
 const Playlist = require('../database/models/Playlist');
 const Favorite = require('../database/models/Favorite');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+const convertColor = require('kythia-core').utils.color;
 const { t } = require('@coreHelpers/translator');
 const { customFilter } = require('poru');
 const logger = require('@coreHelpers/logger');

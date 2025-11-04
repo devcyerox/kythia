@@ -8,7 +8,7 @@
 
 const { DataTypes } = require('sequelize');
 
-const { KythiaModel } = require('@kenndeclouv/kythia-core');
+const { KythiaModel } = require('kythia-core');
 
 class MarketOrder extends KythiaModel {
     static init(sequelize) {

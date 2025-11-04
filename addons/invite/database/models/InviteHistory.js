@@ -9,7 +9,7 @@
 // file: src/database/models/InviteHistory.js
 const { DataTypes } = require('sequelize');
 
-const { KythiaModel } = require('@kenndeclouv/kythia-core');
+const { KythiaModel } = require('kythia-core');
 
 class InviteHistory extends KythiaModel {
     static CACHE_KEYS = [['guildId']];

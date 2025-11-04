@@ -13,7 +13,7 @@ const os = require('os');
 
 function getKythiaCoreVersion() {
     try {
-        const corePkgPath = require.resolve('@kenndeclouv/kythia-core/package.json');
+        const corePkgPath = require.resolve('kythia-core/package.json');
         const pkg = JSON.parse(fs.readFileSync(corePkgPath, 'utf8'));
         return pkg.version;
     } catch {
@@ -22,8 +22,8 @@ function getKythiaCoreVersion() {
             if (fs.existsSync(mainPkgPath)) {
                 const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, 'utf8'));
                 return (
-                    (mainPkg.dependencies && mainPkg.dependencies['@kenndeclouv/kythia-core']) ||
-                    (mainPkg.devDependencies && mainPkg.devDependencies['@kenndeclouv/kythia-core']) ||
+                    (mainPkg.dependencies && mainPkg.dependencies['kythia-core']) ||
+                    (mainPkg.devDependencies && mainPkg.devDependencies['kythia-core']) ||
                     null
                 );
             }

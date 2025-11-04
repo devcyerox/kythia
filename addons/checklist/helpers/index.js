@@ -7,7 +7,7 @@
  */
 
 const Checklist = require('../database/models/Checklist');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+const convertColor = require('kythia-core').utils.color;
 /**
  * Helper: Get checklist (with cache) and parse items array safely.
  */

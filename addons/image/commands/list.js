@@ -8,7 +8,7 @@
 
 const { ContainerBuilder, TextDisplayBuilder, SeparatorBuilder, SeparatorSpacingSize, MessageFlags } = require('discord.js');
 
-// const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+// const convertColor = require('kythia-core').utils.color;
 // const { t } = require('@coreHelpers/translator');
 
 module.exports = {

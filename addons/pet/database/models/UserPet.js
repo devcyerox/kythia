@@ -8,7 +8,7 @@
 
 const { DataTypes } = require('sequelize');
 
-const { KythiaModel } = require('@kenndeclouv/kythia-core');
+const { KythiaModel } = require('kythia-core');
 
 class UserPet extends KythiaModel {
     static customInvalidationTags = ['UserPet:leaderboard'];

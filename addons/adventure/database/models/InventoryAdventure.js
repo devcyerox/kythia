@@ -7,7 +7,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const { KythiaModel } = require('@kenndeclouv/kythia-core');
+const { KythiaModel } = require('kythia-core');
 class InventoryAdventure extends KythiaModel {
     static init(sequelize) {
         super.init(

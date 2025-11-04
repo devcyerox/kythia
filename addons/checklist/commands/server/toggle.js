@@ -9,7 +9,7 @@
 const { getChecklistAndItems, getScopeMeta, safeReply } = require('../../helpers');
 const { EmbedBuilder } = require('discord.js');
 const { embedFooter } = require('@coreHelpers/discord');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+const convertColor = require('kythia-core').utils.color;
 const { t } = require('@coreHelpers/translator');
 
 module.exports = {

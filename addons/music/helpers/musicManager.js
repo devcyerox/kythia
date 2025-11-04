@@ -26,7 +26,7 @@ const {
 } = require('discord.js');
 const { Poru } = require('poru');
 const { createProgressBar, hasControlPermission } = require('.');
-const convertColor = require('@kenndeclouv/kythia-core').utils.color;
+const convertColor = require('kythia-core').utils.color;
 const logger = require('@coreHelpers/logger');
 const { t } = require('@coreHelpers/translator');
 const { Spotify } = require('poru-spotify');

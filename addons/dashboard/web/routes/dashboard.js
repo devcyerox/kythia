@@ -11,7 +11,7 @@ const ServerSetting = require('@coreModels/ServerSetting');
 const { PermissionsBitField } = require('discord.js');
 const ModLog = require('@coreModels/ModLog');
 const router = require('express').Router();
-const client = require('@kenndeclouv/kythia-core').KythiaClient;
+const client = require('kythia-core').KythiaClient;
 
 router.use('/dashboard', isAuthorized, (req, res, next) => {
     const botClient = req.app.locals.bot;
