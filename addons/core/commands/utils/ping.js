@@ -342,10 +342,10 @@ module.exports = {
         });
 
         collector.on('collect', async (i) => {
-            await i.deferUpdate();
-
             const botLatency = Math.max(0, Date.now() - i.createdTimestamp);
             const apiLatency = Math.round(i.client.ws.ping);
+
+            await i.deferUpdate();
 
             const refreshed = await buildPingEmbed(i, container, {
                 bot: botLatency,
