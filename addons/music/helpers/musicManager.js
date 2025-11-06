@@ -18,7 +18,6 @@ const {
     SeparatorSpacingSize,
     MessageFlags,
     ComponentType,
-    Collection,
     SectionBuilder,
     ThumbnailBuilder,
     MediaGalleryBuilder,
@@ -151,19 +150,13 @@ async function initializeMusicManager(bot) {
         plugins: plugins,
     };
 
-    // -- Begin Lavlink node connection error suppression logic
-    // Patch process-wide unhandled rejection for Poru lavalink node connection failures to be warnings, not errors
-
-    // Save previous listener to keep chain safe
     const prevListener = process.listeners('unhandledRejection').slice();
     const poruLavalinkPattern = /\[Poru Websocket\] Unable to connect with (.+?) node after (\d+) tries/;
 
     function lavalinkRejectionHandler(reason, promise) {
         if (reason && reason.message && typeof reason.message === 'string' && poruLavalinkPattern.test(reason.message)) {
             logger.warn(`‼️ Lavalink node connection warning: ${reason.message}`);
-            // don't throw, don't log as error, handled here
         } else {
-            // Pass to previous handlers
             for (const prev of prevListener) {
                 try {
                     prev(reason, promise);
@@ -171,12 +164,11 @@ async function initializeMusicManager(bot) {
             }
         }
     }
-    // Only add once!
+
     if (!lavalinkRejectionHandler._hooked) {
         process.on('unhandledRejection', lavalinkRejectionHandler);
         lavalinkRejectionHandler._hooked = true;
     }
-    // -- End error suppression patch
 
     client.poru = new Poru(client, nodes, PoruOptions);
 
@@ -192,7 +184,7 @@ async function initializeMusicManager(bot) {
     });
 
     client.poru.on('nodeConnect', (node) => logger.info(`🎚️  Node "${node.name}" connected.`));
-    // Instead of logging node errors as error, warn for lavalink connection problems, allow all other errors normally
+
     client.poru.on('nodeError', (node, error) => {
         const poruLavalinkPatternNode = /\[Poru Websocket\] Unable to connect with (.+?) node after (\d+) tries/;
         if (error && error.message && poruLavalinkPatternNode.test(error.message)) {
@@ -206,22 +198,11 @@ async function initializeMusicManager(bot) {
      * ▶️ Handles when a new track starts playing.
      */
     client.poru.on('trackStart', async (player, track) => {
-        // --- NEW: Leave if no real users in VC and not 24/7, even if queue is not empty.
         try {
             const voiceChannel = client.channels.cache.get(player.voiceChannel);
             if (voiceChannel && !player._247) {
                 const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
                 if (realUsers.size === 0) {
-                    const channel = client.channels.cache.get(player.textChannel);
-                    if (channel) {
-                        channel.send({
-                            embeds: [
-                                new EmbedBuilder()
-                                    .setColor('Orange')
-                                    .setDescription(await t(channel, 'music.helpers.musicManager.manager.no.listener')),
-                            ],
-                        });
-                    }
                     if (player && !player.destroyed) {
                         player.destroy();
                     }
@@ -231,7 +212,6 @@ async function initializeMusicManager(bot) {
         } catch (err) {
             logger.error('❌ Error checking voice channel members (on trackStart):', err);
         }
-        // --- END NEW
 
         if (!guildStates.has(player.guildId)) {
             guildStates.set(player.guildId, {
@@ -243,10 +223,12 @@ async function initializeMusicManager(bot) {
         const channel = client.channels.cache.get(player.textChannel);
         if (!channel) return;
 
+        const voiceChannel = client.channels.cache.get(player.voiceChannel);
+
         const songTitle = track.info && track.info.title ? track.info.title : 'Unknown';
 
         try {
-            await setVoiceChannelStatus(channel, `🎵 ${songTitle}`);
+            await setVoiceChannelStatus(voiceChannel, `🎵 ${songTitle}`);
         } catch (e) {
             logger.error('❌ Failed to set voice channel status', e);
         }
@@ -523,22 +505,11 @@ async function initializeMusicManager(bot) {
         }
 
         player.updateInterval = setInterval(async () => {
-            // --- NEW: Leave if no real users in VC and not 24/7, periodic check to catch others
             try {
                 const voiceChannel = client.channels.cache.get(player.voiceChannel);
                 if (voiceChannel && !player._247) {
                     const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
                     if (realUsers.size === 0) {
-                        const channel = client.channels.cache.get(player.textChannel);
-                        if (channel) {
-                            channel.send({
-                                embeds: [
-                                    new EmbedBuilder()
-                                        .setColor('Orange')
-                                        .setDescription(await t(channel, 'music.helpers.musicManager.manager.no.listener')),
-                                ],
-                            });
-                        }
                         if (player && !player.destroyed) {
                             player.destroy();
                         }
@@ -549,7 +520,6 @@ async function initializeMusicManager(bot) {
             } catch (err) {
                 logger.error('❌ Error checking voice channel members (periodic):', err);
             }
-            // --- END NEW
 
             const currentTrack = player.currentTrack;
             if (!currentTrack || !player.nowPlayingMessage?.editable) return;
@@ -791,9 +761,9 @@ async function initializeMusicManager(bot) {
             player.buttonCollector = null;
         }
 
-        const channel = client.channels.cache.get(player.textChannel);
+        const voiceChannel = client.channels.cache.get(player.voiceChannel);
         try {
-            setVoiceChannelStatus(channel, 'idle');
+            setVoiceChannelStatus(voiceChannel, 'idle');
         } catch (e) {
             logger.error('❌ Failed to set voice channel status', e);
         }
