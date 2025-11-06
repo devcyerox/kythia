@@ -111,6 +111,184 @@ async function shutdownPlayerUI(player, track, client, channel) {
     } catch (e) {}
 }
 
+function getFirstControlButtonRow(isPaused, disabled = false) {
+    return new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId('music_pause_resume')
+            [typeof kythia.emojis.musicPlay !== 'undefined' && typeof kythia.emojis.musicPause !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicPlay !== 'undefined' && typeof kythia.emojis.musicPause !== 'undefined'
+                    ? isPaused
+                        ? kythia.emojis.musicPlay
+                        : kythia.emojis.musicPause
+                    : isPaused
+                      ? 'Play'
+                      : 'Pause'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_skip')
+            [typeof kythia.emojis.musicSkip !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicSkip !== 'undefined' ? kythia.emojis.musicSkip : 'Skip'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_stop')
+            [typeof kythia.emojis.musicStop !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicStop !== 'undefined' ? kythia.emojis.musicStop : 'Stop'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_loop')
+            [typeof kythia.emojis.musicLoop !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicLoop !== 'undefined' ? kythia.emojis.musicLoop : 'Loop'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_autoplay')
+            [typeof kythia.emojis.musicAutoplay !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicAutoplay !== 'undefined' ? kythia.emojis.musicAutoplay : 'Autoplay'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled)
+    );
+}
+function getSecondControlButtonRow(disabled = false) {
+    return new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId('music_lyrics')
+            [typeof kythia.emojis.musicLyrics !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicLyrics !== 'undefined' ? kythia.emojis.musicLyrics : 'Lyrics'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_queue')
+            [typeof kythia.emojis.musicQueue !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicQueue !== 'undefined' ? kythia.emojis.musicQueue : 'Queue'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_shuffle')
+            [typeof kythia.emojis.musicShuffle !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicShuffle !== 'undefined' ? kythia.emojis.musicShuffle : 'Shuffle'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_filter')
+            [typeof kythia.emojis.musicFilter !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicFilter !== 'undefined' ? kythia.emojis.musicFilter : 'Filter'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_favorite_add')
+            [typeof kythia.emojis.musicFavorite !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicFavorite !== 'undefined' ? kythia.emojis.musicFavorite : 'Favorite'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled)
+    );
+}
+
+/**
+ * Updates the "Now Playing" UI for a specific player.
+ * Dijalankan oleh Global Ticker.
+ * @param {object} player - The Poru player instance.
+ */
+async function updateNowPlayingUI(player) {
+    try {
+        const client = player.poru.client;
+
+        const voiceChannel = client.channels.cache.get(player.voiceChannel);
+        if (voiceChannel && !player._247) {
+            const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
+            if (realUsers.size === 0) {
+                if (player && !player.destroyed) {
+                    player.destroy();
+                }
+                return;
+            }
+        }
+
+        const currentTrack = player.currentTrack;
+        const channel = client.channels.cache.get(player.textChannel);
+        if (!currentTrack || !player.nowPlayingMessage?.editable || !channel) return;
+
+        const updatedFirstControlButtonRow = getFirstControlButtonRow(player.isPaused, false);
+        const updatedSecondControlButtonRow = getSecondControlButtonRow(false);
+
+        const updatedNowPlayingText = await t(channel, 'music.helpers.musicManager.manager.playing', {
+            title: currentTrack.info.title.replace(/[\[\]\(\)]/g, ''),
+            url: currentTrack.info.uri,
+        });
+        const updatedProgress = createProgressBar(player);
+        const updatedArtistText = await t(channel, 'music.helpers.musicManager.manager.channel', { author: currentTrack.info.author });
+        const updatedRequestedByText = await t(channel, 'music.helpers.musicManager.manager.requested.by', {
+            user: currentTrack.info.requester?.username
+                ? `${currentTrack.info.requester} (${currentTrack.info.requester.username})`
+                : `${currentTrack.info.requester}`,
+        });
+
+        let updatedSuggestionRow = null;
+        if (player._latestSuggestionRow) {
+            const menu = player._latestSuggestionRow.components[0];
+            menu.setDisabled(false);
+            updatedSuggestionRow = new ActionRowBuilder().addComponents(menu);
+        }
+
+        const updatedContainer = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
+
+        if (kythia.addons.music.artworkUrlStyle === 'banner') {
+            if (currentTrack.info.artworkUrl || currentTrack.info.image) {
+                updatedContainer.addMediaGalleryComponents(
+                    new MediaGalleryBuilder().addItems([
+                        new MediaGalleryItemBuilder().setURL(currentTrack.info.artworkUrl || currentTrack.info.image),
+                    ])
+                );
+            }
+            updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedNowPlayingText));
+        } else {
+            updatedContainer.addSectionComponents(
+                new SectionBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedNowPlayingText))
+                    .setThumbnailAccessory(
+                        currentTrack.info.artworkUrl || currentTrack.info.image
+                            ? new ThumbnailBuilder()
+                                  .setDescription(currentTrack.info.title)
+                                  .setURL(currentTrack.info.artworkUrl || currentTrack.info.image)
+                            : null
+                    )
+            );
+        }
+
+        updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedProgress));
+        updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedArtistText));
+        updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedRequestedByText));
+        updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+        if (updatedSuggestionRow) {
+            updatedContainer.addActionRowComponents(updatedSuggestionRow);
+            updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+        }
+        updatedContainer.addActionRowComponents(updatedFirstControlButtonRow);
+        updatedContainer.addActionRowComponents(updatedSecondControlButtonRow);
+        updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+        updatedContainer.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(await t(channel, 'common.container.footer', { username: client.user.username }))
+        );
+
+        await player.nowPlayingMessage.edit({
+            components: [updatedContainer],
+            flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+        });
+    } catch (e) {}
+}
+
 /**
  * 🎵 Initializes the Poru music manager and sets up all event listeners and Discord integration.
  * @param {object} bot - The bot object containing the Discord client.
@@ -181,6 +359,7 @@ async function initializeMusicManager(bot) {
         player.playedTrackIdentifiers = new Set();
         player.buttonCollector = null;
         player._247 = false;
+        player._latestSuggestionRow = null;
     });
 
     client.poru.on('nodeConnect', (node) => logger.info(`🎚️  Node "${node.name}" connected.`));
@@ -277,98 +456,6 @@ async function initializeMusicManager(bot) {
             user: track.info.requester?.username ? `${track.info.requester} (${track.info.requester.username})` : `${track.info.requester}`,
         });
 
-        function getFirstControlButtonRow(isPaused, disabled = false) {
-            return new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('music_pause_resume')
-                    [
-                        typeof kythia.emojis.musicPlay !== 'undefined' && typeof kythia.emojis.musicPause !== 'undefined'
-                            ? 'setEmoji'
-                            : 'setLabel'
-                    ](
-                        typeof kythia.emojis.musicPlay !== 'undefined' && typeof kythia.emojis.musicPause !== 'undefined'
-                            ? isPaused
-                                ? kythia.emojis.musicPlay
-                                : kythia.emojis.musicPause
-                            : isPaused
-                              ? 'Play'
-                              : 'Pause'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_skip')
-                    [typeof kythia.emojis.musicSkip !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicSkip !== 'undefined' ? kythia.emojis.musicSkip : 'Skip'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_stop')
-                    [typeof kythia.emojis.musicStop !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicStop !== 'undefined' ? kythia.emojis.musicStop : 'Stop'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_loop')
-                    [typeof kythia.emojis.musicLoop !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicLoop !== 'undefined' ? kythia.emojis.musicLoop : 'Loop'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_autoplay')
-                    [typeof kythia.emojis.musicAutoplay !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicAutoplay !== 'undefined' ? kythia.emojis.musicAutoplay : 'Autoplay'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled)
-            );
-        }
-        function getSecondControlButtonRow(disabled = false) {
-            return new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('music_lyrics')
-                    [typeof kythia.emojis.musicLyrics !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicLyrics !== 'undefined' ? kythia.emojis.musicLyrics : 'Lyrics'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_queue')
-                    [typeof kythia.emojis.musicQueue !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicQueue !== 'undefined' ? kythia.emojis.musicQueue : 'Queue'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_shuffle')
-                    [typeof kythia.emojis.musicShuffle !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicShuffle !== 'undefined' ? kythia.emojis.musicShuffle : 'Shuffle'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_filter')
-                    [typeof kythia.emojis.musicFilter !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicFilter !== 'undefined' ? kythia.emojis.musicFilter : 'Filter'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled),
-                new ButtonBuilder()
-                    .setCustomId('music_favorite_add')
-                    [typeof kythia.emojis.musicFavorite !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                        typeof kythia.emojis.musicFavorite !== 'undefined' ? kythia.emojis.musicFavorite : 'Favorite'
-                    )
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(disabled)
-            );
-        }
-
-        let firstControlButtonRow = getFirstControlButtonRow(false, false);
-        let secondControlButtonRow = getSecondControlButtonRow(false);
-
         let suggestionRow = null;
         if (recommendations.length > 0) {
             const suggestionOptions = [];
@@ -386,6 +473,10 @@ async function initializeMusicManager(bot) {
                 .setDisabled(false);
             suggestionRow = new ActionRowBuilder().addComponents(suggestionMenu);
         }
+        player._latestSuggestionRow = suggestionRow || null;
+
+        const firstControlButtonRow = getFirstControlButtonRow(false, false);
+        const secondControlButtonRow = getSecondControlButtonRow(false);
 
         const container = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
 
@@ -504,98 +595,6 @@ async function initializeMusicManager(bot) {
         } finally {
             player._sendingNowPlaying = false;
         }
-
-        player.updateInterval = setInterval(async () => {
-            try {
-                const voiceChannel = client.channels.cache.get(player.voiceChannel);
-                if (voiceChannel && !player._247) {
-                    const realUsers = voiceChannel.members.filter((m) => !m.user.bot);
-                    if (realUsers.size === 0) {
-                        if (player && !player.destroyed) {
-                            player.destroy();
-                        }
-                        clearInterval(player.updateInterval);
-                        return;
-                    }
-                }
-            } catch (err) {
-                logger.error('❌ Error checking voice channel members (periodic):', err);
-            }
-
-            const currentTrack = player.currentTrack;
-            if (!currentTrack || !player.nowPlayingMessage?.editable) return;
-
-            const updatedFirstControlButtonRow = getFirstControlButtonRow(player.isPaused, false);
-            const updatedSecondControlButtonRow = getSecondControlButtonRow(false);
-
-            const updatedNowPlayingText = await t(channel, 'music.helpers.musicManager.manager.playing', {
-                title: currentTrack.info.title.replace(/[\[\]\(\)]/g, ''),
-                url: currentTrack.info.uri,
-            });
-            const updatedProgress = createProgressBar(player);
-            const updatedArtistText = await t(channel, 'music.helpers.musicManager.manager.channel', { author: currentTrack.info.author });
-            const updatedRequestedByText = await t(channel, 'music.helpers.musicManager.manager.requested.by', {
-                user: currentTrack.info.requester?.username
-                    ? `${currentTrack.info.requester} (${currentTrack.info.requester.username})`
-                    : `${currentTrack.info.requester}`,
-            });
-
-            let updatedSuggestionRow = null;
-            if (suggestionRow) {
-                const menu = suggestionRow.components[0];
-                menu.setDisabled(false);
-                updatedSuggestionRow = new ActionRowBuilder().addComponents(menu);
-            }
-
-            const updatedContainer = new ContainerBuilder().setAccentColor(convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }));
-
-            if (kythia.addons.music.artworkUrlStyle === 'banner') {
-                if (currentTrack.info.artworkUrl || currentTrack.info.image) {
-                    updatedContainer.addMediaGalleryComponents(
-                        new MediaGalleryBuilder().addItems([
-                            new MediaGalleryItemBuilder().setURL(currentTrack.info.artworkUrl || currentTrack.info.image),
-                        ])
-                    );
-                }
-                updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedNowPlayingText));
-            } else {
-                updatedContainer.addSectionComponents(
-                    new SectionBuilder()
-                        .addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedNowPlayingText))
-                        .setThumbnailAccessory(
-                            currentTrack.info.artworkUrl || currentTrack.info.image
-                                ? new ThumbnailBuilder()
-                                      .setDescription(currentTrack.info.title)
-                                      .setURL(currentTrack.info.artworkUrl || currentTrack.info.image)
-                                : null
-                        )
-                );
-            }
-
-            updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedProgress));
-            updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedArtistText));
-            updatedContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(updatedRequestedByText));
-            updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-            if (updatedSuggestionRow) {
-                updatedContainer.addActionRowComponents(updatedSuggestionRow);
-                updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-            }
-            updatedContainer.addActionRowComponents(updatedFirstControlButtonRow);
-            updatedContainer.addActionRowComponents(updatedSecondControlButtonRow);
-            updatedContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
-            updatedContainer.addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(await t(channel, 'common.container.footer', { username: client.user.username }))
-            );
-
-            try {
-                await player.nowPlayingMessage.edit({
-                    components: [updatedContainer],
-                    flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
-                });
-            } catch (e) {
-                clearInterval(player.updateInterval);
-            }
-        }, 1000);
 
         player._autoplayReference = track;
 
@@ -859,7 +858,36 @@ async function initializeMusicManager(bot) {
         }
     });
 
-    client.once('clientReady', () => client.poru.init(client));
+    client.once('clientReady', () => {
+        client.poru.init(client);
+
+        logger.info('🎵 Starting Global Music UI Ticker (every 3 seconds)');
+        setInterval(() => {
+            const players = client.poru.players.values();
+
+            for (const player of players) {
+                try {
+                    if (!player || player.destroyed || !player.nowPlayingMessage?.editable || !player.currentTrack) {
+                        continue;
+                    }
+
+                    const track = player.currentTrack;
+
+                    if (track.info) {
+                        if (!track.info.isStream && track.info.length > 0) {
+                            if (player.position >= track.info.length - 5000) {
+                                continue;
+                            }
+                        }
+                    }
+
+                    updateNowPlayingUI(player);
+                } catch (e) {
+                    logger.warn(`[Ticker] Gagal update UI buat player: ${player.guildId}`, e.message);
+                }
+            }
+        }, 3000);
+    });
 }
 
 module.exports = initializeMusicManager;
