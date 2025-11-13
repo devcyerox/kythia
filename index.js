@@ -5,7 +5,7 @@
  * @file index.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.11-beta
+ * @version 0.9.12-beta
  *
  * @description
  * This file serves as the main entry point for the Kythia Discord Bot application.

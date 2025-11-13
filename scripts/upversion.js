@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.11-beta
+ * @version 0.9.12-beta
  */
 
 /**
@@ -12,17 +12,17 @@
  * @file scripts/upversion.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.11-beta
+ * @version 0.9.12-beta
  *
  * @description
  * This script scans all JavaScript files in the project and updates the
- * @version 0.9.11-beta in file headers to match the version specified in package.json.
+ * @version 0.9.12-beta in file headers to match the version specified in package.json.
  * It ignores certain directories and files, and logs all changes to the console.
  *
  * ✨ Main Features:
  * - Reads the current version from package.json.
  * - Recursively finds all .js files in the project, excluding ignored paths.
- * - Updates the @version 0.9.11-beta in file headers to the latest version.
+ * - Updates the @version 0.9.12-beta in file headers to the latest version.
  * - Logs updated files and errors to the console.
  */
 

@@ -4,7 +4,7 @@
  * @file add_namespace.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.11-beta
+ * @version 0.9.12-beta
  *
  * @description
  * This script scans your project for all command-related JavaScript files,

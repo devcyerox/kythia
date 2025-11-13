@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.11-beta
+ * @version 0.9.12-beta
  */
 
 /**
@@ -12,7 +12,7 @@
  * @file scripts/gen_structure.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.11-beta
+ * @version 0.9.12-beta
  *
  * @description
  * This script scans the project directory and generates a Markdown file
