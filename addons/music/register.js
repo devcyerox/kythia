@@ -6,7 +6,7 @@
  * @version 0.9.12-beta
  */
 
-const initializeMusicManager = require('./helpers/musicManager');
+const { initializeMusicManager } = require('./helpers/musicManager');
 
 module.exports = {
     async initialize(bot) {

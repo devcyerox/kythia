@@ -29,6 +29,7 @@ const {
     handleFavorite,
     handleDownload,
     handle247,
+    handleRadio,
 } = require('../helpers/handlers');
 const { formatDuration, hasControlPermission } = require('../helpers');
 const { guildStates } = require('../helpers/musicManager');
@@ -113,7 +114,7 @@ module.exports = {
                 .setDescription('Manage your personal music playlists.')
                 .addSubcommand((subcommand) =>
                     subcommand
-                        .setName('save') // <--- Ganti dari 'create'
+                        .setName('save')
                         .setDescription('Saves the current queue as a new playlist.')
                         .addStringOption((option) =>
                             option.setName('name').setDescription('The name for your new playlist.').setRequired(true)
@@ -279,11 +280,18 @@ module.exports = {
         .addSubcommand((subcommand) =>
             subcommand.setName('247').setDescription('🎧 Enable or disable 24/7 mode to keep the bot in the voice channel.')
         )
-        // .addSubcommand(subcommand =>
-        //   subcommand
-        //     .setName('download')
-        //     .setDescription('📥 Download the currently playing song.')
-        // )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName('radio')
+                .setDescription('📻 Search and play live radio stations worldwide')
+                .addStringOption((option) =>
+                    option
+                        .setName('search')
+                        .setDescription('Name of the radio station (e.g., Prambors, BBC, Lofi)')
+                        .setRequired(true)
+                        .setAutocomplete(true)
+                )
+        )
         .setContexts(InteractionContextType.Guild),
     cooldown: 15,
     permissions: [
@@ -310,7 +318,6 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand(false);
         const subcommandgroup = interaction.options.getSubcommandGroup(false);
 
-        // Autocomplete for song search (play, track-add, favorite add)
         if (
             (focusedOption.name === 'search' && (subcommand === 'play' || subcommand === 'track-add')) ||
             (subcommandgroup === 'favorite' && subcommand === 'add' && focusedOption.name === 'search')
@@ -379,7 +386,6 @@ module.exports = {
             }
         }
 
-        // Autocomplete for playlist name
         if (subcommandgroup === 'playlist' && focusedOption.name === 'name') {
             try {
                 const userPlaylists = await Playlist.getAllCache({
@@ -399,7 +405,6 @@ module.exports = {
             }
         }
 
-        // Autocomplete for favorite song name
         if (subcommandgroup === 'favorite' && focusedOption.name === 'name') {
             try {
                 const userFavorites = await Favorite.getAllCache({
@@ -421,6 +426,51 @@ module.exports = {
                 return interaction.respond([]);
             }
         }
+
+        if (subcommand === 'radio' && focusedOption.name === 'search') {
+            // Cek cache dulu biar irit API
+            if (!client._radioAutocompleteCache) client._radioAutocompleteCache = new Map();
+            if (client._radioAutocompleteCache.has(focusedValue)) {
+                return interaction.respond(client._radioAutocompleteCache.get(focusedValue));
+            }
+
+            if (!focusedValue || focusedValue.trim().length === 0) {
+                return interaction.respond([]); // Kosongin kalo belum ngetik
+            }
+
+            try {
+                // Fetch ke Radio Browser API (Limit 20 biar muat di autocomplete)
+                const axios = require('axios'); // Pastikan axios ada
+                const response = await axios.get(
+                    `https://de1.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(focusedValue)}&limit=20&hidebroken=true&order=clickcount&reverse=true`,
+                    { timeout: 2000 }
+                );
+
+                if (!response.data || !Array.isArray(response.data)) return interaction.respond([]);
+
+                const choices = response.data.slice(0, 25).map((station) => {
+                    // Format: "Nama Radio (ID | 128kbps)"
+                    // Kita potong nama biar gak kepanjangan
+                    const name = station.name.length > 50 ? station.name.substring(0, 47) + '...' : station.name;
+                    const country = station.countrycode || '🌐';
+                    const bitrate = station.bitrate || 0;
+
+                    return {
+                        name: `📻 ${name} [${country}|${bitrate}k]`,
+                        value: station.stationuuid, // Value-nya UUID biar unik & langsung bisa dipake play
+                    };
+                });
+
+                // Simpan ke cache sebentar (misal 60 detik) biar gak spam API kalo user ngetik hapus ngetik hapus
+                client._radioAutocompleteCache.set(focusedValue, choices);
+                setTimeout(() => client._radioAutocompleteCache.delete(focusedValue), 60000);
+
+                return interaction.respond(choices);
+            } catch (e) {
+                // Silent error kalo API timeout/down
+                return interaction.respond([]);
+            }
+        }
     },
 
     /**
@@ -438,7 +488,6 @@ module.exports = {
             return await interaction.reply({ content: await t(interaction, 'music.music.voice.channel.not.found'), ephemeral: true });
         }
 
-        // Poru: get player by guildId
         const player = client.poru.players.get(guild.id);
 
         if (subcommandGroup && subcommandGroup === 'playlist') {
@@ -452,7 +501,10 @@ module.exports = {
         if (!subcommandGroup && subcommand == 'play') {
             return handlePlay(interaction);
         }
-        // Require active player for other commands
+        if (!subcommandGroup && subcommand == 'radio') {
+            return handleRadio(interaction, player);
+        }
+
         if (!player) {
             return interaction.reply({ content: await t(interaction, 'music.music.player.not.found'), ephemeral: true });
         }
@@ -476,7 +528,6 @@ module.exports = {
             });
         }
 
-        // Command handler mapping
         const originalRequesterCommandHandlers = {
             pause: handlePause,
             resume: handleResume,
@@ -487,7 +538,7 @@ module.exports = {
             volume: handleVolume,
             shuffle: handleShuffle,
             filter: handleFilter,
-            back: handleBack,
+            // back: handleBack,
             remove: handleRemove,
             move: handleMove,
             clear: handleClear,
@@ -498,7 +549,7 @@ module.exports = {
 
         if (originalRequesterCommandHandlers[subcommand]) {
             return originalRequesterCommandHandlers[subcommand](interaction, player);
-        } else if (subcommand === 'back') {
+        } else if (subcommand == 'back') {
             return handleBack(interaction, player, guildStates);
         } else {
             return interaction.reply({ content: await t(interaction, 'music.music.subcommand.not.found'), ephemeral: true });

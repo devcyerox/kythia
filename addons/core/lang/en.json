@@ -2122,6 +2122,13 @@
                     "player": {
                         "notfound": "❌ Unable to find a music player for this server."
                     }
+                },
+                "radio": {
+                    "load_failed": "❌ Failed to load radio stream. Please try another station (stream might be offline).",
+                    "no_results": "❌ No radio stations found for **{query}**.",
+                    "select_desc": "Found multiple results for **{query}**. Please select a station below within 30 seconds.",
+                    "timeout": "❌ Selection timed out. Please use the command again.",
+                    "live_title": "## 🔴 LIVE RADIO STARTED"
                 }
             },
             "musicManager": {

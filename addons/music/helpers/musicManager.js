@@ -38,14 +38,13 @@ const {
     handleAutoplay,
     handleQueue,
     handleShuffle,
-    handleFilter,
     handleFavorite,
+    handleBack,
 } = require('./handlers');
+
 const { setVoiceChannelStatus } = require('@coreHelpers/discord');
 
 const guildStates = new Map();
-
-module.exports.guildStates = guildStates;
 
 const MASTER_TITLE_CLEAN_REGEX =
     /[\[\]\(\)]|(?:\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s{2,}/g;
@@ -126,8 +125,22 @@ async function shutdownPlayerUI(player, track, client, channel) {
     } catch (e) {}
 }
 
-function getFirstControlButtonRow(isPaused, disabled = false) {
+function getFirstControlButtonRow(isPaused, disabled = false, hasHistory) {
     return new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+            .setCustomId('music_autoplay')
+            [typeof kythia.emojis.musicAutoplay !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicAutoplay !== 'undefined' ? kythia.emojis.musicAutoplay : 'Autoplay'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled),
+        new ButtonBuilder()
+            .setCustomId('music_back')
+            [typeof kythia.emojis.musicBack !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicBack !== 'undefined' ? kythia.emojis.musicBack : 'Back'
+            )
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(disabled || !hasHistory),
         new ButtonBuilder()
             .setCustomId('music_pause_resume')
             [typeof kythia.emojis.musicPlay !== 'undefined' && typeof kythia.emojis.musicPause !== 'undefined' ? 'setEmoji' : 'setLabel'](
@@ -149,23 +162,9 @@ function getFirstControlButtonRow(isPaused, disabled = false) {
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(disabled),
         new ButtonBuilder()
-            .setCustomId('music_stop')
-            [typeof kythia.emojis.musicStop !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                typeof kythia.emojis.musicStop !== 'undefined' ? kythia.emojis.musicStop : 'Stop'
-            )
-            .setStyle(ButtonStyle.Secondary)
-            .setDisabled(disabled),
-        new ButtonBuilder()
             .setCustomId('music_loop')
             [typeof kythia.emojis.musicLoop !== 'undefined' ? 'setEmoji' : 'setLabel'](
                 typeof kythia.emojis.musicLoop !== 'undefined' ? kythia.emojis.musicLoop : 'Loop'
-            )
-            .setStyle(ButtonStyle.Secondary)
-            .setDisabled(disabled),
-        new ButtonBuilder()
-            .setCustomId('music_autoplay')
-            [typeof kythia.emojis.musicAutoplay !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                typeof kythia.emojis.musicAutoplay !== 'undefined' ? kythia.emojis.musicAutoplay : 'Autoplay'
             )
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(disabled)
@@ -188,16 +187,16 @@ function getSecondControlButtonRow(disabled = false) {
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(disabled),
         new ButtonBuilder()
-            .setCustomId('music_shuffle')
-            [typeof kythia.emojis.musicShuffle !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                typeof kythia.emojis.musicShuffle !== 'undefined' ? kythia.emojis.musicShuffle : 'Shuffle'
+            .setCustomId('music_stop')
+            [typeof kythia.emojis.musicStop !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicStop !== 'undefined' ? kythia.emojis.musicStop : 'Stop'
             )
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(disabled),
         new ButtonBuilder()
-            .setCustomId('music_filter')
-            [typeof kythia.emojis.musicFilter !== 'undefined' ? 'setEmoji' : 'setLabel'](
-                typeof kythia.emojis.musicFilter !== 'undefined' ? kythia.emojis.musicFilter : 'Filter'
+            .setCustomId('music_shuffle')
+            [typeof kythia.emojis.musicShuffle !== 'undefined' ? 'setEmoji' : 'setLabel'](
+                typeof kythia.emojis.musicShuffle !== 'undefined' ? kythia.emojis.musicShuffle : 'Shuffle'
             )
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(disabled),
@@ -235,7 +234,10 @@ async function updateNowPlayingUI(player) {
         const channel = client.channels.cache.get(player.textChannel);
         if (!currentTrack || !player.nowPlayingMessage?.editable || !channel) return;
 
-        const updatedFirstControlButtonRow = getFirstControlButtonRow(player.isPaused, false);
+        const state = guildStates.get(player.guildId);
+        const hasHistory = state && state.previousTracks.length > 0;
+
+        const updatedFirstControlButtonRow = getFirstControlButtonRow(player.isPaused, false, hasHistory);
         const updatedSecondControlButtonRow = getSecondControlButtonRow(false);
 
         const cleanTitle = currentTrack.info.title.replace(MASTER_TITLE_CLEAN_REGEX, '');
@@ -393,7 +395,9 @@ async function initializeMusicManager(bot) {
         player.disconnectTimeout = null;
     });
 
-    client.poru.on('nodeConnect', (node) => logger.info(`🎚️  Node "${node.name}" connected.`));
+    client.poru.on('nodeConnect', (node) => {
+        logger.info(`🎚️  Node "${node.name}" connected.`);
+    });
 
     client.poru.on('nodeError', (node, error) => {
         const poruLavalinkPatternNode = /\[Poru Websocket\] Unable to connect with (.+?) node after (\d+) tries/;
@@ -597,6 +601,10 @@ async function initializeMusicManager(bot) {
                     });
                 }
                 switch (interaction.customId) {
+                    case 'music_back': {
+                        await handleBack(interaction, player, guildStates);
+                        break;
+                    }
                     case 'music_pause_resume': {
                         await handlePauseResume(interaction, player);
                         break;
@@ -629,10 +637,6 @@ async function initializeMusicManager(bot) {
                         await handleShuffle(interaction, player);
                         break;
                     }
-                    case 'music_filter': {
-                        await handleFilter(interaction, player);
-                        break;
-                    }
                     case 'music_favorite_add': {
                         await handleFavorite(interaction, player);
                         break;
@@ -655,11 +659,19 @@ async function initializeMusicManager(bot) {
      * ⏭️ Handles when a track ends (either naturally or by skip/stop).
      */
     client.poru.on('trackEnd', async (player, track) => {
-        const state = guildStates.get(player.guildId);
-        if (state) {
-            state.previousTracks.unshift(track);
-            if (state.previousTracks.length > 10) state.previousTracks.pop();
+        let state = guildStates.get(player.guildId);
+
+        if (!state) {
+            state = {
+                previousTracks: [],
+                lastPlayedTrack: null,
+            };
+            guildStates.set(player.guildId, state);
         }
+
+        state.previousTracks.unshift(track);
+
+        if (state.previousTracks.length > 10) state.previousTracks.pop();
 
         if (player.updateInterval) clearInterval(player.updateInterval);
 
@@ -718,6 +730,24 @@ async function initializeMusicManager(bot) {
             return;
         }
 
+        const lastTrack = player._autoplayReference;
+
+        if (lastTrack) {
+            let state = guildStates.get(player.guildId);
+
+            if (!state) {
+                state = { previousTracks: [], lastPlayedTrack: null };
+                guildStates.set(player.guildId, state);
+            }
+
+            const topHistory = state.previousTracks[0];
+
+            if (!topHistory || topHistory.info.identifier !== lastTrack.info.identifier) {
+                state.previousTracks.unshift(lastTrack);
+                if (state.previousTracks.length > 10) state.previousTracks.pop();
+            }
+        }
+
         if (player.buttonCollector) {
             try {
                 player.buttonCollector.stop('queueEnd');
@@ -725,9 +755,9 @@ async function initializeMusicManager(bot) {
             player.buttonCollector = null;
         }
 
-        const autoplayReference = player._autoplayReference;
         let autoplaySucceeded = false;
-        if (player.autoplay && autoplayReference) {
+
+        if (player.autoplay && lastTrack) {
             let searchingMessage = null;
 
             try {
@@ -736,18 +766,18 @@ async function initializeMusicManager(bot) {
                         embeds: [
                             new EmbedBuilder().setColor(kythia.bot.color).setDescription(
                                 await t(channel, 'music.helpers.musicManager.manager.searching', {
-                                    title: autoplayReference.info.title,
+                                    title: lastTrack.info.title,
                                 })
                             ),
                         ],
                     });
                 }
 
-                const searchUrl = `https://www.youtube.com/watch?v=${autoplayReference.info.identifier}&list=RD${autoplayReference.info.identifier}`;
+                const searchUrl = `https://www.youtube.com/watch?v=${lastTrack.info.identifier}&list=RD${lastTrack.info.identifier}`;
                 const res = await client.poru.resolve({
                     query: searchUrl,
                     source: 'ytsearch',
-                    requester: autoplayReference.info.requester,
+                    requester: lastTrack.info.requester,
                 });
 
                 if (res.loadType !== 'playlist' || !res.tracks.length) {
@@ -810,13 +840,13 @@ async function initializeMusicManager(bot) {
                 setVoiceChannelStatus(voiceChannel, 'idle');
             } catch (e) {}
 
-            let lastTrack = player.currentTrack || player._autoplayReference;
-            await shutdownPlayerUI(player, lastTrack, client);
+            let lastPlayable = player.currentTrack || lastTrack;
+            await shutdownPlayerUI(player, lastPlayable, client);
 
             player.nowPlayingMessage = null;
         } else {
-            let lastTrack = player.currentTrack || player._autoplayReference;
-            await shutdownPlayerUI(player, lastTrack, client);
+            let lastPlayable = player.currentTrack || lastTrack;
+            await shutdownPlayerUI(player, lastPlayable, client);
             player.nowPlayingMessage = null;
 
             const IDLE_TIMEOUT_MS = 5 * 60 * 1000;
@@ -982,4 +1012,7 @@ async function initializeMusicManager(bot) {
     });
 }
 
-module.exports = initializeMusicManager;
+module.exports = {
+    initializeMusicManager,
+    guildStates,
+};

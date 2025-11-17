@@ -23,6 +23,10 @@ const {
     AttachmentBuilder,
     MediaGalleryItemBuilder,
     MediaGalleryBuilder,
+    StringSelectMenuBuilder,
+    StringSelectMenuOptionBuilder,
+    SectionBuilder,
+    ThumbnailBuilder,
 } = require('discord.js');
 const PlaylistTrack = require('../database/models/PlaylistTrack');
 const Playlist = require('../database/models/Playlist');
@@ -530,39 +534,45 @@ async function handleShuffle(interaction, player) {
  * Plays the previous track from history.
  * @param {import('discord.js').ChatInputCommandInteraction} interaction
  * @param {object} player - The music player instance.
+ * @param {Map} guildStates - The passed guildStates map.
  */
 async function handleBack(interaction, player, guildStates) {
-    await interaction.deferReply();
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const guildState = guildStates.get(interaction.guild.id);
+    try {
+        const guildId = interaction.guildId;
+        const guildState = guildStates.get(guildId);
 
-    if (!guildState || !guildState.previousTracks || guildState.previousTracks.length === 0) {
+        if (!guildState || !guildState.previousTracks || guildState.previousTracks.length === 0) {
+            const embed = new EmbedBuilder()
+                .setColor('Red')
+                .setDescription(await t(interaction, 'music.helpers.handlers.music.no.previous.track'))
+                .setFooter(await embedFooter(interaction));
+            return interaction.editReply({ embeds: [embed] });
+        }
+
+        const previousTrack = guildState.previousTracks.shift();
+
+        if (player.currentTrack) {
+            player.queue.unshift(player.currentTrack);
+        }
+
+        player.queue.unshift(previousTrack);
+
+        player.skip();
+
         const embed = new EmbedBuilder()
-            .setColor('Red')
-
-            .setDescription(await t(interaction, 'music.helpers.handlers.music.no.previous.track'))
+            .setColor(kythia.bot.color)
+            .setDescription(await t(interaction, 'music.helpers.handlers.music.playing.previous', { title: previousTrack.info.title }))
             .setFooter(await embedFooter(interaction));
+
         return interaction.editReply({ embeds: [embed] });
+    } catch (error) {
+        console.error('[HandleBack] Error:', error);
+
+        return interaction.editReply({ content: '❌ An error occurred while trying to go back.' });
     }
-
-    const previousTrack = guildState.previousTracks.shift();
-
-    if (player.currentTrack) {
-        player.queue.unshift(player.currentTrack);
-    }
-
-    player.queue.unshift(previousTrack);
-
-    player.skip();
-
-    const embed = new EmbedBuilder()
-        .setColor(kythia.bot.color)
-
-        .setDescription(await t(interaction, 'music.helpers.handlers.music.playing.previous', { title: previousTrack.info.title }))
-        .setFooter(await embedFooter(interaction));
-    return interaction.editReply({ embeds: [embed] });
 }
-
 /**
  * 🎧 Handles the 'filter' subcommand.
  * Menampilkan UI filter dengan tombol-tombol filter (11 filter, 5-5-1), menggunakan ContainerBuilder dan collector yang tidak mati.
@@ -873,10 +883,8 @@ async function handleSeek(interaction, player) {
         if (timeParts.length === 1) {
             seconds = timeParts[0];
         } else if (timeParts.length === 2) {
-            // mm:ss
             seconds = timeParts[0] * 60 + timeParts[1];
         } else if (timeParts.length === 3) {
-            // hh:mm:ss
             seconds = timeParts[0] * 3600 + timeParts[1] * 60 + timeParts[2];
         } else {
             seconds = 0;
@@ -2200,6 +2208,193 @@ async function handle247(interaction, player) {
     await interaction.editReply({ embeds: [embed] });
 }
 
+/**
+ * 📻 Handles the 'radio' subcommand.
+ * Searches for real radio stations using Radio Browser API and plays them via Lavalink.
+ * UI updated to use ContainerBuilder for consistency.
+ * @param {import('discord.js').ChatInputCommandInteraction} interaction
+ * @param {object} player - The music player instance.
+ */
+
+async function handleRadio(interaction, player) {
+    const { client, member, guild, channel } = interaction;
+    const container = client.container;
+    const { helpers } = container;
+    const { convertColor } = helpers.color;
+    const query = interaction.options.getString('search');
+    const accentColor = convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' });
+
+    await interaction.deferReply();
+
+    const playStation = async (stationData, interactionToUpdate) => {
+        if (!player) {
+            player = client.poru.createConnection({
+                guildId: guild.id,
+                voiceChannel: member.voice.channel.id,
+                textChannel: channel.id,
+                deaf: true,
+            });
+        }
+
+        const res = await client.poru.resolve({ query: stationData.url_resolved, requester: interaction.user });
+
+        if (res.loadType === 'error' || !res.tracks.length) {
+            const errContainer = new ContainerBuilder()
+                .setAccentColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(await t(interaction, 'music.helpers.handlers.radio.load_failed'))
+                );
+
+            if (interactionToUpdate.replied || interactionToUpdate.deferred) {
+                return interactionToUpdate.editReply({
+                    components: [errContainer],
+                    flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+                });
+            }
+            return interactionToUpdate.followUp({
+                components: [errContainer],
+                ephemeral: true,
+                flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+            });
+        }
+
+        const track = res.tracks[0];
+        track.info.title = stationData.name;
+        track.info.author = stationData.country || 'Live Radio';
+        track.info.isStream = true;
+        track.info.uri = stationData.url_resolved;
+        track.info.image = stationData.favicon || null;
+
+        player.queue.clear();
+        player.queue.add(track);
+
+        if (!player.isPlaying && player.isConnected) player.play();
+        else player.skip();
+
+        const playingContainer = new ContainerBuilder()
+            .setAccentColor(accentColor)
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(await t(interaction, 'music.helpers.handlers.radio.live_title')))
+            .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+
+        const infoText = `**Station:** [${stationData.name}](${stationData.homepage || stationData.url_resolved})\n**Country:** ${stationData.country || 'Global'}\n**Bitrate:** ${stationData.bitrate} kbps`;
+
+        if (stationData.favicon) {
+            playingContainer.addSectionComponents(
+                new SectionBuilder()
+                    .addTextDisplayComponents(new TextDisplayBuilder().setContent(infoText))
+                    .setThumbnailAccessory(new ThumbnailBuilder().setDescription('Radio Logo').setURL(stationData.favicon))
+            );
+        } else {
+            playingContainer.addTextDisplayComponents(new TextDisplayBuilder().setContent(infoText));
+        }
+
+        playingContainer.addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true));
+        playingContainer.addTextDisplayComponents(
+            new TextDisplayBuilder().setContent(await t(interaction, 'common.container.footer', { username: client.user.username }))
+        );
+
+        await interactionToUpdate.editReply({
+            components: [playingContainer],
+            flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+        });
+    };
+
+    try {
+        const isUUID = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/.test(query);
+
+        if (isUUID) {
+            const response = await axios.get(`https://de1.api.radio-browser.info/json/stations/byuuid/${query}`);
+            if (response.data && response.data.length > 0) {
+                return await playStation(response.data[0], interaction);
+            }
+        }
+
+        const response = await axios.get(
+            `https://de1.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(query)}&limit=10&hidebroken=true&order=clickcount&reverse=true`
+        );
+
+        if (!response.data || response.data.length === 0) {
+            const embed = new EmbedBuilder()
+                .setColor('Red')
+                .setDescription(await t(interaction, 'music.helpers.handlers.radio.no_results', { query }));
+            return interaction.editReply({ embeds: [embed] });
+        }
+
+        if (response.data.length === 1) {
+            return await playStation(response.data[0], interaction);
+        }
+
+        const stations = response.data.slice(0, 10);
+        const options = stations.map((station) => {
+            const label = station.name.length > 98 ? station.name.substring(0, 95) + '...' : station.name;
+            const description = `${station.countrycode || '🌐'} | ${station.bitrate || 128}kbps | ${station.tags ? station.tags.slice(0, 30) : 'Radio'}`;
+            return { label, description, value: station.stationuuid, emoji: '📻' };
+        });
+
+        const selectMenu = new StringSelectMenuBuilder()
+            .setCustomId('radio_select')
+            .setPlaceholder('Select a radio station...')
+            .addOptions(options);
+        const row = new ActionRowBuilder().addComponents(selectMenu);
+
+        const selectContainer = new ContainerBuilder()
+            .setAccentColor(accentColor)
+            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`## 📻 Search Results: "${query}"`))
+            .addSeparatorComponents(new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true))
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(await t(interaction, 'music.helpers.handlers.radio.select_desc', { query }))
+            )
+            .addActionRowComponents(row);
+
+        const msg = await interaction.editReply({
+            components: [selectContainer],
+            flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+        });
+
+        const collector = msg.createMessageComponentCollector({
+            componentType: ComponentType.StringSelect,
+            filter: (i) => i.user.id === interaction.user.id,
+            time: 30000,
+        });
+
+        collector.on('collect', async (i) => {
+            await i.deferUpdate();
+            const selectedUUID = i.values[0];
+            const selectedStation = stations.find((s) => s.stationuuid === selectedUUID);
+            if (!selectedStation) return;
+            collector.stop('selected');
+            await playStation(selectedStation, i);
+        });
+
+        collector.on('end', async (collected, reason) => {
+            if (reason === 'time') {
+                const timeoutContainer = new ContainerBuilder()
+                    .setAccentColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
+                    .addTextDisplayComponents(
+                        new TextDisplayBuilder().setContent(await t(interaction, 'music.helpers.handlers.radio.timeout'))
+                    );
+                await interaction
+                    .editReply({
+                        components: [timeoutContainer],
+                        flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+                    })
+                    .catch(() => {});
+            }
+        });
+    } catch (error) {
+        logger.error('Radio Handler Error:', error);
+        const errContainer = new ContainerBuilder()
+            .setAccentColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
+            .addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(await t(interaction, 'music.helpers.handlers.music.failed', { error: error?.message }))
+            );
+        return interaction.editReply({
+            components: [errContainer],
+            flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+        });
+    }
+}
+
 module.exports = {
     handlePlay,
     handlePause,
@@ -2223,4 +2418,5 @@ module.exports = {
     handlePlaylist,
     handleFavorite,
     handle247,
+    handleRadio,
 };

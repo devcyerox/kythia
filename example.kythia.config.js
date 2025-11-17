@@ -436,6 +436,7 @@ function loadKythiaConfig() {
             musicShuffle: '<:name:id>',
             musicFilter: '<:name:id>',
             musicFavorite: '<:name:id>',
+            musicBack: '<:name:id>',
         },
     };
 }
