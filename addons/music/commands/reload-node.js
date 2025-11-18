@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/music/commands/reloadnode.js
+ * @namespace: addons/music/commands/reload-node.js
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

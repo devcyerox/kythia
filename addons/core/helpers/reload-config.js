@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/core/helpers/reload_config.js
+ * @namespace: addons/core/helpers/reload-config.js
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

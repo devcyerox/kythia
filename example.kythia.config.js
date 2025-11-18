@@ -98,17 +98,17 @@ function loadKythiaConfig() {
          * ------------------------------------------------------------------- */
         db: {
             // Database dialect/driver ('mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle')
-            driver: process.env.DB_DRIVER || 'mysql',
+            driver: process.env.DB_DRIVER,
             // Database host (IP or hostname)
-            host: process.env.DB_HOST || 'localhost',
+            host: process.env.DB_HOST,
             // Database port (string or number, as per your DB)
             port: process.env.DB_PORT,
             // Database name
-            name: process.env.DB_NAME || 'kythia',
+            name: process.env.DB_NAME,
             // Database username
-            user: process.env.DB_USER || 'root',
+            user: process.env.DB_USER,
             // Database password
-            password: process.env.DB_PASSWORD || '',
+            password: process.env.DB_PASSWORD,
             // Optional: For SQLite, path to storage file
             storagePath: process.env.DB_STORAGE_PATH,
             // Optional: For MySQL/MariaDB, Unix socket path
@@ -119,7 +119,7 @@ function loadKythiaConfig() {
             // Optional: For MySQL/MariaDB, timezone
             timezone: '+07:00',
             // Optional: For Redis, Redis URL
-            redis: process.env.REDIS_URLS || 'redis://localhost:6379',
+            redis: process.env.REDIS_URLS,
 
             // Optional: For Redis, Redis cache version
             redisCacheVersion: 'v1.0',

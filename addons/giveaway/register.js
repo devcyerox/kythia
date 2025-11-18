@@ -6,30 +6,28 @@
  * @version 0.9.12-beta
  */
 
-// addons/giveaway/register.js
-const path = require('path');
-const { initializeGiveawayScheduler } = require('./tasks/giveawayScheduler');
-
-const initialize = (bot) => {
-    const summary = [];
-    try {
-        const giveawayJoinButtonHandler = require('./buttons/giveawayjoin.js');
-
-        bot.registerButtonHandler('giveawayjoin', giveawayJoinButtonHandler.execute);
-
-        summary.push("  └─ Button: 'giveawayjoin'");
-    } catch (error) {
-        console.error("Failed to register button handler 'giveawayjoin':", error);
-    }
-
-    bot.addClientReadyHook(() => {
-        initializeGiveawayScheduler(bot.client);
-    });
-
-    summary.push('  └─ Task: Giveaway Scheduler (Cron Job)');
-    return summary;
-};
+const GiveawayManager = require('./helpers/GiveawayManager');
 
 module.exports = {
-    initialize,
+    async initialize(bot) {
+        const container = bot.client.container;
+        const summary = [];
+
+        // 1. INSTANCE DIBUAT SEKARANG (Biar Button Handler gak error)
+        container.giveawayManager = new GiveawayManager(container);
+
+        // 2. Register Button (Aman karena container.giveaway udah ada)
+        bot.registerButtonHandler('giveaway_join', container.giveawayManager.handleJoin.bind(container.giveawayManager));
+        summary.push("   └─ Button: 'giveaway_join'");
+
+        // 3. JALANKAN SCHEDULER SAAT READY (Biar DB aman)
+        bot.addClientReadyHook(async () => {
+            // Init dipanggil nanti saat bot & DB udah siap 100%
+            await container.giveawayManager.init();
+        });
+
+        summary.push('   └─ 🎁 Giveaway Manager (Scheduler Queued)');
+
+        return summary;
+    },
 };
