@@ -5,11 +5,11 @@
  * @assistant chaa & graa
  * @version 0.9.12-beta
  */
-const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
-    subcommand: true,
-    data: new SlashCommandBuilder()
-        .setName('eco')
-        .setDescription('💰 Get your money and become rich')
+	subcommand: true,
+	data: new SlashCommandBuilder()
+		.setName("eco")
+		.setDescription("💰 Get your money and become rich"),
 };

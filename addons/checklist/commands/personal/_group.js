@@ -7,6 +7,7 @@
  */
 
 module.exports = {
-    subcommand: true,
-    data: (group) => group.setName('personal').setDescription('Manage personal checklist'),
+	subcommand: true,
+	data: (group) =>
+		group.setName("personal").setDescription("Manage personal checklist"),
 };

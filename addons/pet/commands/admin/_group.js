@@ -7,6 +7,9 @@
  */
 
 module.exports = {
-    subcommand: true,
-    data: (group) => group.setName('admin').setDescription('Administrative pet management commands.'),
+	subcommand: true,
+	data: (group) =>
+		group
+			.setName("admin")
+			.setDescription("Administrative pet management commands."),
 };

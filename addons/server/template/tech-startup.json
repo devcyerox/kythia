@@ -1,720 +1,963 @@
 {
-    "meta": {
-        "key": "tech-startup",
-        "display": "Tech Startup",
-        "description": "Comprehensive tech startup template with development, product management, investor relations, and growth tracking",
-        "defaultLocale": "en"
-    },
-    "roles": [
-        { "name": "CEO", "color": 15844367, "hoist": true, "mentionable": false, "perms": ["Administrator"] },
-        {
-            "name": "CTO",
-            "color": 15158332,
-            "hoist": true,
-            "mentionable": true,
-            "perms": ["ManageGuild", "ManageChannels", "ManageMessages", "ViewAuditLog"]
-        },
-        { "name": "CPO", "color": 10181046, "hoist": true, "mentionable": true, "perms": ["ManageMessages", "ManageRoles"] },
-        { "name": "VP Engineering", "color": 3447003, "hoist": true, "mentionable": true, "perms": ["ManageMessages"] },
-        { "name": "VP Product", "color": 11342935, "hoist": true, "mentionable": true, "perms": ["ManageMessages"] },
-        { "name": "VP Marketing", "color": 16753920, "hoist": true, "mentionable": true, "perms": ["ManageMessages"] },
-        { "name": "VP Sales", "color": 3066993, "hoist": true, "mentionable": true, "perms": ["ManageMessages"] },
-        { "name": "Head of Design", "color": 10181046, "hoist": true, "mentionable": true, "perms": ["ManageMessages"] },
-        { "name": "Head of Operations", "color": 8359053, "hoist": true, "mentionable": true, "perms": ["ManageMessages"] },
-        { "name": "Lead Developer", "color": 3066993, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Senior Developer", "color": 3066993, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Developer", "color": 3066993, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "DevOps Engineer", "color": 3447003, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "QA Engineer", "color": 12745742, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Product Manager", "color": 11342935, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Product Designer", "color": 10181046, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "UX Designer", "color": 10181046, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "UI Designer", "color": 10181046, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Marketing Manager", "color": 16753920, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Content Creator", "color": 15105570, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Sales Manager", "color": 3066993, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Sales Rep", "color": 3066993, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Customer Success", "color": 3447003, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Data Analyst", "color": 6323595, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Business Analyst", "color": 11342935, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "HR Manager", "color": 10038562, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Legal Counsel", "color": 8359053, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Finance Manager", "color": 10038562, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Intern", "color": 8421504, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Contractor", "color": 8421504, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Advisor", "color": 15105570, "hoist": false, "mentionable": true, "perms": [] },
-        { "name": "Investor", "color": 16763904, "hoist": true, "mentionable": true, "perms": [] },
-        { "name": "Bot", "color": 9807270, "hoist": false, "mentionable": false, "perms": ["ManageMessages", "EmbedLinks", "AttachFiles"] }
-    ],
-    "categories": [
-        {
-            "name": "📢 ANNOUNCEMENTS",
-            "channels": [
-                {
-                    "name": "📢┃announcements",
-                    "type": "text",
-                    "topic": "Company-wide announcements, updates, and important news",
-                    "pin": [
-                        {
-                            "title": "📢 Company Announcements",
-                            "description": "Stay updated with the latest company news, product updates, and important announcements.",
-                            "color": 15158332,
-                            "fields": [
-                                {
-                                    "name": "🚀 Product Updates",
-                                    "value": "• New feature releases\n• Product improvements\n• Bug fixes and patches\n• Roadmap changes"
-                                },
-                                {
-                                    "name": "👥 Team Updates",
-                                    "value": "• New hires and departures\n• Role changes and promotions\n• Team restructuring\n• Company milestones"
-                                },
-                                {
-                                    "name": "📈 Business Updates",
-                                    "value": "• Funding announcements\n• Partnership news\n• Market updates\n• Strategic initiatives"
-                                }
-                            ]
-                        }
-                    ],
-                    "perms": [
-                        { "roles": ["@everyone"], "deny": ["SendMessages"] },
-                        { "roles": ["CEO", "CTO", "CPO", "VP Marketing", "VP Sales"], "allow": ["SendMessages"] }
-                    ]
-                },
-                {
-                    "name": "🎉┃milestones",
-                    "type": "text",
-                    "topic": "Company milestones, achievements, and celebrations",
-                    "pin": [
-                        {
-                            "title": "🎉 Company Milestones",
-                            "description": "Celebrate our achievements, milestones, and team accomplishments!",
-                            "color": 16763904,
-                            "fields": [
-                                {
-                                    "name": "📊 Key Metrics",
-                                    "value": "• User growth milestones\n• Revenue achievements\n• Product milestones\n• Team growth"
-                                },
-                                {
-                                    "name": "🏆 Recognition",
-                                    "value": "• Individual achievements\n• Team accomplishments\n• Industry awards\n• Customer success stories"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "📅┃company-calendar",
-                    "type": "text",
-                    "topic": "Important dates, deadlines, and company events",
-                    "pin": [
-                        {
-                            "title": "📅 Company Calendar",
-                            "description": "Important dates, deadlines, and company events to keep track of.",
-                            "color": 3447003,
-                            "fields": [
-                                {
-                                    "name": "📅 Key Dates",
-                                    "value": "• Product launch dates\n• Board meetings\n• All-hands meetings\n• Company events"
-                                },
-                                {
-                                    "name": "⏰ Deadlines",
-                                    "value": "• Sprint deadlines\n• Project milestones\n• Investor updates\n• Performance reviews"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "💻 ENGINEERING",
-            "channels": [
-                {
-                    "name": "💻┃engineering",
-                    "type": "text",
-                    "topic": "Engineering discussions, technical updates, and development news",
-                    "pin": [
-                        {
-                            "title": "💻 Engineering Hub",
-                            "description": "Central hub for engineering discussions, technical updates, and development news.",
-                            "color": 3066993,
-                            "fields": [
-                                {
-                                    "name": "🔧 Technical Discussions",
-                                    "value": "• Architecture decisions\n• Code reviews\n• Technical challenges\n• Best practices"
-                                },
-                                {
-                                    "name": "📊 Development Metrics",
-                                    "value": "• Sprint progress\n• Code quality metrics\n• Performance benchmarks\n• Bug tracking"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "🚀┃releases",
-                    "type": "text",
-                    "topic": "Product releases, deployments, and version updates",
-                    "pin": [
-                        {
-                            "title": "🚀 Product Releases",
-                            "description": "Track product releases, deployments, and version updates.",
-                            "color": 15158332,
-                            "fields": [
-                                {
-                                    "name": "📦 Release Process",
-                                    "value": "• Release planning\n• Testing procedures\n• Deployment steps\n• Rollback plans"
-                                },
-                                {
-                                    "name": "📋 Release Notes",
-                                    "value": "• Feature descriptions\n• Bug fixes\n• Breaking changes\n• Migration guides"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "🐛┃bugs-issues",
-                    "type": "text",
-                    "topic": "Bug reports, issue tracking, and technical problems",
-                    "pin": [
-                        {
-                            "title": "🐛 Bug Reports & Issues",
-                            "description": "Report bugs, track issues, and discuss technical problems.",
-                            "color": 15158332,
-                            "fields": [
-                                {
-                                    "name": "📝 Bug Report Format",
-                                    "value": "**Title:** Brief description\n**Severity:** Critical/High/Medium/Low\n**Environment:** Dev/Staging/Production\n**Steps to Reproduce:**\n1. Step one\n2. Step two\n**Expected vs Actual:**\n**Screenshots/Logs:**"
-                                },
-                                {
-                                    "name": "🏷️ Issue Labels",
-                                    "value": "• Bug - Software defect\n• Enhancement - Feature request\n• Task - General work item\n• Epic - Large feature or project"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "🔧┃devops",
-                    "type": "text",
-                    "topic": "DevOps, infrastructure, and deployment discussions",
-                    "pin": [
-                        {
-                            "title": "🔧 DevOps & Infrastructure",
-                            "description": "DevOps discussions, infrastructure management, and deployment strategies.",
-                            "color": 3447003,
-                            "fields": [
-                                {
-                                    "name": "🏗️ Infrastructure",
-                                    "value": "• Server management\n• Cloud services\n• Monitoring and alerting\n• Security updates"
-                                },
-                                {
-                                    "name": "🚀 Deployment",
-                                    "value": "• CI/CD pipelines\n• Release automation\n• Environment management\n• Rollback procedures"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "📊┃performance",
-                    "type": "text",
-                    "topic": "Performance monitoring, optimization, and metrics",
-                    "pin": [
-                        {
-                            "title": "📊 Performance Monitoring",
-                            "description": "Track performance metrics, optimization efforts, and system health.",
-                            "color": 6323595,
-                            "fields": [
-                                {
-                                    "name": "📈 Key Metrics",
-                                    "value": "• Response times\n• Throughput\n• Error rates\n• Resource utilization"
-                                },
-                                {
-                                    "name": "🔍 Monitoring Tools",
-                                    "value": "• Application monitoring\n• Infrastructure monitoring\n• User experience tracking\n• Alert management"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "🎨 PRODUCT & DESIGN",
-            "channels": [
-                {
-                    "name": "🎨┃product",
-                    "type": "text",
-                    "topic": "Product strategy, roadmap, and feature discussions",
-                    "pin": [
-                        {
-                            "title": "🎨 Product Hub",
-                            "description": "Product strategy, roadmap, and feature discussions.",
-                            "color": 11342935,
-                            "fields": [
-                                {
-                                    "name": "📋 Product Strategy",
-                                    "value": "• Product vision and goals\n• Market analysis\n• Competitive landscape\n• User research insights"
-                                },
-                                {
-                                    "name": "🗺️ Roadmap",
-                                    "value": "• Feature prioritization\n• Release planning\n• Resource allocation\n• Timeline management"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "🎯┃user-research",
-                    "type": "text",
-                    "topic": "User research, feedback, and customer insights",
-                    "pin": [
-                        {
-                            "title": "🎯 User Research",
-                            "description": "User research findings, customer feedback, and market insights.",
-                            "color": 10181046,
-                            "fields": [
-                                {
-                                    "name": "👥 Research Methods",
-                                    "value": "• User interviews\n• Surveys and questionnaires\n• Usability testing\n• Analytics analysis"
-                                },
-                                {
-                                    "name": "📊 Insights",
-                                    "value": "• User personas\n• Pain points and needs\n• Feature requests\n• Market trends"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "🎨┃design",
-                    "type": "text",
-                    "topic": "Design system, UI/UX, and visual design discussions",
-                    "pin": [
-                        {
-                            "title": "🎨 Design System",
-                            "description": "Design system, UI/UX, and visual design discussions.",
-                            "color": 10181046,
-                            "fields": [
-                                {
-                                    "name": "🎨 Design Elements",
-                                    "value": "• Color palette\n• Typography\n• Component library\n• Icon system"
-                                },
-                                {
-                                    "name": "📐 Guidelines",
-                                    "value": "• Design principles\n• Accessibility standards\n• Brand guidelines\n• Usage examples"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "📱┃prototypes",
-                    "type": "text",
-                    "topic": "Prototypes, mockups, and design iterations",
-                    "pin": [
-                        {
-                            "title": "📱 Prototypes & Mockups",
-                            "description": "Share prototypes, mockups, and design iterations for feedback.",
-                            "color": 10181046,
-                            "fields": [
-                                {
-                                    "name": "🎯 Prototype Types",
-                                    "value": "• Wireframes\n• High-fidelity mockups\n• Interactive prototypes\n• User flow diagrams"
-                                },
-                                {
-                                    "name": "💬 Feedback Process",
-                                    "value": "• Design reviews\n• Stakeholder feedback\n• User testing results\n• Iteration planning"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "📈 GROWTH & MARKETING",
-            "channels": [
-                {
-                    "name": "📈┃growth",
-                    "type": "text",
-                    "topic": "Growth strategies, metrics, and user acquisition",
-                    "pin": [
-                        {
-                            "title": "📈 Growth & Metrics",
-                            "description": "Growth strategies, key metrics, and user acquisition discussions.",
-                            "color": 16763904,
-                            "fields": [
-                                {
-                                    "name": "📊 Key Metrics",
-                                    "value": "• User acquisition\n• Retention rates\n• Revenue growth\n• Market share"
-                                },
-                                {
-                                    "name": "🚀 Growth Strategies",
-                                    "value": "• Marketing campaigns\n• Product-led growth\n• Partnership opportunities\n• Referral programs"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "📢┃marketing",
-                    "type": "text",
-                    "topic": "Marketing campaigns, content, and brand strategy",
-                    "pin": [
-                        {
-                            "title": "📢 Marketing Hub",
-                            "description": "Marketing campaigns, content strategy, and brand development.",
-                            "color": 16753920,
-                            "fields": [
-                                {
-                                    "name": "🎯 Campaigns",
-                                    "value": "• Digital marketing\n• Content marketing\n• Social media strategy\n• Email marketing"
-                                },
-                                {
-                                    "name": "📝 Content",
-                                    "value": "• Blog posts and articles\n• Video content\n• Social media posts\n• Case studies"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "💰┃sales",
-                    "type": "text",
-                    "topic": "Sales strategies, pipeline, and revenue tracking",
-                    "pin": [
-                        {
-                            "title": "💰 Sales & Revenue",
-                            "description": "Sales strategies, pipeline management, and revenue tracking.",
-                            "color": 3066993,
-                            "fields": [
-                                {
-                                    "name": "📊 Sales Metrics",
-                                    "value": "• Pipeline value\n• Conversion rates\n• Average deal size\n• Sales velocity"
-                                },
-                                {
-                                    "name": "🎯 Strategies",
-                                    "value": "• Lead generation\n• Qualification process\n• Closing techniques\n• Customer retention"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "👥┃customer-success",
-                    "type": "text",
-                    "topic": "Customer success, support, and satisfaction",
-                    "pin": [
-                        {
-                            "title": "👥 Customer Success",
-                            "description": "Customer success strategies, support processes, and satisfaction tracking.",
-                            "color": 3447003,
-                            "fields": [
-                                {
-                                    "name": "🎯 Success Metrics",
-                                    "value": "• Customer satisfaction\n• Net Promoter Score (NPS)\n• Churn rate\n• Expansion revenue"
-                                },
-                                {
-                                    "name": "🛠️ Support",
-                                    "value": "• Support ticket management\n• Knowledge base\n• Training materials\n• Onboarding process"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "📊 DATA & ANALYTICS",
-            "channels": [
-                {
-                    "name": "📊┃analytics",
-                    "type": "text",
-                    "topic": "Data analytics, insights, and business intelligence",
-                    "pin": [
-                        {
-                            "title": "📊 Analytics & Insights",
-                            "description": "Data analytics, business intelligence, and insights generation.",
-                            "color": 6323595,
-                            "fields": [
-                                {
-                                    "name": "📈 Key Metrics",
-                                    "value": "• User behavior analytics\n• Business performance metrics\n• Product usage statistics\n• Financial metrics"
-                                },
-                                { "name": "🔍 Analysis Tools", "value": "• Google Analytics\n• Mixpanel\n• Tableau\n• Custom dashboards" }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "📈┃kpis",
-                    "type": "text",
-                    "topic": "Key Performance Indicators and business metrics",
-                    "pin": [
-                        {
-                            "title": "📈 KPIs & Business Metrics",
-                            "description": "Track Key Performance Indicators and business metrics.",
-                            "color": 16763904,
-                            "fields": [
-                                {
-                                    "name": "🎯 Business KPIs",
-                                    "value": "• Monthly Recurring Revenue (MRR)\n• Customer Acquisition Cost (CAC)\n• Lifetime Value (LTV)\n• Churn rate"
-                                },
-                                {
-                                    "name": "📊 Product KPIs",
-                                    "value": "• Daily/Monthly Active Users\n• Feature adoption rates\n• User engagement metrics\n• Performance indicators"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "🔍┃experiments",
-                    "type": "text",
-                    "topic": "A/B tests, experiments, and data-driven decisions",
-                    "pin": [
-                        {
-                            "title": "🔍 Experiments & A/B Testing",
-                            "description": "A/B tests, experiments, and data-driven decision making.",
-                            "color": 3447003,
-                            "fields": [
-                                {
-                                    "name": "🧪 Experiment Types",
-                                    "value": "• A/B tests\n• Multivariate tests\n• Feature flags\n• User experience experiments"
-                                },
-                                {
-                                    "name": "📊 Analysis",
-                                    "value": "• Statistical significance\n• Confidence intervals\n• Effect sizes\n• Business impact"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "💰 FINANCE & OPERATIONS",
-            "channels": [
-                {
-                    "name": "💰┃finance",
-                    "type": "text",
-                    "topic": "Financial planning, budgeting, and investment discussions",
-                    "pin": [
-                        {
-                            "title": "💰 Finance & Budgeting",
-                            "description": "Financial planning, budgeting, and investment discussions.",
-                            "color": 10038562,
-                            "fields": [
-                                {
-                                    "name": "📊 Financial Metrics",
-                                    "value": "• Revenue tracking\n• Expense management\n• Cash flow analysis\n• Profit margins"
-                                },
-                                {
-                                    "name": "💼 Investment",
-                                    "value": "• Funding rounds\n• Investor relations\n• Capital allocation\n• Financial planning"
-                                }
-                            ]
-                        }
-                    ],
-                    "perms": [
-                        { "roles": ["@everyone"], "deny": ["ViewChannel"] },
-                        {
-                            "roles": ["CEO", "CTO", "CPO", "Finance Manager", "Legal Counsel", "Investor"],
-                            "allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
-                        }
-                    ]
-                },
-                {
-                    "name": "🏢┃operations",
-                    "type": "text",
-                    "topic": "Operations, processes, and organizational efficiency",
-                    "pin": [
-                        {
-                            "title": "🏢 Operations & Processes",
-                            "description": "Operations management, process optimization, and organizational efficiency.",
-                            "color": 8359053,
-                            "fields": [
-                                {
-                                    "name": "⚙️ Process Management",
-                                    "value": "• Workflow optimization\n• Process documentation\n• Quality assurance\n• Efficiency improvements"
-                                },
-                                {
-                                    "name": "📋 Operations",
-                                    "value": "• Resource planning\n• Vendor management\n• Compliance tracking\n• Risk management"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "👥┃hr",
-                    "type": "text",
-                    "topic": "Human resources, hiring, and team management",
-                    "pin": [
-                        {
-                            "title": "👥 Human Resources",
-                            "description": "Human resources, hiring, and team management discussions.",
-                            "color": 10038562,
-                            "fields": [
-                                {
-                                    "name": "🎯 HR Functions",
-                                    "value": "• Recruitment and hiring\n• Performance management\n• Employee development\n• Culture and engagement"
-                                },
-                                {
-                                    "name": "📊 Metrics",
-                                    "value": "• Employee satisfaction\n• Retention rates\n• Hiring metrics\n• Performance reviews"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "🤝 COLLABORATION",
-            "channels": [
-                {
-                    "name": "🤝┃general",
-                    "type": "text",
-                    "topic": "General discussions and team collaboration",
-                    "rateLimitPerUser": 2
-                },
-                {
-                    "name": "💡┃ideas",
-                    "type": "text",
-                    "topic": "Brainstorming, ideas, and innovation discussions",
-                    "pin": [
-                        {
-                            "title": "💡 Ideas & Innovation",
-                            "description": "Share ideas, brainstorm solutions, and discuss innovation opportunities.",
-                            "color": 15105570,
-                            "fields": [
-                                {
-                                    "name": "💭 Brainstorming",
-                                    "value": "• Product ideas\n• Process improvements\n• Market opportunities\n• Technology innovations"
-                                },
-                                {
-                                    "name": "🚀 Innovation",
-                                    "value": "• R&D projects\n• Experimental features\n• New technologies\n• Creative solutions"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    "name": "📚┃learning",
-                    "type": "text",
-                    "topic": "Learning resources, training, and skill development",
-                    "pin": [
-                        {
-                            "title": "📚 Learning & Development",
-                            "description": "Learning resources, training opportunities, and skill development.",
-                            "color": 3447003,
-                            "fields": [
-                                {
-                                    "name": "🎓 Learning Resources",
-                                    "value": "• Online courses\n• Books and articles\n• Conference recordings\n• Internal training"
-                                },
-                                {
-                                    "name": "📈 Skill Development",
-                                    "value": "• Technical skills\n• Soft skills\n• Leadership development\n• Industry knowledge"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "name": "🎤 VOICE CHANNELS",
-            "channels": [
-                {
-                    "name": "💬┃general",
-                    "type": "voice",
-                    "topic": "General voice chat and casual discussions"
-                },
-                {
-                    "name": "💻┃engineering",
-                    "type": "voice",
-                    "topic": "Engineering discussions and technical collaboration"
-                },
-                {
-                    "name": "🎨┃product-design",
-                    "type": "voice",
-                    "topic": "Product and design collaboration"
-                },
-                {
-                    "name": "📈┃growth-marketing",
-                    "type": "voice",
-                    "topic": "Growth and marketing discussions"
-                },
-                {
-                    "name": "🤝┃meetings",
-                    "type": "voice",
-                    "topic": "Team meetings and formal discussions"
-                },
-                {
-                    "name": "🎓┃learning",
-                    "type": "voice",
-                    "topic": "Learning sessions and knowledge sharing"
-                }
-            ]
-        },
-        {
-            "name": "🔒 CONFIDENTIAL",
-            "channels": [
-                {
-                    "name": "👑┃executive",
-                    "type": "text",
-                    "topic": "Executive discussions and strategic planning",
-                    "perms": [
-                        { "roles": ["@everyone"], "deny": ["ViewChannel"] },
-                        {
-                            "roles": ["CEO", "CTO", "CPO", "VP Engineering", "VP Product", "VP Marketing", "VP Sales"],
-                            "allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
-                        }
-                    ]
-                },
-                {
-                    "name": "💰┃investor-relations",
-                    "type": "text",
-                    "topic": "Investor relations and funding discussions",
-                    "perms": [
-                        { "roles": ["@everyone"], "deny": ["ViewChannel"] },
-                        {
-                            "roles": ["CEO", "CTO", "CPO", "Finance Manager", "Legal Counsel", "Investor"],
-                            "allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
-                        }
-                    ]
-                },
-                {
-                    "name": "⚖️┃legal",
-                    "type": "text",
-                    "topic": "Legal matters, contracts, and compliance",
-                    "perms": [
-                        { "roles": ["@everyone"], "deny": ["ViewChannel"] },
-                        {
-                            "roles": ["CEO", "CTO", "CPO", "Legal Counsel", "Finance Manager"],
-                            "allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
-                        }
-                    ]
-                },
-                {
-                    "name": "🔧┃system-logs",
-                    "type": "text",
-                    "topic": "System logs, bot activity, and technical monitoring",
-                    "perms": [
-                        { "roles": ["@everyone"], "deny": ["ViewChannel"] },
-                        {
-                            "roles": ["CEO", "CTO", "VP Engineering", "DevOps Engineer", "Bot"],
-                            "allow": ["ViewChannel", "SendMessages", "ReadMessageHistory", "AttachFiles", "EmbedLinks"]
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
+	"meta": {
+		"key": "tech-startup",
+		"display": "Tech Startup",
+		"description": "Comprehensive tech startup template with development, product management, investor relations, and growth tracking",
+		"defaultLocale": "en"
+	},
+	"roles": [
+		{
+			"name": "CEO",
+			"color": 15844367,
+			"hoist": true,
+			"mentionable": false,
+			"perms": ["Administrator"]
+		},
+		{
+			"name": "CTO",
+			"color": 15158332,
+			"hoist": true,
+			"mentionable": true,
+			"perms": [
+				"ManageGuild",
+				"ManageChannels",
+				"ManageMessages",
+				"ViewAuditLog"
+			]
+		},
+		{
+			"name": "CPO",
+			"color": 10181046,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages", "ManageRoles"]
+		},
+		{
+			"name": "VP Engineering",
+			"color": 3447003,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages"]
+		},
+		{
+			"name": "VP Product",
+			"color": 11342935,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages"]
+		},
+		{
+			"name": "VP Marketing",
+			"color": 16753920,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages"]
+		},
+		{
+			"name": "VP Sales",
+			"color": 3066993,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages"]
+		},
+		{
+			"name": "Head of Design",
+			"color": 10181046,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages"]
+		},
+		{
+			"name": "Head of Operations",
+			"color": 8359053,
+			"hoist": true,
+			"mentionable": true,
+			"perms": ["ManageMessages"]
+		},
+		{
+			"name": "Lead Developer",
+			"color": 3066993,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Senior Developer",
+			"color": 3066993,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Developer",
+			"color": 3066993,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "DevOps Engineer",
+			"color": 3447003,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "QA Engineer",
+			"color": 12745742,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Product Manager",
+			"color": 11342935,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Product Designer",
+			"color": 10181046,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "UX Designer",
+			"color": 10181046,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "UI Designer",
+			"color": 10181046,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Marketing Manager",
+			"color": 16753920,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Content Creator",
+			"color": 15105570,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Sales Manager",
+			"color": 3066993,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Sales Rep",
+			"color": 3066993,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Customer Success",
+			"color": 3447003,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Data Analyst",
+			"color": 6323595,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Business Analyst",
+			"color": 11342935,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "HR Manager",
+			"color": 10038562,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Legal Counsel",
+			"color": 8359053,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Finance Manager",
+			"color": 10038562,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Intern",
+			"color": 8421504,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Contractor",
+			"color": 8421504,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Advisor",
+			"color": 15105570,
+			"hoist": false,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Investor",
+			"color": 16763904,
+			"hoist": true,
+			"mentionable": true,
+			"perms": []
+		},
+		{
+			"name": "Bot",
+			"color": 9807270,
+			"hoist": false,
+			"mentionable": false,
+			"perms": ["ManageMessages", "EmbedLinks", "AttachFiles"]
+		}
+	],
+	"categories": [
+		{
+			"name": "📢 ANNOUNCEMENTS",
+			"channels": [
+				{
+					"name": "📢┃announcements",
+					"type": "text",
+					"topic": "Company-wide announcements, updates, and important news",
+					"pin": [
+						{
+							"title": "📢 Company Announcements",
+							"description": "Stay updated with the latest company news, product updates, and important announcements.",
+							"color": 15158332,
+							"fields": [
+								{
+									"name": "🚀 Product Updates",
+									"value": "• New feature releases\n• Product improvements\n• Bug fixes and patches\n• Roadmap changes"
+								},
+								{
+									"name": "👥 Team Updates",
+									"value": "• New hires and departures\n• Role changes and promotions\n• Team restructuring\n• Company milestones"
+								},
+								{
+									"name": "📈 Business Updates",
+									"value": "• Funding announcements\n• Partnership news\n• Market updates\n• Strategic initiatives"
+								}
+							]
+						}
+					],
+					"perms": [
+						{ "roles": ["@everyone"], "deny": ["SendMessages"] },
+						{
+							"roles": ["CEO", "CTO", "CPO", "VP Marketing", "VP Sales"],
+							"allow": ["SendMessages"]
+						}
+					]
+				},
+				{
+					"name": "🎉┃milestones",
+					"type": "text",
+					"topic": "Company milestones, achievements, and celebrations",
+					"pin": [
+						{
+							"title": "🎉 Company Milestones",
+							"description": "Celebrate our achievements, milestones, and team accomplishments!",
+							"color": 16763904,
+							"fields": [
+								{
+									"name": "📊 Key Metrics",
+									"value": "• User growth milestones\n• Revenue achievements\n• Product milestones\n• Team growth"
+								},
+								{
+									"name": "🏆 Recognition",
+									"value": "• Individual achievements\n• Team accomplishments\n• Industry awards\n• Customer success stories"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "📅┃company-calendar",
+					"type": "text",
+					"topic": "Important dates, deadlines, and company events",
+					"pin": [
+						{
+							"title": "📅 Company Calendar",
+							"description": "Important dates, deadlines, and company events to keep track of.",
+							"color": 3447003,
+							"fields": [
+								{
+									"name": "📅 Key Dates",
+									"value": "• Product launch dates\n• Board meetings\n• All-hands meetings\n• Company events"
+								},
+								{
+									"name": "⏰ Deadlines",
+									"value": "• Sprint deadlines\n• Project milestones\n• Investor updates\n• Performance reviews"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "💻 ENGINEERING",
+			"channels": [
+				{
+					"name": "💻┃engineering",
+					"type": "text",
+					"topic": "Engineering discussions, technical updates, and development news",
+					"pin": [
+						{
+							"title": "💻 Engineering Hub",
+							"description": "Central hub for engineering discussions, technical updates, and development news.",
+							"color": 3066993,
+							"fields": [
+								{
+									"name": "🔧 Technical Discussions",
+									"value": "• Architecture decisions\n• Code reviews\n• Technical challenges\n• Best practices"
+								},
+								{
+									"name": "📊 Development Metrics",
+									"value": "• Sprint progress\n• Code quality metrics\n• Performance benchmarks\n• Bug tracking"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "🚀┃releases",
+					"type": "text",
+					"topic": "Product releases, deployments, and version updates",
+					"pin": [
+						{
+							"title": "🚀 Product Releases",
+							"description": "Track product releases, deployments, and version updates.",
+							"color": 15158332,
+							"fields": [
+								{
+									"name": "📦 Release Process",
+									"value": "• Release planning\n• Testing procedures\n• Deployment steps\n• Rollback plans"
+								},
+								{
+									"name": "📋 Release Notes",
+									"value": "• Feature descriptions\n• Bug fixes\n• Breaking changes\n• Migration guides"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "🐛┃bugs-issues",
+					"type": "text",
+					"topic": "Bug reports, issue tracking, and technical problems",
+					"pin": [
+						{
+							"title": "🐛 Bug Reports & Issues",
+							"description": "Report bugs, track issues, and discuss technical problems.",
+							"color": 15158332,
+							"fields": [
+								{
+									"name": "📝 Bug Report Format",
+									"value": "**Title:** Brief description\n**Severity:** Critical/High/Medium/Low\n**Environment:** Dev/Staging/Production\n**Steps to Reproduce:**\n1. Step one\n2. Step two\n**Expected vs Actual:**\n**Screenshots/Logs:**"
+								},
+								{
+									"name": "🏷️ Issue Labels",
+									"value": "• Bug - Software defect\n• Enhancement - Feature request\n• Task - General work item\n• Epic - Large feature or project"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "🔧┃devops",
+					"type": "text",
+					"topic": "DevOps, infrastructure, and deployment discussions",
+					"pin": [
+						{
+							"title": "🔧 DevOps & Infrastructure",
+							"description": "DevOps discussions, infrastructure management, and deployment strategies.",
+							"color": 3447003,
+							"fields": [
+								{
+									"name": "🏗️ Infrastructure",
+									"value": "• Server management\n• Cloud services\n• Monitoring and alerting\n• Security updates"
+								},
+								{
+									"name": "🚀 Deployment",
+									"value": "• CI/CD pipelines\n• Release automation\n• Environment management\n• Rollback procedures"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "📊┃performance",
+					"type": "text",
+					"topic": "Performance monitoring, optimization, and metrics",
+					"pin": [
+						{
+							"title": "📊 Performance Monitoring",
+							"description": "Track performance metrics, optimization efforts, and system health.",
+							"color": 6323595,
+							"fields": [
+								{
+									"name": "📈 Key Metrics",
+									"value": "• Response times\n• Throughput\n• Error rates\n• Resource utilization"
+								},
+								{
+									"name": "🔍 Monitoring Tools",
+									"value": "• Application monitoring\n• Infrastructure monitoring\n• User experience tracking\n• Alert management"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "🎨 PRODUCT & DESIGN",
+			"channels": [
+				{
+					"name": "🎨┃product",
+					"type": "text",
+					"topic": "Product strategy, roadmap, and feature discussions",
+					"pin": [
+						{
+							"title": "🎨 Product Hub",
+							"description": "Product strategy, roadmap, and feature discussions.",
+							"color": 11342935,
+							"fields": [
+								{
+									"name": "📋 Product Strategy",
+									"value": "• Product vision and goals\n• Market analysis\n• Competitive landscape\n• User research insights"
+								},
+								{
+									"name": "🗺️ Roadmap",
+									"value": "• Feature prioritization\n• Release planning\n• Resource allocation\n• Timeline management"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "🎯┃user-research",
+					"type": "text",
+					"topic": "User research, feedback, and customer insights",
+					"pin": [
+						{
+							"title": "🎯 User Research",
+							"description": "User research findings, customer feedback, and market insights.",
+							"color": 10181046,
+							"fields": [
+								{
+									"name": "👥 Research Methods",
+									"value": "• User interviews\n• Surveys and questionnaires\n• Usability testing\n• Analytics analysis"
+								},
+								{
+									"name": "📊 Insights",
+									"value": "• User personas\n• Pain points and needs\n• Feature requests\n• Market trends"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "🎨┃design",
+					"type": "text",
+					"topic": "Design system, UI/UX, and visual design discussions",
+					"pin": [
+						{
+							"title": "🎨 Design System",
+							"description": "Design system, UI/UX, and visual design discussions.",
+							"color": 10181046,
+							"fields": [
+								{
+									"name": "🎨 Design Elements",
+									"value": "• Color palette\n• Typography\n• Component library\n• Icon system"
+								},
+								{
+									"name": "📐 Guidelines",
+									"value": "• Design principles\n• Accessibility standards\n• Brand guidelines\n• Usage examples"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "📱┃prototypes",
+					"type": "text",
+					"topic": "Prototypes, mockups, and design iterations",
+					"pin": [
+						{
+							"title": "📱 Prototypes & Mockups",
+							"description": "Share prototypes, mockups, and design iterations for feedback.",
+							"color": 10181046,
+							"fields": [
+								{
+									"name": "🎯 Prototype Types",
+									"value": "• Wireframes\n• High-fidelity mockups\n• Interactive prototypes\n• User flow diagrams"
+								},
+								{
+									"name": "💬 Feedback Process",
+									"value": "• Design reviews\n• Stakeholder feedback\n• User testing results\n• Iteration planning"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📈 GROWTH & MARKETING",
+			"channels": [
+				{
+					"name": "📈┃growth",
+					"type": "text",
+					"topic": "Growth strategies, metrics, and user acquisition",
+					"pin": [
+						{
+							"title": "📈 Growth & Metrics",
+							"description": "Growth strategies, key metrics, and user acquisition discussions.",
+							"color": 16763904,
+							"fields": [
+								{
+									"name": "📊 Key Metrics",
+									"value": "• User acquisition\n• Retention rates\n• Revenue growth\n• Market share"
+								},
+								{
+									"name": "🚀 Growth Strategies",
+									"value": "• Marketing campaigns\n• Product-led growth\n• Partnership opportunities\n• Referral programs"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "📢┃marketing",
+					"type": "text",
+					"topic": "Marketing campaigns, content, and brand strategy",
+					"pin": [
+						{
+							"title": "📢 Marketing Hub",
+							"description": "Marketing campaigns, content strategy, and brand development.",
+							"color": 16753920,
+							"fields": [
+								{
+									"name": "🎯 Campaigns",
+									"value": "• Digital marketing\n• Content marketing\n• Social media strategy\n• Email marketing"
+								},
+								{
+									"name": "📝 Content",
+									"value": "• Blog posts and articles\n• Video content\n• Social media posts\n• Case studies"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "💰┃sales",
+					"type": "text",
+					"topic": "Sales strategies, pipeline, and revenue tracking",
+					"pin": [
+						{
+							"title": "💰 Sales & Revenue",
+							"description": "Sales strategies, pipeline management, and revenue tracking.",
+							"color": 3066993,
+							"fields": [
+								{
+									"name": "📊 Sales Metrics",
+									"value": "• Pipeline value\n• Conversion rates\n• Average deal size\n• Sales velocity"
+								},
+								{
+									"name": "🎯 Strategies",
+									"value": "• Lead generation\n• Qualification process\n• Closing techniques\n• Customer retention"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "👥┃customer-success",
+					"type": "text",
+					"topic": "Customer success, support, and satisfaction",
+					"pin": [
+						{
+							"title": "👥 Customer Success",
+							"description": "Customer success strategies, support processes, and satisfaction tracking.",
+							"color": 3447003,
+							"fields": [
+								{
+									"name": "🎯 Success Metrics",
+									"value": "• Customer satisfaction\n• Net Promoter Score (NPS)\n• Churn rate\n• Expansion revenue"
+								},
+								{
+									"name": "🛠️ Support",
+									"value": "• Support ticket management\n• Knowledge base\n• Training materials\n• Onboarding process"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "📊 DATA & ANALYTICS",
+			"channels": [
+				{
+					"name": "📊┃analytics",
+					"type": "text",
+					"topic": "Data analytics, insights, and business intelligence",
+					"pin": [
+						{
+							"title": "📊 Analytics & Insights",
+							"description": "Data analytics, business intelligence, and insights generation.",
+							"color": 6323595,
+							"fields": [
+								{
+									"name": "📈 Key Metrics",
+									"value": "• User behavior analytics\n• Business performance metrics\n• Product usage statistics\n• Financial metrics"
+								},
+								{
+									"name": "🔍 Analysis Tools",
+									"value": "• Google Analytics\n• Mixpanel\n• Tableau\n• Custom dashboards"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "📈┃kpis",
+					"type": "text",
+					"topic": "Key Performance Indicators and business metrics",
+					"pin": [
+						{
+							"title": "📈 KPIs & Business Metrics",
+							"description": "Track Key Performance Indicators and business metrics.",
+							"color": 16763904,
+							"fields": [
+								{
+									"name": "🎯 Business KPIs",
+									"value": "• Monthly Recurring Revenue (MRR)\n• Customer Acquisition Cost (CAC)\n• Lifetime Value (LTV)\n• Churn rate"
+								},
+								{
+									"name": "📊 Product KPIs",
+									"value": "• Daily/Monthly Active Users\n• Feature adoption rates\n• User engagement metrics\n• Performance indicators"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "🔍┃experiments",
+					"type": "text",
+					"topic": "A/B tests, experiments, and data-driven decisions",
+					"pin": [
+						{
+							"title": "🔍 Experiments & A/B Testing",
+							"description": "A/B tests, experiments, and data-driven decision making.",
+							"color": 3447003,
+							"fields": [
+								{
+									"name": "🧪 Experiment Types",
+									"value": "• A/B tests\n• Multivariate tests\n• Feature flags\n• User experience experiments"
+								},
+								{
+									"name": "📊 Analysis",
+									"value": "• Statistical significance\n• Confidence intervals\n• Effect sizes\n• Business impact"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "💰 FINANCE & OPERATIONS",
+			"channels": [
+				{
+					"name": "💰┃finance",
+					"type": "text",
+					"topic": "Financial planning, budgeting, and investment discussions",
+					"pin": [
+						{
+							"title": "💰 Finance & Budgeting",
+							"description": "Financial planning, budgeting, and investment discussions.",
+							"color": 10038562,
+							"fields": [
+								{
+									"name": "📊 Financial Metrics",
+									"value": "• Revenue tracking\n• Expense management\n• Cash flow analysis\n• Profit margins"
+								},
+								{
+									"name": "💼 Investment",
+									"value": "• Funding rounds\n• Investor relations\n• Capital allocation\n• Financial planning"
+								}
+							]
+						}
+					],
+					"perms": [
+						{ "roles": ["@everyone"], "deny": ["ViewChannel"] },
+						{
+							"roles": [
+								"CEO",
+								"CTO",
+								"CPO",
+								"Finance Manager",
+								"Legal Counsel",
+								"Investor"
+							],
+							"allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
+						}
+					]
+				},
+				{
+					"name": "🏢┃operations",
+					"type": "text",
+					"topic": "Operations, processes, and organizational efficiency",
+					"pin": [
+						{
+							"title": "🏢 Operations & Processes",
+							"description": "Operations management, process optimization, and organizational efficiency.",
+							"color": 8359053,
+							"fields": [
+								{
+									"name": "⚙️ Process Management",
+									"value": "• Workflow optimization\n• Process documentation\n• Quality assurance\n• Efficiency improvements"
+								},
+								{
+									"name": "📋 Operations",
+									"value": "• Resource planning\n• Vendor management\n• Compliance tracking\n• Risk management"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "👥┃hr",
+					"type": "text",
+					"topic": "Human resources, hiring, and team management",
+					"pin": [
+						{
+							"title": "👥 Human Resources",
+							"description": "Human resources, hiring, and team management discussions.",
+							"color": 10038562,
+							"fields": [
+								{
+									"name": "🎯 HR Functions",
+									"value": "• Recruitment and hiring\n• Performance management\n• Employee development\n• Culture and engagement"
+								},
+								{
+									"name": "📊 Metrics",
+									"value": "• Employee satisfaction\n• Retention rates\n• Hiring metrics\n• Performance reviews"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "🤝 COLLABORATION",
+			"channels": [
+				{
+					"name": "🤝┃general",
+					"type": "text",
+					"topic": "General discussions and team collaboration",
+					"rateLimitPerUser": 2
+				},
+				{
+					"name": "💡┃ideas",
+					"type": "text",
+					"topic": "Brainstorming, ideas, and innovation discussions",
+					"pin": [
+						{
+							"title": "💡 Ideas & Innovation",
+							"description": "Share ideas, brainstorm solutions, and discuss innovation opportunities.",
+							"color": 15105570,
+							"fields": [
+								{
+									"name": "💭 Brainstorming",
+									"value": "• Product ideas\n• Process improvements\n• Market opportunities\n• Technology innovations"
+								},
+								{
+									"name": "🚀 Innovation",
+									"value": "• R&D projects\n• Experimental features\n• New technologies\n• Creative solutions"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "📚┃learning",
+					"type": "text",
+					"topic": "Learning resources, training, and skill development",
+					"pin": [
+						{
+							"title": "📚 Learning & Development",
+							"description": "Learning resources, training opportunities, and skill development.",
+							"color": 3447003,
+							"fields": [
+								{
+									"name": "🎓 Learning Resources",
+									"value": "• Online courses\n• Books and articles\n• Conference recordings\n• Internal training"
+								},
+								{
+									"name": "📈 Skill Development",
+									"value": "• Technical skills\n• Soft skills\n• Leadership development\n• Industry knowledge"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "🎤 VOICE CHANNELS",
+			"channels": [
+				{
+					"name": "💬┃general",
+					"type": "voice",
+					"topic": "General voice chat and casual discussions"
+				},
+				{
+					"name": "💻┃engineering",
+					"type": "voice",
+					"topic": "Engineering discussions and technical collaboration"
+				},
+				{
+					"name": "🎨┃product-design",
+					"type": "voice",
+					"topic": "Product and design collaboration"
+				},
+				{
+					"name": "📈┃growth-marketing",
+					"type": "voice",
+					"topic": "Growth and marketing discussions"
+				},
+				{
+					"name": "🤝┃meetings",
+					"type": "voice",
+					"topic": "Team meetings and formal discussions"
+				},
+				{
+					"name": "🎓┃learning",
+					"type": "voice",
+					"topic": "Learning sessions and knowledge sharing"
+				}
+			]
+		},
+		{
+			"name": "🔒 CONFIDENTIAL",
+			"channels": [
+				{
+					"name": "👑┃executive",
+					"type": "text",
+					"topic": "Executive discussions and strategic planning",
+					"perms": [
+						{ "roles": ["@everyone"], "deny": ["ViewChannel"] },
+						{
+							"roles": [
+								"CEO",
+								"CTO",
+								"CPO",
+								"VP Engineering",
+								"VP Product",
+								"VP Marketing",
+								"VP Sales"
+							],
+							"allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
+						}
+					]
+				},
+				{
+					"name": "💰┃investor-relations",
+					"type": "text",
+					"topic": "Investor relations and funding discussions",
+					"perms": [
+						{ "roles": ["@everyone"], "deny": ["ViewChannel"] },
+						{
+							"roles": [
+								"CEO",
+								"CTO",
+								"CPO",
+								"Finance Manager",
+								"Legal Counsel",
+								"Investor"
+							],
+							"allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
+						}
+					]
+				},
+				{
+					"name": "⚖️┃legal",
+					"type": "text",
+					"topic": "Legal matters, contracts, and compliance",
+					"perms": [
+						{ "roles": ["@everyone"], "deny": ["ViewChannel"] },
+						{
+							"roles": [
+								"CEO",
+								"CTO",
+								"CPO",
+								"Legal Counsel",
+								"Finance Manager"
+							],
+							"allow": ["ViewChannel", "ReadMessageHistory", "SendMessages"]
+						}
+					]
+				},
+				{
+					"name": "🔧┃system-logs",
+					"type": "text",
+					"topic": "System logs, bot activity, and technical monitoring",
+					"perms": [
+						{ "roles": ["@everyone"], "deny": ["ViewChannel"] },
+						{
+							"roles": [
+								"CEO",
+								"CTO",
+								"VP Engineering",
+								"DevOps Engineer",
+								"Bot"
+							],
+							"allow": [
+								"ViewChannel",
+								"SendMessages",
+								"ReadMessageHistory",
+								"AttachFiles",
+								"EmbedLinks"
+							]
+						}
+					]
+				}
+			]
+		}
+	]
 }

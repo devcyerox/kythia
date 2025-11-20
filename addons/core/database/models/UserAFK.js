@@ -6,29 +6,33 @@
  * @version 0.9.12-beta
  */
 
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
-const { KythiaModel } = require('kythia-core');
+const { KythiaModel } = require("kythia-core");
 
 class UserAFK extends KythiaModel {
-    static CACHE_KEYS = [['userId', 'guildId']];
-    static init(sequelize) {
-        super.init(
-            {
-                userId: { type: DataTypes.STRING, allowNull: false },
-                reason: { type: DataTypes.STRING, allowNull: false, defaultValue: 'No reason provided.' },
-                timestamp: { type: DataTypes.DATE, allowNull: false },
-            },
-            {
-                sequelize,
-                modelName: 'UserAFK',
-                tableName: 'user_afks',
-                timestamps: false,
-            }
-        );
+	static CACHE_KEYS = [["userId", "guildId"]];
+	static init(sequelize) {
+		KythiaModel.init(
+			{
+				userId: { type: DataTypes.STRING, allowNull: false },
+				reason: {
+					type: DataTypes.STRING,
+					allowNull: false,
+					defaultValue: "No reason provided.",
+				},
+				timestamp: { type: DataTypes.DATE, allowNull: false },
+			},
+			{
+				sequelize,
+				modelName: "UserAFK",
+				tableName: "user_afks",
+				timestamps: false,
+			},
+		);
 
-        return this;
-    }
+		return UserAFK;
+	}
 }
 
 // UserAFK.init(sequelize);

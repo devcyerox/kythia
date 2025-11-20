@@ -6,6 +6,7 @@
  * @version 0.9.12-beta
  */
 module.exports = {
-    subcommand: true,
-    data: (subcommandGroup) => subcommandGroup.setName('claim').setDescription('🌐 Klaim Your Rewards!'),
+	subcommand: true,
+	data: (subcommandGroup) =>
+		subcommandGroup.setName("claim").setDescription("🌐 Klaim Your Rewards!"),
 };
