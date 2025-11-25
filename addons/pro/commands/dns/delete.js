@@ -32,7 +32,7 @@ module.exports = {
 		const baseDomain = kythiaConfig.addons.pro.cloudflare.domain || 'kyth.me';
 
 		try {
-			const userRecords = await DnsRecord.getAllCache({
+			const userRecords = await DnsRecord.findAll({
 				include: {
 					model: Subdomain,
 					as: 'subdomain',
@@ -118,8 +118,10 @@ module.exports = {
 			});
 		}
 
-		const recordToDelete = await DnsRecord.getCache({
-			id: databaseRecordId,
+		const recordToDelete = await DnsRecord.findAll({
+			where: {
+				id: databaseRecordId,
+			},
 			include: {
 				model: Subdomain,
 				as: 'subdomain',

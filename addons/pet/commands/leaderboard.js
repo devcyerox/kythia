@@ -18,7 +18,7 @@ module.exports = {
 	async execute(interaction) {
 		await interaction.deferReply();
 
-		const leaderboard = await UserPet.getAllCache({
+		const leaderboard = await UserPet.findAll({
 			include: [{ model: Pet, as: 'pet' }],
 			order: [
 				[

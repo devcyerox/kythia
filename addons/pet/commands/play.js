@@ -20,8 +20,10 @@ module.exports = {
 
 		const userId = interaction.user.id;
 		// Get user's pet
-		const userPet = await UserPet.getCache({
-			userId: userId,
+		const userPet = await UserPet.findOne({
+			where: {
+				userId: userId,
+			},
 			include: [{ model: Pet, as: 'pet' }],
 		});
 		if (!userPet) {

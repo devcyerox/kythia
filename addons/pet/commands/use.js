@@ -25,7 +25,7 @@ module.exports = {
 		const userId = interaction.user.id;
 
 		const kythiaUser = await KythiaUser.getCache({ userId });
-		const userPet = await UserPet.getCache({
+		const userPet = await UserPet.findOne({
 			where: { userId: userId, isDead: false },
 			include: [{ model: Pet, as: 'pet' }],
 		});

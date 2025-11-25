@@ -25,8 +25,10 @@ module.exports = {
 		await interaction.deferReply();
 
 		const userId = interaction.user.id;
-		const userPet = await UserPet.getCache({
-			userId: userId,
+		const userPet = await UserPet.findOne({
+			where: {
+				userId: userId,
+			},
 			include: [{ model: Pet, as: 'pet' }],
 		});
 		const newName = interaction.options.getString('name');
