@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
@@ -13,15 +13,15 @@ const {
 	AttachmentBuilder,
 	EmbedBuilder,
 	InteractionContextType,
-} = require("discord.js");
-const _fs = require("node:fs");
-const path = require("node:path");
-const { loadTemplates, buildEmbeds } = require("../helpers/template");
-const { t } = require("@coreHelpers/translator");
-const { embedFooter } = require("@coreHelpers/discord");
+} = require('discord.js');
+const _fs = require('node:fs');
+const path = require('node:path');
+const { loadTemplates, buildEmbeds } = require('../helpers/template');
+const { t } = require('@coreHelpers/translator');
+const { embedFooter } = require('@coreHelpers/discord');
 
 // Path ke folder template
-const TEMPLATE_DIR = path.join(__dirname, "../template");
+const TEMPLATE_DIR = path.join(__dirname, '../template');
 
 // Loader template DRY: gunakan loadTemplates helper untuk load dari folder + embedded
 const EMBEDDED = loadTemplates(TEMPLATE_DIR);
@@ -39,7 +39,7 @@ const PERM = new Proxy(
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function roleIdByName(guild, name) {
-	if (name === "@everyone") return guild.roles.everyone.id;
+	if (name === '@everyone') return guild.roles.everyone.id;
 	const r = guild.roles.cache.find(
 		(x) => x.name.toLowerCase() === name.toLowerCase(),
 	);
@@ -73,7 +73,7 @@ async function ensureRole(guild, spec, stats) {
 		hoist: !!spec.hoist,
 		mentionable: !!spec.mentionable,
 		permissions: perms,
-		reason: "autobuild: create role",
+		reason: 'autobuild: create role',
 	});
 	stats.role.created++;
 	await sleep(250);
@@ -92,7 +92,7 @@ async function ensureCategory(guild, name, stats) {
 	const cat = await guild.channels.create({
 		name,
 		type: ChannelType.GuildCategory,
-		reason: "autobuild: create category",
+		reason: 'autobuild: create category',
 	});
 	stats.category.created++;
 	await sleep(250);
@@ -116,7 +116,7 @@ async function ensureChannel(guild, category, spec, stats) {
 		topic: spec.topic || undefined,
 		nsfw: !!spec.nsfw,
 		rateLimitPerUser: spec.rateLimitPerUser || undefined,
-		reason: "autobuild: create channel",
+		reason: 'autobuild: create channel',
 	};
 	if (spec.type === ChannelType.GuildForum) {
 		options.availableTags = (spec.forumTags || []).map((t) => ({ name: t }));
@@ -139,7 +139,7 @@ async function ensureChannel(guild, category, spec, stats) {
 	) {
 		for (const msg of spec.pin) {
 			let m;
-			if (typeof msg === "object" && msg !== null && !Array.isArray(msg)) {
+			if (typeof msg === 'object' && msg !== null && !Array.isArray(msg)) {
 				const embedsToSend = buildEmbeds([msg]);
 				m = await ch.send({ embeds: embedsToSend });
 			} else {
@@ -167,16 +167,16 @@ async function updateProgress(interaction, progress) {
 			: 0;
 	const barLength = 20;
 	const filledLength = Math.round((percent / 100) * barLength);
-	const bar = "█".repeat(filledLength) + "░".repeat(barLength - filledLength);
+	const bar = '█'.repeat(filledLength) + '░'.repeat(barLength - filledLength);
 	const embed = new EmbedBuilder()
 		.setColor(kythia.bot.color)
 		.setDescription(
-			`## ${await t(interaction, "server.server.progress.title")}\n` +
+			`## ${await t(interaction, 'server.server.progress.title')}\n` +
 				`**${progress.label}**\n` +
 				`\`${bar}\` ${percent}%\n` +
 				`(${progress.current}/${progress.total})\n\n` +
-				(progress.extra || "") +
-				`\n${await t(interaction, "server.server.progress.step", { step: progress.step, totalSteps: progress.totalSteps })}`,
+				(progress.extra || '') +
+				`\n${await t(interaction, 'server.server.progress.step', { step: progress.step, totalSteps: progress.totalSteps })}`,
 		)
 		.setFooter(await embedFooter(interaction));
 	await interaction.editReply({ embeds: [embed] });
@@ -190,7 +190,7 @@ async function runTemplate(interaction, tpl, opts) {
 		channel: { created: 0, skipped: 0 },
 		failed: 0,
 	};
-	if (!guild) throw new Error("guild missing");
+	if (!guild) throw new Error('guild missing');
 	if (
 		!guild.members.me.permissions.has(
 			PermissionFlagsBits.ManageGuild |
@@ -199,7 +199,7 @@ async function runTemplate(interaction, tpl, opts) {
 		)
 	) {
 		throw new Error(
-			"bot kurang permission: ManageGuild, ManageChannels, ManageRoles",
+			'bot kurang permission: ManageGuild, ManageChannels, ManageRoles',
 		);
 	}
 
@@ -230,7 +230,7 @@ async function runTemplate(interaction, tpl, opts) {
 				totalSteps,
 				current: i,
 				total: totalRoles,
-				label: await t(interaction, "server.server.progress.creating.roles"),
+				label: await t(interaction, 'server.server.progress.creating.roles'),
 			});
 		}
 		step++;
@@ -239,7 +239,7 @@ async function runTemplate(interaction, tpl, opts) {
 	// Categories & Channels
 	let catIdx = 0;
 	for (const cat of tpl.categories || []) {
-		if (cat.name.toLowerCase() === "voice" && !opts.includeVoice) continue;
+		if (cat.name.toLowerCase() === 'voice' && !opts.includeVoice) continue;
 		let catRef = null;
 		if (!opts.dryRun) {
 			try {
@@ -255,21 +255,21 @@ async function runTemplate(interaction, tpl, opts) {
 			totalSteps,
 			current: catIdx,
 			total: totalCats,
-			label: await t(interaction, "server.server.progress.creating.categories"),
+			label: await t(interaction, 'server.server.progress.creating.categories'),
 		});
 
 		// Channels in this category
 		let chIdx = 0;
 		for (const ch of cat.channels || []) {
 			if (
-				cat.name.toLowerCase() === "voice" &&
+				cat.name.toLowerCase() === 'voice' &&
 				!opts.includeVoice &&
 				ch.type === ChannelType.GuildVoice
 			)
 				continue;
-			if (opts.privateStaff && cat.name.toLowerCase() === "staff") {
+			if (opts.privateStaff && cat.name.toLowerCase() === 'staff') {
 				ch.perms = ch.perms || [];
-				ch.perms.unshift({ roles: ["@everyone"], deny: ["ViewChannel"] });
+				ch.perms.unshift({ roles: ['@everyone'], deny: ['ViewChannel'] });
 			}
 			if (!opts.dryRun) {
 				try {
@@ -288,7 +288,7 @@ async function runTemplate(interaction, tpl, opts) {
 				total: cat.channels.length,
 				label: await t(
 					interaction,
-					"server.server.progress.creating.channels",
+					'server.server.progress.creating.channels',
 					{ category: cat.name },
 				),
 			});
@@ -299,70 +299,70 @@ async function runTemplate(interaction, tpl, opts) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("server")
-		.setDescription("⚙️ Discord server management tools")
+		.setName('server')
+		.setDescription('⚙️ Discord server management tools')
 		.addSubcommand((sub) =>
 			sub
-				.setName("autobuild")
+				.setName('autobuild')
 				.setDescription(
-					"automatically build server structure from a JSON template",
+					'automatically build server structure from a JSON template',
 				)
 				.addStringOption((o) =>
 					o
-						.setName("template")
+						.setName('template')
 						.setDescription(
-							"template key (e.g. store, gaming, saas, company, tech-community)",
+							'template key (e.g. store, gaming, saas, company, tech-community)',
 						)
 						.setRequired(true)
 						.setAutocomplete(true),
 				)
 				.addBooleanOption((o) =>
 					o
-						.setName("reset")
-						.setDescription("reset server first")
+						.setName('reset')
+						.setDescription('reset server first')
 						.setRequired(true),
 				)
 				.addBooleanOption((o) =>
 					o
-						.setName("dry_run")
-						.setDescription("simulation only")
+						.setName('dry_run')
+						.setDescription('simulation only')
 						.setRequired(false),
 				)
 				.addBooleanOption((o) =>
 					o
-						.setName("include_voice")
-						.setDescription("include voice category")
+						.setName('include_voice')
+						.setDescription('include voice category')
 						.setRequired(false),
 				)
 				.addBooleanOption((o) =>
 					o
-						.setName("private_staff")
-						.setDescription("force staff private")
+						.setName('private_staff')
+						.setDescription('force staff private')
 						.setRequired(false),
 				)
 				.addStringOption((o) =>
-					o.setName("locale").setDescription("id/en").setRequired(false),
+					o.setName('locale').setDescription('id/en').setRequired(false),
 				),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("backup")
-				.setDescription("Backup server structure to a JSON file"),
+				.setName('backup')
+				.setDescription('Backup server structure to a JSON file'),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("restore")
-				.setDescription("Restore server structure from a JSON backup file")
+				.setName('restore')
+				.setDescription('Restore server structure from a JSON backup file')
 				.addAttachmentOption((opt) =>
 					opt
-						.setName("file")
-						.setDescription("Server backup file (.json)")
+						.setName('file')
+						.setDescription('Server backup file (.json)')
 						.setRequired(true),
 				)
 				.addBooleanOption((opt) =>
 					opt
-						.setName("clear")
-						.setDescription("Delete all channels & roles first?")
+						.setName('clear')
+						.setDescription('Delete all channels & roles first?')
 						.setRequired(false),
 				),
 		)
@@ -380,18 +380,18 @@ module.exports = {
 		// reset
 		.addSubcommand((sub) =>
 			sub
-				.setName("reset")
-				.setDescription("Reset server structure to default")
+				.setName('reset')
+				.setDescription('Reset server structure to default')
 				.addBooleanOption((opt) =>
 					opt
-						.setName("clear")
-						.setDescription("Delete all channels & roles first?")
+						.setName('clear')
+						.setDescription('Delete all channels & roles first?')
 						.setRequired(false),
 				),
 		)
 		.setContexts(InteractionContextType.Guild)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
-	aliases: ["srv"],
+	aliases: ['srv'],
 	guildOnly: true,
 	voteLcoked: true,
 	permissions: PermissionFlagsBits.ManageGuild,
@@ -405,9 +405,9 @@ module.exports = {
 		const focused = interaction.options.getFocused();
 		// Autocomplete for /server autobuild template
 		if (
-			sub === "autobuild" &&
-			interaction.options.getSubcommand() === "autobuild" &&
-			interaction.options.getFocused(true)?.name === "template"
+			sub === 'autobuild' &&
+			interaction.options.getSubcommand() === 'autobuild' &&
+			interaction.options.getFocused(true)?.name === 'template'
 		) {
 			const embeddedTemplates = Object.entries(EMBEDDED)
 				.map(([key, tpl]) => ({
@@ -424,9 +424,9 @@ module.exports = {
 		}
 		// Autocomplete untuk /server clone name (server list)
 		if (
-			sub === "clone" &&
-			interaction.options.getSubcommand() === "clone" &&
-			interaction.options.getFocused(true)?.name === "name"
+			sub === 'clone' &&
+			interaction.options.getSubcommand() === 'clone' &&
+			interaction.options.getFocused(true)?.name === 'name'
 		) {
 			const choices = interaction.client.guilds.cache
 				.filter((g) =>
@@ -448,21 +448,21 @@ module.exports = {
 
 		if (!interaction.guild) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					`## ${await t(interaction, "server.server.command.no.guild")}`,
+					`## ${await t(interaction, 'server.server.command.no.guild')}`,
 				);
 			return interaction.editReply({ embeds: [embed], ephemeral: true });
 		}
 		// AUTOBUILD
-		if (subcommand === "autobuild") {
-			const reset = interaction.options.getBoolean("reset", true);
-			const key = interaction.options.getString("template", true);
-			const dryRun = interaction.options.getBoolean("dry_run") ?? false;
+		if (subcommand === 'autobuild') {
+			const reset = interaction.options.getBoolean('reset', true);
+			const key = interaction.options.getString('template', true);
+			const dryRun = interaction.options.getBoolean('dry_run') ?? false;
 			const includeVoice =
-				interaction.options.getBoolean("include_voice") ?? true;
+				interaction.options.getBoolean('include_voice') ?? true;
 			const privateStaff =
-				interaction.options.getBoolean("private_staff") ?? true;
+				interaction.options.getBoolean('private_staff') ?? true;
 
 			if (reset) {
 				await resetServer(interaction);
@@ -471,17 +471,17 @@ module.exports = {
 			const tpl = EMBEDDED[key];
 			if (!tpl) {
 				const embed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						`## ${await t(interaction, "server.server.autobuild.template.not.found", { key })}`,
+						`## ${await t(interaction, 'server.server.autobuild.template.not.found', { key })}`,
 					);
 				return interaction.editReply({ embeds: [embed], ephemeral: true });
 			}
 
 			const locale =
-				interaction.options.getString("locale") ||
+				interaction.options.getString('locale') ||
 				tpl?.meta?.defaultLocale ||
-				"id";
+				'id';
 			// No-op localization: just return the original message
 			const pin = (tmsg) => tmsg;
 			for (const cat of tpl.categories)
@@ -496,7 +496,7 @@ module.exports = {
 						new EmbedBuilder()
 							.setColor(kythia.bot.color)
 							.setDescription(
-								`## ${await t(interaction, "server.server.autobuild.progress.start")}`,
+								`## ${await t(interaction, 'server.server.autobuild.progress.start')}`,
 							)
 							.setFooter(await embedFooter(interaction)),
 					],
@@ -511,12 +511,12 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "server.server.autobuild.success.title", { name: tpl.meta.display || key })}\n` +
-							(await t(interaction, "server.server.autobuild.success.desc", {
-								mode: dryRun ? "dry-run" : "apply",
+						`## ${await t(interaction, 'server.server.autobuild.success.title', { name: tpl.meta.display || key })}\n` +
+							(await t(interaction, 'server.server.autobuild.success.desc', {
+								mode: dryRun ? 'dry-run' : 'apply',
 								locale,
-								voice: includeVoice ? "on" : "off",
-								staff: privateStaff ? "on" : "off",
+								voice: includeVoice ? 'on' : 'off',
+								staff: privateStaff ? 'on' : 'off',
 								roleCreated: stats.role.created,
 								roleSkipped: stats.role.skipped,
 								catCreated: stats.category.created,
@@ -531,24 +531,24 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			} catch (e) {
 				const embed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						`## ${await t(interaction, "server.server.autobuild.failed", { error: e.message })}`,
+						`## ${await t(interaction, 'server.server.autobuild.failed', { error: e.message })}`,
 					);
 				return interaction.editReply({ embeds: [embed] });
 			}
 		}
 
 		// BACKUP/RESTORE/CLONE
-		if (["backup", "restore", "clone"].includes(subcommand)) {
+		if (['backup', 'restore', 'clone'].includes(subcommand)) {
 			switch (subcommand) {
-				case "backup": {
+				case 'backup': {
 					const guild = interaction.guild;
 					if (!guild) {
 						const embed = new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
-								`## ${await t(interaction, "server.server.backup.no.guild")}`,
+								`## ${await t(interaction, 'server.server.backup.no.guild')}`,
 							);
 						return interaction.editReply({ embeds: [embed] });
 					}
@@ -559,7 +559,7 @@ module.exports = {
 							new EmbedBuilder()
 								.setColor(kythia.bot.color)
 								.setDescription(
-									`## ${await t(interaction, "server.server.backup.progress.start")}`,
+									`## ${await t(interaction, 'server.server.backup.progress.start')}`,
 								)
 								.setFooter(await embedFooter(interaction)),
 						],
@@ -588,7 +588,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.backup.progress.settings")}`,
+										`## ${await t(interaction, 'server.server.backup.progress.settings')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -612,7 +612,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.backup.progress.roles")}`,
+										`## ${await t(interaction, 'server.server.backup.progress.roles')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -634,7 +634,7 @@ module.exports = {
 										id: po.id,
 										allow: po.allow.bitfield.toString(),
 										deny: po.deny.bitfield.toString(),
-										type: po.type === OverwriteType.Role ? "role" : "member",
+										type: po.type === OverwriteType.Role ? 'role' : 'member',
 									}),
 								),
 							}));
@@ -644,7 +644,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.backup.progress.channels")}`,
+										`## ${await t(interaction, 'server.server.backup.progress.channels')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -669,7 +669,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.backup.progress.emojis")}`,
+										`## ${await t(interaction, 'server.server.backup.progress.emojis')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -680,7 +680,7 @@ module.exports = {
 						try {
 							if (
 								guild.soundboard &&
-								typeof guild.soundboard.sounds?.fetch === "function"
+								typeof guild.soundboard.sounds?.fetch === 'function'
 							) {
 								const soundboardSounds = await guild.soundboard.sounds.fetch();
 								soundboard = soundboardSounds.map((s) => ({
@@ -690,7 +690,7 @@ module.exports = {
 								}));
 							}
 						} catch (e) {
-							console.warn("Gagal fetch soundboard:", e.message);
+							console.warn('Gagal fetch soundboard:', e.message);
 							soundboard = [];
 						}
 
@@ -699,7 +699,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.backup.progress.soundboard")}`,
+										`## ${await t(interaction, 'server.server.backup.progress.soundboard')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -729,7 +729,7 @@ module.exports = {
 
 						// Kirim file ke DM user
 						await interaction.user.send({
-							content: await t(interaction, "server.server.backup.dm.content", {
+							content: await t(interaction, 'server.server.backup.dm.content', {
 								name: guild.name,
 							}),
 							files: [file],
@@ -737,46 +737,46 @@ module.exports = {
 
 						// Update reply awal di channel
 						const embed = new EmbedBuilder()
-							.setColor("Green")
+							.setColor('Green')
 							.setDescription(
-								`## ${await t(interaction, "server.server.backup.success")}`,
+								`## ${await t(interaction, 'server.server.backup.success')}`,
 							);
 						await interaction.editReply({ embeds: [embed] });
 					} catch (err) {
 						console.error(err);
 						if (err.code === 50007) {
 							const embed = new EmbedBuilder()
-								.setColor("Red")
+								.setColor('Red')
 								.setDescription(
-									`## ${await t(interaction, "server.server.backup.dm.failed")}`,
+									`## ${await t(interaction, 'server.server.backup.dm.failed')}`,
 								);
 							return interaction.editReply({ embeds: [embed] });
 						}
 						const embed = new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
-								`## ${await t(interaction, "server.server.backup.failed")}`,
+								`## ${await t(interaction, 'server.server.backup.failed')}`,
 							);
 						return interaction.editReply({ embeds: [embed] });
 					}
 					break;
 				}
-				case "restore":
-				case "clone": {
+				case 'restore':
+				case 'clone': {
 					// Progress embed: start
 					await interaction.editReply({
 						embeds: [
 							new EmbedBuilder()
 								.setColor(kythia.bot.color)
 								.setDescription(
-									`## ${await t(interaction, "server.server.restore.progress.start")}`,
+									`## ${await t(interaction, 'server.server.restore.progress.start')}`,
 								)
 								.setFooter(await embedFooter(interaction)),
 						],
 					});
 
 					let backup;
-					const clearBefore = interaction.options.getBoolean("clear") ?? false;
+					const clearBefore = interaction.options.getBoolean('clear') ?? false;
 					const guild = interaction.guild;
 
 					const fetchAssetBuffer = async (url) => {
@@ -788,13 +788,13 @@ module.exports = {
 					};
 
 					try {
-						if (subcommand === "restore") {
-							const file = interaction.options.getAttachment("file");
-							if (!file || !file.name.endsWith(".json")) {
+						if (subcommand === 'restore') {
+							const file = interaction.options.getAttachment('file');
+							if (!file || !file.name.endsWith('.json')) {
 								const embed = new EmbedBuilder()
-									.setColor("Red")
+									.setColor('Red')
 									.setDescription(
-										`## ${await t(interaction, "server.server.restore.file.invalid")}`,
+										`## ${await t(interaction, 'server.server.restore.file.invalid')}`,
 									);
 								return interaction.editReply({ embeds: [embed] });
 							}
@@ -806,9 +806,9 @@ module.exports = {
 
 						if (!backup) {
 							const embed = new EmbedBuilder()
-								.setColor("Red")
+								.setColor('Red')
 								.setDescription(
-									`## ${await t(interaction, "server.server.restore.data.invalid")}`,
+									`## ${await t(interaction, 'server.server.restore.data.invalid')}`,
 								);
 							return interaction.editReply({ embeds: [embed] });
 						}
@@ -820,7 +820,7 @@ module.exports = {
 									new EmbedBuilder()
 										.setColor(kythia.bot.color)
 										.setDescription(
-											`## ${await t(interaction, "server.server.restore.clearing")}`,
+											`## ${await t(interaction, 'server.server.restore.clearing')}`,
 										)
 										.setFooter(await embedFooter(interaction)),
 								],
@@ -830,7 +830,7 @@ module.exports = {
 							);
 							await Promise.all(
 								guild.roles.cache
-									.filter((r) => r.editable && r.name !== "@everyone")
+									.filter((r) => r.editable && r.name !== '@everyone')
 									.map((r) => r.delete().catch(() => {})),
 							);
 							await Promise.all(
@@ -849,7 +849,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.restore.settings")}`,
+										`## ${await t(interaction, 'server.server.restore.settings')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -866,7 +866,7 @@ module.exports = {
 								banner: await fetchAssetBuffer(settings.bannerURL),
 							})
 							.catch((e) =>
-								console.warn("Failed to update server settings:", e.message),
+								console.warn('Failed to update server settings:', e.message),
 							);
 
 						// Restore Roles
@@ -875,7 +875,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.restore.roles.text")}`,
+										`## ${await t(interaction, 'server.server.restore.roles.text')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -890,7 +890,7 @@ module.exports = {
 									hoist: roleData.hoist,
 									permissions: BigInt(roleData.permissions),
 									mentionable: roleData.mentionable,
-									reason: "Restore backup",
+									reason: 'Restore backup',
 								})
 								.catch(() => null);
 							if (role) roleMap.set(roleData.id, role);
@@ -901,7 +901,7 @@ module.exports = {
 										new EmbedBuilder()
 											.setColor(kythia.bot.color)
 											.setDescription(
-												`## ${await t(interaction, "server.server.restore.roles.progress", { current: roleIdx, total: backup.roles.length })}`,
+												`## ${await t(interaction, 'server.server.restore.roles.progress', { current: roleIdx, total: backup.roles.length })}`,
 											)
 											.setFooter(await embedFooter(interaction)),
 									],
@@ -915,7 +915,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.restore.channels.text")}`,
+										`## ${await t(interaction, 'server.server.restore.channels.text')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -939,7 +939,7 @@ module.exports = {
 										new EmbedBuilder()
 											.setColor(kythia.bot.color)
 											.setDescription(
-												`## ${await t(interaction, "server.server.restore.categories.progress", { current: catIdx, total: categories.length })}`,
+												`## ${await t(interaction, 'server.server.restore.categories.progress', { current: catIdx, total: categories.length })}`,
 											)
 											.setFooter(await embedFooter(interaction)),
 									],
@@ -968,7 +968,7 @@ module.exports = {
 										allow: BigInt(po.allow),
 										deny: BigInt(po.deny),
 										type:
-											po.type === "role"
+											po.type === 'role'
 												? OverwriteType.Role
 												: OverwriteType.Member,
 									}),
@@ -981,7 +981,7 @@ module.exports = {
 										new EmbedBuilder()
 											.setColor(kythia.bot.color)
 											.setDescription(
-												`## ${await t(interaction, "server.server.restore.channels.progress", { current: chIdx, total: nonCatChannels.length })}`,
+												`## ${await t(interaction, 'server.server.restore.channels.progress', { current: chIdx, total: nonCatChannels.length })}`,
 											)
 											.setFooter(await embedFooter(interaction)),
 									],
@@ -995,7 +995,7 @@ module.exports = {
 								new EmbedBuilder()
 									.setColor(kythia.bot.color)
 									.setDescription(
-										`## ${await t(interaction, "server.server.restore.assets")}`,
+										`## ${await t(interaction, 'server.server.restore.assets')}`,
 									)
 									.setFooter(await embedFooter(interaction)),
 							],
@@ -1012,7 +1012,7 @@ module.exports = {
 										}),
 									)
 									.catch((e) =>
-										console.warn("Failed to restore emoji:", e.message),
+										console.warn('Failed to restore emoji:', e.message),
 									),
 							);
 						});
@@ -1022,12 +1022,12 @@ module.exports = {
 									.then((buffer) =>
 										guild.stickers.create({
 											name: sticker.name,
-											tags: sticker.tags.split(",")[0],
+											tags: sticker.tags.split(',')[0],
 											file: buffer,
 										}),
 									)
 									.catch((e) =>
-										console.warn("Failed to restore sticker:", e.message),
+										console.warn('Failed to restore sticker:', e.message),
 									),
 							);
 						});
@@ -1042,7 +1042,7 @@ module.exports = {
 										}),
 									)
 									.catch((e) =>
-										console.warn("Failed to restore sound:", e.message),
+										console.warn('Failed to restore sound:', e.message),
 									),
 							);
 						});
@@ -1050,17 +1050,17 @@ module.exports = {
 						await Promise.allSettled(assetPromises);
 
 						const embed = new EmbedBuilder()
-							.setColor("Green")
+							.setColor('Green')
 							.setDescription(
-								`## ${await t(interaction, "server.server.restore.success", { name: backup.metadata.guildName })}`,
+								`## ${await t(interaction, 'server.server.restore.success', { name: backup.metadata.guildName })}`,
 							);
 						return interaction.editReply({ embeds: [embed] });
 					} catch (err) {
 						console.error(err);
 						const embed = new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
-								`## ${await t(interaction, "server.server.restore.failed")}`,
+								`## ${await t(interaction, 'server.server.restore.failed')}`,
 							);
 						return interaction.editReply({ embeds: [embed] });
 					}
@@ -1069,7 +1069,7 @@ module.exports = {
 		}
 
 		// RESET
-		if (subcommand === "reset") {
+		if (subcommand === 'reset') {
 			await resetServer(interaction);
 		}
 	},
@@ -1079,9 +1079,9 @@ async function resetServer(interaction) {
 	const guild = interaction.guild;
 	if (!guild) {
 		const embed = new EmbedBuilder()
-			.setColor("Red")
+			.setColor('Red')
 			.setDescription(
-				`## ${await t(interaction, "server.server.reset.no.guild")}`,
+				`## ${await t(interaction, 'server.server.reset.no.guild')}`,
 			);
 		return interaction.editReply({ embeds: [embed] });
 	}
@@ -1092,7 +1092,7 @@ async function resetServer(interaction) {
 			new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "server.server.reset.progress.start")}`,
+					`## ${await t(interaction, 'server.server.reset.progress.start')}`,
 				)
 				.setFooter(await embedFooter(interaction)),
 		],
@@ -1113,7 +1113,7 @@ async function resetServer(interaction) {
 					new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "server.server.reset.progress.channels", { current: chIdx, total: channelsArr.length })}`,
+							`## ${await t(interaction, 'server.server.reset.progress.channels', { current: chIdx, total: channelsArr.length })}`,
 						)
 						.setFooter(await embedFooter(interaction)),
 				],
@@ -1126,7 +1126,7 @@ async function resetServer(interaction) {
 	let roleIdx = 0;
 	const rolesArr = Array.from(guild.roles.cache.values());
 	for (const role of rolesArr) {
-		if (role.editable && role.name !== "@everyone") {
+		if (role.editable && role.name !== '@everyone') {
 			rolePromises.push(role.delete().catch(() => {}));
 		}
 		roleIdx++;
@@ -1136,7 +1136,7 @@ async function resetServer(interaction) {
 					new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "server.server.reset.progress.roles", { current: roleIdx, total: rolesArr.length })}`,
+							`## ${await t(interaction, 'server.server.reset.progress.roles', { current: roleIdx, total: rolesArr.length })}`,
 						)
 						.setFooter(await embedFooter(interaction)),
 				],
@@ -1156,7 +1156,7 @@ async function resetServer(interaction) {
 					new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "server.server.reset.progress.emojis", { current: emojiIdx, total: emojisArr.length })}`,
+							`## ${await t(interaction, 'server.server.reset.progress.emojis', { current: emojiIdx, total: emojisArr.length })}`,
 						)
 						.setFooter(await embedFooter(interaction)),
 				],
@@ -1176,7 +1176,7 @@ async function resetServer(interaction) {
 						new EmbedBuilder()
 							.setColor(kythia.bot.color)
 							.setDescription(
-								`## ${await t(interaction, "server.server.reset.progress.stickers", { current: stickerIdx, total: stickersArr.length })}`,
+								`## ${await t(interaction, 'server.server.reset.progress.stickers', { current: stickerIdx, total: stickersArr.length })}`,
 							)
 							.setFooter(await embedFooter(interaction)),
 					],
@@ -1186,7 +1186,7 @@ async function resetServer(interaction) {
 	}
 
 	const embed = new EmbedBuilder()
-		.setColor("Green")
-		.setDescription(`${await t(interaction, "server.server.reset.success")}`);
+		.setColor('Green')
+		.setDescription(`${await t(interaction, 'server.server.reset.success')}`);
 	return interaction.editReply({ embeds: [embed] });
 }

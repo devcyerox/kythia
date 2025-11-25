@@ -3,12 +3,12 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 let _isOwner = () => false;
-let _personaPrompt = "Default Persona: You are a helpful AI assistant.";
-let _ownerInteractionPrompt = "";
+let _personaPrompt = 'Default Persona: You are a helpful AI assistant.';
+let _ownerInteractionPrompt = '';
 
 const toolRulesPrompt = `
 --- TOOL USAGE RULES (MANDATORY) ---
@@ -39,8 +39,8 @@ const discordRulesPrompt = `
  * @param {object} deps.config - The main application config object
  */
 function init({ isOwner, config }) {
-	if (typeof isOwner !== "function" || !config) {
-		console.error("PromptBuilder init requires isOwner function and config.");
+	if (typeof isOwner !== 'function' || !config) {
+		console.error('PromptBuilder init requires isOwner function and config.');
 
 		return;
 	}
@@ -76,7 +76,7 @@ function buildSystemInstruction(context) {
 		instructionParts.push(_ownerInteractionPrompt);
 	}
 
-	let instruction = instructionParts.join("\n");
+	let instruction = instructionParts.join('\n');
 
 	const userContext = `
    --- CURRENT INFORMATION ---
@@ -90,7 +90,7 @@ function buildSystemInstruction(context) {
    Conversation Context:
    - Server: ${context.guildName}
    - Channel: #${context.channelName}
-   ${context.userFactsString ? `\nFacts you already remember about this user:\n${context.userFactsString}` : ""}
+   ${context.userFactsString ? `\nFacts you already remember about this user:\n${context.userFactsString}` : ''}
    `;
 
 	instruction += userContext;

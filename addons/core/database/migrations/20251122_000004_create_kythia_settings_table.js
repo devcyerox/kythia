@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("kythia_settings", {
+		await queryInterface.createTable('kythia_settings', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -21,12 +21,12 @@ module.exports = {
 			},
 		});
 
-		await queryInterface.addIndex("kythia_settings", ["guildId"], {
-			name: "kythia_settings_guildId",
+		await queryInterface.addIndex('kythia_settings', ['guildId'], {
+			name: 'kythia_settings_guildId',
 		});
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("kythia_settings");
+		await queryInterface.dropTable('kythia_settings');
 	},
 };

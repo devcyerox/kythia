@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("slowmode")
-			.setDescription("⏳ Sets the slowmode for the channel.")
+			.setName('slowmode')
+			.setDescription('⏳ Sets the slowmode for the channel.')
 			.addIntegerOption((option) =>
 				option
-					.setName("duration")
-					.setDescription("Duration in seconds")
+					.setName('duration')
+					.setDescription('Duration in seconds')
 					.setRequired(true),
 			),
 
@@ -26,14 +26,14 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
-		const duration = interaction.options.getInteger("duration");
+		const duration = interaction.options.getInteger('duration');
 		await interaction.channel.setRateLimitPerUser(duration);
 
 		const embed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				`## ⏳ ${await t(interaction, "core.moderation.slowmode.title")}\n` +
-					(await t(interaction, "core.moderation.slowmode.set.success", {
+				`## ⏳ ${await t(interaction, 'core.moderation.slowmode.title')}\n` +
+					(await t(interaction, 'core.moderation.slowmode.set.success', {
 						duration,
 					})),
 			)

@@ -3,21 +3,21 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { MessageFlags } = require("discord.js");
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("subdomain")
-			.setDescription("🌐 Claim a new .kyth.me subdomain (Max 5).")
+			.setName('subdomain')
+			.setDescription('🌐 Claim a new .kyth.me subdomain (Max 5).')
 			.addStringOption((option) =>
 				option
-					.setName("name")
-					.setDescription("Unique subdomain name (e.g.: kythia-cool)")
+					.setName('name')
+					.setDescription('Unique subdomain name (e.g.: kythia-cool)')
 					.setRequired(true),
 			),
 
@@ -33,10 +33,10 @@ module.exports = {
 		if (!user) {
 			const desc = await t(
 				interaction,
-				"pro.claim.subdomain.error_mustHaveAccount",
+				'pro.claim.subdomain.error_mustHaveAccount',
 			);
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -49,10 +49,10 @@ module.exports = {
 		if (!isPremiumActive && !isVoterActive) {
 			const desc = await t(
 				interaction,
-				"pro.claim.subdomain.error_proOrVoterRequired",
+				'pro.claim.subdomain.error_proOrVoterRequired',
 			);
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -63,16 +63,16 @@ module.exports = {
 		if (userSubdomains >= MAX_SUBDOMAINS) {
 			const desc = await t(
 				interaction,
-				"pro.claim.subdomain.error_maxReached",
+				'pro.claim.subdomain.error_maxReached',
 				{ max: MAX_SUBDOMAINS },
 			);
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
-		const namaSubdomain = interaction.options.getString("name").toLowerCase();
+		const namaSubdomain = interaction.options.getString('name').toLowerCase();
 		if (
 			!/^[a-z0-9-]+$/.test(namaSubdomain) ||
 			namaSubdomain.length < 3 ||
@@ -80,32 +80,32 @@ module.exports = {
 		) {
 			const desc = await t(
 				interaction,
-				"pro.claim.subdomain.error_invalidName",
+				'pro.claim.subdomain.error_invalidName',
 			);
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
 		const forbiddenNames = [
-			"www",
-			"mail",
-			"api",
-			"bot",
-			"admin",
-			"dashboard",
-			"kythia",
-			"kyth",
-			"avalon",
-			"hyperion",
+			'www',
+			'mail',
+			'api',
+			'bot',
+			'admin',
+			'dashboard',
+			'kythia',
+			'kyth',
+			'avalon',
+			'hyperion',
 		];
 		if (forbiddenNames.includes(namaSubdomain)) {
-			const desc = await t(interaction, "pro.claim.subdomain.error_forbidden", {
+			const desc = await t(interaction, 'pro.claim.subdomain.error_forbidden', {
 				name: namaSubdomain,
 			});
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -116,8 +116,8 @@ module.exports = {
 				name: namaSubdomain,
 			});
 
-			const title = await t(interaction, "pro.claim.subdomain.success_title");
-			const desc = await t(interaction, "pro.claim.subdomain.success_desc", {
+			const title = await t(interaction, 'pro.claim.subdomain.success_title');
+			const desc = await t(interaction, 'pro.claim.subdomain.success_desc', {
 				subdomain: namaSubdomain,
 				domain: kythiaConfig.addons.pro.cloudflare.domain,
 				used: userSubdomains + 1,
@@ -126,19 +126,19 @@ module.exports = {
 
 			return interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
-					color: "Green",
+					color: 'Green',
 					title: title,
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		} catch (error) {
-			if (error.name === "SequelizeUniqueConstraintError") {
-				const desc = await t(interaction, "pro.claim.subdomain.error_taken", {
+			if (error.name === 'SequelizeUniqueConstraintError') {
+				const desc = await t(interaction, 'pro.claim.subdomain.error_taken', {
 					name: namaSubdomain,
 				});
 				return interaction.editReply({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -148,9 +148,9 @@ module.exports = {
 				error,
 			);
 
-			const desc = await t(interaction, "pro.claim.subdomain.error_technical");
+			const desc = await t(interaction, 'pro.claim.subdomain.error_technical');
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}

@@ -3,13 +3,13 @@
  * @type: Command Group Definition
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	guildOnly: false,
 	data: new SlashCommandBuilder()
-		.setName("image")
-		.setDescription("Manage images in the storage"),
+		.setName('image')
+		.setDescription('Manage images in the storage'),
 };

@@ -3,30 +3,30 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const crypto = require("node:crypto");
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const crypto = require('node:crypto');
 
-const ALGORITHM = "aes-256-gcm";
+const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 16;
 const _AUTH_TAG_LENGTH = 16;
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("encrypt")
-		.setDescription("🔒 Encrypt a text with a secret key (two-way encryption).")
+		.setName('encrypt')
+		.setDescription('🔒 Encrypt a text with a secret key (two-way encryption).')
 		.addStringOption((option) =>
 			option
-				.setName("text")
-				.setDescription("The text you want to encrypt")
+				.setName('text')
+				.setDescription('The text you want to encrypt')
 				.setRequired(true),
 		)
 		.addStringOption((option) =>
 			option
-				.setName("secret-key")
-				.setDescription("A 32-character secret key for encryption")
+				.setName('secret-key')
+				.setDescription('A 32-character secret key for encryption')
 				.setRequired(true),
 		),
 	async execute(interaction, container) {
@@ -35,12 +35,12 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const text = interaction.options.getString("text");
-		const secretKey = interaction.options.getString("secret-key");
+		const text = interaction.options.getString('text');
+		const secretKey = interaction.options.getString('secret-key');
 
 		if (secretKey.length !== 32) {
 			return interaction.editReply({
-				content: await t(interaction, "core.tools.encrypt.invalid.key.length"),
+				content: await t(interaction, 'core.tools.encrypt.invalid.key.length'),
 			});
 		}
 
@@ -53,24 +53,24 @@ module.exports = {
 				iv,
 			);
 
-			let encrypted = cipher.update(text, "utf8", "hex");
-			encrypted += cipher.final("hex");
+			let encrypted = cipher.update(text, 'utf8', 'hex');
+			encrypted += cipher.final('hex');
 
 			const authTag = cipher.getAuthTag();
 
-			const encryptedData = `${iv.toString("hex")}:${authTag.toString("hex")}:${encrypted}`;
+			const encryptedData = `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted}`;
 
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
-				.setTitle(await t(interaction, "core.tools.encrypt.success"))
-				.setDescription(await t(interaction, "core.tools.encrypt.embed.desc"))
+				.setTitle(await t(interaction, 'core.tools.encrypt.success'))
+				.setDescription(await t(interaction, 'core.tools.encrypt.embed.desc'))
 				.addFields(
 					{
-						name: await t(interaction, "core.tools.encrypt.secret.key.used"),
-						value: `\`\`\`${"*".repeat(32)}\`\`\``,
+						name: await t(interaction, 'core.tools.encrypt.secret.key.used'),
+						value: `\`\`\`${'*'.repeat(32)}\`\`\``,
 					},
 					{
-						name: await t(interaction, "core.tools.encrypt.encrypted.data"),
+						name: await t(interaction, 'core.tools.encrypt.encrypted.data'),
 						value: `\`\`\`${encryptedData}\`\`\``,
 					},
 				)
@@ -80,7 +80,7 @@ module.exports = {
 		} catch (error) {
 			console.error(error);
 			await interaction.editReply({
-				content: await t(interaction, "core.tools.encrypt.error"),
+				content: await t(interaction, 'core.tools.encrypt.error'),
 			});
 		}
 	},

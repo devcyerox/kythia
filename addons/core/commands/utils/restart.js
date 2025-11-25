@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
@@ -16,12 +16,12 @@ const {
 	SeparatorSpacingSize,
 	MessageFlags,
 	InteractionContextType,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("restart")
-		.setDescription("🔁 Restarts the bot.")
+		.setName('restart')
+		.setDescription('🔁 Restarts the bot.')
 		.setContexts(InteractionContextType.BotDM),
 	ownerOnly: true,
 	async execute(interaction, container) {
@@ -29,11 +29,11 @@ module.exports = {
 		const { convertColor } = helpers.color;
 
 		const restartContainer = new ContainerBuilder().setAccentColor(
-			convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 		);
 		restartContainer.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await t(interaction, "core.utils.restart.embed.confirm.desc"),
+				await t(interaction, 'core.utils.restart.embed.confirm.desc'),
 			),
 		);
 		restartContainer.addSeparatorComponents(
@@ -44,12 +44,12 @@ module.exports = {
 		restartContainer.addActionRowComponents(
 			new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
-					.setCustomId("confirm_restart")
-					.setLabel(await t(interaction, "core.utils.restart.button.confirm"))
+					.setCustomId('confirm_restart')
+					.setLabel(await t(interaction, 'core.utils.restart.button.confirm'))
 					.setStyle(ButtonStyle.Danger),
 				new ButtonBuilder()
-					.setCustomId("cancel_restart")
-					.setLabel(await t(interaction, "core.utils.restart.button.cancel"))
+					.setCustomId('cancel_restart')
+					.setLabel(await t(interaction, 'core.utils.restart.button.cancel'))
 					.setStyle(ButtonStyle.Secondary),
 			),
 		);
@@ -64,17 +64,17 @@ module.exports = {
 			time: 15000,
 		});
 
-		collector.on("collect", async (i) => {
+		collector.on('collect', async (i) => {
 			// Prevent double-acknowledgement by stopping the collector after a button is pressed
-			collector.stop("handled");
+			collector.stop('handled');
 
-			if (i.customId === "cancel_restart") {
+			if (i.customId === 'cancel_restart') {
 				const restartContainer = new ContainerBuilder().setAccentColor(
-					convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				);
 				restartContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "core.utils.restart.embed.cancelled.desc"),
+						await t(interaction, 'core.utils.restart.embed.cancelled.desc'),
 					),
 				);
 				restartContainer.addSeparatorComponents(
@@ -84,7 +84,7 @@ module.exports = {
 				);
 				restartContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "common.container.footer", {
+						await t(interaction, 'common.container.footer', {
 							username: interaction.client.user.username,
 						}),
 					),
@@ -97,13 +97,13 @@ module.exports = {
 				} catch (_err) {
 					// Ignore if already acknowledged
 				}
-			} else if (i.customId === "confirm_restart") {
+			} else if (i.customId === 'confirm_restart') {
 				const restartContainer = new ContainerBuilder().setAccentColor(
-					convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				);
 				restartContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "core.utils.restart.embed.restarting.desc"),
+						await t(interaction, 'core.utils.restart.embed.restarting.desc'),
 					),
 				);
 				restartContainer.addSeparatorComponents(
@@ -113,7 +113,7 @@ module.exports = {
 				);
 				restartContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "common.container.footer", {
+						await t(interaction, 'common.container.footer', {
 							username: interaction.client.user.username,
 						}),
 					),
@@ -130,14 +130,14 @@ module.exports = {
 			}
 		});
 
-		collector.on("end", async (_collected, reason) => {
-			if (reason === "time") {
+		collector.on('end', async (_collected, reason) => {
+			if (reason === 'time') {
 				const restartContainer = new ContainerBuilder().setAccentColor(
-					convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				);
 				restartContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "core.utils.restart.embed.timeout.desc"),
+						await t(interaction, 'core.utils.restart.embed.timeout.desc'),
 					),
 				);
 				restartContainer.addSeparatorComponents(
@@ -147,7 +147,7 @@ module.exports = {
 				);
 				restartContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "common.container.footer", {
+						await t(interaction, 'common.container.footer', {
 							username: interaction.client.user.username,
 						}),
 					),

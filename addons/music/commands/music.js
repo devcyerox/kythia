@@ -3,29 +3,29 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
 	GuildMember,
 	PermissionFlagsBits,
 	InteractionContextType,
-} = require("discord.js");
-const { formatTrackDuration, hasControlPermission } = require("../helpers");
+} = require('discord.js');
+const { formatTrackDuration, hasControlPermission } = require('../helpers');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("music")
-		.setDescription("🎵 Full music command suite using Lavalink")
+		.setName('music')
+		.setDescription('🎵 Full music command suite using Lavalink')
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("play")
-				.setDescription("🎶 Play a song or add it to the queue")
+				.setName('play')
+				.setDescription('🎶 Play a song or add it to the queue')
 				.addStringOption((option) =>
 					option
-						.setName("search")
+						.setName('search')
 						.setDescription(
-							"Song title or URL (YouTube, Spotify (can be playlist link))",
+							'Song title or URL (YouTube, Spotify (can be playlist link))',
 						)
 						.setRequired(true)
 						.setAutocomplete(true),
@@ -33,62 +33,62 @@ module.exports = {
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("pause")
-				.setDescription("⏸️ Pause the currently playing song"),
+				.setName('pause')
+				.setDescription('⏸️ Pause the currently playing song'),
 		)
 		.addSubcommand((subcommand) =>
-			subcommand.setName("resume").setDescription("▶️ Resume the paused song"),
+			subcommand.setName('resume').setDescription('▶️ Resume the paused song'),
 		)
 		.addSubcommand((subcommand) =>
-			subcommand.setName("skip").setDescription("⏭️ Skip the current song"),
-		)
-		.addSubcommand((subcommand) =>
-			subcommand
-				.setName("stop")
-				.setDescription("⏹️ Stop music and clear the queue"),
+			subcommand.setName('skip').setDescription('⏭️ Skip the current song'),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("queue")
-				.setDescription("📜 Show the current song queue"),
+				.setName('stop')
+				.setDescription('⏹️ Stop music and clear the queue'),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("nowplaying")
-				.setDescription("ℹ️ Show the currently playing song"),
+				.setName('queue')
+				.setDescription('📜 Show the current song queue'),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("shuffle")
-				.setDescription("🔀 Shuffle the queue order"),
-		)
-		.addSubcommand((subcommand) =>
-			subcommand.setName("back").setDescription("⏮️ Play the previous song"),
+				.setName('nowplaying')
+				.setDescription('ℹ️ Show the currently playing song'),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("loop")
-				.setDescription("🔁 Set repeat mode")
+				.setName('shuffle')
+				.setDescription('🔀 Shuffle the queue order'),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand.setName('back').setDescription('⏮️ Play the previous song'),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName('loop')
+				.setDescription('🔁 Set repeat mode')
 				.addStringOption((option) =>
 					option
-						.setName("mode")
-						.setDescription("Choose repeat mode")
+						.setName('mode')
+						.setDescription('Choose repeat mode')
 						.setRequired(true)
 						.addChoices(
-							{ name: "❌ Off", value: "none" },
-							{ name: "🔂 Track", value: "track" },
-							{ name: "🔁 Queue", value: "queue" },
+							{ name: '❌ Off', value: 'none' },
+							{ name: '🔂 Track', value: 'track' },
+							{ name: '🔁 Queue', value: 'queue' },
 						),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("volume")
-				.setDescription("🔊 Set music volume")
+				.setName('volume')
+				.setDescription('🔊 Set music volume')
 				.addIntegerOption((option) =>
 					option
-						.setName("level")
-						.setDescription("Volume level (1-1000)")
+						.setName('level')
+						.setDescription('Volume level (1-1000)')
 						.setRequired(true)
 						.setMinValue(1)
 						.setMaxValue(1000),
@@ -96,156 +96,156 @@ module.exports = {
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("autoplay")
-				.setDescription("🔄 Enable or disable autoplay")
+				.setName('autoplay')
+				.setDescription('🔄 Enable or disable autoplay')
 				.addStringOption((option) =>
 					option
-						.setName("status")
-						.setDescription("Enable or disable autoplay")
+						.setName('status')
+						.setDescription('Enable or disable autoplay')
 						.addChoices(
-							{ name: "Enable", value: "enable" },
-							{ name: "Disable", value: "disable" },
+							{ name: 'Enable', value: 'enable' },
+							{ name: 'Disable', value: 'disable' },
 						),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("filter")
-				.setDescription("🎧 Apply audio filter (equalizer)"),
+				.setName('filter')
+				.setDescription('🎧 Apply audio filter (equalizer)'),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("remove")
-				.setDescription("🗑️ Remove a song from queue")
+				.setName('remove')
+				.setDescription('🗑️ Remove a song from queue')
 				.addIntegerOption((option) =>
 					option
-						.setName("position")
-						.setDescription("Position in queue to remove")
+						.setName('position')
+						.setDescription('Position in queue to remove')
 						.setRequired(true),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("move")
-				.setDescription("🔀 Move a song to different position")
+				.setName('move')
+				.setDescription('🔀 Move a song to different position')
 				.addIntegerOption((option) =>
 					option
-						.setName("from")
-						.setDescription("Current position")
+						.setName('from')
+						.setDescription('Current position')
 						.setRequired(true),
 				)
 				.addIntegerOption((option) =>
-					option.setName("to").setDescription("New position").setRequired(true),
+					option.setName('to').setDescription('New position').setRequired(true),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("lyrics")
-				.setDescription("🎤 Show the lyrics of the currently playing song"),
+				.setName('lyrics')
+				.setDescription('🎤 Show the lyrics of the currently playing song'),
 		)
 		.addSubcommandGroup((subcommandGroup) =>
 			subcommandGroup
-				.setName("playlist")
-				.setDescription("Manage your personal music playlists.")
+				.setName('playlist')
+				.setDescription('Manage your personal music playlists.')
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("save")
-						.setDescription("Saves the current queue as a new playlist.")
+						.setName('save')
+						.setDescription('Saves the current queue as a new playlist.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name for your new playlist.")
+								.setName('name')
+								.setDescription('The name for your new playlist.')
 								.setRequired(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("load")
-						.setDescription("Clears the queue and loads a playlist.")
+						.setName('load')
+						.setDescription('Clears the queue and loads a playlist.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name of the playlist to load.")
+								.setName('name')
+								.setDescription('The name of the playlist to load.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("append")
-						.setDescription("Adds songs from a playlist to the current queue.")
+						.setName('append')
+						.setDescription('Adds songs from a playlist to the current queue.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name of the playlist to append.")
+								.setName('name')
+								.setDescription('The name of the playlist to append.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("list")
-						.setDescription("Shows all of your saved playlists."),
+						.setName('list')
+						.setDescription('Shows all of your saved playlists.'),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("delete")
-						.setDescription("Deletes one of your playlists.")
+						.setName('delete')
+						.setDescription('Deletes one of your playlists.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name of the playlist to delete.")
+								.setName('name')
+								.setDescription('The name of the playlist to delete.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("rename")
-						.setDescription("Renames one of your playlists.")
+						.setName('rename')
+						.setDescription('Renames one of your playlists.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name of the playlist to rename.")
+								.setName('name')
+								.setDescription('The name of the playlist to rename.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						)
 						.addStringOption((option) =>
 							option
-								.setName("new_name")
-								.setDescription("The new name of the playlist.")
+								.setName('new_name')
+								.setDescription('The new name of the playlist.')
 								.setRequired(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("track-remove")
-						.setDescription("Removes a track from one of your playlists.")
+						.setName('track-remove')
+						.setDescription('Removes a track from one of your playlists.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
+								.setName('name')
 								.setDescription(
-									"The name of the playlist to remove the track from.",
+									'The name of the playlist to remove the track from.',
 								)
 								.setRequired(true)
 								.setAutocomplete(true),
 						)
 						.addIntegerOption((option) =>
 							option
-								.setName("position")
-								.setDescription("The position of the track to remove.")
+								.setName('position')
+								.setDescription('The position of the track to remove.')
 								.setRequired(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("track-list")
-						.setDescription("Shows the list of tracks in a playlist.")
+						.setName('track-list')
+						.setDescription('Shows the list of tracks in a playlist.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
+								.setName('name')
 								.setDescription(
-									"The name of the playlist to show the list of tracks from.",
+									'The name of the playlist to show the list of tracks from.',
 								)
 								.setRequired(true)
 								.setAutocomplete(true),
@@ -253,32 +253,32 @@ module.exports = {
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("track-add")
-						.setDescription("Adds a single song to one of your playlists.")
+						.setName('track-add')
+						.setDescription('Adds a single song to one of your playlists.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name of the playlist to add the song to.")
+								.setName('name')
+								.setDescription('The name of the playlist to add the song to.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						)
 						.addStringOption((option) =>
 							option
-								.setName("search")
-								.setDescription("The song title or URL to add.")
+								.setName('search')
+								.setDescription('The song title or URL to add.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("import")
+						.setName('import')
 						.setDescription(
 							`Import Playlist from ${kythia.bot.name} playlist code or external services like Spotify.`,
 						)
 						.addStringOption((option) =>
 							option
-								.setName("code")
+								.setName('code')
 								.setDescription(
 									`${kythia.bot.name} playlist code or Spotify URL to import.`,
 								)
@@ -287,11 +287,11 @@ module.exports = {
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("share")
+						.setName('share')
 						.setDescription(`Share ${kythia.bot.name} playlist with others.`)
 						.addStringOption((option) =>
 							option
-								.setName("name")
+								.setName('name')
 								.setDescription(
 									`The name of the ${kythia.bot.name} playlist to share.`,
 								)
@@ -301,59 +301,59 @@ module.exports = {
 				),
 		)
 		.addSubcommand((subcommand) =>
-			subcommand.setName("clear").setDescription("🗑️ Clears the current queue."),
+			subcommand.setName('clear').setDescription('🗑️ Clears the current queue.'),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("seek")
-				.setDescription("⏩ Seeks to a specific time in the current song.")
+				.setName('seek')
+				.setDescription('⏩ Seeks to a specific time in the current song.')
 				.addStringOption((option) =>
 					option
-						.setName("time")
-						.setDescription("The time to seek to. eg. 10, 2:30, 1:20:30")
+						.setName('time')
+						.setDescription('The time to seek to. eg. 10, 2:30, 1:20:30')
 						.setRequired(true),
 				),
 		)
 		.addSubcommandGroup((subcommandGroup) =>
 			subcommandGroup
-				.setName("favorite")
-				.setDescription("💖 Manage your favorite songs.")
+				.setName('favorite')
+				.setDescription('💖 Manage your favorite songs.')
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("play")
-						.setDescription("🎶 Play all songs from your favorites.")
+						.setName('play')
+						.setDescription('🎶 Play all songs from your favorites.')
 						.addBooleanOption((option) =>
 							option
-								.setName("append")
-								.setDescription("Append the songs to the current queue.")
+								.setName('append')
+								.setDescription('Append the songs to the current queue.')
 								.setRequired(false),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("list")
-						.setDescription("🌟 Show your favorite songs."),
+						.setName('list')
+						.setDescription('🌟 Show your favorite songs.'),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("add")
-						.setDescription("💖 Add a song to your favorites.")
+						.setName('add')
+						.setDescription('💖 Add a song to your favorites.')
 						.addStringOption((option) =>
 							option
-								.setName("search")
-								.setDescription("The song title or URL to add.")
+								.setName('search')
+								.setDescription('The song title or URL to add.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
 				)
 				.addSubcommand((subcommand) =>
 					subcommand
-						.setName("remove")
-						.setDescription("💖 Remove a song from your favorites.")
+						.setName('remove')
+						.setDescription('💖 Remove a song from your favorites.')
 						.addStringOption((option) =>
 							option
-								.setName("name")
-								.setDescription("The name of the song to remove.")
+								.setName('name')
+								.setDescription('The name of the song to remove.')
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
@@ -361,20 +361,20 @@ module.exports = {
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("247")
+				.setName('247')
 				.setDescription(
-					"🎧 Enable or disable 24/7 mode to keep the bot in the voice channel.",
+					'🎧 Enable or disable 24/7 mode to keep the bot in the voice channel.',
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("radio")
-				.setDescription("📻 Search and play live radio stations worldwide")
+				.setName('radio')
+				.setDescription('📻 Search and play live radio stations worldwide')
 				.addStringOption((option) =>
 					option
-						.setName("search")
+						.setName('search')
 						.setDescription(
-							"Name of the radio station (e.g., Prambors, BBC, Lofi)",
+							'Name of the radio station (e.g., Prambors, BBC, Lofi)',
 						)
 						.setRequired(true)
 						.setAutocomplete(true),
@@ -393,8 +393,8 @@ module.exports = {
 		PermissionFlagsBits.Connect,
 		PermissionFlagsBits.SendMessages,
 	],
-	aliases: ["music", "m", "🎵"],
-	defaultArgument: "search",
+	aliases: ['music', 'm', '🎵'],
+	defaultArgument: 'search',
 
 	/**
 	 * 🔎 Handles autocomplete for the 'play' subcommand.
@@ -411,13 +411,13 @@ module.exports = {
 		const subcommandgroup = interaction.options.getSubcommandGroup(false);
 
 		if (
-			(focusedOption.name === "search" &&
-				(subcommand === "play" || subcommand === "track-add")) ||
-			(subcommandgroup === "favorite" &&
-				subcommand === "add" &&
-				focusedOption.name === "search")
+			(focusedOption.name === 'search' &&
+				(subcommand === 'play' || subcommand === 'track-add')) ||
+			(subcommandgroup === 'favorite' &&
+				subcommand === 'add' &&
+				focusedOption.name === 'search')
 		) {
-			if (focusedValue.toLowerCase().includes("spotify")) {
+			if (focusedValue.toLowerCase().includes('spotify')) {
 				const truncatedUrl =
 					focusedValue.length > 50
 						? `${focusedValue.slice(0, 47)}...`
@@ -428,7 +428,7 @@ module.exports = {
 						value: focusedValue,
 					},
 				]);
-			} else if (focusedValue.toLowerCase().includes("youtube")) {
+			} else if (focusedValue.toLowerCase().includes('youtube')) {
 				const truncatedUrl =
 					focusedValue.length > 50
 						? `${focusedValue.slice(0, 47)}...`
@@ -468,15 +468,15 @@ module.exports = {
 				return interaction.respond([]);
 			}
 
-			if (!client.poru || typeof client.poru.resolve !== "function") {
+			if (!client.poru || typeof client.poru.resolve !== 'function') {
 				logger.error(
-					"Autocomplete search failed: client.poru or client.poru.resolve is undefined",
+					'Autocomplete search failed: client.poru or client.poru.resolve is undefined',
 				);
 				return interaction.respond([]);
 			}
 
 			try {
-				const source = kythia.addons.music.defaultPlatform || "ytsearch";
+				const source = kythia.addons.music.defaultPlatform || 'ytsearch';
 				const res = await client.poru.resolve({
 					query: focusedValue,
 					source: source,
@@ -499,12 +499,12 @@ module.exports = {
 				searchCache.set(focusedValue, choices);
 				return interaction.respond(choices);
 			} catch (e) {
-				logger.error("Autocomplete search failed:", e?.stack ? e.stack : e);
+				logger.error('Autocomplete search failed:', e?.stack ? e.stack : e);
 				return interaction.respond([]);
 			}
 		}
 
-		if (subcommandgroup === "playlist" && focusedOption.name === "name") {
+		if (subcommandgroup === 'playlist' && focusedOption.name === 'name') {
 			try {
 				const userPlaylists = await Playlist.getAllCache({
 					where: { userId: interaction.user.id },
@@ -520,12 +520,12 @@ module.exports = {
 					.map((name) => ({ name: `🎵 ${name}`, value: name }));
 				return interaction.respond(filteredChoices.slice(0, 25));
 			} catch (error) {
-				logger.error("Playlist autocomplete error:", error);
+				logger.error('Playlist autocomplete error:', error);
 				return interaction.respond([]);
 			}
 		}
 
-		if (subcommandgroup === "favorite" && focusedOption.name === "name") {
+		if (subcommandgroup === 'favorite' && focusedOption.name === 'name') {
 			try {
 				const userFavorites = await Favorite.getAllCache({
 					where: { userId: interaction.user.id },
@@ -544,12 +544,12 @@ module.exports = {
 					}));
 				return interaction.respond(filteredChoices.slice(0, 25));
 			} catch (error) {
-				logger.error("Favorite autocomplete error:", error);
+				logger.error('Favorite autocomplete error:', error);
 				return interaction.respond([]);
 			}
 		}
 
-		if (subcommand === "radio" && focusedOption.name === "search") {
+		if (subcommand === 'radio' && focusedOption.name === 'search') {
 			// Cek cache dulu biar irit API
 			if (!client._radioAutocompleteCache)
 				client._radioAutocompleteCache = new Map();
@@ -565,7 +565,7 @@ module.exports = {
 
 			try {
 				// Fetch ke Radio Browser API (Limit 20 biar muat di autocomplete)
-				const axios = require("axios"); // Pastikan axios ada
+				const axios = require('axios'); // Pastikan axios ada
 				const response = await axios.get(
 					`https://de1.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(focusedValue)}&limit=20&hidebroken=true&order=clickcount&reverse=true`,
 					{ timeout: 2000 },
@@ -581,7 +581,7 @@ module.exports = {
 						station.name.length > 50
 							? `${station.name.substring(0, 47)}...`
 							: station.name;
-					const country = station.countrycode || "🌐";
+					const country = station.countrycode || '🌐';
 					const bitrate = station.bitrate || 0;
 
 					return {
@@ -618,37 +618,37 @@ module.exports = {
 
 		if (!(member instanceof GuildMember) || !member.voice.channel) {
 			return await interaction.reply({
-				content: await t(interaction, "music.music.voice.channel.not.found"),
+				content: await t(interaction, 'music.music.voice.channel.not.found'),
 				ephemeral: true,
 			});
 		}
 
 		const player = client.poru.players.get(guild.id);
 
-		if (subcommandGroup && subcommandGroup === "playlist") {
+		if (subcommandGroup && subcommandGroup === 'playlist') {
 			return musicHandlers.handlePlaylist(interaction, player);
 		}
 
-		if (subcommandGroup && subcommandGroup === "favorite") {
+		if (subcommandGroup && subcommandGroup === 'favorite') {
 			return musicHandlers.handleFavorite(interaction, player);
 		}
 
-		if (!subcommandGroup && subcommand === "play") {
+		if (!subcommandGroup && subcommand === 'play') {
 			return musicHandlers.handlePlay(interaction);
 		}
-		if (!subcommandGroup && subcommand === "radio") {
+		if (!subcommandGroup && subcommand === 'radio') {
 			return musicHandlers.handleRadio(interaction, player);
 		}
 
 		if (!player) {
 			return interaction.reply({
-				content: await t(interaction, "music.music.player.not.found"),
+				content: await t(interaction, 'music.music.player.not.found'),
 				ephemeral: true,
 			});
 		}
 		if (member.voice.channel.id !== player.voiceChannel) {
 			return interaction.reply({
-				content: await t(interaction, "music.music.required"),
+				content: await t(interaction, 'music.music.required'),
 				ephemeral: true,
 			});
 		}
@@ -666,7 +666,7 @@ module.exports = {
 			return interaction.reply({
 				content: await t(
 					interaction,
-					"music.helpers.musicManager.music.permission.denied",
+					'music.helpers.musicManager.music.permission.denied',
 				),
 				ephemeral: true,
 			});
@@ -691,11 +691,11 @@ module.exports = {
 
 		if (originalRequesterCommandHandlers[subcommand]) {
 			return originalRequesterCommandHandlers[subcommand](interaction, player);
-		} else if (subcommand === "back") {
+		} else if (subcommand === 'back') {
 			return musicHandlers.handleBack(interaction, player, music.guildStates);
 		} else {
 			return interaction.reply({
-				content: await t(interaction, "music.music.subcommand.not.found"),
+				content: await t(interaction, 'music.music.subcommand.not.found'),
 				ephemeral: true,
 			});
 		}

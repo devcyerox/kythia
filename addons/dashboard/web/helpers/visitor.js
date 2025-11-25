@@ -3,12 +3,12 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const Visitor = require("@addons/dashboard/database/models/Visitor");
-const logger = require("@coreHelpers/logger");
-const crypto = require("node:crypto");
+const Visitor = require('@addons/dashboard/database/models/Visitor');
+const logger = require('@coreHelpers/logger');
+const crypto = require('node:crypto');
 
 /**
  * Middleware to fetch visitor data and provide it to all EJS files via `res.locals`.
@@ -28,7 +28,7 @@ const loadVisitorCounts = async (_req, res, next) => {
 		res.locals.todayVisitors = todayCount;
 		res.locals.totalVisitors = totalCount;
 	} catch (error) {
-		console.error("Failed to load visitor data:", error);
+		console.error('Failed to load visitor data:', error);
 		res.locals.todayVisitors = 0;
 		res.locals.totalVisitors = 0;
 	}
@@ -42,12 +42,12 @@ const trackVisitor = async (req, _res, next) => {
 	try {
 		// Gunakan IP yang lebih bisa diandalkan, fallback ke remoteAddress
 		const ip =
-			req.headers["x-forwarded-for"]?.split(",").shift() ||
+			req.headers['x-forwarded-for']?.split(',').shift() ||
 			req.socket.remoteAddress;
 
 		if (!ip) return next();
 
-		const ipHash = crypto.createHash("sha256").update(ip).digest("hex");
+		const ipHash = crypto.createHash('sha256').update(ip).digest('hex');
 		const today = new Date();
 		// Atur tanggal ke awal hari (jam 00:00:00) biar datanya konsisten
 		today.setHours(0, 0, 0, 0);
@@ -63,16 +63,16 @@ const trackVisitor = async (req, _res, next) => {
 			// Jika visitor baru dibuat, kita harus membersihkan cache hitungan
 			// agar `loadVisitorCounts` selanjutnya mengambil data baru dari DB.
 			await Visitor.clearCache({
-				queryType: "count",
+				queryType: 'count',
 				where: { visitDate: today },
 			});
-			await Visitor.clearCache({ queryType: "count" });
+			await Visitor.clearCache({ queryType: 'count' });
 			logger.info(
 				`✅ New unique visitor detected today. Count caches cleared.`,
 			);
 		}
 	} catch (error) {
-		console.error("Failed to track visitor:", error);
+		console.error('Failed to track visitor:', error);
 	}
 
 	next();

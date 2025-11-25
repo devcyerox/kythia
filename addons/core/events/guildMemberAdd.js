@@ -3,16 +3,16 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
 	resolvePlaceholders,
 	safeResolvePlaceholder,
-} = require("../helpers/stats");
-const { generateBanner } = require("../helpers/canvas");
-const { EmbedBuilder } = require("discord.js");
-const { rolePrefix } = require("../helpers");
+} = require('../helpers/stats');
+const { generateBanner } = require('../helpers/canvas');
+const { EmbedBuilder } = require('discord.js');
+const { rolePrefix } = require('../helpers');
 
 module.exports = async (bot, member) => {
 	const container = bot.client.container;
@@ -37,7 +37,7 @@ module.exports = async (bot, member) => {
 	if (!setting || !setting.welcomeInOn) return;
 
 	const channel = guild.channels.cache.get(setting.welcomeInChannelId);
-	if (!channel) return console.log("Welcome channel not found");
+	if (!channel) return console.log('Welcome channel not found');
 
 	if (setting.welcomeRoleId) {
 		try {
@@ -61,7 +61,7 @@ module.exports = async (bot, member) => {
 		userTag: member.user.id,
 		guildName: guild.name,
 		guildId: guild.id,
-		ownerName: guild.members.cache.get(guild.ownerId)?.user?.tag || "Unknown",
+		ownerName: guild.members.cache.get(guild.ownerId)?.user?.tag || 'Unknown',
 		ownerId: guild.ownerId,
 		region: guild.preferredLocale,
 		createdAt: guild.createdAt,
@@ -72,36 +72,36 @@ module.exports = async (bot, member) => {
 		emojis: guild.emojis.cache.size,
 		stickers: guild.stickers.cache.size,
 		memberJoin: member.joinedAt,
-		online: guild.members.cache.filter((m) => m.presence?.status === "online")
+		online: guild.members.cache.filter((m) => m.presence?.status === 'online')
 			.size,
-		idle: guild.members.cache.filter((m) => m.presence?.status === "idle").size,
-		dnd: guild.members.cache.filter((m) => m.presence?.status === "dnd").size,
+		idle: guild.members.cache.filter((m) => m.presence?.status === 'idle').size,
+		dnd: guild.members.cache.filter((m) => m.presence?.status === 'dnd').size,
 		offline: guild.members.cache.filter(
-			(m) => !m.presence || m.presence.status === "offline",
+			(m) => !m.presence || m.presence.status === 'offline',
 		).size,
 		bots: guild.members.cache.filter((m) => m.user.bot).size,
 		humans: guild.members.cache.filter((m) => !m.user.bot).size,
 		onlineBots: guild.members.cache.filter(
-			(m) => m.user.bot && m.presence && m.presence.status !== "offline",
+			(m) => m.user.bot && m.presence && m.presence.status !== 'offline',
 		).size,
 		onlineHumans: guild.members.cache.filter(
-			(m) => !m.user.bot && m.presence && m.presence.status !== "offline",
+			(m) => !m.user.bot && m.presence && m.presence.status !== 'offline',
 		).size,
 		channels: guild.channels.cache.size,
 		textChannels: guild.channels.cache.filter(
-			(c) => c.type === 0 || c.type === "GUILD_TEXT",
+			(c) => c.type === 0 || c.type === 'GUILD_TEXT',
 		).size,
 		voiceChannels: guild.channels.cache.filter(
-			(c) => c.type === 2 || c.type === "GUILD_VOICE",
+			(c) => c.type === 2 || c.type === 'GUILD_VOICE',
 		).size,
 		categories: guild.channels.cache.filter(
-			(c) => c.type === 4 || c.type === "GUILD_CATEGORY",
+			(c) => c.type === 4 || c.type === 'GUILD_CATEGORY',
 		).size,
 		announcementChannels: guild.channels.cache.filter(
-			(c) => c.type === 5 || c.type === "GUILD_ANNOUNCEMENT",
+			(c) => c.type === 5 || c.type === 'GUILD_ANNOUNCEMENT',
 		).size,
 		stageChannels: guild.channels.cache.filter(
-			(c) => c.type === 13 || c.type === "GUILD_STAGE_VOICE",
+			(c) => c.type === 13 || c.type === 'GUILD_STAGE_VOICE',
 		).size,
 		verified: guild.verified,
 		partnered: guild.partnered,
@@ -111,7 +111,7 @@ module.exports = async (bot, member) => {
 	let welcomeText;
 	if (setting.welcomeInEmbedText) {
 		const welcomeInTextValue = setting.welcomeInEmbedText;
-		if (typeof welcomeInTextValue !== "string" || !welcomeInTextValue.trim()) {
+		if (typeof welcomeInTextValue !== 'string' || !welcomeInTextValue.trim()) {
 			welcomeText = `${member.user.username} has joined the server!`;
 		} else {
 			try {
@@ -120,14 +120,14 @@ module.exports = async (bot, member) => {
 					statsData,
 					member.guild.preferredLocale,
 				);
-				if (typeof welcomeText === "string") {
-					welcomeText = welcomeText.replace(/\\n/g, "\n");
+				if (typeof welcomeText === 'string') {
+					welcomeText = welcomeText.replace(/\\n/g, '\n');
 				}
 				if (welcomeText == null) {
 					welcomeText = `${member.user.username} has joined the server!`;
 				}
 			} catch (err) {
-				console.error("Error in resolvePlaceholders for welcomeInText:", err);
+				console.error('Error in resolvePlaceholders for welcomeInText:', err);
 				welcomeText = `${member.user.username} has joined the server!`;
 			}
 		}
@@ -143,9 +143,9 @@ module.exports = async (bot, member) => {
 		overlay: { color: setting.welcomeInOverlayColor },
 		avatar: {
 			enabled: true,
-			url: member.user.displayAvatarURL({ extension: "png", size: 512 }),
+			url: member.user.displayAvatarURL({ extension: 'png', size: 512 }),
 			size: setting.welcomeInAvatarSize,
-			round: (setting.welcomeInAvatarShape || "circle") === "circle",
+			round: (setting.welcomeInAvatarShape || 'circle') === 'circle',
 			yOffset: setting.welcomeInAvatarYOffset,
 			border: {
 				color: setting.welcomeInAvatarBorderColor,
@@ -158,12 +158,12 @@ module.exports = async (bot, member) => {
 					member,
 					setting.welcomeInMainTextContent,
 					statsData,
-					"",
+					'',
 				),
 				font: setting.welcomeInMainTextFont,
 				color: setting.welcomeInMainTextColor,
-				align: "center",
-				baseline: "middle",
+				align: 'center',
+				baseline: 'middle',
 				x: (setting.welcomeInBannerWidth || 800) / 2,
 				y:
 					(setting.welcomeInBannerHeight || 300) / 2 +
@@ -180,12 +180,12 @@ module.exports = async (bot, member) => {
 					member,
 					setting.welcomeInSubTextContent,
 					statsData,
-					"",
+					'',
 				),
 				font: setting.welcomeInSubTextFont,
 				color: setting.welcomeInSubTextColor,
-				align: "center",
-				baseline: "middle",
+				align: 'center',
+				baseline: 'middle',
 				x: (setting.welcomeInBannerWidth || 800) / 2,
 				y:
 					(setting.welcomeInBannerHeight || 300) / 2 +
@@ -213,24 +213,24 @@ module.exports = async (bot, member) => {
 
 	let safeWelcomeText;
 	try {
-		if (typeof welcomeText !== "string") {
-			safeWelcomeText = String(welcomeText ?? "");
+		if (typeof welcomeText !== 'string') {
+			safeWelcomeText = String(welcomeText ?? '');
 		} else {
 			safeWelcomeText = welcomeText;
 		}
 	} catch (_e) {
-		safeWelcomeText = "";
+		safeWelcomeText = '';
 	}
 
 	let embedImageUrl = welcomeInImage;
 	const files = [];
 	if (Buffer.isBuffer(welcomeInImage)) {
-		const { AttachmentBuilder } = require("discord.js");
+		const { AttachmentBuilder } = require('discord.js');
 		const attachment = new AttachmentBuilder(welcomeInImage, {
-			name: "welcome.png",
+			name: 'welcome.png',
 		});
 		files.push(attachment);
-		embedImageUrl = "attachment://welcome.png";
+		embedImageUrl = 'attachment://welcome.png';
 	}
 
 	const welcomeEmbed = new EmbedBuilder()

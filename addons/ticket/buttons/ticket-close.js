@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ContainerBuilder,
@@ -14,7 +14,7 @@ const {
 	MessageFlags,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -22,33 +22,33 @@ module.exports = {
 		const { convertColor } = helpers.color;
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("ticket-confirm-close")
-				.setLabel(await t(interaction, "ticket.close.confirm_button"))
+				.setCustomId('ticket-confirm-close')
+				.setLabel(await t(interaction, 'ticket.close.confirm_button'))
 				.setStyle(ButtonStyle.Danger)
-				.setEmoji("✅"),
+				.setEmoji('✅'),
 			new ButtonBuilder()
-				.setCustomId("ticket-close-with-reason")
-				.setLabel(await t(interaction, "ticket.v2.close_with_reason_button"))
+				.setCustomId('ticket-close-with-reason')
+				.setLabel(await t(interaction, 'ticket.v2.close_with_reason_button'))
 				.setStyle(ButtonStyle.Secondary)
-				.setEmoji("🔏"),
+				.setEmoji('🔏'),
 			new ButtonBuilder()
-				.setCustomId("ticket-cancel-close")
-				.setLabel(await t(interaction, "ticket.close.cancel_button"))
+				.setCustomId('ticket-cancel-close')
+				.setLabel(await t(interaction, 'ticket.close.cancel_button'))
 				.setStyle(ButtonStyle.Secondary)
-				.setEmoji("❌"),
+				.setEmoji('❌'),
 		);
 
 		const confirmContainer = new ContainerBuilder()
 			.setAccentColor(accentColor)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "ticket.close.confirm_title"),
+					await t(interaction, 'ticket.close.confirm_title'),
 				),
 			)
 			.addSeparatorComponents(
@@ -58,7 +58,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "ticket.close.confirm_desc"),
+					await t(interaction, 'ticket.close.confirm_desc'),
 				),
 			)
 			.addActionRowComponents(row)
@@ -69,7 +69,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "common.container.footer", {
+					await t(interaction, 'common.container.footer', {
 						username: interaction.client.user.username,
 					}),
 				),

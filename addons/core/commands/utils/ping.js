@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
@@ -16,7 +16,7 @@ const {
 	TextDisplayBuilder,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
-} = require("discord.js");
+} = require('discord.js');
 
 /**
  * Get Lavalink nodes ping/latency information
@@ -45,7 +45,7 @@ async function getLavalinkNodesPings(client) {
 
 				if (host && port && password) {
 					try {
-						const url = `http${secure ? "s" : ""}://${host}:${port}/version`;
+						const url = `http${secure ? 's' : ''}://${host}:${port}/version`;
 						const startTime = Date.now();
 
 						const res = await fetch(url, {
@@ -61,26 +61,26 @@ async function getLavalinkNodesPings(client) {
 
 			nodes.push({
 				name: name,
-				host: node.options?.host || "Unknown",
+				host: node.options?.host || 'Unknown',
 				port: node.options?.port || 2333,
 				ping: ping,
 				players: players,
 				connected: isConnected,
 				status: isConnected
 					? ping !== -1
-						? "operational"
-						: "no_stats"
-					: "disconnected",
+						? 'operational'
+						: 'no_stats'
+					: 'disconnected',
 			});
 		} catch (_error) {
 			nodes.push({
 				name: name,
-				host: node.options?.host || "Unknown",
+				host: node.options?.host || 'Unknown',
 				port: node.options?.port || 2333,
 				ping: -1,
 				players: 0,
 				connected: false,
-				status: "error",
+				status: 'error',
 			});
 		}
 	}
@@ -96,18 +96,18 @@ async function getLavalinkNodesPings(client) {
 async function getDbPing(container) {
 	const { sequelize } = container;
 	if (!sequelize) {
-		return { ping: -1, status: "not_configured" };
+		return { ping: -1, status: 'not_configured' };
 	}
 	let ping = -1;
-	let status = "unknown";
+	let status = 'unknown';
 	let errorMsg;
 	try {
 		const start = Date.now();
 		await sequelize.authenticate();
 		ping = Date.now() - start;
-		status = "connected";
+		status = 'connected';
 	} catch (err) {
-		status = "error";
+		status = 'error';
 		errorMsg = err.message || String(err);
 	}
 	return { ping, status, error: errorMsg };
@@ -141,7 +141,7 @@ async function getRedisPings(container) {
 	const failedIndexes = KythiaModel._redisFailedIndexes || new Set();
 
 	let activePing = -1;
-	if (isConnected && redis && typeof redis.ping === "function") {
+	if (isConnected && redis && typeof redis.ping === 'function') {
 		try {
 			const start = Date.now();
 			await redis.ping();
@@ -157,14 +157,14 @@ async function getRedisPings(container) {
 
 		if (index === currentIndex) {
 			if (isConnected) {
-				nodes.push({ name: name, status: "active", ping: activePing });
+				nodes.push({ name: name, status: 'active', ping: activePing });
 			} else {
-				nodes.push({ name: name, status: "failed", ping: -1 });
+				nodes.push({ name: name, status: 'failed', ping: -1 });
 			}
 		} else if (failedIndexes.has(index)) {
-			nodes.push({ name: name, status: "failed", ping: -1 });
+			nodes.push({ name: name, status: 'failed', ping: -1 });
 		} else {
-			nodes.push({ name: name, status: "standby", ping: -1 });
+			nodes.push({ name: name, status: 'standby', ping: -1 });
 		}
 	}
 	return nodes;
@@ -188,12 +188,12 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 	]);
 
 	const embedContainer = new ContainerBuilder().setAccentColor(
-		convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+		convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 	);
 
 	embedContainer.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			await t(interaction, "core.utils.ping.embed.title"),
+			await t(interaction, 'core.utils.ping.embed.title'),
 		),
 	);
 	embedContainer.addSeparatorComponents(
@@ -204,51 +204,51 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 
 	embedContainer.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			`**${await t(interaction, "core.utils.ping.field.bot.latency")}**\n\`\`\`${botLatency}ms\`\`\``,
+			`**${await t(interaction, 'core.utils.ping.field.bot.latency')}**\n\`\`\`${botLatency}ms\`\`\``,
 		),
 	);
 	embedContainer.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			`**${await t(interaction, "core.utils.ping.field.api.latency")}**\n\`\`\`${apiLatency}ms\`\`\``,
+			`**${await t(interaction, 'core.utils.ping.field.api.latency')}**\n\`\`\`${apiLatency}ms\`\`\``,
 		),
 	);
 	embedContainer.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			`**${await t(interaction, "core.utils.ping.field.db.latency")}**\n\`\`\`${
-				dbPingInfo.status === "connected"
+			`**${await t(interaction, 'core.utils.ping.field.db.latency')}**\n\`\`\`${
+				dbPingInfo.status === 'connected'
 					? `${dbPingInfo.ping}ms`
-					: dbPingInfo.status === "not_configured"
-						? "Not Configured"
-						: dbPingInfo.status === "error"
-							? "Error"
-							: "Unknown"
+					: dbPingInfo.status === 'not_configured'
+						? 'Not Configured'
+						: dbPingInfo.status === 'error'
+							? 'Error'
+							: 'Unknown'
 			}\`\`\`` +
-				(dbPingInfo.status === "error" && dbPingInfo.error
+				(dbPingInfo.status === 'error' && dbPingInfo.error
 					? `\n\`\`\`Error: ${dbPingInfo.error}\`\`\``
-					: ""),
+					: ''),
 		),
 	);
 
 	if (redisNodes.length > 0) {
 		embedContainer.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				`**${await t(interaction, "core.utils.ping.field.redis.nodes")}**`,
+				`**${await t(interaction, 'core.utils.ping.field.redis.nodes')}**`,
 			),
 		);
 		for (const node of redisNodes) {
-			let statusEmoji = "❓";
-			let pingText = "N/A";
-			if (node.status === "active") {
-				statusEmoji = "`✅`";
-				if (node.ping === -2) pingText = "Ping Failed";
-				else if (node.ping === -1) pingText = "Pinging...";
+			let statusEmoji = '❓';
+			let pingText = 'N/A';
+			if (node.status === 'active') {
+				statusEmoji = '`✅`';
+				if (node.ping === -2) pingText = 'Ping Failed';
+				else if (node.ping === -1) pingText = 'Pinging...';
 				else pingText = `${node.ping}ms`;
-			} else if (node.status === "standby") {
-				statusEmoji = "`⚪`";
-				pingText = "Standby";
-			} else if (node.status === "failed") {
-				statusEmoji = "`❌`";
-				pingText = "Failed";
+			} else if (node.status === 'standby') {
+				statusEmoji = '`⚪`';
+				pingText = 'Standby';
+			} else if (node.status === 'failed') {
+				statusEmoji = '`❌`';
+				pingText = 'Failed';
 			}
 			embedContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
@@ -266,26 +266,26 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 		);
 		embedContainer.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				`**${await t(interaction, "core.utils.ping.field.lavalink.nodes")}**`,
+				`**${await t(interaction, 'core.utils.ping.field.lavalink.nodes')}**`,
 			),
 		);
 		for (const node of lavalinkNodes) {
-			let statusEmoji = "❓";
-			let pingText = "N/A";
-			if (node.status === "operational") {
-				statusEmoji = "`🟢`";
+			let statusEmoji = '❓';
+			let pingText = 'N/A';
+			if (node.status === 'operational') {
+				statusEmoji = '`🟢`';
 				pingText = `${node.ping}ms`;
-			} else if (node.status === "no_stats") {
-				statusEmoji = "`🟡`";
-				pingText = "Stats OK, Ping Data Missing";
-			} else if (node.status === "disconnected") {
-				statusEmoji = "`🔴`";
-				pingText = "Disconnected";
-			} else if (node.status === "error") {
-				statusEmoji = "`❌`";
-				pingText = "Error";
+			} else if (node.status === 'no_stats') {
+				statusEmoji = '`🟡`';
+				pingText = 'Stats OK, Ping Data Missing';
+			} else if (node.status === 'disconnected') {
+				statusEmoji = '`🔴`';
+				pingText = 'Disconnected';
+			} else if (node.status === 'error') {
+				statusEmoji = '`❌`';
+				pingText = 'Error';
 			}
-			const playersText = node.players > 0 ? ` (${node.players} players)` : "";
+			const playersText = node.players > 0 ? ` (${node.players} players)` : '';
 			embedContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
 					`${statusEmoji} **${node.name}**\n\`\`\`${pingText}${playersText}\`\`\``,
@@ -302,8 +302,8 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 	embedContainer.addActionRowComponents(
 		new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("ping_refresh")
-				.setLabel(await t(interaction, "core.utils.ping.button.refresh"))
+				.setCustomId('ping_refresh')
+				.setLabel(await t(interaction, 'core.utils.ping.button.refresh'))
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(false),
 		),
@@ -315,7 +315,7 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 	);
 	embedContainer.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			await t(interaction, "common.container.footer", {
+			await t(interaction, 'common.container.footer', {
 				username: interaction.client.user.username,
 			}),
 		),
@@ -333,11 +333,11 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("ping")
+		.setName('ping')
 		.setDescription(
 			"🔍 Checks the bot's, Discord API's, database and cache/redis connection speed.",
 		),
-	aliases: ["p", "pong", "🏓"],
+	aliases: ['p', 'pong', '🏓'],
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers } = container;
 		const { convertColor } = helpers.color;
@@ -347,11 +347,11 @@ module.exports = {
 
 		const loadingEmbed = new ContainerBuilder()
 			.setAccentColor(
-				convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+				convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "core.utils.ping.embed.title"),
+					await t(interaction, 'core.utils.ping.embed.title'),
 				),
 			)
 			.addSeparatorComponents(
@@ -361,12 +361,12 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					`**${await t(interaction, "core.utils.ping.field.bot.latency")}**\n\`\`\`${botLatency}ms\`\`\``,
+					`**${await t(interaction, 'core.utils.ping.field.bot.latency')}**\n\`\`\`${botLatency}ms\`\`\``,
 				),
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					`**${await t(interaction, "core.utils.ping.field.api.latency")}**\n\`\`\`${apiLatency}ms\`\`\``,
+					`**${await t(interaction, 'core.utils.ping.field.api.latency')}**\n\`\`\`${apiLatency}ms\`\`\``,
 				),
 			)
 			.addSeparatorComponents(
@@ -376,7 +376,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "core.utils.ping.loading"),
+					await t(interaction, 'core.utils.ping.loading'),
 				),
 			)
 			.addSeparatorComponents(
@@ -387,8 +387,8 @@ module.exports = {
 			.addActionRowComponents(
 				new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
-						.setCustomId("ping_refresh")
-						.setLabel(await t(interaction, "core.utils.ping.button.refresh"))
+						.setCustomId('ping_refresh')
+						.setLabel(await t(interaction, 'core.utils.ping.button.refresh'))
 						.setStyle(ButtonStyle.Secondary)
 						.setDisabled(true),
 				),
@@ -400,14 +400,14 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "common.container.footer", {
+					await t(interaction, 'common.container.footer', {
 						username: interaction.client.user.username,
 					}),
 				),
 			);
 
 		const sent = await interaction.reply({
-			content: " ",
+			content: ' ',
 			components: [loadingEmbed],
 			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
 			fetchReply: true,
@@ -424,10 +424,10 @@ module.exports = {
 
 		const collector = sent.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			filter: (i) => i.customId === "ping_refresh",
+			filter: (i) => i.customId === 'ping_refresh',
 		});
 
-		collector.on("collect", async (i) => {
+		collector.on('collect', async (i) => {
 			const botLatency = Math.max(0, Date.now() - i.createdTimestamp);
 			const apiLatency = Math.round(i.client.ws.ping);
 

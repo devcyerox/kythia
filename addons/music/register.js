@@ -3,11 +3,11 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const MusicManager = require("./helpers/MusicManager");
-const MusicHandlers = require("./helpers/MusicHandlers");
+const MusicManager = require('./helpers/MusicManager');
+const MusicHandlers = require('./helpers/MusicHandlers');
 
 module.exports = {
 	async initialize(bot) {
@@ -16,27 +16,27 @@ module.exports = {
 		const summary = [];
 
 		container.musicHandlers = new MusicHandlers(container);
-		summary.push("   └─ 🎵 Music Handlers Injected");
+		summary.push('   └─ 🎵 Music Handlers Injected');
 
 		container.music = new MusicManager(container);
 		await container.music.init();
 
-		summary.push("   └─ 🎵 Initialize Music Manager");
+		summary.push('   └─ 🎵 Initialize Music Manager');
 
 		bot.addClientReadyHook(async (client) => {
-			logger.info("🎵 [24/7 Resurrector] Checking persistent 24/7 sessions...");
+			logger.info('🎵 [24/7 Resurrector] Checking persistent 24/7 sessions...');
 
 			const Music247 = container.models.Music247;
 			if (!Music247) {
 				logger.warn(
-					"🎵 [24/7 Resurrector] Music247 model not found. Skipping.",
+					'🎵 [24/7 Resurrector] Music247 model not found. Skipping.',
 				);
 				return;
 			}
 
 			const sessions = await Music247.findAll();
 			if (sessions.length === 0) {
-				logger.info("🎵 [24/7 Resurrector] No active sessions found.");
+				logger.info('🎵 [24/7 Resurrector] No active sessions found.');
 				return;
 			}
 
@@ -50,7 +50,7 @@ module.exports = {
 					const textChannel = await guild.channels.fetch(session.textChannelId);
 
 					if (!guild || !voiceChannel || !textChannel) {
-						throw new Error("Guild/Channel not found");
+						throw new Error('Guild/Channel not found');
 					}
 
 					const player = client.poru.createConnection({
@@ -74,7 +74,7 @@ module.exports = {
 				`🎵 [24/7 Resurrector] Successfully restored ${restoredCount}/${sessions.length} sessions.`,
 			);
 		});
-		summary.push("   └─ 🎵 24/7 Resurrector Hook is Active");
+		summary.push('   └─ 🎵 24/7 Resurrector Hook is Active');
 
 		return summary;
 	},

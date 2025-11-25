@@ -3,13 +3,13 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const MONSTERS = [
 	// Level 1-2 (increased HP and strength)
 	{
-		name: "Wild Dog",
+		name: 'Wild Dog',
 		hp: 42,
 		strength: 12,
 		goldDrop: 16,
@@ -18,7 +18,7 @@ const MONSTERS = [
 		maxLevel: 3,
 	},
 	{
-		name: "Rat",
+		name: 'Rat',
 		hp: 30,
 		strength: 7,
 		goldDrop: 10,
@@ -27,7 +27,7 @@ const MONSTERS = [
 		maxLevel: 2,
 	},
 	{
-		name: "Bat",
+		name: 'Bat',
 		hp: 28,
 		strength: 6,
 		goldDrop: 9,
@@ -36,7 +36,7 @@ const MONSTERS = [
 		maxLevel: 2,
 	},
 	{
-		name: "Slime",
+		name: 'Slime',
 		hp: 25,
 		strength: 5,
 		goldDrop: 7,
@@ -45,7 +45,7 @@ const MONSTERS = [
 		maxLevel: 2,
 	},
 	{
-		name: "Goblin",
+		name: 'Goblin',
 		hp: 38,
 		strength: 10,
 		goldDrop: 14,
@@ -56,7 +56,7 @@ const MONSTERS = [
 
 	// Level 3-4 (increased HP and strength)
 	{
-		name: "Orc",
+		name: 'Orc',
 		hp: 160,
 		strength: 25,
 		goldDrop: 40,
@@ -65,7 +65,7 @@ const MONSTERS = [
 		maxLevel: 4,
 	},
 	{
-		name: "Giant Spider",
+		name: 'Giant Spider',
 		hp: 140,
 		strength: 22,
 		goldDrop: 35,
@@ -74,7 +74,7 @@ const MONSTERS = [
 		maxLevel: 4,
 	},
 	{
-		name: "Skeleton",
+		name: 'Skeleton',
 		hp: 120,
 		strength: 20,
 		goldDrop: 32,
@@ -83,7 +83,7 @@ const MONSTERS = [
 		maxLevel: 4,
 	},
 	{
-		name: "Zombie",
+		name: 'Zombie',
 		hp: 150,
 		strength: 24,
 		goldDrop: 38,
@@ -92,7 +92,7 @@ const MONSTERS = [
 		maxLevel: 4,
 	},
 	{
-		name: "Bandit",
+		name: 'Bandit',
 		hp: 130,
 		strength: 27,
 		goldDrop: 45,
@@ -103,7 +103,7 @@ const MONSTERS = [
 
 	// Level 5-6 (increased HP and strength)
 	{
-		name: "Wyvern",
+		name: 'Wyvern',
 		hp: 400,
 		strength: 70,
 		goldDrop: 110,
@@ -112,7 +112,7 @@ const MONSTERS = [
 		maxLevel: 6,
 	},
 	{
-		name: "Vampire",
+		name: 'Vampire',
 		hp: 220,
 		strength: 45,
 		goldDrop: 60,
@@ -121,7 +121,7 @@ const MONSTERS = [
 		maxLevel: 6,
 	},
 	{
-		name: "Troll",
+		name: 'Troll',
 		hp: 320,
 		strength: 55,
 		goldDrop: 90,
@@ -130,7 +130,7 @@ const MONSTERS = [
 		maxLevel: 6,
 	},
 	{
-		name: "Werewolf",
+		name: 'Werewolf',
 		hp: 260,
 		strength: 50,
 		goldDrop: 80,
@@ -139,7 +139,7 @@ const MONSTERS = [
 		maxLevel: 6,
 	},
 	{
-		name: "Dark Mage",
+		name: 'Dark Mage',
 		hp: 200,
 		strength: 65,
 		goldDrop: 100,
@@ -150,7 +150,7 @@ const MONSTERS = [
 
 	// Level 7-8 (increased HP and strength)
 	{
-		name: "Behemoth",
+		name: 'Behemoth',
 		hp: 700,
 		strength: 120,
 		goldDrop: 250,
@@ -159,7 +159,7 @@ const MONSTERS = [
 		maxLevel: 8,
 	},
 	{
-		name: "Phoenix",
+		name: 'Phoenix',
 		hp: 600,
 		strength: 110,
 		goldDrop: 230,
@@ -168,7 +168,7 @@ const MONSTERS = [
 		maxLevel: 8,
 	},
 	{
-		name: "Hydra",
+		name: 'Hydra',
 		hp: 550,
 		strength: 105,
 		goldDrop: 220,
@@ -177,7 +177,7 @@ const MONSTERS = [
 		maxLevel: 8,
 	},
 	{
-		name: "Lich King",
+		name: 'Lich King',
 		hp: 520,
 		strength: 130,
 		goldDrop: 270,
@@ -186,7 +186,7 @@ const MONSTERS = [
 		maxLevel: 9,
 	},
 	{
-		name: "Ancient Golem",
+		name: 'Ancient Golem',
 		hp: 650,
 		strength: 120,
 		goldDrop: 240,
@@ -197,7 +197,7 @@ const MONSTERS = [
 
 	// Level 9-10+ (increased HP and strength)
 	{
-		name: "Dragon",
+		name: 'Dragon',
 		hp: 900,
 		strength: 170,
 		goldDrop: 350,
@@ -206,7 +206,7 @@ const MONSTERS = [
 		maxLevel: 99,
 	},
 	{
-		name: "Demon Lord",
+		name: 'Demon Lord',
 		hp: 1100,
 		strength: 210,
 		goldDrop: 420,
@@ -215,7 +215,7 @@ const MONSTERS = [
 		maxLevel: 99,
 	},
 	{
-		name: "Celestial Serpent",
+		name: 'Celestial Serpent',
 		hp: 1000,
 		strength: 190,
 		goldDrop: 390,
@@ -224,7 +224,7 @@ const MONSTERS = [
 		maxLevel: 99,
 	},
 	{
-		name: "Shadow Reaper",
+		name: 'Shadow Reaper',
 		hp: 880,
 		strength: 180,
 		goldDrop: 360,
@@ -233,7 +233,7 @@ const MONSTERS = [
 		maxLevel: 99,
 	},
 	{
-		name: "Titan",
+		name: 'Titan',
 		hp: 1400,
 		strength: 240,
 		goldDrop: 500,

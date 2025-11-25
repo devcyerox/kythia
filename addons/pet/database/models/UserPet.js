@@ -3,13 +3,13 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class UserPet extends KythiaModel {
-	static customInvalidationTags = ["UserPet:leaderboard"];
+	static customInvalidationTags = ['UserPet:leaderboard'];
 	static guarded = [];
 
 	static get structure() {
@@ -20,13 +20,13 @@ class UserPet extends KythiaModel {
 
 	static associate(models) {
 		this.belongsTo(models.KythiaUser, {
-			foreignKey: "userId",
-			as: "user",
+			foreignKey: 'userId',
+			as: 'user',
 		});
 
 		this.belongsTo(models.Pet, {
-			foreignKey: "petId",
-			as: "pet",
+			foreignKey: 'petId',
+			as: 'pet',
 		});
 	}
 }

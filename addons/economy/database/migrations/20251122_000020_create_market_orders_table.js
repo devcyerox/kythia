@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("market_orders", {
+		await queryInterface.createTable('market_orders', {
 			orderId: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -23,18 +23,18 @@ module.exports = {
 			status: {
 				type: DataTypes.STRING,
 				allowNull: false,
-				defaultValue: "open",
+				defaultValue: 'open',
 			},
 
 			createdAt: { type: DataTypes.DATE, allowNull: false },
 			updatedAt: { type: DataTypes.DATE, allowNull: false },
 		});
 
-		await queryInterface.addIndex("market_orders", ["userId"]);
-		await queryInterface.addIndex("market_orders", ["userId", "assetId"]);
+		await queryInterface.addIndex('market_orders', ['userId']);
+		await queryInterface.addIndex('market_orders', ['userId', 'assetId']);
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("market_orders");
+		await queryInterface.dropTable('market_orders');
 	},
 };

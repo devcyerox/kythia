@@ -3,7 +3,7 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -20,10 +20,10 @@ const {
 	ButtonBuilder,
 	ButtonStyle,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 function safeWebhookClient(url) {
-	if (typeof url === "string" && url.trim().length > 0) {
+	if (typeof url === 'string' && url.trim().length > 0) {
 		return new WebhookClient({ url });
 	}
 	return null;
@@ -54,7 +54,7 @@ async function getInviteLink(guild) {
 					const invite = await channel.createInvite({
 						maxAge: 0,
 						maxUses: 0,
-						reason: "Bot joined - sharing server invite for logging",
+						reason: 'Bot joined - sharing server invite for logging',
 					});
 					if (invite?.url) {
 						return invite.url;
@@ -73,12 +73,12 @@ module.exports = async (bot, guild) => {
 
 	const { convertColor } = helpers.color;
 
-	const locale = guild.preferredLocale || "en";
+	const locale = guild.preferredLocale || 'en';
 	const [_setting, created] = await ServerSetting.findOrCreateWithCache({
 		where: { guildId: guild.id },
 		defaults: {
 			guildId: guild.id,
-			guildName: guild.name ?? "Unknown",
+			guildName: guild.name ?? 'Unknown',
 			lang: locale,
 		},
 	});
@@ -89,10 +89,10 @@ module.exports = async (bot, guild) => {
 	const webhookClient = safeWebhookClient(
 		kythiaConfig.api.webhookGuildInviteLeave,
 	);
-	let ownerName = "Unknown";
+	let ownerName = 'Unknown';
 	try {
 		let owner = guild.members?.cache?.get(guild.ownerId);
-		if (!owner && typeof guild.fetchOwner === "function") {
+		if (!owner && typeof guild.fetchOwner === 'function') {
 			owner = await guild.fetchOwner();
 		}
 		if (owner?.user?.username) {
@@ -103,26 +103,26 @@ module.exports = async (bot, guild) => {
 	const inviteUrl = await getInviteLink(guild);
 	const inviteText = inviteUrl
 		? inviteUrl
-		: await t(guild, "core.events.guildCreate.events.guild.create.no.invite");
+		: await t(guild, 'core.events.guildCreate.events.guild.create.no.invite');
 
 	const inviteEmbed = new EmbedBuilder()
 		.setColor(kythiaConfig.bot.color)
 		.setDescription(
 			await t(
 				guild,
-				"core.events.guildCreate.events.guild.create.webhook.desc",
+				'core.events.guildCreate.events.guild.create.webhook.desc',
 				{
 					bot: guild.client.user.username,
 					guild: guild.name,
 					guildId: guild.id,
 					ownerId: guild.ownerId,
 					ownerName: ownerName,
-					memberCount: guild.memberCount ?? "?",
+					memberCount: guild.memberCount ?? '?',
 					invite: inviteText,
-					createdAt: guild.createdAt.toLocaleDateString("en-US", {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
+					createdAt: guild.createdAt.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric',
 					}),
 				},
 			),
@@ -142,8 +142,8 @@ module.exports = async (bot, guild) => {
 		channel = guild.channels.cache.find(
 			(ch) =>
 				ch.type === 0 &&
-				typeof ch.name === "string" &&
-				ch.name.toLowerCase() === "general",
+				typeof ch.name === 'string' &&
+				ch.name.toLowerCase() === 'general',
 		);
 	}
 	if (channel) {
@@ -154,8 +154,8 @@ module.exports = async (bot, guild) => {
 				user: bot.client.user,
 			};
 			const accentColor = convertColor(kythiaConfig.bot.color, {
-				from: "hex",
-				to: "decimal",
+				from: 'hex',
+				to: 'decimal',
 			});
 
 			const welcomeContainer = new ContainerBuilder()
@@ -178,7 +178,7 @@ module.exports = async (bot, guild) => {
 					new TextDisplayBuilder().setContent(
 						await t(
 							guild,
-							"core.events.guildCreate.events.guild.create.welcome.desc",
+							'core.events.guildCreate.events.guild.create.welcome.desc',
 							{
 								bot: guild.client.user.username,
 							},
@@ -194,20 +194,20 @@ module.exports = async (bot, guild) => {
 				.addActionRowComponents(
 					new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
-							.setLabel("Official Web")
+							.setLabel('Official Web')
 							.setStyle(ButtonStyle.Link)
 							.setURL(kythiaConfig.settings.kythiaWeb)
-							.setEmoji("🌸"),
+							.setEmoji('🌸'),
 						new ButtonBuilder()
-							.setLabel("Support server")
+							.setLabel('Support server')
 							.setStyle(ButtonStyle.Link)
 							.setURL(kythiaConfig.settings.supportServer)
-							.setEmoji("🎂"),
+							.setEmoji('🎂'),
 						new ButtonBuilder()
-							.setLabel("Contact Owner")
+							.setLabel('Contact Owner')
 							.setStyle(ButtonStyle.Link)
 							.setURL(kythiaConfig.settings.ownerWeb)
-							.setEmoji("❄️"),
+							.setEmoji('❄️'),
 					),
 				)
 				.addSeparatorComponents(
@@ -218,7 +218,7 @@ module.exports = async (bot, guild) => {
 
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(fakeInteraction, "common.container.footer", {
+						await t(fakeInteraction, 'common.container.footer', {
 							username: bot.client.user.username,
 						}),
 					),
@@ -233,7 +233,7 @@ module.exports = async (bot, guild) => {
 				await channel.send(
 					await t(
 						guild,
-						"core.events.guildCreate.events.guild.create.welcome.fallback",
+						'core.events.guildCreate.events.guild.create.welcome.fallback',
 						{
 							bot: guild.client.user.username,
 						},

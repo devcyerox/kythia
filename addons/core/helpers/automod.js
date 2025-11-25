@@ -3,15 +3,15 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { Collection, PermissionsBitField } = require("discord.js");
-const ServerSetting = require("@coreModels/ServerSetting");
-const { sendLogsWarning } = require("./system");
-const { t } = require("@coreHelpers/translator");
-const logger = require("@coreHelpers/logger");
-const leetMap = require("./leetMap");
+const { Collection, PermissionsBitField } = require('discord.js');
+const ServerSetting = require('@coreModels/ServerSetting');
+const { sendLogsWarning } = require('./system');
+const { t } = require('@coreHelpers/translator');
+const logger = require('@coreHelpers/logger');
+const leetMap = require('./leetMap');
 
 const userCache = new Collection();
 const SPAM_THRESHOLD = kythia.settings.spamThreshold || 5;
@@ -39,17 +39,17 @@ for (const [baseChar, variations] of Object.entries(leetMap)) {
 }
 
 function normalizeText(text) {
-	if (!text) return "";
+	if (!text) return '';
 
 	const lowerText = text.toLowerCase();
-	let normalized = "";
+	let normalized = '';
 
 	for (let i = 0; i < lowerText.length; i++) {
 		const char = lowerText[i];
 		normalized += reverseLeetMap.get(char) || char;
 	}
 
-	return normalized.replace(/[^a-z0-9]+/g, " ").trim();
+	return normalized.replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
 function canDeleteMessage(message) {
@@ -153,12 +153,12 @@ async function checkSpam(message, setting) {
 	);
 
 	if (duplicateMessages.length >= DUPLICATE_THRESHOLD) {
-		spamType = "duplicate";
+		spamType = 'duplicate';
 		messagesToDelete = [...duplicateMessages];
 	}
 
 	if (!spamType && userData.fastMessages.length >= SPAM_THRESHOLD) {
-		spamType = "fast";
+		spamType = 'fast';
 		messagesToDelete = [...userData.fastMessages];
 	}
 
@@ -168,7 +168,7 @@ async function checkSpam(message, setting) {
 			(m) => m.content.length > 0 && m.content.length <= 5,
 		).length >= SHORT_MESSAGE_THRESHOLD
 	) {
-		spamType = "short";
+		spamType = 'short';
 		messagesToDelete = [
 			...userData.fastMessages.filter(
 				(m) => m.content.length > 0 && m.content.length <= 5,
@@ -177,12 +177,12 @@ async function checkSpam(message, setting) {
 	}
 
 	if (spamType) {
-		let reasonKey = "";
-		if (spamType === "duplicate")
-			reasonKey = "core.system.automod.spam.duplicate";
-		else if (spamType === "fast") reasonKey = "core.system.automod.spam.fast";
-		else if (spamType === "short") reasonKey = "core.system.automod.spam.short";
-		else reasonKey = "core.system.automod.spam.generic";
+		let reasonKey = '';
+		if (spamType === 'duplicate')
+			reasonKey = 'core.system.automod.spam.duplicate';
+		else if (spamType === 'fast') reasonKey = 'core.system.automod.spam.fast';
+		else if (spamType === 'short') reasonKey = 'core.system.automod.spam.short';
+		else reasonKey = 'core.system.automod.spam.generic';
 
 		const reason = await t(message, reasonKey);
 
@@ -190,7 +190,7 @@ async function checkSpam(message, setting) {
 			if (canDeleteMessage(msg)) {
 				msg.delete().catch((err) => {
 					if (err.code !== 50013) {
-						logger.error("Failed to delete spam message:", err);
+						logger.error('Failed to delete spam message:', err);
 					}
 				});
 			}
@@ -210,12 +210,12 @@ async function checkSpam(message, setting) {
 		) {
 			message.member.timeout(timeoutDuration * 1000, reason).catch((err) => {
 				if (err.code !== 50013) {
-					logger.error("Failed to timeout member:", err);
+					logger.error('Failed to timeout member:', err);
 				}
 			});
 		}
 
-		if (spamType === "duplicate") {
+		if (spamType === 'duplicate') {
 			userData.duplicateMessages = [];
 		}
 
@@ -231,7 +231,7 @@ async function checkSpam(message, setting) {
 async function checkAllCaps(message, setting) {
 	if (!setting.antiAllCapsOn) return false;
 
-	const raw = message.content || "";
+	const raw = message.content || '';
 	if (raw.length < ALL_CAPS_MIN_LENGTH) return false;
 
 	const chars = [...raw].filter((c) => c.match(/[A-Za-z]/));
@@ -245,13 +245,13 @@ async function checkAllCaps(message, setting) {
 	if (capRatio >= ALL_CAPS_RATIO) {
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.capslock.detected",
+			'core.helpers.automod.system.automod.capslock.detected',
 		);
 		sendLogsWarning(message, reason, message.content, setting);
 		if (canDeleteMessage(message)) {
 			message.delete().catch((err) => {
 				if (err.code !== 50013)
-					logger.error("Failed to delete ALL CAPS message:", err);
+					logger.error('Failed to delete ALL CAPS message:', err);
 			});
 		}
 		return true;
@@ -274,7 +274,7 @@ function _countEmojis(str) {
 async function checkEmojiSpam(message, setting) {
 	if (!setting.antiEmojiSpamOn) return false;
 
-	const raw = message.content || "";
+	const raw = message.content || '';
 	if (!raw || raw.length < 3) return false;
 
 	const { total, ratio } = _countEmojis(raw);
@@ -282,14 +282,14 @@ async function checkEmojiSpam(message, setting) {
 	if (total >= ANTI_EMOJI_MIN_TOTAL || ratio >= ANTI_EMOJI_RATIO) {
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.emojispam.detected",
+			'core.helpers.automod.system.automod.emojispam.detected',
 		);
 		sendLogsWarning(message, reason, message.content, setting);
 
 		if (canDeleteMessage(message)) {
 			message.delete().catch((err) => {
 				if (err.code !== 50013)
-					logger.error("Failed to delete emoji spam message:", err);
+					logger.error('Failed to delete emoji spam message:', err);
 			});
 		}
 		return true;
@@ -306,7 +306,7 @@ function _countZalgo(str) {
 async function checkZalgo(message, setting) {
 	if (!setting.antiZalgoOn) return false;
 
-	const raw = message.content || "";
+	const raw = message.content || '';
 
 	if (!raw || raw.length < 6) return false;
 
@@ -314,14 +314,14 @@ async function checkZalgo(message, setting) {
 	if (count >= ANTI_ZALGO_MIN) {
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.zalgo.detected",
+			'core.helpers.automod.system.automod.zalgo.detected',
 		);
 		sendLogsWarning(message, reason, message.content, setting);
 
 		if (canDeleteMessage(message)) {
 			message.delete().catch((err) => {
 				if (err.code !== 50013)
-					logger.error("Failed to delete zalgo message:", err);
+					logger.error('Failed to delete zalgo message:', err);
 			});
 		}
 		return true;
@@ -334,8 +334,8 @@ async function checkBadwords(message, setting) {
 
 	const rawBadwords = Array.isArray(setting.badwords)
 		? setting.badwords
-		: typeof setting.badwords === "string" && setting.badwords.trim().length > 0
-			? setting.badwords.split(",")
+		: typeof setting.badwords === 'string' && setting.badwords.trim().length > 0
+			? setting.badwords.split(',')
 			: [];
 	const badwords = rawBadwords
 		.map((w) => w.trim().toLowerCase())
@@ -343,19 +343,19 @@ async function checkBadwords(message, setting) {
 
 	if (badwords.length === 0) return false;
 
-	const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+	const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 
 	const normalizedBadwords = badwords.map((w) => {
 		const normalized = normalizeText(w);
 
-		const coreWord = normalized.replace(/\s+/g, "");
+		const coreWord = normalized.replace(/\s+/g, '');
 
-		return `${coreWord.split("").map(escapeRegex).join("+\\s*")}+`;
+		return `${coreWord.split('').map(escapeRegex).join('+\\s*')}+`;
 	});
 
 	const badwordRegex = new RegExp(
-		`\\b(${normalizedBadwords.join("|")})\\b`,
-		"i",
+		`\\b(${normalizedBadwords.join('|')})\\b`,
+		'i',
 	);
 
 	const contentToCheck = [
@@ -364,7 +364,7 @@ async function checkBadwords(message, setting) {
 		...message.attachments.map((a) => a.name),
 	]
 		.filter(Boolean)
-		.join(" ");
+		.join(' ');
 
 	if (!contentToCheck) return false;
 
@@ -376,7 +376,7 @@ async function checkBadwords(message, setting) {
 		const foundBadword = match[0];
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.badword.detected",
+			'core.helpers.automod.system.automod.badword.detected',
 			{ word: foundBadword },
 		);
 		sendLogsWarning(message, reason, foundBadword, setting);
@@ -405,13 +405,13 @@ async function checkMentions(message, setting) {
 	if (mentionCount >= MENTION_THRESHOLD) {
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.mention.spam",
+			'core.helpers.automod.system.automod.mention.spam',
 		);
 		sendLogsWarning(message, reason, message.content, setting);
 		if (canDeleteMessage(message)) {
 			message.delete().catch((err) => {
 				if (err.code !== 50013) {
-					logger.error("Failed to delete mention spam message:", err);
+					logger.error('Failed to delete mention spam message:', err);
 				}
 			});
 		}
@@ -435,17 +435,17 @@ async function checkUsername(message, setting) {
 
 	if (badwords.length === 0) return false;
 
-	const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+	const escapeRegex = (str) => str.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 	const normalizedBadwords = badwords.map((word) =>
 		escapeRegex(normalizeText(word)),
 	);
 	const badwordRegex = new RegExp(
-		`\\b(${normalizedBadwords.join("|")})\\b`,
-		"i",
+		`\\b(${normalizedBadwords.join('|')})\\b`,
+		'i',
 	);
 
 	const nameToCheck = normalizeText(
-		`${author.username} ${member?.displayName || ""}`,
+		`${author.username} ${member?.displayName || ''}`,
 	);
 	const match = nameToCheck.match(badwordRegex);
 
@@ -453,7 +453,7 @@ async function checkUsername(message, setting) {
 		const foundBadword = match[0];
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.badname.detected",
+			'core.helpers.automod.system.automod.badname.detected',
 			{ word: foundBadword },
 		);
 
@@ -476,86 +476,86 @@ async function checkUsername(message, setting) {
 
 async function checkLinks(message, setting) {
 	const sanitize = (text) =>
-		(text || "")
-			.replace(/[\s\\\u200B-\u200D\uFEFF[\](){}<>|`'".,;:!~_=-]/g, "")
+		(text || '')
+			.replace(/[\s\\\u200B-\u200D\uFEFF[\](){}<>|`'".,;:!~_=-]/g, '')
 			.toLowerCase();
 
 	const inviteCore = [
-		"discordapp.com/invite",
-		"discord.com/invite",
-		"discord.gg",
-		"discordapp.gg",
-		"dsc.gg",
-		"invite.gg",
-		"disc.gg",
-		"dscrdly.com",
-		"discord.me",
-		"discord.io",
-		"discord.link",
-		"discordplus.me",
-		"joinmydiscord.com",
+		'discordapp.com/invite',
+		'discord.com/invite',
+		'discord.gg',
+		'discordapp.gg',
+		'dsc.gg',
+		'invite.gg',
+		'disc.gg',
+		'dscrdly.com',
+		'discord.me',
+		'discord.io',
+		'discord.link',
+		'discordplus.me',
+		'joinmydiscord.com',
 	];
 
 	function obf(s) {
 		return s
-			.split("")
+			.split('')
 			.map((c) => `[${c}${c.toUpperCase()}][^a-zA-Z0-9]{0,2}`)
-			.join("");
+			.join('');
 	}
 	const inviteRegex = new RegExp(
-		`${inviteCore.map(obf).join("|")}[^a-zA-Z0-9]{0,8}[a-z0-9-]{2,}`,
-		"iu",
+		`${inviteCore.map(obf).join('|')}[^a-zA-Z0-9]{0,8}[a-z0-9-]{2,}`,
+		'iu',
 	);
 
 	const domainRegex =
 		/(?:(?:https?:\/\/)?(?:www\.)?)?((?:[a-z0-9\u00a1-\uffff][^a-zA-Z0-9]{0,2}){2,}\.(?:[a-z\u00a1-\uffff]{2,}))(?:\/[^\s]*)?/giu;
 
 	const shorteners = [
-		"bit.ly",
-		"tinyurl.com",
-		"goo.gl",
-		"t.co",
-		"ow.ly",
-		"is.gd",
-		"buff.ly",
-		"cutt.ly",
-		"rb.gy",
-		"shorte.st",
-		"adf.ly",
-		"rebrand.ly",
-		"s.id",
-		"v.gd",
-		"soo.gd",
-		"qr.ae",
-		"lnkd.in",
-		"db.tt",
-		"clck.ru",
-		"po.st",
-		"bc.vc",
-		"x.co",
-		"tr.im",
-		"mcaf.ee",
-		"su.pr",
-		"twurl.nl",
-		"snipurl.com",
-		"shorturl.at",
-		"shrtco.de",
-		"chilp.it",
-		"u.to",
-		"j.mp",
-		"bddy.me",
-		"ity.im",
-		"q.gs",
-		"viralurl.com",
-		"vur.me",
-		"lnk.fi",
-		"lnk.in",
-		"linktr.ee",
-		"link.ly",
-		"link.to",
-		"link.bio",
+		'bit.ly',
+		'tinyurl.com',
+		'goo.gl',
+		't.co',
+		'ow.ly',
+		'is.gd',
+		'buff.ly',
+		'cutt.ly',
+		'rb.gy',
+		'shorte.st',
+		'adf.ly',
+		'rebrand.ly',
+		's.id',
+		'v.gd',
+		'soo.gd',
+		'qr.ae',
+		'lnkd.in',
+		'db.tt',
+		'clck.ru',
+		'po.st',
+		'bc.vc',
+		'x.co',
+		'tr.im',
+		'mcaf.ee',
+		'su.pr',
+		'twurl.nl',
+		'snipurl.com',
+		'shorturl.at',
+		'shrtco.de',
+		'chilp.it',
+		'u.to',
+		'j.mp',
+		'bddy.me',
+		'ity.im',
+		'q.gs',
+		'viralurl.com',
+		'vur.me',
+		'lnk.fi',
+		'lnk.in',
+		'linktr.ee',
+		'link.ly',
+		'link.to',
+		'link.bio',
 	];
-	const shortenerRegex = new RegExp(shorteners.map(obf).join("|"), "iu");
+	const shortenerRegex = new RegExp(shorteners.map(obf).join('|'), 'iu');
 
 	const sanitizedContent = sanitize(message.content);
 
@@ -563,9 +563,9 @@ async function checkLinks(message, setting) {
 	if (message.embeds?.length) {
 		for (const embed of message.embeds) {
 			if (
-				inviteRegex.test(sanitize(embed.url || "")) ||
-				inviteRegex.test(sanitize(embed.description || "")) ||
-				inviteRegex.test(sanitize(embed.title || ""))
+				inviteRegex.test(sanitize(embed.url || '')) ||
+				inviteRegex.test(sanitize(embed.description || '')) ||
+				inviteRegex.test(sanitize(embed.title || ''))
 			) {
 				hasInviteInEmbed = true;
 				break;
@@ -576,7 +576,7 @@ async function checkLinks(message, setting) {
 	let hasInviteInAttachment = false;
 	if (message.attachments?.size) {
 		for (const att of message.attachments.values()) {
-			if (inviteRegex.test(sanitize(att.url || ""))) {
+			if (inviteRegex.test(sanitize(att.url || ''))) {
 				hasInviteInAttachment = true;
 				break;
 			}
@@ -587,9 +587,9 @@ async function checkLinks(message, setting) {
 	if (message.embeds?.length) {
 		for (const embed of message.embeds) {
 			if (
-				domainRegex.test(embed.url || "") ||
-				domainRegex.test(embed.description || "") ||
-				domainRegex.test(embed.title || "")
+				domainRegex.test(embed.url || '') ||
+				domainRegex.test(embed.description || '') ||
+				domainRegex.test(embed.title || '')
 			) {
 				hasLinkInEmbed = true;
 				break;
@@ -600,11 +600,11 @@ async function checkLinks(message, setting) {
 	let hasLinkInAttachment = false;
 	if (setting.antiLinkOn && message.attachments?.size > 0) {
 		for (const att of message.attachments.values()) {
-			const url = att.url || "";
+			const url = att.url || '';
 
 			const isDiscordCdn =
-				url.startsWith("https://cdn.discordapp.com") ||
-				url.startsWith("https://media.discordapp.net");
+				url.startsWith('https://cdn.discordapp.com') ||
+				url.startsWith('https://media.discordapp.net');
 
 			if (!isDiscordCdn && domainRegex.test(url)) {
 				hasLinkInAttachment = true;
@@ -623,13 +623,13 @@ async function checkLinks(message, setting) {
 	) {
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.invite.detected",
+			'core.helpers.automod.system.automod.invite.detected',
 		);
 		await sendLogsWarning(message, reason, message.content, setting);
 		if (canDeleteMessage(message)) {
 			return message.delete().catch((err) => {
 				if (err.code !== 50013) {
-					logger.error("Failed to delete invite message:", err);
+					logger.error('Failed to delete invite message:', err);
 				}
 			});
 		}
@@ -645,13 +645,13 @@ async function checkLinks(message, setting) {
 	) {
 		const reason = await t(
 			message,
-			"core.helpers.automod.system.automod.link.detected",
+			'core.helpers.automod.system.automod.link.detected',
 		);
 		await sendLogsWarning(message, reason, message.content, setting);
 		if (canDeleteMessage(message)) {
 			return message.delete().catch((err) => {
 				if (err.code !== 50013) {
-					logger.error("Failed to delete link message:", err);
+					logger.error('Failed to delete link message:', err);
 				}
 			});
 		}

@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("giveaways", {
+		await queryInterface.createTable('giveaways', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -30,11 +30,11 @@ module.exports = {
 		});
 
 		// Indexing biar query cepet (Opsional, tapi recommended buat guildId/messageId)
-		await queryInterface.addIndex("giveaways", ["guildId"]);
-		await queryInterface.addIndex("giveaways", ["messageId"]);
+		await queryInterface.addIndex('giveaways', ['guildId']);
+		await queryInterface.addIndex('giveaways', ['messageId']);
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("giveaways");
+		await queryInterface.dropTable('giveaways');
 	},
 };

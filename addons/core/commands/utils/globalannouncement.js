@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -15,24 +15,24 @@ const {
 	EmbedBuilder,
 	PermissionFlagsBits,
 	InteractionContextType,
-} = require("discord.js");
+} = require('discord.js');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("global-announcement")
-		.setDescription("Send an announcement to all servers the bot has joined.")
+		.setName('global-announcement')
+		.setDescription('Send an announcement to all servers the bot has joined.')
 		.addSubcommand((sub) =>
 			sub
-				.setName("embed")
-				.setDescription("Send a simple announcement using an embed."),
+				.setName('embed')
+				.setDescription('Send a simple announcement using an embed.'),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("container")
+				.setName('container')
 				.setDescription(
-					"Send a complex announcement by pasting a JSON payload.",
+					'Send a complex announcement by pasting a JSON payload.',
 				),
 		)
 		.setContexts(InteractionContextType.BotDM),
@@ -42,19 +42,19 @@ module.exports = {
 
 		const subcommand = interaction.options.getSubcommand();
 
-		if (subcommand === "embed") {
+		if (subcommand === 'embed') {
 			const modal = new ModalBuilder()
 				.setCustomId(`announcement-modal-embed_${interaction.user.id}`)
-				.setTitle("📝 Create Embed Announcement");
+				.setTitle('📝 Create Embed Announcement');
 
 			const titleInput = new TextInputBuilder()
-				.setCustomId("announcement-title")
-				.setLabel("Title")
+				.setCustomId('announcement-title')
+				.setLabel('Title')
 				.setStyle(TextInputStyle.Short)
 				.setRequired(true);
 			const contentInput = new TextInputBuilder()
-				.setCustomId("announcement-content")
-				.setLabel("Content (Markdown)")
+				.setCustomId('announcement-content')
+				.setLabel('Content (Markdown)')
 				.setStyle(TextInputStyle.Paragraph)
 				.setRequired(true);
 
@@ -66,26 +66,26 @@ module.exports = {
 
 			const modalSubmit = await interaction
 				.awaitModalSubmit({
-					filter: (i) => i.customId.startsWith("announcement-modal-embed_"),
+					filter: (i) => i.customId.startsWith('announcement-modal-embed_'),
 					time: 300_000,
 				})
 				.catch(() => null);
 
 			if (!modalSubmit)
-				return logger.warn("Embed announcement modal timed out.");
+				return logger.warn('Embed announcement modal timed out.');
 
 			await modalSubmit.deferReply({ ephemeral: true });
 
-			const title = modalSubmit.fields.getTextInputValue("announcement-title");
+			const title = modalSubmit.fields.getTextInputValue('announcement-title');
 			const content = modalSubmit.fields.getTextInputValue(
-				"announcement-content",
+				'announcement-content',
 			);
 			const payload = {
 				embeds: [
 					new EmbedBuilder()
 						.setTitle(`📢 ${title}`)
 						.setDescription(content)
-						.setColor("Blurple")
+						.setColor('Blurple')
 						.setTimestamp()
 						.setFooter({
 							text: `Announcement from Developer ${interaction.client.user.username}`,
@@ -93,16 +93,16 @@ module.exports = {
 				],
 			};
 			await this.sendToAllGuilds(modalSubmit, payload);
-		} else if (subcommand === "container") {
+		} else if (subcommand === 'container') {
 			const modal = new ModalBuilder()
 				.setCustomId(`announcement-modal-container_${interaction.user.id}`)
-				.setTitle("📝 Create Container Announcement");
+				.setTitle('📝 Create Container Announcement');
 
 			const jsonInput = new TextInputBuilder()
-				.setCustomId("announcement-json")
-				.setLabel("Paste JSON Payload Here")
+				.setCustomId('announcement-json')
+				.setLabel('Paste JSON Payload Here')
 				.setStyle(TextInputStyle.Paragraph)
-				.setPlaceholder("Copy the JSON from Discohook and paste it here...")
+				.setPlaceholder('Copy the JSON from Discohook and paste it here...')
 				.setRequired(true);
 
 			modal.addComponents(new ActionRowBuilder().addComponents(jsonInput));
@@ -110,18 +110,18 @@ module.exports = {
 
 			const modalSubmit = await interaction
 				.awaitModalSubmit({
-					filter: (i) => i.customId.startsWith("announcement-modal-container_"),
+					filter: (i) => i.customId.startsWith('announcement-modal-container_'),
 					time: 300_000,
 				})
 				.catch(() => null);
 
 			if (!modalSubmit)
-				return logger.warn("Container announcement modal timed out.");
+				return logger.warn('Container announcement modal timed out.');
 
 			await modalSubmit.deferReply({ ephemeral: true });
 
 			const jsonString =
-				modalSubmit.fields.getTextInputValue("announcement-json");
+				modalSubmit.fields.getTextInputValue('announcement-json');
 			let payload;
 			try {
 				payload = JSON.parse(jsonString);
@@ -142,7 +142,7 @@ module.exports = {
 	 */
 	async sendToAllGuilds(interaction, payload) {
 		await interaction.editReply({
-			content: "⏳ Starting to send the announcement to all servers...",
+			content: '⏳ Starting to send the announcement to all servers...',
 			ephemeral: true,
 		});
 
@@ -173,14 +173,14 @@ module.exports = {
 								.has(PermissionFlagsBits.ViewChannel),
 					);
 					const channelNamesPriority = [
-						"kythia-updates",
-						"kythia",
-						"update",
-						"bot-updates",
-						"announcements",
-						"pengumuman",
-						"general",
-						"chat",
+						'kythia-updates',
+						'kythia',
+						'update',
+						'bot-updates',
+						'announcements',
+						'pengumuman',
+						'general',
+						'chat',
 					];
 					for (const name of channelNamesPriority) {
 						targetChannel = possibleChannels.find((ch) =>
@@ -207,28 +207,28 @@ module.exports = {
 		}
 
 		const reportEmbed = new EmbedBuilder()
-			.setTitle("✅ Announcement Delivery Report")
-			.setColor("Green")
+			.setTitle('✅ Announcement Delivery Report')
+			.setColor('Green')
 			.addFields(
 				{
-					name: "Successfully Sent",
+					name: 'Successfully Sent',
 					value: `${successCount} server(s)`,
 					inline: true,
 				},
 				{
-					name: "Failed to Send",
+					name: 'Failed to Send',
 					value: `${failCount} server(s)`,
 					inline: true,
 				},
 			);
 		if (failedServers.length > 0) {
 			reportEmbed.addFields({
-				name: "Failed Server List",
-				value: `\`\`\`${failedServers.slice(0, 10).join("\n")}\`\`\``,
+				name: 'Failed Server List',
+				value: `\`\`\`${failedServers.slice(0, 10).join('\n')}\`\`\``,
 			});
 		}
 		await interaction.editReply({
-			content: "Announcement delivery finished!",
+			content: 'Announcement delivery finished!',
 			embeds: [reportEmbed],
 			ephemeral: true,
 		});

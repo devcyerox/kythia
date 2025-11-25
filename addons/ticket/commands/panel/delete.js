@@ -3,21 +3,21 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { MessageFlags } = require("discord.js");
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("delete")
-			.setDescription("Deletes a ticket panel and all its types.")
+			.setName('delete')
+			.setDescription('Deletes a ticket panel and all its types.')
 			.addStringOption((option) =>
 				option
-					.setName("panel_id")
-					.setDescription("Select the panel to delete.")
+					.setName('panel_id')
+					.setDescription('Select the panel to delete.')
 					.setAutocomplete(true)
 					.setRequired(true),
 			),
@@ -55,14 +55,14 @@ module.exports = {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		try {
-			const panelMessageId = interaction.options.getString("panel_id");
+			const panelMessageId = interaction.options.getString('panel_id');
 			const panel = await TicketPanel.getCache({ messageId: panelMessageId });
 
 			if (!panel) {
-				const desc = await t(interaction, "ticket.errors.no_panels_found");
+				const desc = await t(interaction, 'ticket.errors.no_panels_found');
 				return interaction.editReply({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 				});
 			}
@@ -93,20 +93,20 @@ module.exports = {
 
 			await panel.destroy();
 
-			const desc = await t(interaction, "ticket.panel.delete_success", {
+			const desc = await t(interaction, 'ticket.panel.delete_success', {
 				title: panel.title,
 			});
 			await interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
-					color: "Green",
+					color: 'Green',
 				}),
 				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (error) {
-			console.error("Error deleting panel:", error);
-			const desc = await t(interaction, "ticket.errors.generic");
+			console.error('Error deleting panel:', error);
+			const desc = await t(interaction, 'ticket.errors.generic');
 			await interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 			});
 		}
 	},

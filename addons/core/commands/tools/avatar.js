@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -11,30 +11,30 @@ const {
 	EmbedBuilder,
 	ApplicationCommandType,
 	ContextMenuCommandBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	slashCommand: new SlashCommandBuilder()
-		.setName("avatar")
-		.setDescription("🖼️ Show user avatar.")
+		.setName('avatar')
+		.setDescription('🖼️ Show user avatar.')
 		.addUserOption((option) =>
 			option
-				.setName("user")
-				.setDescription("The user whose avatar you want to see.")
+				.setName('user')
+				.setDescription('The user whose avatar you want to see.')
 				.setRequired(false),
 		),
 
 	contextMenuCommand: new ContextMenuCommandBuilder()
-		.setName("User Avatar")
+		.setName('User Avatar')
 		.setType(ApplicationCommandType.User),
 
-	contextMenuDescription: "🖼️ Show user avatar.",
+	contextMenuDescription: '🖼️ Show user avatar.',
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers } = container;
 		const { embedFooter } = helpers.discord;
 
 		const user =
-			interaction.options.getUser("user") ||
+			interaction.options.getUser('user') ||
 			interaction.targetUser ||
 			interaction.user;
 
@@ -44,7 +44,7 @@ module.exports = {
 			.setColor(kythiaConfig.bot.color)
 			.setAuthor({ name: user.tag, iconURL: user.displayAvatarURL() })
 			.setDescription(
-				await t(interaction, "core.tools.avatar.embed.desc", {
+				await t(interaction, 'core.tools.avatar.embed.desc', {
 					url: avatarURL,
 				}),
 			)

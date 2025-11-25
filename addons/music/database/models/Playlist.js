@@ -3,10 +3,10 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class Playlist extends KythiaModel {
 	static guarded = [];
@@ -19,8 +19,8 @@ class Playlist extends KythiaModel {
 
 	static associate(models) {
 		this.hasMany(models.PlaylistTrack, {
-			foreignKey: "playlistId",
-			as: "tracks",
+			foreignKey: 'playlistId',
+			as: 'tracks',
 		});
 	}
 }

@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("lock")
-			.setDescription("🔒 Locks a channel to prevent messages.")
+			.setName('lock')
+			.setDescription('🔒 Locks a channel to prevent messages.')
 			.addChannelOption((option) =>
 				option
-					.setName("channel")
-					.setDescription("Channel to lock")
+					.setName('channel')
+					.setDescription('Channel to lock')
 					.setRequired(false),
 			),
 	permissions: PermissionFlagsBits.ManageChannels,
@@ -27,7 +27,7 @@ module.exports = {
 		await interaction.deferReply({ ephemeral: true });
 
 		const channel =
-			interaction.options.getChannel("channel") || interaction.channel;
+			interaction.options.getChannel('channel') || interaction.channel;
 
 		// Try to lock the channel (set @everyone SEND_MESSAGES to false)
 		try {
@@ -38,7 +38,7 @@ module.exports = {
 			});
 		} catch (_e) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.lock.failed"),
+				content: await t(interaction, 'core.moderation.lock.failed'),
 				ephemeral: true,
 			});
 		}
@@ -46,9 +46,9 @@ module.exports = {
 		// Embed to notify the channel
 		try {
 			const lockEmbed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "core.moderation.lock.embed.channel.locked", {
+					await t(interaction, 'core.moderation.lock.embed.channel.locked', {
 						user: `<@${interaction.user.id}>`,
 					}),
 				)
@@ -64,7 +64,7 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				await t(interaction, "core.moderation.lock.embed.reply", {
+				await t(interaction, 'core.moderation.lock.embed.reply', {
 					channel: `<#${channel.id}>`,
 				}),
 			)

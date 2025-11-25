@@ -3,35 +3,35 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("role")
-			.setDescription("⭕ Add or remove a role from a user.")
+			.setName('role')
+			.setDescription('⭕ Add or remove a role from a user.')
 			.addUserOption((option) =>
 				option
-					.setName("user")
-					.setDescription("The user to modify")
+					.setName('user')
+					.setDescription('The user to modify')
 					.setRequired(true),
 			)
 			.addRoleOption((option) =>
 				option
-					.setName("role")
-					.setDescription("The role to add or remove")
+					.setName('role')
+					.setDescription('The role to add or remove')
 					.setRequired(true),
 			)
 			.addStringOption((option) =>
 				option
-					.setName("action")
-					.setDescription("Choose whether to add or remove the role.")
+					.setName('action')
+					.setDescription('Choose whether to add or remove the role.')
 					.setRequired(true)
 					.addChoices(
-						{ name: "Add", value: "add" },
-						{ name: "Remove", value: "remove" },
+						{ name: 'Add', value: 'add' },
+						{ name: 'Remove', value: 'remove' },
 					),
 			),
 	permissions: PermissionFlagsBits.ManageRoles,
@@ -42,17 +42,17 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const user = interaction.options.getUser("user");
-		const role = interaction.options.getRole("role");
-		const action = interaction.options.getString("action");
+		const user = interaction.options.getUser('user');
+		const role = interaction.options.getRole('role');
+		const action = interaction.options.getString('action');
 		let member;
 		try {
 			member = await interaction.guild.members.fetch(user.id);
 		} catch (_err) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "core.moderation.role.member.not.found", {
+					await t(interaction, 'core.moderation.role.member.not.found', {
 						user: user.tag,
 					}),
 				)
@@ -70,21 +70,21 @@ module.exports = {
 		const botMember = interaction.guild.members.me;
 		if (!botMember) {
 			embed
-				.setColor("Red")
-				.setDescription("Bot member not found in this guild.");
+				.setColor('Red')
+				.setDescription('Bot member not found in this guild.');
 			return interaction.editReply({ embeds: [embed] });
 		}
 		if (role.managed) {
-			embed.setColor("Red").setDescription(
-				await t(interaction, "core.moderation.role.managed", {
+			embed.setColor('Red').setDescription(
+				await t(interaction, 'core.moderation.role.managed', {
 					role: role.name,
 				}),
 			);
 			return interaction.editReply({ embeds: [embed] });
 		}
 		if (role.position >= botMember.roles.highest.position) {
-			embed.setColor("Red").setDescription(
-				await t(interaction, "core.moderation.role.too.high", {
+			embed.setColor('Red').setDescription(
+				await t(interaction, 'core.moderation.role.too.high', {
 					role: role.name,
 				}),
 			);
@@ -92,8 +92,8 @@ module.exports = {
 		}
 		// Defensive: Check if user is guild owner
 		if (member.id === interaction.guild.ownerId) {
-			embed.setColor("Red").setDescription(
-				await t(interaction, "core.moderation.role.owner", {
+			embed.setColor('Red').setDescription(
+				await t(interaction, 'core.moderation.role.owner', {
 					user: user.tag,
 				}),
 			);
@@ -106,9 +106,9 @@ module.exports = {
 			)
 		) {
 			embed
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "core.moderation.role.missing.bot.perm"),
+					await t(interaction, 'core.moderation.role.missing.bot.perm'),
 				);
 			return interaction.editReply({ embeds: [embed] });
 		}
@@ -119,18 +119,18 @@ module.exports = {
 				member.roles.highest.position &&
 			interaction.user.id !== interaction.guild.ownerId
 		) {
-			embed.setColor("Red").setDescription(
-				await t(interaction, "core.moderation.role.hierarchy", {
+			embed.setColor('Red').setDescription(
+				await t(interaction, 'core.moderation.role.hierarchy', {
 					user: user.tag,
 				}),
 			);
 			return interaction.editReply({ embeds: [embed] });
 		}
 
-		if (action === "add") {
+		if (action === 'add') {
 			if (member.roles.cache.has(role.id)) {
 				embed.setColor(kythia.bot.color).setDescription(
-					await t(interaction, "core.moderation.role.already.has", {
+					await t(interaction, 'core.moderation.role.already.has', {
 						user: user.tag,
 						role: role.name,
 					}),
@@ -140,7 +140,7 @@ module.exports = {
 				try {
 					await member.roles.add(role);
 					embed.setColor(kythia.bot.color).setDescription(
-						await t(interaction, "core.moderation.role.add.success", {
+						await t(interaction, 'core.moderation.role.add.success', {
 							role: role.name,
 							user: user.tag,
 						}),
@@ -149,15 +149,15 @@ module.exports = {
 				} catch (error) {
 					// Defensive: Handle DiscordAPIError[50013]: Missing Permissions
 					if (error.code === 50013) {
-						embed.setColor("Red").setDescription(
-							await t(interaction, "core.moderation.role.missing.perm.error", {
+						embed.setColor('Red').setDescription(
+							await t(interaction, 'core.moderation.role.missing.perm.error', {
 								role: role.name,
 								user: user.tag,
 							}),
 						);
 					} else {
-						embed.setColor("Red").setDescription(
-							await t(interaction, "core.moderation.role.unknown.error", {
+						embed.setColor('Red').setDescription(
+							await t(interaction, 'core.moderation.role.unknown.error', {
 								error: error.message || error.toString(),
 							}),
 						);
@@ -165,10 +165,10 @@ module.exports = {
 					return interaction.editReply({ embeds: [embed] });
 				}
 			}
-		} else if (action === "remove") {
+		} else if (action === 'remove') {
 			if (!member.roles.cache.has(role.id)) {
 				embed.setColor(kythia.bot.color).setDescription(
-					await t(interaction, "core.moderation.role.not.has", {
+					await t(interaction, 'core.moderation.role.not.has', {
 						user: user.tag,
 						role: role.name,
 					}),
@@ -178,7 +178,7 @@ module.exports = {
 				try {
 					await member.roles.remove(role);
 					embed.setColor(kythia.bot.color).setDescription(
-						await t(interaction, "core.moderation.role.remove.success", {
+						await t(interaction, 'core.moderation.role.remove.success', {
 							role: role.name,
 							user: user.tag,
 						}),
@@ -187,15 +187,15 @@ module.exports = {
 				} catch (error) {
 					// Defensive: Handle DiscordAPIError[50013]: Missing Permissions
 					if (error.code === 50013) {
-						embed.setColor("Red").setDescription(
-							await t(interaction, "core.moderation.role.missing.perm.error", {
+						embed.setColor('Red').setDescription(
+							await t(interaction, 'core.moderation.role.missing.perm.error', {
 								role: role.name,
 								user: user.tag,
 							}),
 						);
 					} else {
-						embed.setColor("Red").setDescription(
-							await t(interaction, "core.moderation.role.unknown.error", {
+						embed.setColor('Red').setDescription(
+							await t(interaction, 'core.moderation.role.unknown.error', {
 								error: error.message || error.toString(),
 							}),
 						);

@@ -3,13 +3,13 @@
  * @type: Subcommand Group Definition
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	subcommand: true,
 	data: (group) =>
 		group
-			.setName("admin")
-			.setDescription("Administrative pet management commands."),
+			.setName('admin')
+			.setDescription('Administrative pet management commands.'),
 };

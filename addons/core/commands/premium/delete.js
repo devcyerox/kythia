@@ -3,18 +3,18 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("delete")
-			.setDescription("Remove a user from premium")
+			.setName('delete')
+			.setDescription('Remove a user from premium')
 			.addUserOption((opt) =>
 				opt
-					.setName("user")
-					.setDescription("User to remove premium from")
+					.setName('user')
+					.setDescription('User to remove premium from')
 					.setRequired(true),
 			),
 	async execute(interaction, container) {
@@ -23,12 +23,12 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const user = interaction.options.getUser("user");
+		const user = interaction.options.getUser('user');
 
 		const kythiaUser = await KythiaUser.getCache({ userId: user.id });
 		if (!kythiaUser || !kythiaUser.isPremium) {
 			return interaction.editReply(
-				await t(interaction, "core.premium.premium.not.premium"),
+				await t(interaction, 'core.premium.premium.not.premium'),
 			);
 		}
 
@@ -37,7 +37,7 @@ module.exports = {
 		await kythiaUser.save();
 
 		return interaction.editReply(
-			await t(interaction, "core.premium.premium.delete.success", {
+			await t(interaction, 'core.premium.premium.delete.success', {
 				user: `<@${user.id}>`,
 			}),
 		);

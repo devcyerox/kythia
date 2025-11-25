@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("checklists", {
+		await queryInterface.createTable('checklists', {
 			id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 			guildId: { type: DataTypes.STRING, allowNull: true },
 			userId: { type: DataTypes.STRING, allowNull: true },
@@ -17,6 +17,6 @@ module.exports = {
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("checklists");
+		await queryInterface.dropTable('checklists');
 	},
 };

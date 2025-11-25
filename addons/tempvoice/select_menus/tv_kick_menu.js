@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
@@ -13,14 +13,14 @@ module.exports = {
 		const { TempVoiceChannel } = models;
 
 		const userIdToKick = interaction.values[0];
-		const channelId = interaction.customId.split(":")[1];
+		const channelId = interaction.customId.split(':')[1];
 
 		if (!channelId) {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.no_channel_id"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.no_channel_id'),
+					{ color: 'Red' },
 				),
 			});
 		}
@@ -33,8 +33,8 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.not_owner"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.not_owner'),
+					{ color: 'Red' },
 				),
 			});
 		}
@@ -46,9 +46,9 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.channel_not_found"),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
@@ -61,9 +61,9 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.kick.menu.user_not_found"),
+					await t(interaction, 'tempvoice.kick.menu.user_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
@@ -73,34 +73,34 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.kick.menu.not_in_channel", {
+					await t(interaction, 'tempvoice.kick.menu.not_in_channel', {
 						user: memberToKick.displayName,
 					}),
-					{ color: "Red" },
+					{ color: 'Red' },
 				),
 			});
 		}
 
 		try {
 			await memberToKick.voice.disconnect(
-				await t(interaction, "tempvoice.kick.menu.kick_reason"),
+				await t(interaction, 'tempvoice.kick.menu.kick_reason'),
 			);
 
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.kick.menu.success", {
+					await t(interaction, 'tempvoice.kick.menu.success', {
 						user: memberToKick.displayName,
 					}),
-					{ color: "Green" },
+					{ color: 'Green' },
 				),
 			});
 		} catch (_err) {
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.fail'),
+					{ color: 'Red' },
 				),
 			});
 		}

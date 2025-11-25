@@ -3,34 +3,34 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
 	EmbedBuilder,
 	PermissionFlagsBits,
 	InteractionContextType,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("sticky")
-		.setDescription("📌 Manage sticky messages in a channel.")
+		.setName('sticky')
+		.setDescription('📌 Manage sticky messages in a channel.')
 		.addSubcommand((sub) =>
 			sub
-				.setName("set")
-				.setDescription("Sets a sticky message for this channel.")
+				.setName('set')
+				.setDescription('Sets a sticky message for this channel.')
 				.addStringOption((opt) =>
 					opt
-						.setName("message")
-						.setDescription("The content of the sticky message.")
+						.setName('message')
+						.setDescription('The content of the sticky message.')
 						.setRequired(true),
 				),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("remove")
-				.setDescription("Removes the sticky message from this channel."),
+				.setName('remove')
+				.setDescription('Removes the sticky message from this channel.'),
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 		.setContexts(InteractionContextType.Guild),
@@ -47,19 +47,19 @@ module.exports = {
 		const channelId = interaction.channel.id;
 
 		switch (sub) {
-			case "set": {
-				const pesan = interaction.options.getString("message");
+			case 'set': {
+				const pesan = interaction.options.getString('message');
 				const existingSticky = await StickyMessage.getCache({ channelId });
 
 				if (existingSticky) {
 					return interaction.reply({
-						content: await t(interaction, "core.tools.sticky.set.error.exists"),
+						content: await t(interaction, 'core.tools.sticky.set.error.exists'),
 						ephemeral: true,
 					});
 				}
 
 				const stickyEmbed = new EmbedBuilder()
-					.setTitle(await t(interaction, "core.tools.sticky.embed.title"))
+					.setTitle(await t(interaction, 'core.tools.sticky.embed.title'))
 					.setDescription(pesan)
 					.setColor(kythiaConfig.bot.color)
 					.setFooter(await embedFooter(interaction));
@@ -78,19 +78,19 @@ module.exports = {
 				);
 
 				return interaction.reply({
-					content: await t(interaction, "core.tools.sticky.set.success"),
+					content: await t(interaction, 'core.tools.sticky.set.success'),
 					ephemeral: true,
 				});
 			}
 
-			case "remove": {
+			case 'remove': {
 				const sticky = await StickyMessage.getCache({ channelId: channelId });
 
 				if (!sticky) {
 					return interaction.reply({
 						content: await t(
 							interaction,
-							"core.tools.sticky.remove.error.not.found",
+							'core.tools.sticky.remove.error.not.found',
 						),
 						ephemeral: true,
 					});
@@ -108,7 +108,7 @@ module.exports = {
 				}
 				await sticky.destroy({ individualHooks: true });
 				return interaction.reply({
-					content: await t(interaction, "core.tools.sticky.remove.success"),
+					content: await t(interaction, 'core.tools.sticky.remove.success'),
 					ephemeral: true,
 				});
 			}

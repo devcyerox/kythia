@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("sessions", {
+		await queryInterface.createTable('sessions', {
 			sid: { type: DataTypes.STRING, primaryKey: true },
 			expires: { type: DataTypes.DATE },
 			data: { type: DataTypes.TEXT },
@@ -19,6 +19,6 @@ module.exports = {
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("sessions");
+		await queryInterface.dropTable('sessions');
 	},
 };

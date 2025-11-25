@@ -3,12 +3,12 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 // addons/core/events/messageDelete.js
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
 
 module.exports = async (bot, message) => {
 	if (!message.guild || !message.channelId) return;
@@ -85,8 +85,8 @@ module.exports = async (bot, message) => {
 			// Warna Orange jika executor tidak diketahui, Merah jika diketahui
 			.setColor(
 				executor
-					? convertColor("Red", { from: "discord", to: "decimal" })
-					: convertColor("Orange", { from: "discord", to: "decimal" }),
+					? convertColor('Red', { from: 'discord', to: 'decimal' })
+					: convertColor('Orange', { from: 'discord', to: 'decimal' }),
 			)
 			// Pakai timestamp audit log jika ada, fallback ke waktu pesan dibuat (jika ada), atau waktu sekarang
 			.setTimestamp(
@@ -103,7 +103,7 @@ module.exports = async (bot, message) => {
 				`🗑️ **Message deleted in <#${message.channelId}>** by ${executor}`,
 			);
 		} else {
-			embed.setAuthor({ name: "Message Deleted" }); // Judul generik
+			embed.setAuthor({ name: 'Message Deleted' }); // Judul generik
 			embed.setDescription(
 				`🗑️ **Message deleted in <#${message.channelId}>** (Executor unknown)`,
 			);
@@ -112,32 +112,32 @@ module.exports = async (bot, message) => {
 		embed.addFields(
 			// Field Author asli pesan (handle jika tidak ada)
 			{
-				name: "Author",
+				name: 'Author',
 				value: message.author
 					? `${message.author.tag} (${message.author.id})`
-					: "Unknown (Not Cached)",
+					: 'Unknown (Not Cached)',
 				inline: true,
 			},
-			{ name: "Channel", value: `<#${message.channelId}>`, inline: true },
+			{ name: 'Channel', value: `<#${message.channelId}>`, inline: true },
 			// Field Executor (hanya jika diketahui & BEDA dari author asli)
 			executor && (!message.author || executor.id !== message.author.id)
 				? {
-						name: "Deleted By",
+						name: 'Deleted By',
 						value: `${executor.tag} (${executor.id})`,
 						inline: true,
 					}
-				: { name: "\u200B", value: "\u200B", inline: true }, // Field kosong untuk layout
+				: { name: '\u200B', value: '\u200B', inline: true }, // Field kosong untuk layout
 			{
-				name: "Message ID",
-				value: message.id || "Unknown (Not Cached)",
+				name: 'Message ID',
+				value: message.id || 'Unknown (Not Cached)',
 				inline: true,
 			},
 			// Konten (handle jika tidak ada & potong jika panjang)
 			{
-				name: "Content",
+				name: 'Content',
 				value:
-					(message.content?.substring(0, 1020) || "(No Content / Not Cached)") +
-					(message.content?.length > 1020 ? "..." : ""),
+					(message.content?.substring(0, 1020) || '(No Content / Not Cached)') +
+					(message.content?.length > 1020 ? '...' : ''),
 				inline: false,
 			},
 		);
@@ -145,26 +145,26 @@ module.exports = async (bot, message) => {
 		// Attachments (handle jika partial)
 		if (message.attachments && message.attachments.size > 0) {
 			embed.addFields({
-				name: "Attachments",
+				name: 'Attachments',
 				value:
 					message.attachments
-						.map((a) => a.name || "Unknown Attachment")
-						.join(", ") || "None",
+						.map((a) => a.name || 'Unknown Attachment')
+						.join(', ') || 'None',
 			});
-		} else if (message.partial || typeof message.attachments === "undefined") {
+		} else if (message.partial || typeof message.attachments === 'undefined') {
 			// Cek eksplisit undefined kalau-kalau bukan partial tapi attachment hilang
 			embed.addFields({
-				name: "Attachments",
-				value: "(Could not fetch attachments)",
+				name: 'Attachments',
+				value: '(Could not fetch attachments)',
 			});
 		}
 
 		// Reason (jika ada dari audit log)
 		if (reason) {
-			embed.addFields({ name: "Reason (from Audit Log)", value: reason });
+			embed.addFields({ name: 'Reason (from Audit Log)', value: reason });
 		}
 
-		embed.setFooter({ text: `Author ID: ${message.author?.id || "Unknown"}` });
+		embed.setFooter({ text: `Author ID: ${message.author?.id || 'Unknown'}` });
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {

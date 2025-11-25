@@ -3,15 +3,15 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("cache")
-		.setDescription("Shows cache statistics."),
+		.setName('cache')
+		.setDescription('Shows cache statistics.'),
 
 	async execute(interaction, container) {
 		const { kythiaConfig, helpers, models } = container;
@@ -24,7 +24,7 @@ module.exports = {
 
 		if (!KythiaModel || !KythiaModel.cacheStats) {
 			await interaction.reply({
-				content: "❌ No cache stats are available for this model.",
+				content: '❌ No cache stats are available for this model.',
 				ephemeral: true,
 			});
 			return;
@@ -48,14 +48,14 @@ module.exports = {
 						statusList.push(`⚪ ${name} (Standby)`);
 					}
 				});
-				cacheStatus = statusList.join("\n");
+				cacheStatus = statusList.join('\n');
 			} else {
-				cacheStatus = "### `✅` **Kythia Redis (Online)**";
+				cacheStatus = '### `✅` **Kythia Redis (Online)**';
 			}
 		} else if (!KythiaModel.isShardMode) {
-			cacheStatus = "### `⚠️` **In-Memory (Fallback)**";
+			cacheStatus = '### `⚠️` **In-Memory (Fallback)**';
 		} else {
-			cacheStatus = "### `❌` **DISABLED (Sharding)**";
+			cacheStatus = '### `❌` **DISABLED (Sharding)**';
 		}
 
 		const embed = new EmbedBuilder()
@@ -63,27 +63,27 @@ module.exports = {
 			.setDescription(`## 📊 Cache Engine Statistics\n${cacheStatus}`)
 			.addFields(
 				{
-					name: "Redis Hits",
+					name: 'Redis Hits',
 					value: `\`\`\`\n${String(stats.redisHits || 0)}\n\`\`\``,
 					inline: false,
 				},
 				{
-					name: "In-Memory Hits",
+					name: 'In-Memory Hits',
 					value: `\`\`\`\n${String(stats.mapHits || 0)}\n\`\`\``,
 					inline: false,
 				},
 				{
-					name: "Cache Misses",
+					name: 'Cache Misses',
 					value: `\`\`\`\n${String(stats.misses || 0)}\n\`\`\``,
 					inline: false,
 				},
 				{
-					name: "Cache Sets",
+					name: 'Cache Sets',
 					value: `\`\`\`\n${String(stats.sets || 0)}\n\`\`\``,
 					inline: false,
 				},
 				{
-					name: "Cache Clears",
+					name: 'Cache Clears',
 					value: `\`\`\`\n${String(stats.clears || 0)}\n\`\`\``,
 					inline: false,
 				},

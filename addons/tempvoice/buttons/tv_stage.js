@@ -3,9 +3,9 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { PermissionsBitField, MessageFlags } = require("discord.js");
+const { PermissionsBitField, MessageFlags } = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -21,8 +21,8 @@ module.exports = {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.stage.no_active_channel"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.stage.no_active_channel'),
+					{ color: 'Red' },
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
@@ -35,9 +35,9 @@ module.exports = {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.channel_not_found"),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
@@ -56,8 +56,8 @@ module.exports = {
 				await interaction.reply({
 					components: await simpleContainer(
 						interaction,
-						await t(interaction, "tempvoice.stage.enabled"),
-						{ color: "Green" },
+						await t(interaction, 'tempvoice.stage.enabled'),
+						{ color: 'Green' },
 					),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -68,8 +68,8 @@ module.exports = {
 				await interaction.reply({
 					components: await simpleContainer(
 						interaction,
-						await t(interaction, "tempvoice.stage.disabled"),
-						{ color: "Green" },
+						await t(interaction, 'tempvoice.stage.disabled'),
+						{ color: 'Green' },
 					),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -78,8 +78,8 @@ module.exports = {
 			await interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.fail'),
+					{ color: 'Red' },
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});

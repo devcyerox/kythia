@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
 
 module.exports = async (bot, invite) => {
 	if (!invite.guild) return;
@@ -38,47 +38,47 @@ module.exports = async (bot, invite) => {
 		if (!entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Red", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`🔗 **Invite Deleted** by <@${entry.executor?.id || "Unknown"}>`,
+				`🔗 **Invite Deleted** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
-				{ name: "Invite Code", value: invite.code, inline: true },
+				{ name: 'Invite Code', value: invite.code, inline: true },
 				{
-					name: "Channel",
-					value: invite.channel ? `<#${invite.channel.id}>` : "Unknown",
+					name: 'Channel',
+					value: invite.channel ? `<#${invite.channel.id}>` : 'Unknown',
 					inline: true,
 				},
-				{ name: "Uses", value: `${invite.uses || 0}`, inline: true },
+				{ name: 'Uses', value: `${invite.uses || 0}`, inline: true },
 				{
-					name: "Max Uses",
-					value: invite.maxUses ? invite.maxUses.toString() : "Unlimited",
-					inline: true,
-				},
-				{
-					name: "Max Age",
-					value: invite.maxAge ? `${invite.maxAge} seconds` : "Never expires",
+					name: 'Max Uses',
+					value: invite.maxUses ? invite.maxUses.toString() : 'Unlimited',
 					inline: true,
 				},
 				{
-					name: "Temporary",
-					value: invite.temporary ? "Yes" : "No",
+					name: 'Max Age',
+					value: invite.maxAge ? `${invite.maxAge} seconds` : 'Never expires',
+					inline: true,
+				},
+				{
+					name: 'Temporary',
+					value: invite.temporary ? 'Yes' : 'No',
 					inline: true,
 				},
 			)
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in inviteDelete audit log:", err);
+		console.error('Error in inviteDelete audit log:', err);
 	}
 };

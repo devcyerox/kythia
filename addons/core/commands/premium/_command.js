@@ -3,16 +3,16 @@
  * @type: Command Group Definition
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	ownerOnly: true,
 	data: new SlashCommandBuilder()
-		.setName("premium")
+		.setName('premium')
 		.setDescription(
-			"💰 Manage premium user status (add, delete, edit, list, info)",
+			'💰 Manage premium user status (add, delete, edit, list, info)',
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 };

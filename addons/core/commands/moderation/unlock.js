@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("unlock")
-			.setDescription("🔓 Unlocks a channel to allow messages.")
+			.setName('unlock')
+			.setDescription('🔓 Unlocks a channel to allow messages.')
 			.addChannelOption((option) =>
 				option
-					.setName("channel")
-					.setDescription("Channel to unlock")
+					.setName('channel')
+					.setDescription('Channel to unlock')
 					.setRequired(false),
 			),
 	permissions: PermissionFlagsBits.ManageChannels,
@@ -26,7 +26,7 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 		const channel =
-			interaction.options.getChannel("channel") || interaction.channel;
+			interaction.options.getChannel('channel') || interaction.channel;
 
 		await channel.permissionOverwrites.edit(interaction.guild.roles.everyone, {
 			SendMessages: true,
@@ -35,10 +35,10 @@ module.exports = {
 		const lockEmbed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				`## ${await t(interaction, "core.moderation.unlock.embed.channel.unlocked.title")}\n` +
+				`## ${await t(interaction, 'core.moderation.unlock.embed.channel.unlocked.title')}\n` +
 					(await t(
 						interaction,
-						"core.moderation.unlock.embed.channel.unlocked.desc",
+						'core.moderation.unlock.embed.channel.unlocked.desc',
 						{ user: `<@${interaction.user.id}>` },
 					)),
 			)
@@ -51,8 +51,8 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				`## ${await t(interaction, "core.moderation.unlock.embed.reply.title")}\n` +
-					(await t(interaction, "core.moderation.unlock.embed.reply.desc", {
+				`## ${await t(interaction, 'core.moderation.unlock.embed.reply.title')}\n` +
+					(await t(interaction, 'core.moderation.unlock.embed.reply.desc', {
 						channel: channel.toString(),
 					})),
 			)

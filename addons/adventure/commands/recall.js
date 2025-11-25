@@ -3,21 +3,21 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("recall")
-			.setNameLocalizations({ id: "kembali", fr: "retour", ja: "リコール" })
-			.setDescription("🏙️ Get back to the city!")
+			.setName('recall')
+			.setNameLocalizations({ id: 'kembali', fr: 'retour', ja: 'リコール' })
+			.setDescription('🏙️ Get back to the city!')
 			.setDescriptionLocalizations({
-				id: "🏙️ kembali ke kota",
-				fr: "🏙️ Retourne en ville !",
-				ja: "🏙️ 街へ戻ろう！",
+				id: '🏙️ kembali ke kota',
+				fr: '🏙️ Retourne en ville !',
+				ja: '🏙️ 街へ戻ろう！',
 			}),
 	async execute(interaction, container) {
 		// Dependency
@@ -30,8 +30,8 @@ module.exports = {
 
 		if (!user) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "adventure.no.character"));
+				.setColor('Red')
+				.setDescription(await t(interaction, 'adventure.no.character'));
 			return interaction.editReply({ embeds: [embed] });
 		}
 
@@ -43,7 +43,7 @@ module.exports = {
 		user.monsterXpDrop = 0;
 		await user.saveAndUpdateCache();
 		const embed = new EmbedBuilder()
-			.setDescription(await t(interaction, "adventure.recall.recalled"))
+			.setDescription(await t(interaction, 'adventure.recall.recalled'))
 			.setColor(kythiaConfig.bot.color)
 			.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
 			.setFooter(await embedFooter(interaction));

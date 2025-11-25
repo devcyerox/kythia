@@ -3,12 +3,12 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 // const { DataTypes } = require("sequelize");
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class KythiaTeam extends KythiaModel {
 	static guarded = [];

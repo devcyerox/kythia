@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 /**
@@ -11,18 +11,18 @@
  * Each card is an object with a color, type, and value/display text.
  */
 
-const COLORS = ["RED", "YELLOW", "GREEN", "BLUE"];
-const SPECIAL_TYPES = ["SKIP", "REVERSE", "DRAW_2"];
-const WILD_TYPES = ["WILD", "WILD_DRAW_4"];
+const COLORS = ['RED', 'YELLOW', 'GREEN', 'BLUE'];
+const SPECIAL_TYPES = ['SKIP', 'REVERSE', 'DRAW_2'];
+const WILD_TYPES = ['WILD', 'WILD_DRAW_4'];
 
 const DECK = [];
 
 // Generate number cards (1-9 twice, 0 once for each color)
 for (const color of COLORS) {
-	DECK.push({ color, type: "NUMBER", value: "0" });
+	DECK.push({ color, type: 'NUMBER', value: '0' });
 	for (let i = 0; i < 2; i++) {
 		for (let j = 1; j <= 9; j++) {
-			DECK.push({ color, type: "NUMBER", value: j.toString() });
+			DECK.push({ color, type: 'NUMBER', value: j.toString() });
 		}
 	}
 }

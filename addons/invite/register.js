@@ -3,10 +3,10 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { refreshGuildInvites } = require("./helpers");
+const { refreshGuildInvites } = require('./helpers');
 
 const initialize = (bot) => {
 	const summary = [];
@@ -15,7 +15,7 @@ const initialize = (bot) => {
 			await refreshGuildInvites(guild);
 		}
 	});
-	summary.push("  └─ ReadyHook: warm invite caches");
+	summary.push('  └─ ReadyHook: warm invite caches');
 	return summary;
 };
 

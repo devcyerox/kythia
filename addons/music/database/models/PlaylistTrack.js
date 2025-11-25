@@ -3,10 +3,10 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.11.0-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class PlaylistTrack extends KythiaModel {
 	static guarded = [];
@@ -19,11 +19,11 @@ class PlaylistTrack extends KythiaModel {
 
 	static associate(models) {
 		this.belongsTo(models.Playlist, {
-			foreignKey: "playlistId",
-			as: "playlist",
+			foreignKey: 'playlistId',
+			as: 'playlist',
 		});
 
-		this.setupParentTouch("playlistId", models.Playlist, "updatedAt");
+		this.setupParentTouch('playlistId', models.Playlist, 'updatedAt');
 	}
 }
 

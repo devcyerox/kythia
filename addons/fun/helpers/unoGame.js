@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { getShuffledDeck, WILD_TYPES } = require("./unoCards");
+const { getShuffledDeck, WILD_TYPES } = require('./unoCards');
 
 /**
  * 🧠 Manages the entire state and logic for a single UNO game.
@@ -38,7 +38,7 @@ class UnoGame {
 		// Place the first card on the discard pile
 		let firstCard = this.drawPile.pop();
 		// The first card cannot be a Wild Draw 4
-		while (firstCard.type === "WILD_DRAW_4") {
+		while (firstCard.type === 'WILD_DRAW_4') {
 			this.drawPile.push(firstCard);
 			firstCard = this.drawPile.pop();
 		}
@@ -85,7 +85,7 @@ class UnoGame {
 
 			// Prioritas 1: Mainkan kartu Wild Draw 4 atau Draw 2 jika memungkinkan
 			const powerCard = playableCards.find(
-				(p) => p.card.type === "WILD_DRAW_4" || p.card.type === "DRAW_2",
+				(p) => p.card.type === 'WILD_DRAW_4' || p.card.type === 'DRAW_2',
 			);
 			if (powerCard) {
 				bestPlay = powerCard;
@@ -97,7 +97,7 @@ class UnoGame {
 				);
 
 				const colorChangeCard = playableCards.find(
-					(p) => p.card.color === bestColor || p.card.type === "WILD",
+					(p) => p.card.color === bestColor || p.card.type === 'WILD',
 				);
 				if (colorChangeCard) {
 					bestPlay = colorChangeCard;
@@ -121,7 +121,7 @@ class UnoGame {
 			// Mainkan kartu yang dipilih
 			const result = this.playCard(aiId, bestPlay.index, chosenColor);
 			return {
-				action: "play",
+				action: 'play',
 				card: result.card,
 				message: `Bot memainkan ${result.card.color} ${result.card.value}!`,
 			};
@@ -134,21 +134,21 @@ class UnoGame {
 				const result = this.playCard(aiId, newCardIndex);
 				if (result?.card) {
 					return {
-						action: "draw-and-play",
+						action: 'draw-and-play',
 						card: result.card,
 						message: `Bot menarik kartu dan langsung memainkan ${result.card.color} ${result.card.value}!`,
 					};
 				} else {
 					// Jika terjadi error saat memainkan kartu, fallback ke aksi draw saja
 					return {
-						action: "draw",
+						action: 'draw',
 						card: drawnCard,
 						message: `Bot menarik satu kartu.`,
 					};
 				}
 			}
 			return {
-				action: "draw",
+				action: 'draw',
 				card: drawnCard,
 				message: `Bot menarik satu kartu.`,
 			};
@@ -192,7 +192,7 @@ class UnoGame {
 			if (!chosenColor) {
 				return {
 					success: false,
-					message: "You must choose a color when playing a Wild card.",
+					message: 'You must choose a color when playing a Wild card.',
 					card: null,
 				};
 			}
@@ -232,24 +232,24 @@ class UnoGame {
 	nextTurn(playedCard) {
 		// Card effects apply *after* the card is played
 		switch (playedCard.type) {
-			case "SKIP":
+			case 'SKIP':
 				this.currentPlayerIndex = this.getNextPlayerIndex();
 				break;
-			case "REVERSE":
+			case 'REVERSE':
 				this.playDirection *= -1;
 				// In a 2-player game, Reverse acts like a Skip
 				if (this.players.length === 2) {
 					this.currentPlayerIndex = this.getNextPlayerIndex();
 				}
 				break;
-			case "DRAW_2": {
+			case 'DRAW_2': {
 				const nextPlayerId = this.players[this.getNextPlayerIndex()].id;
 				this.drawCard(nextPlayerId);
 				this.drawCard(nextPlayerId);
 				this.currentPlayerIndex = this.getNextPlayerIndex(); // Skip the next player's turn
 				break;
 			}
-			case "WILD_DRAW_4": {
+			case 'WILD_DRAW_4': {
 				const punishedPlayerId = this.players[this.getNextPlayerIndex()].id;
 				for (let i = 0; i < 4; i++) this.drawCard(punishedPlayerId);
 				this.currentPlayerIndex = this.getNextPlayerIndex(); // Skip their turn

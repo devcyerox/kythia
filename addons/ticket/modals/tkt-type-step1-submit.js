@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -15,7 +15,7 @@ const {
 	ButtonBuilder,
 	ButtonStyle,
 	ActionRowBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -26,26 +26,26 @@ module.exports = {
 		await interaction.deferUpdate();
 
 		try {
-			const messageId = interaction.customId.split(":")[1];
+			const messageId = interaction.customId.split(':')[1];
 			if (!messageId) {
-				const desc = await t(interaction, "ticket.errors.no_message_id");
+				const desc = await t(interaction, 'ticket.errors.no_message_id');
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 
 			const panelMessageId =
-				interaction.fields.getStringSelectValues("panelId")[0]; //
+				interaction.fields.getStringSelectValues('panelId')[0]; //
 
-			const typeName = interaction.fields.getTextInputValue("typeName");
-			const typeEmoji = interaction.fields.getTextInputValue("typeEmoji");
+			const typeName = interaction.fields.getTextInputValue('typeName');
+			const typeEmoji = interaction.fields.getTextInputValue('typeEmoji');
 			const ticketOpenMessage =
-				interaction.fields.getTextInputValue("ticketOpenMessage");
+				interaction.fields.getTextInputValue('ticketOpenMessage');
 			const ticketOpenImage =
-				interaction.fields.getTextInputValue("ticketOpenImage");
+				interaction.fields.getTextInputValue('ticketOpenImage');
 
 			const cacheKey = `ticket:type-create:${interaction.user.id}`;
 			const step1Data = {
@@ -55,29 +55,29 @@ module.exports = {
 				ticketOpenMessage: ticketOpenMessage || null,
 				ticketOpenImage: ticketOpenImage || null,
 			};
-			await redis.set(cacheKey, JSON.stringify(step1Data), "EX", 1800);
+			await redis.set(cacheKey, JSON.stringify(step1Data), 'EX', 1800);
 
 			const accentColor = convertColor(kythiaConfig.bot.color, {
-				from: "hex",
-				to: "decimal",
+				from: 'hex',
+				to: 'decimal',
 			});
 			const nextButton = new ButtonBuilder()
-				.setCustomId("tkt-type-step2-show")
-				.setLabel(await t(interaction, "ticket.type.next_button"))
+				.setCustomId('tkt-type-step2-show')
+				.setLabel(await t(interaction, 'ticket.type.next_button'))
 				.setStyle(ButtonStyle.Secondary)
-				.setEmoji("🎟️");
+				.setEmoji('🎟️');
 
 			const components = [
 				new ContainerBuilder()
 					.setAccentColor(accentColor)
 					.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(interaction, "ticket.type.step2_title"),
+							await t(interaction, 'ticket.type.step2_title'),
 						),
 					)
 					.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(interaction, "ticket.type.step2_desc"),
+							await t(interaction, 'ticket.type.step2_desc'),
 						),
 					)
 					.addSeparatorComponents(
@@ -92,10 +92,10 @@ module.exports = {
 				components: components,
 			});
 		} catch (error) {
-			console.error("Error in tkt-type-step1-submit handler:", error);
-			const desc = await t(interaction, "ticket.errors.generic");
+			console.error('Error in tkt-type-step1-submit handler:', error);
+			const desc = await t(interaction, 'ticket.errors.generic');
 			await interaction.followUp({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}

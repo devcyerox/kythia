@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("snipes", {
+		await queryInterface.createTable('snipes', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -46,16 +46,16 @@ module.exports = {
 			},
 			attachments: {
 				type: DataTypes.JSON,
-				defaultValue: "[]",
+				defaultValue: '[]',
 			},
 		});
 
-		await queryInterface.addIndex("snipes", ["guildId", "channelId"], {
-			name: "snipes_guildId_channelId",
+		await queryInterface.addIndex('snipes', ['guildId', 'channelId'], {
+			name: 'snipes_guildId_channelId',
 		});
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("snipes");
+		await queryInterface.dropTable('snipes');
 	},
 };

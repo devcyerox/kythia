@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("sticky_messages", {
+		await queryInterface.createTable('sticky_messages', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -29,12 +29,12 @@ module.exports = {
 			},
 		});
 
-		await queryInterface.addIndex("sticky_messages", ["channelId"], {
-			name: "sticky_messages_channelId",
+		await queryInterface.addIndex('sticky_messages', ['channelId'], {
+			name: 'sticky_messages_channelId',
 		});
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("sticky_messages");
+		await queryInterface.dropTable('sticky_messages');
 	},
 };

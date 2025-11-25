@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const Streak = require("../database/models/Streak");
+const Streak = require('../database/models/Streak');
 
 async function getOrCreateStreak(userId, guildId) {
 	let userStreak = await Streak.getCache({ userId: userId, guildId: guildId });
@@ -26,7 +26,7 @@ async function getOrCreateStreak(userId, guildId) {
 async function updateNickname(
 	member,
 	streakCount,
-	streakEmoji = "🔥",
+	streakEmoji = '🔥',
 	streakMinimum = 3,
 ) {
 	if (!member.manageable) {
@@ -37,7 +37,7 @@ async function updateNickname(
 		let currentNickname = member.nickname || member.user.username;
 
 		const streakRegex = new RegExp(`^\\[${streakEmoji}\\s\\d+\\]\\s*`);
-		currentNickname = currentNickname.replace(streakRegex, "").trim();
+		currentNickname = currentNickname.replace(streakRegex, '').trim();
 
 		let newNickname = currentNickname;
 		if (streakCount >= streakMinimum) {

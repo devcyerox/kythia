@@ -3,26 +3,26 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("inventory")
+			.setName('inventory')
 			.setNameLocalizations({
-				id: "inventaris",
-				fr: "inventaire",
-				ja: "インベントリ",
+				id: 'inventaris',
+				fr: 'inventaire',
+				ja: 'インベントリ',
 			})
-			.setDescription("🎒 Look at your inventory")
+			.setDescription('🎒 Look at your inventory')
 			.setDescriptionLocalizations({
-				id: "🎒 Lihat inventaris yang kamu punya",
-				fr: "🎒 Ton inventaire",
-				ja: "🎒 所持品を確認しよう",
+				id: '🎒 Lihat inventaris yang kamu punya',
+				fr: '🎒 Ton inventaire',
+				ja: '🎒 所持品を確認しよう',
 			}),
 	async execute(interaction, container) {
 		// Dependency
@@ -35,8 +35,8 @@ module.exports = {
 		const user = await UserAdventure.getCache({ userId: userId });
 		if (!user) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "adventure.no.character"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'adventure.no.character'))
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
 		}
@@ -49,7 +49,7 @@ module.exports = {
 		if (inventory.length === 0) {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
-				.setDescription(await t(interaction, "adventure.inventory.empty"))
+				.setDescription(await t(interaction, 'adventure.inventory.empty'))
 				.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
 				.setFooter(await embedFooter(interaction));
 
@@ -69,12 +69,12 @@ module.exports = {
 		// Compose item list
 		const itemList = Object.entries(itemCount)
 			.map(([itemName, count]) => `${itemName} x${count}`)
-			.join("\n");
+			.join('\n');
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
 			.setDescription(
-				await t(interaction, "adventure.inventory.list", {
+				await t(interaction, 'adventure.inventory.list', {
 					username: interaction.user.username,
 					items: itemList,
 				}),

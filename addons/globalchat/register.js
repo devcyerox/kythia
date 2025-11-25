@@ -3,11 +3,11 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const _logger = require("@coreHelpers/logger");
-const { initializeWebhookHealthCheck } = require("./tasks/webhookHealthCheck");
+const _logger = require('@coreHelpers/logger');
+const { initializeWebhookHealthCheck } = require('./tasks/webhookHealthCheck');
 
 module.exports = {
 	async initialize(bot) {
@@ -15,7 +15,7 @@ module.exports = {
 		bot.addClientReadyHook(() => {
 			initializeWebhookHealthCheck(bot);
 		});
-		summery.push("   └─ Task: Webhook Health Check (Cron Job) On");
+		summery.push('   └─ Task: Webhook Health Check (Cron Job) On');
 
 		return summery;
 	},

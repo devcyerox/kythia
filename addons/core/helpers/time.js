@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { t } = require("./translator");
+const { t } = require('./translator');
 
 /**
  * Parses a human-readable duration string into milliseconds.
@@ -15,7 +15,7 @@ const { t } = require("./translator");
  * @returns {number} Milliseconds represented by the input, or 0 on invalid input.
  */
 function parseDuration(duration) {
-	if (!duration || typeof duration !== "string") return 0;
+	if (!duration || typeof duration !== 'string') return 0;
 	const timeUnitRegex =
 		/(\d+)\s*(detik|second|seconds|menit|min|mins|minute|minutes|jam|hour|hours|hari|day|days|pekan|minggu|week|weeks|s|m|h|j|d|w|p)\b/gi;
 	let totalMilliseconds = 0;
@@ -27,39 +27,39 @@ function parseDuration(duration) {
 		const unit = match[2].toLowerCase();
 
 		switch (unit) {
-			case "s":
-			case "detik":
-			case "second":
-			case "seconds":
+			case 's':
+			case 'detik':
+			case 'second':
+			case 'seconds':
 				totalMilliseconds += value * 1000;
 				break;
-			case "m":
-			case "menit":
-			case "min":
-			case "mins":
-			case "minute":
-			case "minutes":
+			case 'm':
+			case 'menit':
+			case 'min':
+			case 'mins':
+			case 'minute':
+			case 'minutes':
 				totalMilliseconds += value * 60 * 1000;
 				break;
-			case "h":
-			case "j":
-			case "jam":
-			case "hour":
-			case "hours":
+			case 'h':
+			case 'j':
+			case 'jam':
+			case 'hour':
+			case 'hours':
 				totalMilliseconds += value * 60 * 60 * 1000;
 				break;
-			case "d":
-			case "hari":
-			case "day":
-			case "days":
+			case 'd':
+			case 'hari':
+			case 'day':
+			case 'days':
 				totalMilliseconds += value * 24 * 60 * 60 * 1000;
 				break;
-			case "w":
-			case "p":
-			case "pekan":
-			case "minggu":
-			case "week":
-			case "weeks":
+			case 'w':
+			case 'p':
+			case 'pekan':
+			case 'minggu':
+			case 'week':
+			case 'weeks':
 				totalMilliseconds += value * 7 * 24 * 60 * 60 * 1000;
 				break;
 			default:
@@ -105,15 +105,15 @@ async function formatDuration(ms, interaction) {
 
 	const parts = [];
 	if (days > 0)
-		parts.push(`${days} ${await t(interaction, "common.time.days")}`);
+		parts.push(`${days} ${await t(interaction, 'common.time.days')}`);
 	if (hours > 0)
-		parts.push(`${hours} ${await t(interaction, "common.time.hours")}`);
+		parts.push(`${hours} ${await t(interaction, 'common.time.hours')}`);
 	if (minutes > 0)
-		parts.push(`${minutes} ${await t(interaction, "common.time.minutes")}`);
+		parts.push(`${minutes} ${await t(interaction, 'common.time.minutes')}`);
 	if (seconds > 0)
-		parts.push(`${seconds} ${await t(interaction, "common.time.seconds")}`);
+		parts.push(`${seconds} ${await t(interaction, 'common.time.seconds')}`);
 
-	return parts.join(", ");
+	return parts.join(', ');
 }
 
 module.exports = { parseDuration, checkCooldown, formatDuration };

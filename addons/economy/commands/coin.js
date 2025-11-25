@@ -3,16 +3,16 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("coin")
-			.setDescription("💰 Check your kythia coin balance."),
+			.setName('coin')
+			.setDescription('💰 Check your kythia coin balance.'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { KythiaUser } = models;
@@ -25,7 +25,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -36,7 +36,7 @@ module.exports = {
 			.setColor(kythiaConfig.bot.color)
 			.setThumbnail(interaction.user.displayAvatarURL())
 			.setDescription(
-				await t(interaction, "economy.cash.cash.balance", {
+				await t(interaction, 'economy.cash.cash.balance', {
 					username: interaction.user.username,
 					cash: user.kythiaCoin.toLocaleString(),
 				}),

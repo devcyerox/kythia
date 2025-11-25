@@ -3,16 +3,16 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { MessageFlags, ChannelType } = require("discord.js");
+const { MessageFlags, ChannelType } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("remove")
-			.setDescription("Disable the tempvoice system and remove the panel."),
+			.setName('remove')
+			.setDescription('Disable the tempvoice system and remove the panel.'),
 
 	async execute(interaction, container) {
 		const { models, logger, client, helpers, t } = container;
@@ -27,25 +27,25 @@ module.exports = {
 			return interaction.editReply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.unset.not_setup"),
-					{ color: "Yellow" },
+					await t(interaction, 'tempvoice.unset.not_setup'),
+					{ color: 'Yellow' },
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
-		const deleteReason = await t(interaction, "tempvoice.unset.delete_reason");
+		const deleteReason = await t(interaction, 'tempvoice.unset.delete_reason');
 		const deleteReasonPanel = await t(
 			interaction,
-			"tempvoice.unset.delete_reason_panel",
+			'tempvoice.unset.delete_reason_panel',
 		);
 		const deleteReasonTrigger = await t(
 			interaction,
-			"tempvoice.unset.delete_reason_trigger",
+			'tempvoice.unset.delete_reason_trigger',
 		);
 		const deleteReasonCategory = await t(
 			interaction,
-			"tempvoice.unset.delete_reason_category",
+			'tempvoice.unset.delete_reason_category',
 		);
 
 		const activeChannels = await TempVoiceChannel.getAllCache({
@@ -165,8 +165,8 @@ module.exports = {
 		return interaction.editReply({
 			components: await simpleContainer(
 				interaction,
-				await t(interaction, "tempvoice.unset.success_content"),
-				{ color: "Red" },
+				await t(interaction, 'tempvoice.unset.success_content'),
+				{ color: 'Red' },
 			),
 			flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 		});

@@ -3,35 +3,35 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const router = require("express").Router();
-const passport = require("passport");
+const router = require('express').Router();
+const passport = require('passport');
 
-router.get("/auth/discord", passport.authenticate("discord"));
+router.get('/auth/discord', passport.authenticate('discord'));
 
 router.get(
-	"/auth/discord/callback",
-	passport.authenticate("discord", {
-		failureRedirect: "/",
+	'/auth/discord/callback',
+	passport.authenticate('discord', {
+		failureRedirect: '/',
 	}),
 	(_req, res) => {
-		res.redirect("/dashboard/servers");
+		res.redirect('/dashboard/servers');
 	},
 );
 
-router.get("/auth/logout", (req, res) => {
+router.get('/auth/logout', (req, res) => {
 	if (req.user) {
 		req.logout((err) => {
 			if (err) {
-				console.error("Error saat logout:", err);
-				return res.redirect("/dashboard");
+				console.error('Error saat logout:', err);
+				return res.redirect('/dashboard');
 			}
-			res.redirect("/");
+			res.redirect('/');
 		});
 	} else {
-		res.redirect("/");
+		res.redirect('/');
 	}
 });
 

@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 /**
@@ -12,17 +12,17 @@
  * optional variables and fallback logic.
  * © 2025 kenndeclouv — v0.9.8-beta
  */
-const ServerSetting = require("@coreModels/ServerSetting");
-const { Collection } = require("discord.js");
-const logger = require("./logger");
-const path = require("node:path");
-const fs = require("node:fs");
+const ServerSetting = require('@coreModels/ServerSetting');
+const { Collection } = require('discord.js');
+const logger = require('./logger');
+const path = require('node:path');
+const fs = require('node:fs');
 
 // Defensive fallback to 'en' when `kythia.bot.language` is not defined
 let defaultLang =
-	typeof kythia !== "undefined" && kythia.bot && kythia.bot.language
+	typeof kythia !== 'undefined' && kythia.bot && kythia.bot.language
 		? kythia.bot.language
-		: "en";
+		: 'en';
 
 const guildLanguageCache = new Collection();
 const locales = new Collection();
@@ -39,7 +39,7 @@ function getLocales() {
  * Loads all JSON language files from `src/lang` into memory.
  */
 function loadLocales() {
-	const langDir = path.join(__dirname, "..", "lang");
+	const langDir = path.join(__dirname, '..', 'lang');
 
 	try {
 		if (!fs.existsSync(langDir)) {
@@ -48,14 +48,14 @@ function loadLocales() {
 
 		const langFiles = fs
 			.readdirSync(langDir)
-			.filter((file) => file.endsWith(".json"));
+			.filter((file) => file.endsWith('.json'));
 
 		// Load all available languages
 		for (const file of langFiles) {
-			const lang = file.replace(".json", "");
+			const lang = file.replace('.json', '');
 			const filePath = path.join(langDir, file);
 
-			const translations = JSON.parse(fs.readFileSync(filePath, "utf8"));
+			const translations = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 			locales.set(lang, translations);
 			logger.info(`🌐 Loaded Language: ${lang}`);
 		}
@@ -69,11 +69,11 @@ function loadLocales() {
 				);
 				defaultLang = availableLangs[0];
 			} else {
-				throw new Error("❌ No language files found in lang directory.");
+				throw new Error('❌ No language files found in lang directory.');
 			}
 		}
 	} catch (err) {
-		logger.error("❌ Error loading locales:", err);
+		logger.error('❌ Error loading locales:', err);
 	}
 }
 
@@ -86,9 +86,9 @@ function loadLocales() {
 function getNestedValue(obj, pathExpr) {
 	if (!pathExpr) return undefined;
 	return pathExpr
-		.split(".")
+		.split('.')
 		.reduce(
-			(o, key) => (o && o[key] !== "undefined" ? o[key] : undefined),
+			(o, key) => (o && o[key] !== 'undefined' ? o[key] : undefined),
 			obj,
 		);
 }
@@ -117,7 +117,7 @@ async function t(interaction, key, variables = {}, forceLang = null) {
 				lang = setting?.language ? setting.language : defaultLang;
 				guildLanguageCache.set(interaction.guildId, lang || defaultLang);
 			} catch (error) {
-				logger.error("Error getting language setting:", error);
+				logger.error('Error getting language setting:', error);
 				lang = defaultLang;
 			}
 		}
@@ -148,7 +148,7 @@ async function t(interaction, key, variables = {}, forceLang = null) {
 	}
 
 	for (const [variable, value] of Object.entries(variables)) {
-		const regex = new RegExp(`{${variable}}`, "g");
+		const regex = new RegExp(`{${variable}}`, 'g');
 		translation = translation.replace(regex, String(value));
 	}
 

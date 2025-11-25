@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("kythia_users", {
+		await queryInterface.createTable('kythia_users', {
 			userId: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -19,8 +19,8 @@ module.exports = {
 				defaultValue: false,
 			},
 			premiumType: {
-				type: DataTypes.ENUM("personal", "server"),
-				defaultValue: "personal",
+				type: DataTypes.ENUM('personal', 'server'),
+				defaultValue: 'personal',
 			},
 			premiumServerIds: {
 				type: DataTypes.JSON,
@@ -44,7 +44,7 @@ module.exports = {
 			},
 			bankType: {
 				type: DataTypes.STRING,
-				defaultValue: "solara_mutual",
+				defaultValue: 'solara_mutual',
 			},
 			hackMastered: {
 				type: DataTypes.INTEGER,
@@ -94,6 +94,6 @@ module.exports = {
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("kythia_users");
+		await queryInterface.dropTable('kythia_users');
 	},
 };

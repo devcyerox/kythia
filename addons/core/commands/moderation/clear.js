@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	EmbedBuilder,
@@ -12,18 +12,18 @@ const {
 	ButtonStyle,
 	ComponentType,
 	PermissionFlagsBits,
-} = require("discord.js");
-const logger = require("@coreHelpers/logger");
+} = require('discord.js');
+const logger = require('@coreHelpers/logger');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("clear")
-			.setDescription("🗑️ Delete messages from a channel.")
+			.setName('clear')
+			.setDescription('🗑️ Delete messages from a channel.')
 			.addIntegerOption((option) =>
 				option
-					.setName("amount")
-					.setDescription("Amount of messages to delete (0 = all)")
+					.setName('amount')
+					.setDescription('Amount of messages to delete (0 = all)')
 					.setRequired(true),
 			),
 
@@ -32,7 +32,7 @@ module.exports = {
 	async execute(interaction, container) {
 		const { t, logger } = container;
 
-		const amount = interaction.options.getInteger("amount");
+		const amount = interaction.options.getInteger('amount');
 
 		if (amount === 0) {
 			return await showClearOptions(interaction, t, container);
@@ -40,11 +40,11 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		if (typeof interaction.channel.bulkDelete !== "function") {
+		if (typeof interaction.channel.bulkDelete !== 'function') {
 			const embed = new EmbedBuilder()
-				.setColor("Orange")
+				.setColor('Orange')
 				.setDescription(
-					await t(interaction, "core.moderation.clear.text.only"),
+					await t(interaction, 'core.moderation.clear.text.only'),
 				);
 			return interaction.editReply({ embeds: [embed] });
 		}
@@ -55,15 +55,15 @@ module.exports = {
 
 			if (totalDeleted === 0) {
 				const embed = new EmbedBuilder()
-					.setColor("Orange")
+					.setColor('Orange')
 					.setDescription(
-						await t(interaction, "core.moderation.clear.nothing.deleted"),
+						await t(interaction, 'core.moderation.clear.nothing.deleted'),
 					);
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			const embed = new EmbedBuilder().setColor("Green").setDescription(
-				await t(interaction, "core.moderation.clear.embed.desc", {
+			const embed = new EmbedBuilder().setColor('Green').setDescription(
+				await t(interaction, 'core.moderation.clear.embed.desc', {
 					count: totalDeleted,
 				}),
 			);
@@ -71,8 +71,8 @@ module.exports = {
 		} catch (error) {
 			logger.error(error);
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "core.moderation.clear.error"));
+				.setColor('Red')
+				.setDescription(await t(interaction, 'core.moderation.clear.error'));
 			return interaction.editReply({ embeds: [embed] });
 		}
 	},
@@ -83,36 +83,36 @@ async function showClearOptions(interaction, t, container) {
 	await interaction.deferReply({ ephemeral: true });
 
 	const embed = new EmbedBuilder()
-		.setColor("Orange")
+		.setColor('Orange')
 		.setDescription(
-			"## " +
-				(await t(interaction, "core.moderation.clear.options.title")) +
-				"\n" +
-				(await t(interaction, "core.moderation.clear.options.desc")),
+			'## ' +
+				(await t(interaction, 'core.moderation.clear.options.title')) +
+				'\n' +
+				(await t(interaction, 'core.moderation.clear.options.desc')),
 		)
 		.addFields(
 			{
-				name: "💥 Nuke Channel",
-				value: await t(interaction, "core.moderation.clear.options.nuke.value"),
+				name: '💥 Nuke Channel',
+				value: await t(interaction, 'core.moderation.clear.options.nuke.value'),
 			},
 			{
-				name: "🗑️ Bulk Delete",
-				value: await t(interaction, "core.moderation.clear.options.bulk.value"),
+				name: '🗑️ Bulk Delete',
+				value: await t(interaction, 'core.moderation.clear.options.bulk.value'),
 			},
 		);
 
 	const row = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId("confirmNuke")
-			.setLabel("Nuke Channel")
+			.setCustomId('confirmNuke')
+			.setLabel('Nuke Channel')
 			.setStyle(ButtonStyle.Danger),
 		new ButtonBuilder()
-			.setCustomId("confirmBulk")
-			.setLabel("Bulk Delete All")
+			.setCustomId('confirmBulk')
+			.setLabel('Bulk Delete All')
 			.setStyle(ButtonStyle.Primary),
 		new ButtonBuilder()
-			.setCustomId("cancelClear")
-			.setLabel("Cancel")
+			.setCustomId('cancelClear')
+			.setLabel('Cancel')
 			.setStyle(ButtonStyle.Secondary),
 	);
 
@@ -126,38 +126,38 @@ async function showClearOptions(interaction, t, container) {
 		time: 30000,
 	});
 
-	collector.on("collect", async (btnInteraction) => {
+	collector.on('collect', async (btnInteraction) => {
 		if (btnInteraction.user.id !== interaction.user.id) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(btnInteraction, "core.moderation.clear.not.for.you"),
+					await t(btnInteraction, 'core.moderation.clear.not.for.you'),
 				);
 			return btnInteraction.reply({ embeds: [embed], ephemeral: true });
 		}
 
 		collector.stop();
 
-		if (btnInteraction.customId === "confirmNuke") {
+		if (btnInteraction.customId === 'confirmNuke') {
 			await executeNukeChannel(interaction, btnInteraction, t, container);
-		} else if (btnInteraction.customId === "confirmBulk") {
+		} else if (btnInteraction.customId === 'confirmBulk') {
 			await executeBulkDeleteAll(interaction, btnInteraction, t, container);
-		} else if (btnInteraction.customId === "cancelClear") {
+		} else if (btnInteraction.customId === 'cancelClear') {
 			const embed = new EmbedBuilder()
-				.setColor("Grey")
+				.setColor('Grey')
 				.setDescription(
-					await t(interaction, "core.moderation.clear.cancel.desc"),
+					await t(interaction, 'core.moderation.clear.cancel.desc'),
 				);
 			await interaction.editReply({ embeds: [embed], components: [] });
 		}
 	});
 
-	collector.on("end", async (_collected, reason) => {
-		if (reason === "time") {
+	collector.on('end', async (_collected, reason) => {
+		if (reason === 'time') {
 			const embed = new EmbedBuilder()
-				.setColor("Grey")
+				.setColor('Grey')
 				.setDescription(
-					await t(interaction, "core.moderation.clear.confirm.expired"),
+					await t(interaction, 'core.moderation.clear.confirm.expired'),
 				);
 			await interaction.editReply({ embeds: [embed], components: [] });
 		}
@@ -167,9 +167,9 @@ async function showClearOptions(interaction, t, container) {
 // Nuke logic (Clone & Delete)
 async function executeNukeChannel(interaction, btnInteraction, t, _container) {
 	const progressEmbed = new EmbedBuilder()
-		.setColor("Orange")
+		.setColor('Orange')
 		.setDescription(
-			await t(interaction, "core.moderation.clear.nuke.in.progress"),
+			await t(interaction, 'core.moderation.clear.nuke.in.progress'),
 		);
 	await btnInteraction.update({ embeds: [progressEmbed], components: [] });
 
@@ -179,17 +179,17 @@ async function executeNukeChannel(interaction, btnInteraction, t, _container) {
 		await interaction.channel.delete();
 		await newChannel.setPosition(oldPosition);
 
-		const embed = new EmbedBuilder().setColor("Green").setDescription(
-			await t(interaction, "core.moderation.clear.success", {
+		const embed = new EmbedBuilder().setColor('Green').setDescription(
+			await t(interaction, 'core.moderation.clear.success', {
 				user: `${interaction.member}`,
 			}),
 		);
 		await newChannel.send({ embeds: [embed] });
 	} catch (err) {
-		logger.error("Nuke error:", err);
+		logger.error('Nuke error:', err);
 		const embed = new EmbedBuilder()
-			.setColor("Red")
-			.setDescription(await t(interaction, "core.moderation.clear.error"));
+			.setColor('Red')
+			.setDescription(await t(interaction, 'core.moderation.clear.error'));
 		await interaction.followUp({ embeds: [embed], ephemeral: true });
 	}
 }
@@ -202,9 +202,9 @@ async function executeBulkDeleteAll(
 	_container,
 ) {
 	const progressEmbed = new EmbedBuilder()
-		.setColor("Orange")
+		.setColor('Orange')
 		.setDescription(
-			await t(interaction, "core.moderation.clear.bulk.in.progress"),
+			await t(interaction, 'core.moderation.clear.bulk.in.progress'),
 		);
 	await btnInteraction.update({ embeds: [progressEmbed], components: [] });
 
@@ -232,8 +232,8 @@ async function executeBulkDeleteAll(
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 		}
 
-		const doneEmbed = new EmbedBuilder().setColor("Green").setDescription(
-			await t(interaction, "core.moderation.clear.embed.desc", {
+		const doneEmbed = new EmbedBuilder().setColor('Green').setDescription(
+			await t(interaction, 'core.moderation.clear.embed.desc', {
 				count: totalDeleted,
 			}),
 		);
@@ -244,10 +244,10 @@ async function executeBulkDeleteAll(
 		//   .setDescription(await t(interaction, 'core.moderation.clear.done'));
 		await interaction.editReply({ embeds: [doneEmbed], components: [] });
 	} catch (err) {
-		logger.error("Bulk delete all error:", err);
+		logger.error('Bulk delete all error:', err);
 		const embed = new EmbedBuilder()
-			.setColor("Red")
-			.setDescription(await t(interaction, "core.moderation.clear.error"));
+			.setColor('Red')
+			.setDescription(await t(interaction, 'core.moderation.clear.error'));
 		await interaction.followUp({ embeds: [embed], ephemeral: true });
 	}
 }

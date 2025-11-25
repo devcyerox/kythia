@@ -3,15 +3,15 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const BANKS = {
 	apex_financial: {
-		id: "apex_financial",
-		name: "Apex Financial",
-		emoji: "🏦",
-		description: "Active income bonus for hard workers.",
+		id: 'apex_financial',
+		name: 'Apex Financial',
+		emoji: '🏦',
+		description: 'Active income bonus for hard workers.',
 
 		incomeBonusPercent: 10,
 		interestRatePercent: 1,
@@ -23,10 +23,10 @@ const BANKS = {
 	},
 
 	titan_holdings: {
-		id: "titan_holdings",
-		name: "Titan Holdings",
-		emoji: "🏛️",
-		description: "Maximize passive profit with the highest interest.",
+		id: 'titan_holdings',
+		name: 'Titan Holdings',
+		emoji: '🏛️',
+		description: 'Maximize passive profit with the highest interest.',
 
 		incomeBonusPercent: 0,
 		interestRatePercent: 5,
@@ -38,10 +38,10 @@ const BANKS = {
 	},
 
 	zenith_commerce: {
-		id: "zenith_commerce",
-		name: "Zenith Commerce",
-		emoji: "🌐",
-		description: "Unlimited transactions with the lowest transfer fees.",
+		id: 'zenith_commerce',
+		name: 'Zenith Commerce',
+		emoji: '🌐',
+		description: 'Unlimited transactions with the lowest transfer fees.',
 
 		incomeBonusPercent: 0,
 		interestRatePercent: 2,
@@ -53,10 +53,10 @@ const BANKS = {
 	},
 
 	crimson_syndicate: {
-		id: "crimson_syndicate",
-		name: "Crimson Syndicate",
-		emoji: "🗡️",
-		description: "Luck favors the bold. Bonus from illegal activities.",
+		id: 'crimson_syndicate',
+		name: 'Crimson Syndicate',
+		emoji: '🗡️',
+		description: 'Luck favors the bold. Bonus from illegal activities.',
 
 		incomeBonusPercent: -5,
 		interestRatePercent: 0,
@@ -68,10 +68,10 @@ const BANKS = {
 	},
 
 	solara_mutual: {
-		id: "solara_mutual",
-		name: "Solara Mutual",
-		emoji: "☀️",
-		description: "A safe choice to start your economic journey.",
+		id: 'solara_mutual',
+		name: 'Solara Mutual',
+		emoji: '☀️',
+		description: 'A safe choice to start your economic journey.',
 
 		incomeBonusPercent: 2,
 		interestRatePercent: 2,

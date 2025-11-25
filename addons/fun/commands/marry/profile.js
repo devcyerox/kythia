@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -14,14 +14,14 @@ const {
 	SeparatorBuilder,
 	SectionBuilder,
 	ThumbnailBuilder,
-} = require("discord.js");
-const { Op } = require("sequelize");
+} = require('discord.js');
+const { Op } = require('sequelize');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("profile")
-			.setDescription("👰 View your marriage profile"),
+			.setName('profile')
+			.setDescription('👰 View your marriage profile'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { Marriage } = models;
@@ -33,8 +33,8 @@ module.exports = {
 		const marriages = await Marriage.getAllCache({
 			where: {
 				[Op.or]: [
-					{ user1Id: userId, status: "married" },
-					{ user2Id: userId, status: "married" },
+					{ user1Id: userId, status: 'married' },
+					{ user2Id: userId, status: 'married' },
 				],
 			},
 			limit: 1,
@@ -44,8 +44,8 @@ module.exports = {
 
 		if (!marriage) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "fun.marry.not.married"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'fun.marry.not.married'))
 				.setFooter(await embedFooter(interaction));
 			return interaction.reply({
 				embeds: [embed],
@@ -62,37 +62,37 @@ module.exports = {
 			(Date.now() - marriage.marriedAt) / (1000 * 60 * 60 * 24),
 		);
 		const marriedAtStr = marriage.marriedAt.toLocaleDateString(undefined, {
-			year: "numeric",
-			month: "short",
-			day: "numeric",
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
 		});
 
-		const selfBlock = `-# ${(await t(interaction, "fun.marry.profile.you.label", {}, null)) || "YOU"}\n## ${self.username}\n`;
-		const partnerBlock = `-# ${(await t(interaction, "fun.marry.profile.partner.label", {}, null)) || "YOUR PARTNER"}\n## ${partner?.username || "Unknown"}\n`;
+		const selfBlock = `-# ${(await t(interaction, 'fun.marry.profile.you.label', {}, null)) || 'YOU'}\n## ${self.username}\n`;
+		const partnerBlock = `-# ${(await t(interaction, 'fun.marry.profile.partner.label', {}, null)) || 'YOUR PARTNER'}\n## ${partner?.username || 'Unknown'}\n`;
 
-		const defaultAvatar = "https://cdn.discordapp.com/embed/avatars/0.png";
+		const defaultAvatar = 'https://cdn.discordapp.com/embed/avatars/0.png';
 		const selfAvatar = self.displayAvatarURL
-			? self.displayAvatarURL({ extension: "png", size: 256 })
+			? self.displayAvatarURL({ extension: 'png', size: 256 })
 			: defaultAvatar;
 		const partnerAvatar = partner?.displayAvatarURL
-			? partner.displayAvatarURL({ extension: "png", size: 256 })
+			? partner.displayAvatarURL({ extension: 'png', size: 256 })
 			: defaultAvatar;
 
 		const statsSection =
-			`${(await t(interaction, "fun.marry.profile.married.since", {}, null)) || "Married Since"}\n${marriedAtStr}\n` +
-			`${(await t(interaction, "fun.marry.profile.days.married", {}, null)) || "Days Together"}\n${marriedFor} days\n` +
-			`${(await t(interaction, "fun.marry.profile.love.score", {}, null)) || "Love Score"}\n${marriage.loveScore} ❤️`;
+			`${(await t(interaction, 'fun.marry.profile.married.since', {}, null)) || 'Married Since'}\n${marriedAtStr}\n` +
+			`${(await t(interaction, 'fun.marry.profile.days.married', {}, null)) || 'Days Together'}\n${marriedFor} days\n` +
+			`${(await t(interaction, 'fun.marry.profile.love.score', {}, null)) || 'Love Score'}\n${marriage.loveScore} ❤️`;
 
-		const footerText = `${await t(interaction, "common.container.footer", { username: interaction.client.user.username })}`;
+		const footerText = `${await t(interaction, 'common.container.footer', { username: interaction.client.user.username })}`;
 
 		const marryContainer = new ContainerBuilder()
 			.setAccentColor(
-				convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+				convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					(await t(interaction, "fun.marry.profile.title")) ||
-						"💘 MARRIAGE PROFILE",
+					(await t(interaction, 'fun.marry.profile.title')) ||
+						'💘 MARRIAGE PROFILE',
 				),
 			)
 			.addSeparatorComponents(new SeparatorBuilder().setDivider(true))
@@ -116,7 +116,7 @@ module.exports = {
 					.setThumbnailAccessory(
 						new ThumbnailBuilder()
 							.setURL(partnerAvatar)
-							.setDescription(partner?.username || "Unknown"),
+							.setDescription(partner?.username || 'Unknown'),
 					),
 			)
 			.addSeparatorComponents(new SeparatorBuilder().setDivider(true))

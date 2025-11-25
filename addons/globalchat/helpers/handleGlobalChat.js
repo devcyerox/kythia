@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const fetch = require("node-fetch");
-const { handleFailedGlobalChat } = require("./handleFailedGlobalChat");
+const fetch = require('node-fetch');
+const { handleFailedGlobalChat } = require('./handleFailedGlobalChat');
 
 async function handleGlobalChat(message, container) {
 	const { logger, kythiaConfig } = container;
@@ -64,9 +64,9 @@ async function handleGlobalChat(message, container) {
 		const apiKey = kythiaConfig.addons.globalchat.apiKey;
 
 		const response = await fetch(`${apiUrl}/chat`, {
-			method: "POST",
+			method: 'POST',
 			headers: {
-				"Content-Type": "application/json",
+				'Content-Type': 'application/json',
 				Authorization: `Bearer ${apiKey}`,
 			},
 			body: JSON.stringify({
@@ -78,13 +78,13 @@ async function handleGlobalChat(message, container) {
 		const result = await response.json();
 
 		switch (result.status) {
-			case "ok":
+			case 'ok':
 				break;
-			case "ignored":
+			case 'ignored':
 				break;
-			case "skipped":
+			case 'skipped':
 				break;
-			case "partial": {
+			case 'partial': {
 				const stats = result.data?.deliveryStats || {};
 				logger.info(
 					`Partially delivered: ${stats.successful || 0}/${stats.total || 0}`,
@@ -95,13 +95,13 @@ async function handleGlobalChat(message, container) {
 				) {
 					const failedGuildNames = result.data.failedGuilds
 						.map((g) => g.guildName || g.guildId)
-						.join(", ");
+						.join(', ');
 					logger.warn(`Failed guilds: ${failedGuildNames}`);
 
 					handleFailedGlobalChat(result.data.failedGuilds, container).catch(
 						(err) => {
 							logger.error(
-								"[GlobalChat] Error during background webhook fix attempt:",
+								'[GlobalChat] Error during background webhook fix attempt:',
 								err,
 							);
 						},
@@ -110,7 +110,7 @@ async function handleGlobalChat(message, container) {
 				break;
 			}
 
-			case "failed": {
+			case 'failed': {
 				logger.error(`All deliveries failed for message ${safeMessage.id}`);
 
 				if (
@@ -119,13 +119,13 @@ async function handleGlobalChat(message, container) {
 				) {
 					const failedNames = result.data.failedGuilds
 						.map((g) => g.guildName || g.guildId)
-						.join(", ");
+						.join(', ');
 					logger.error(`Failed guilds: ${failedNames}`);
 
 					handleFailedGlobalChat(result.data.failedGuilds, container).catch(
 						(err) => {
 							logger.error(
-								"[GlobalChat] Error during background webhook fix attempt:",
+								'[GlobalChat] Error during background webhook fix attempt:',
 								err,
 							);
 						},
@@ -141,16 +141,16 @@ async function handleGlobalChat(message, container) {
 				logger.warn(
 					`⚠️ [GlobalChat] Unknown API response status: ${result.status}`,
 				);
-				logger.info("🌏 [GlobalChat] Full response:", result);
+				logger.info('🌏 [GlobalChat] Full response:', result);
 		}
 
-		if (result.status === "ok" || result.status === "partial") {
+		if (result.status === 'ok' || result.status === 'partial') {
 			logger.info(
 				`🌏 [GlobalChat] 📤 Sent from: ${message.guild.name} (${message.guildId}) by ${message.author.tag}`,
 			);
 		}
 	} catch (apiError) {
-		logger.error("❌ [GlobalChat] Failed to send message to API:", apiError);
+		logger.error('❌ [GlobalChat] Failed to send message to API:', apiError);
 	}
 }
 

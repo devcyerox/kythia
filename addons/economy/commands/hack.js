@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("hack")
-			.setDescription("💵 Hack another user.")
+			.setName('hack')
+			.setDescription('💵 Hack another user.')
 			.addUserOption((option) =>
 				option
-					.setName("target")
-					.setDescription("User you want to hack")
+					.setName('target')
+					.setDescription('User you want to hack')
 					.setRequired(true),
 			),
 	guildOnly: true,
@@ -31,7 +31,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		const targetUser = interaction.options.getUser("target");
+		const targetUser = interaction.options.getUser('target');
 		const user = await KythiaUser.getCache({ userId: interaction.user.id });
 		const target = await KythiaUser.getCache({ userId: targetUser.id });
 
@@ -39,7 +39,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -53,9 +53,9 @@ module.exports = {
 		);
 		if (cooldown.remaining) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					await t(interaction, "economy.hack.hack.cooldown", {
+					await t(interaction, 'economy.hack.hack.cooldown', {
 						time: cooldown.time,
 					}),
 				)
@@ -66,9 +66,9 @@ module.exports = {
 
 		if (!user || !target) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "economy.hack.hack.user.or.target.not.found"),
+					await t(interaction, 'economy.hack.hack.user.or.target.not.found'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -77,8 +77,8 @@ module.exports = {
 
 		if (targetUser.id === interaction.user.id) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "economy.hack.hack.self"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'economy.hack.hack.self'))
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
@@ -86,9 +86,9 @@ module.exports = {
 
 		if (target.kythiaBank <= 0) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "economy.hack.hack.target.no.bank"),
+					await t(interaction, 'economy.hack.hack.target.no.bank'),
 				)
 				.setThumbnail(targetUser.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -97,8 +97,8 @@ module.exports = {
 
 		if (user.kythiaBank <= 20) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "economy.hack.hack.user.no.bank"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'economy.hack.hack.user.no.bank'))
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
@@ -106,7 +106,7 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setDescription(
-				await t(interaction, "economy.hack.hack.in.progress", {
+				await t(interaction, 'economy.hack.hack.in.progress', {
 					user: interaction.user.username,
 					target: targetUser.username,
 					chance: user.hackMastered || 10,
@@ -119,7 +119,7 @@ module.exports = {
 
 		const desktop = await Inventory.getCache({
 			userId: interaction.user.id,
-			itemName: "🖥️ Desktop",
+			itemName: '🖥️ Desktop',
 		});
 		let successChance = 1;
 		if (desktop) {
@@ -129,10 +129,10 @@ module.exports = {
 		setTimeout(async () => {
 			const hackResult =
 				Math.random() < ((user.hackMastered || 10) / 100) * successChance
-					? "success"
-					: "failure";
+					? 'success'
+					: 'failure';
 
-			if (hackResult === "success") {
+			if (hackResult === 'success') {
 				const userBank = banks.getBank(user.bankType);
 				const robSuccessBonusPercent = userBank.robSuccessBonusPercent;
 				const hackBonus = Math.floor(
@@ -147,18 +147,18 @@ module.exports = {
 				target.kythiaBank = 0;
 				user.lastHack = Date.now();
 
-				user.changed("kythiaBank", true);
-				user.changed("lastHack", true);
-				target.changed("kythiaBank", true);
+				user.changed('kythiaBank', true);
+				user.changed('lastHack', true);
+				target.changed('kythiaBank', true);
 
-				await user.saveAndUpdateCache("userId");
-				await target.saveAndUpdateCache("userId");
+				await user.saveAndUpdateCache('userId');
+				await target.saveAndUpdateCache('userId');
 
 				const embedToTarget = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setDescription(
-						await t(interaction, "economy.hack.hack.success.dm", {
+						await t(interaction, 'economy.hack.hack.success.dm', {
 							hacker: interaction.user.username,
 							amount: totalHacked,
 						}),
@@ -172,7 +172,7 @@ module.exports = {
 					.setColor(kythiaConfig.bot.color)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setDescription(
-						await t(interaction, "economy.hack.hack.success.text", {
+						await t(interaction, 'economy.hack.hack.success.text', {
 							target: targetUser.username,
 						}),
 					)
@@ -180,7 +180,7 @@ module.exports = {
 
 				await interaction.editReply({ embeds: [successEmbed] });
 			} else {
-				const userBank = banks.getBank(user.bankType || "solara_mutual");
+				const userBank = banks.getBank(user.bankType || 'solara_mutual');
 				const robPenaltyMultiplier = userBank
 					? userBank.robPenaltyMultiplier
 					: 1;
@@ -191,22 +191,22 @@ module.exports = {
 					user.kythiaBank = BigInt(user.kythiaBank) - BigInt(penalty);
 					target.kythiaBank = BigInt(target.kythiaBank) + BigInt(penalty);
 
-					user.changed("kythiaBank", true);
-					target.changed("kythiaBank", true);
+					user.changed('kythiaBank', true);
+					target.changed('kythiaBank', true);
 
-					await user.saveAndUpdateCache("userId");
-					await target.saveAndUpdateCache("userId");
+					await user.saveAndUpdateCache('userId');
+					await target.saveAndUpdateCache('userId');
 				}
 
 				user.lastHack = Date.now();
-				user.changed("lastHack", true);
-				await user.saveAndUpdateCache("userId");
+				user.changed('lastHack', true);
+				await user.saveAndUpdateCache('userId');
 
 				const failureEmbed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setDescription(
-						await t(interaction, "economy.hack.hack.failure", {
+						await t(interaction, 'economy.hack.hack.failure', {
 							target: targetUser.username,
 							penalty,
 						}),

@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
-const banks = require("../helpers/banks");
+const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
-	aliases: ["lootbox"],
+	aliases: ['lootbox'],
 	data: (subcommand) =>
 		subcommand
-			.setName("lootbox")
-			.setDescription("🎁 Open a lootbox to get a random reward."),
+			.setName('lootbox')
+			.setDescription('🎁 Open a lootbox to get a random reward.'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { KythiaUser } = models;
@@ -29,7 +29,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -43,9 +43,9 @@ module.exports = {
 		);
 		if (cooldown.remaining) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					await t(interaction, "economy.lootbox.lootbox.cooldown", {
+					await t(interaction, 'economy.lootbox.lootbox.cooldown', {
 						time: cooldown.time,
 					}),
 				)
@@ -69,17 +69,17 @@ module.exports = {
 		user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(randomReward);
 		user.lastLootbox = Date.now();
 
-		user.changed("kythiaCoin", true);
-		user.changed("lastLootbox", true);
+		user.changed('kythiaCoin', true);
+		user.changed('lastLootbox', true);
 
-		await user.saveAndUpdateCache("userId");
+		await user.saveAndUpdateCache('userId');
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
-			.setTitle(await t(interaction, "economy.lootbox.lootbox.title"))
+			.setTitle(await t(interaction, 'economy.lootbox.lootbox.title'))
 			.setThumbnail(interaction.user.displayAvatarURL())
 			.setDescription(
-				await t(interaction, "economy.lootbox.lootbox.success", {
+				await t(interaction, 'economy.lootbox.lootbox.success', {
 					amount: randomReward,
 				}),
 			)

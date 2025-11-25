@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -11,49 +11,49 @@ const {
 	ContextMenuCommandBuilder,
 	ApplicationCommandType,
 	PermissionFlagsBits,
-} = require("discord.js");
+} = require('discord.js');
 
 function parseCustomEmoji(str) {
 	const match = str.match(/<?a?:?(\w+):(\d+)>?/);
 	if (!match) return null;
 	const [, name, id] = match;
-	const isAnimated = str.startsWith("<a:");
+	const isAnimated = str.startsWith('<a:');
 	return { name, id, isAnimated };
 }
 
 module.exports = {
 	slashCommand: new SlashCommandBuilder()
-		.setName("grab")
-		.setDescription("🛍️ grab stickers or emojis from messages.")
+		.setName('grab')
+		.setDescription('🛍️ grab stickers or emojis from messages.')
 		.addSubcommand((sub) =>
 			sub
-				.setName("sticker")
-				.setDescription("grab a sticker from a message")
+				.setName('sticker')
+				.setDescription('grab a sticker from a message')
 				.addStringOption((opt) =>
 					opt
-						.setName("sticker_id")
-						.setDescription("Sticker ID to grab")
+						.setName('sticker_id')
+						.setDescription('Sticker ID to grab')
 						.setRequired(true),
 				),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("emoji")
-				.setDescription("grab a custom emoji from a message")
+				.setName('emoji')
+				.setDescription('grab a custom emoji from a message')
 				.addStringOption((opt) =>
 					opt
-						.setName("emoji")
-						.setDescription("Emoji to grab (custom emoji format)")
+						.setName('emoji')
+						.setDescription('Emoji to grab (custom emoji format)')
 						.setRequired(true),
 				),
 		)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageEmojisAndStickers),
 
 	contextMenuCommand: new ContextMenuCommandBuilder()
-		.setName("Grab Sticker/Emoji")
+		.setName('Grab Sticker/Emoji')
 		.setType(ApplicationCommandType.Message),
 
-	contextMenuDescription: "🛍️ Grab sticker or emoji from this message.",
+	contextMenuDescription: '🛍️ Grab sticker or emoji from this message.',
 
 	permissions: PermissionFlagsBits.ManageEmojisAndStickers,
 	botPermissions: PermissionFlagsBits.ManageEmojisAndStickers,
@@ -63,33 +63,33 @@ module.exports = {
 
 		if (
 			interaction.isChatInputCommand?.() &&
-			interaction.commandName === "grab"
+			interaction.commandName === 'grab'
 		) {
 			const sub = interaction.options.getSubcommand();
-			if (sub === "sticker") {
+			if (sub === 'sticker') {
 				await interaction.deferReply({ ephemeral: true });
-				const stickerId = interaction.options.getString("sticker_id");
+				const stickerId = interaction.options.getString('sticker_id');
 				try {
 					const sticker = await interaction.client.fetchSticker(stickerId);
 					if (!sticker) {
 						return interaction.editReply({
 							content: await t(
 								interaction,
-								"core.utils.grab.sticker.not.found",
+								'core.utils.grab.sticker.not.found',
 							),
 						});
 					}
 
 					if (!interaction.guild?.stickers?.create) {
 						return interaction.editReply({
-							content: await t(interaction, "core.utils.grab.no.perm.sticker"),
+							content: await t(interaction, 'core.utils.grab.no.perm.sticker'),
 						});
 					}
 
 					const url = sticker.url || sticker.asset;
 					if (!url) {
 						return interaction.editReply({
-							content: await t(interaction, "core.utils.grab.sticker.no.url"),
+							content: await t(interaction, 'core.utils.grab.sticker.no.url'),
 						});
 					}
 
@@ -97,41 +97,41 @@ module.exports = {
 						const created = await interaction.guild.stickers.create({
 							file: url,
 							name: sticker.name || `stolen_sticker_${sticker.id}`,
-							tags: sticker.tags || "stolen",
+							tags: sticker.tags || 'stolen',
 						});
 						return interaction.editReply({
-							content: await t(interaction, "core.utils.grab.sticker.success", {
+							content: await t(interaction, 'core.utils.grab.sticker.success', {
 								name: created.name,
 							}),
 						});
 					} catch (_e) {
 						return interaction.editReply({
-							content: await t(interaction, "core.utils.grab.sticker.manual"),
+							content: await t(interaction, 'core.utils.grab.sticker.manual'),
 							files: [url],
 						});
 					}
 				} catch (_err) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.sticker.error"),
+						content: await t(interaction, 'core.utils.grab.sticker.error'),
 					});
 				}
-			} else if (sub === "emoji") {
+			} else if (sub === 'emoji') {
 				await interaction.deferReply({ ephemeral: true });
-				const emojiInput = interaction.options.getString("emoji");
+				const emojiInput = interaction.options.getString('emoji');
 
 				const match = emojiInput.match(/<?a?:?(\w+):(\d+)>?/);
 				if (!match) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.emoji.invalid"),
+						content: await t(interaction, 'core.utils.grab.emoji.invalid'),
 					});
 				}
 				const [, name, id] = match;
-				const isAnimated = emojiInput.startsWith("<a:");
-				const url = `https://cdn.discordapp.com/emojis/${id}.${isAnimated ? "gif" : "png"}?v=1`;
+				const isAnimated = emojiInput.startsWith('<a:');
+				const url = `https://cdn.discordapp.com/emojis/${id}.${isAnimated ? 'gif' : 'png'}?v=1`;
 				try {
 					if (!interaction.guild?.emojis?.create) {
 						return interaction.editReply({
-							content: await t(interaction, "core.utils.grab.no.perm.emoji"),
+							content: await t(interaction, 'core.utils.grab.no.perm.emoji'),
 						});
 					}
 					const created = await interaction.guild.emojis.create({
@@ -139,13 +139,13 @@ module.exports = {
 						name,
 					});
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.emoji.success", {
+						content: await t(interaction, 'core.utils.grab.emoji.success', {
 							name: created.name,
 						}),
 					});
 				} catch (_e) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.emoji.manual"),
+						content: await t(interaction, 'core.utils.grab.emoji.manual'),
 						files: [url],
 					});
 				}
@@ -154,7 +154,7 @@ module.exports = {
 
 		if (
 			interaction.isMessageContextMenuCommand?.() &&
-			interaction.commandName === "grab Sticker/Emoji"
+			interaction.commandName === 'grab Sticker/Emoji'
 		) {
 			await interaction.deferReply({ ephemeral: true });
 			const message = interaction.targetMessage;
@@ -163,32 +163,32 @@ module.exports = {
 				const sticker = message.stickers.first();
 				if (!sticker) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.sticker.not.found"),
+						content: await t(interaction, 'core.utils.grab.sticker.not.found'),
 					});
 				}
 				const url = sticker.url || sticker.asset;
 				if (!url) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.sticker.no.url"),
+						content: await t(interaction, 'core.utils.grab.sticker.no.url'),
 					});
 				}
 
 				try {
 					if (!interaction.guild?.stickers?.create)
-						throw new Error("No permission");
+						throw new Error('No permission');
 					const created = await interaction.guild.stickers.create({
 						file: url,
 						name: sticker.name || `stolen_sticker_${sticker.id}`,
-						tags: sticker.tags || "stolen",
+						tags: sticker.tags || 'stolen',
 					});
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.sticker.success", {
+						content: await t(interaction, 'core.utils.grab.sticker.success', {
 							name: created.name,
 						}),
 					});
 				} catch (_e) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.sticker.manual"),
+						content: await t(interaction, 'core.utils.grab.sticker.manual'),
 						files: [url],
 					});
 				}
@@ -200,15 +200,15 @@ module.exports = {
 				const emojiData = parseCustomEmoji(found[0]);
 				if (!emojiData) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.emoji.invalid"),
+						content: await t(interaction, 'core.utils.grab.emoji.invalid'),
 					});
 				}
 				const { name, id, isAnimated } = emojiData;
-				const url = `https://cdn.discordapp.com/emojis/${id}.${isAnimated ? "gif" : "png"}?v=1`;
+				const url = `https://cdn.discordapp.com/emojis/${id}.${isAnimated ? 'gif' : 'png'}?v=1`;
 				try {
 					if (!interaction.guild?.emojis?.create) {
 						return interaction.editReply({
-							content: await t(interaction, "core.utils.grab.no.perm.emoji"),
+							content: await t(interaction, 'core.utils.grab.no.perm.emoji'),
 						});
 					}
 					const created = await interaction.guild.emojis.create({
@@ -216,13 +216,13 @@ module.exports = {
 						name,
 					});
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.emoji.success", {
+						content: await t(interaction, 'core.utils.grab.emoji.success', {
 							name: created.name,
 						}),
 					});
 				} catch (_e) {
 					return interaction.editReply({
-						content: await t(interaction, "core.utils.grab.emoji.manual"),
+						content: await t(interaction, 'core.utils.grab.emoji.manual'),
 						files: [url],
 					});
 				}
@@ -231,7 +231,7 @@ module.exports = {
 			return interaction.editReply({
 				content: await t(
 					interaction,
-					"core.utils.grab.sticker.or.emoji.not.found",
+					'core.utils.grab.sticker.or.emoji.not.found',
 				),
 			});
 		}

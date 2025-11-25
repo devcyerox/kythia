@@ -3,81 +3,81 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const axios = require("axios");
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const axios = require('axios');
 
 const VALID_ACTIONS = [
-	"hug",
-	"kiss",
-	"pat",
-	"slap",
-	"cuddle",
-	"wave",
-	"highfive",
-	"handhold",
-	"bite",
-	"bonk",
-	"yeet",
-	"dance",
-	"poke",
-	"wink",
-	"lick",
-	"smile",
-	"blush",
-	"happy",
-	"cry",
-	"nom",
-	"kill",
-	"kick",
-	"smug",
-	"cringe",
-	"bully",
+	'hug',
+	'kiss',
+	'pat',
+	'slap',
+	'cuddle',
+	'wave',
+	'highfive',
+	'handhold',
+	'bite',
+	'bonk',
+	'yeet',
+	'dance',
+	'poke',
+	'wink',
+	'lick',
+	'smile',
+	'blush',
+	'happy',
+	'cry',
+	'nom',
+	'kill',
+	'kick',
+	'smug',
+	'cringe',
+	'bully',
 ];
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("act")
-		.setDescription("🤗 Perform an anime action with a user")
+		.setName('act')
+		.setDescription('🤗 Perform an anime action with a user')
 		.addStringOption((option) =>
 			option
-				.setName("action")
-				.setDescription("The action to perform")
+				.setName('action')
+				.setDescription('The action to perform')
 				.setRequired(true)
 				.addChoices(
-					{ name: "Hug", value: "hug" },
-					{ name: "Kiss", value: "kiss" },
-					{ name: "Pat", value: "pat" },
-					{ name: "Slap", value: "slap" },
-					{ name: "Cuddle", value: "cuddle" },
-					{ name: "Wave", value: "wave" },
-					{ name: "High Five", value: "highfive" },
-					{ name: "Handhold", value: "handhold" },
-					{ name: "Bite", value: "bite" },
-					{ name: "Bonk", value: "bonk" },
-					{ name: "Yeet", value: "yeet" },
-					{ name: "Dance", value: "dance" },
-					{ name: "Poke", value: "poke" },
-					{ name: "Wink", value: "wink" },
-					{ name: "Lick", value: "lick" },
-					{ name: "Smile", value: "smile" },
-					{ name: "Blush", value: "blush" },
-					{ name: "Happy", value: "happy" },
-					{ name: "Cry", value: "cry" },
-					{ name: "Nom", value: "nom" },
-					{ name: "Kill", value: "kill" },
-					{ name: "Kick", value: "kick" },
-					{ name: "Smug", value: "smug" },
-					{ name: "Cringe", value: "cringe" },
-					{ name: "Bully", value: "bully" },
+					{ name: 'Hug', value: 'hug' },
+					{ name: 'Kiss', value: 'kiss' },
+					{ name: 'Pat', value: 'pat' },
+					{ name: 'Slap', value: 'slap' },
+					{ name: 'Cuddle', value: 'cuddle' },
+					{ name: 'Wave', value: 'wave' },
+					{ name: 'High Five', value: 'highfive' },
+					{ name: 'Handhold', value: 'handhold' },
+					{ name: 'Bite', value: 'bite' },
+					{ name: 'Bonk', value: 'bonk' },
+					{ name: 'Yeet', value: 'yeet' },
+					{ name: 'Dance', value: 'dance' },
+					{ name: 'Poke', value: 'poke' },
+					{ name: 'Wink', value: 'wink' },
+					{ name: 'Lick', value: 'lick' },
+					{ name: 'Smile', value: 'smile' },
+					{ name: 'Blush', value: 'blush' },
+					{ name: 'Happy', value: 'happy' },
+					{ name: 'Cry', value: 'cry' },
+					{ name: 'Nom', value: 'nom' },
+					{ name: 'Kill', value: 'kill' },
+					{ name: 'Kick', value: 'kick' },
+					{ name: 'Smug', value: 'smug' },
+					{ name: 'Cringe', value: 'cringe' },
+					{ name: 'Bully', value: 'bully' },
 				),
 		)
 		.addUserOption((option) =>
 			option
-				.setName("user")
-				.setDescription("The user to perform the action on")
+				.setName('user')
+				.setDescription('The user to perform the action on')
 				.setRequired(false),
 		),
 
@@ -85,13 +85,13 @@ module.exports = {
 		const { t, kythiaConfig, helpers } = container;
 		const { embedFooter } = helpers.discord;
 
-		const action = interaction.options.getString("action");
-		const targetUser = interaction.options.getUser("user");
+		const action = interaction.options.getString('action');
+		const targetUser = interaction.options.getUser('user');
 		const author = interaction.user;
 
 		if (!VALID_ACTIONS.includes(action)) {
 			return interaction.reply({
-				content: await t(interaction, "fun.act.errors.invalid_action"),
+				content: await t(interaction, 'fun.act.errors.invalid_action'),
 				ephemeral: true,
 			});
 		}
@@ -100,7 +100,7 @@ module.exports = {
 		const gifUrl = response.data?.url;
 
 		if (!gifUrl) {
-			throw new Error("No GIF URL received from API");
+			throw new Error('No GIF URL received from API');
 		}
 
 		let actionText;

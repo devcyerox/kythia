@@ -3,28 +3,28 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const characters = require("../helpers/characters");
+const { EmbedBuilder } = require('discord.js');
+const characters = require('../helpers/characters');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) => {
 		const chars = characters.getAllCharacters();
 		return subcommand
-			.setName("start")
-			.setNameLocalizations({ id: "mulai", fr: "demarrer", ja: "スタート" })
-			.setDescription("🛩️ Start your journey now!")
+			.setName('start')
+			.setNameLocalizations({ id: 'mulai', fr: 'demarrer', ja: 'スタート' })
+			.setDescription('🛩️ Start your journey now!')
 			.setDescriptionLocalizations({
-				id: "🛩️ Mulai petualanganmu sekarang!",
-				fr: "🛩️ Commence ton aventure maintenant !",
-				ja: "🛩️ 今すぐ冒険を始めよう！",
+				id: '🛩️ Mulai petualanganmu sekarang!',
+				fr: '🛩️ Commence ton aventure maintenant !',
+				ja: '🛩️ 今すぐ冒険を始めよう！',
 			})
 			.addStringOption((option) =>
 				option
-					.setName("character")
-					.setDescription("Choose your starting character!")
+					.setName('character')
+					.setDescription('Choose your starting character!')
 					.setRequired(true)
 					.addChoices(
 						...chars.map((char) => ({
@@ -50,18 +50,18 @@ module.exports = {
 		if (existing) {
 			const alreadyEmbed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
-				.setDescription(await t(interaction, "adventure.start.already.have"))
+				.setDescription(await t(interaction, 'adventure.start.already.have'))
 				.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [alreadyEmbed] });
 		}
 
-		const charId = interaction.options.getString("character");
+		const charId = interaction.options.getString('character');
 		const selected = characters.getChar(charId);
 		if (!selected) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription("Invalid character selection. Please try again.");
+				.setColor('Red')
+				.setDescription('Invalid character selection. Please try again.');
 			return interaction.editReply({ embeds: [embed] });
 		}
 
@@ -90,28 +90,28 @@ module.exports = {
 
 		const charStatsString = await t(
 			interaction,
-			"adventure.start.choose.char.stats",
+			'adventure.start.choose.char.stats',
 			{
-				str: `${strength - selected.strengthBonus} (${selected.strengthBonus >= 0 ? "+" : ""}${selected.strengthBonus})`,
-				def: `${defense - selected.defenseBonus} (${selected.defenseBonus >= 0 ? "+" : ""}${selected.defenseBonus})`,
-				hp: `100% (${selected.hpBonusPercent >= 0 ? "+" : ""}${selected.hpBonusPercent}%)`,
-				xp: `0% (${selected.xpBonusPercent >= 0 ? "+" : ""}${selected.xpBonusPercent}%)`,
-				gold: `0% (${selected.goldBonusPercent >= 0 ? "+" : ""}${selected.goldBonusPercent}%)`,
+				str: `${strength - selected.strengthBonus} (${selected.strengthBonus >= 0 ? '+' : ''}${selected.strengthBonus})`,
+				def: `${defense - selected.defenseBonus} (${selected.defenseBonus >= 0 ? '+' : ''}${selected.defenseBonus})`,
+				hp: `100% (${selected.hpBonusPercent >= 0 ? '+' : ''}${selected.hpBonusPercent}%)`,
+				xp: `0% (${selected.xpBonusPercent >= 0 ? '+' : ''}${selected.xpBonusPercent}%)`,
+				gold: `0% (${selected.goldBonusPercent >= 0 ? '+' : ''}${selected.goldBonusPercent}%)`,
 			},
 		);
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
-			.setTitle(await t(interaction, "adventure.start.success.title"))
+			.setTitle(await t(interaction, 'adventure.start.success.title'))
 			.setDescription(
 				[
-					await t(interaction, "adventure.start.success.desc"),
-					"",
-					`**${await t(interaction, "adventure.start.selected.char")}**`,
+					await t(interaction, 'adventure.start.success.desc'),
+					'',
+					`**${await t(interaction, 'adventure.start.selected.char')}**`,
 					`${selected.emoji} ${selected.name}`,
 					selected.description,
 					charStatsString,
-				].join("\n"),
+				].join('\n'),
 			)
 			.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
 			.setFooter(await embedFooter(interaction));

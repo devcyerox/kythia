@@ -3,12 +3,12 @@
  * @type: Scheduled Task
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { getAndUseNextAvailableToken } = require("../helpers/gemini");
-const { GoogleGenAI } = require("@google/genai");
-const cron = require("node-cron");
+const { getAndUseNextAvailableToken } = require('../helpers/gemini');
+const { GoogleGenAI } = require('@google/genai');
+const cron = require('node-cron');
 
 function findMainChannel(guild, client) {
 	let mainChannel = null;
@@ -21,14 +21,14 @@ function findMainChannel(guild, client) {
 				(channel) =>
 					channel.type === 0 &&
 					channel.viewable &&
-					channel.permissionsFor(client.user)?.has("SEND_MESSAGES"),
+					channel.permissionsFor(client.user)?.has('SEND_MESSAGES'),
 			)
 			.sort((a, b) => a.position - b.position)
 			.first();
 	}
 	if (!mainChannel) {
 		mainChannel = guild.channels.cache.find(
-			(channel) => channel.name === "general" && channel.type === 0,
+			(channel) => channel.name === 'general' && channel.type === 0,
 		);
 	}
 	return mainChannel;
@@ -39,7 +39,7 @@ function initializeAiTasks(bot) {
 	const logger = client.container.logger;
 	const kythiaConfig = client.container.kythiaConfig;
 
-	const schedule = kythiaConfig.addons.ai.dailyGreeterSchedule || "0 7 * * *";
+	const schedule = kythiaConfig.addons.ai.dailyGreeterSchedule || '0 7 * * *';
 	cron.schedule(
 		schedule,
 		async () => {
@@ -70,7 +70,7 @@ function initializeAiTasks(bot) {
 						}
 
 						const GEMINI_API_KEY =
-							kythiaConfig.addons.ai.geminiApiKeys.split(",")[tokenIdx];
+							kythiaConfig.addons.ai.geminiApiKeys.split(',')[tokenIdx];
 						const genAI = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 						const response = await genAI.models.generateContent({
@@ -80,7 +80,7 @@ function initializeAiTasks(bot) {
 
 						const greeting = response.text
 							? response.text.trim()
-							: "❌ Failed to generate greeting";
+							: '❌ Failed to generate greeting';
 						await mainChannel.send(greeting);
 					} catch (err) {
 						logger.error(
@@ -90,7 +90,7 @@ function initializeAiTasks(bot) {
 					}
 				}
 			} catch (err) {
-				logger.error("❌ Failed to run daily greeter task:", err);
+				logger.error('❌ Failed to run daily greeter task:', err);
 			}
 		},
 		{

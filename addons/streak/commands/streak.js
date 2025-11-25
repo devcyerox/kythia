@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -12,54 +12,54 @@ const {
 	getTodayDateString,
 	getYesterdayDateString,
 	giveStreakRoleReward,
-} = require("../helpers");
+} = require('../helpers');
 const {
 	SlashCommandBuilder,
 	EmbedBuilder,
 	InteractionContextType,
-} = require("discord.js");
-const ServerSetting = require("@coreModels/ServerSetting");
-const Streak = require("../database/models/Streak");
-const { t } = require("@coreHelpers/translator");
-const { Op } = require("sequelize");
+} = require('discord.js');
+const ServerSetting = require('@coreModels/ServerSetting');
+const Streak = require('../database/models/Streak');
+const { t } = require('@coreHelpers/translator');
+const { Op } = require('sequelize');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("streak")
-		.setDescription("Check and claim your daily streak!")
+		.setName('streak')
+		.setDescription('Check and claim your daily streak!')
 		.addSubcommand((sub) =>
 			sub
-				.setName("claim")
-				.setDescription("Klaim streak harianmu untuk hari ini!"),
+				.setName('claim')
+				.setDescription('Klaim streak harianmu untuk hari ini!'),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("me")
-				.setDescription("Lihat status streak harianmu saat ini."),
+				.setName('me')
+				.setDescription('Lihat status streak harianmu saat ini.'),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("leaderboard")
-				.setDescription("Lihat leaderboard streak di server ini."),
+				.setName('leaderboard')
+				.setDescription('Lihat leaderboard streak di server ini.'),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("reset")
+				.setName('reset')
 				.setDescription(
-					"Reset streak kamu ke 0 (hati-hati, tidak bisa dibatalkan).",
+					'Reset streak kamu ke 0 (hati-hati, tidak bisa dibatalkan).',
 				),
 		)
 		.addSubcommand((sub) =>
-			sub.setName("stats").setDescription("Lihat statistik streak server ini."),
+			sub.setName('stats').setDescription('Lihat statistik streak server ini.'),
 		)
 		.addSubcommand((sub) =>
 			sub
-				.setName("user")
-				.setDescription("Lihat streak user lain.")
+				.setName('user')
+				.setDescription('Lihat streak user lain.')
 				.addUserOption((opt) =>
 					opt
-						.setName("target")
-						.setDescription("User yang ingin dicek streak-nya")
+						.setName('target')
+						.setDescription('User yang ingin dicek streak-nya')
 						.setRequired(true),
 				),
 		)
@@ -71,25 +71,25 @@ module.exports = {
 		const guildId = interaction.guild.id;
 
 		const serverSetting = await ServerSetting.getCache({ guildId });
-		const streakEmoji = serverSetting.streakEmoji || "🔥";
+		const streakEmoji = serverSetting.streakEmoji || '🔥';
 		const streakMinimum =
-			typeof serverSetting.streakMinimum === "number"
+			typeof serverSetting.streakMinimum === 'number'
 				? serverSetting.streakMinimum
 				: 3;
 		const streakRoleReward = Array.isArray(serverSetting.streakRoleReward)
 			? serverSetting.streakRoleReward
 			: [];
 		const _streakFreezeDailyLimit =
-			typeof serverSetting.streakFreezeDailyLimit === "number"
+			typeof serverSetting.streakFreezeDailyLimit === 'number'
 				? serverSetting.streakFreezeDailyLimit
 				: 1;
 		const _streakFreezeInitial =
-			typeof serverSetting.streakFreezeInitial === "number"
+			typeof serverSetting.streakFreezeInitial === 'number'
 				? serverSetting.streakFreezeInitial
 				: 1;
 
 		try {
-			if (sub === "claim") {
+			if (sub === 'claim') {
 				await interaction.deferReply();
 
 				const streak = await getOrCreateStreak(userId, guildId);
@@ -102,8 +102,8 @@ module.exports = {
 					const embed = new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "streak.streak.claim.already.title")}\n` +
-								(await t(interaction, "streak.streak.claim.already.desc", {
+							`## ${await t(interaction, 'streak.streak.claim.already.title')}\n` +
+								(await t(interaction, 'streak.streak.claim.already.desc', {
 									streak: streak.currentStreak,
 									emoji: streakEmoji,
 								})),
@@ -126,19 +126,19 @@ module.exports = {
 					if (streak.streakFreezes > 0) {
 						streak.streakFreezes -= 1;
 						streak.currentStreak += 1;
-						message = await t(interaction, "streak.streak.claim.freeze.used", {
+						message = await t(interaction, 'streak.streak.claim.freeze.used', {
 							streakFreezes: streak.streakFreezes,
 						});
 					} else {
 						streak.currentStreak = 1;
-						message = await t(interaction, "streak.streak.claim.new.streak");
+						message = await t(interaction, 'streak.streak.claim.new.streak');
 					}
 				} else if (lastClaimDateStr === yesterday) {
 					streak.currentStreak += 1;
-					message = await t(interaction, "streak.streak.claim.continue");
+					message = await t(interaction, 'streak.streak.claim.continue');
 				} else {
 					streak.currentStreak = 1;
-					message = await t(interaction, "streak.streak.claim.new.streak");
+					message = await t(interaction, 'streak.streak.claim.new.streak');
 				}
 
 				if (streak.currentStreak > streak.highestStreak) {
@@ -163,48 +163,48 @@ module.exports = {
 					);
 				}
 
-				let rewardMsg = "";
+				let rewardMsg = '';
 				if (rewardRolesGiven.length > 0) {
 					const roleMentions = rewardRolesGiven.map((roleId) => {
 						const role = interaction.guild.roles.cache.get(roleId);
 						return role ? `<@&${role.id}>` : `Role ID: ${roleId}`;
 					});
 					rewardMsg =
-						"\n\n" +
-						(await t(interaction, "streak.streak.claim.reward", {
-							roles: roleMentions.join(", "),
+						'\n\n' +
+						(await t(interaction, 'streak.streak.claim.reward', {
+							roles: roleMentions.join(', '),
 						}));
 				}
 
 				const successEmbed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "streak.streak.claim.success.title")}\n` +
+						`## ${await t(interaction, 'streak.streak.claim.success.title')}\n` +
 							message +
 							rewardMsg,
 					)
 					.addFields(
 						{
-							name: await t(interaction, "streak.streak.field.current", {
+							name: await t(interaction, 'streak.streak.field.current', {
 								emoji: streakEmoji,
 							}),
-							value: `**${streak.currentStreak}** ${await t(interaction, "streak.streak.unit.day")}`,
+							value: `**${streak.currentStreak}** ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.field.highest"),
-							value: `**${streak.highestStreak}** ${await t(interaction, "streak.streak.unit.day")}`,
+							name: await t(interaction, 'streak.streak.field.highest'),
+							value: `**${streak.highestStreak}** ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.field.freeze"),
+							name: await t(interaction, 'streak.streak.field.freeze'),
 							value: `**${streak.streakFreezes}**`,
 							inline: true,
 						},
 					)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setFooter({
-						text: await t(interaction, "streak.streak.claim.footer"),
+						text: await t(interaction, 'streak.streak.claim.footer'),
 					});
 
 				return interaction.editReply({
@@ -213,7 +213,7 @@ module.exports = {
 				});
 			}
 
-			if (sub === "me") {
+			if (sub === 'me') {
 				await interaction.deferReply();
 				const streak = await getOrCreateStreak(userId, guildId);
 				const today = getTodayDateString();
@@ -222,37 +222,37 @@ module.exports = {
 					: null;
 				const status =
 					lastClaimDateStr === today
-						? await t(interaction, "streak.streak.me.status.claimed")
-						: await t(interaction, "streak.streak.me.status.not.claimed");
+						? await t(interaction, 'streak.streak.me.status.claimed')
+						: await t(interaction, 'streak.streak.me.status.not.claimed');
 
 				const embed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "streak.streak.me.title", { username: interaction.user.username })}\n` +
+						`## ${await t(interaction, 'streak.streak.me.title', { username: interaction.user.username })}\n` +
 							status,
 					)
 					.addFields(
 						{
-							name: await t(interaction, "streak.streak.field.current", {
+							name: await t(interaction, 'streak.streak.field.current', {
 								emoji: streakEmoji,
 							}),
-							value: `**${streak.currentStreak}** ${await t(interaction, "streak.streak.unit.day")}`,
+							value: `**${streak.currentStreak}** ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.field.highest"),
-							value: `**${streak.highestStreak}** ${await t(interaction, "streak.streak.unit.day")}`,
+							name: await t(interaction, 'streak.streak.field.highest'),
+							value: `**${streak.highestStreak}** ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.field.freeze"),
+							name: await t(interaction, 'streak.streak.field.freeze'),
 							value: `**${streak.streakFreezes ?? 0}**`,
 							inline: true,
 						},
 					)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setFooter({
-						text: await t(interaction, "streak.streak.footer.requested.by", {
+						text: await t(interaction, 'streak.streak.footer.requested.by', {
 							username: interaction.user.username,
 						}),
 						iconURL: interaction.user.displayAvatarURL(),
@@ -261,13 +261,13 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			if (sub === "leaderboard") {
+			if (sub === 'leaderboard') {
 				await interaction.deferReply();
 				const topStreaks = await Streak.getAllCache({
 					where: { guildId },
 					order: [
-						["currentStreak", "DESC"],
-						["highestStreak", "DESC"],
+						['currentStreak', 'DESC'],
+						['highestStreak', 'DESC'],
 					],
 					limit: 10,
 					cacheTags: [`Streak:leaderboard`],
@@ -277,8 +277,8 @@ module.exports = {
 					const embed = new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "streak.streak.leaderboard.title")}\n` +
-								(await t(interaction, "streak.streak.leaderboard.empty")),
+							`## ${await t(interaction, 'streak.streak.leaderboard.title')}\n` +
+								(await t(interaction, 'streak.streak.leaderboard.empty')),
 						);
 					return interaction.editReply({ embeds: [embed] });
 				}
@@ -296,11 +296,11 @@ module.exports = {
 						const member = members.get(streak.userId);
 						const username = member
 							? member.displayName
-							: await t(interaction, "streak.streak.leaderboard.unknown.user", {
+							: await t(interaction, 'streak.streak.leaderboard.unknown.user', {
 									id: streak.userId.slice(0, 6),
 								});
-						const medal = ["🥇", "🥈", "🥉"][index] || `**${index + 1}.**`;
-						return await t(interaction, "streak.streak.leaderboard.entry", {
+						const medal = ['🥇', '🥈', '🥉'][index] || `**${index + 1}.**`;
+						return await t(interaction, 'streak.streak.leaderboard.entry', {
 							medal,
 							username,
 							emoji: streakEmoji,
@@ -314,11 +314,11 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "streak.streak.leaderboard.title")}\n` +
-							leaderboardDesc.join("\n"),
+						`## ${await t(interaction, 'streak.streak.leaderboard.title')}\n` +
+							leaderboardDesc.join('\n'),
 					)
 					.setFooter({
-						text: await t(interaction, "streak.streak.leaderboard.footer", {
+						text: await t(interaction, 'streak.streak.leaderboard.footer', {
 							server: interaction.guild.name,
 						}),
 					})
@@ -327,7 +327,7 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			if (sub === "reset") {
+			if (sub === 'reset') {
 				await interaction.deferReply({ ephemeral: true });
 				const streak = await getOrCreateStreak(userId, guildId);
 
@@ -335,8 +335,8 @@ module.exports = {
 					const embed = new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "streak.streak.reset.title")}\n` +
-								(await t(interaction, "streak.streak.reset.already.zero")),
+							`## ${await t(interaction, 'streak.streak.reset.title')}\n` +
+								(await t(interaction, 'streak.streak.reset.already.zero')),
 						);
 					return interaction.editReply({ embeds: [embed], ephemeral: true });
 				}
@@ -353,7 +353,7 @@ module.exports = {
 							if (interaction.member.roles.cache.has(reward.role)) {
 								await interaction.member.roles.remove(
 									reward.role,
-									"Reset streak, hapus role reward",
+									'Reset streak, hapus role reward',
 								);
 							}
 						} catch (_e) {}
@@ -363,18 +363,18 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "streak.streak.reset.title")}\n` +
-							(await t(interaction, "streak.streak.reset.success")),
+						`## ${await t(interaction, 'streak.streak.reset.title')}\n` +
+							(await t(interaction, 'streak.streak.reset.success')),
 					);
 				return interaction.editReply({ embeds: [embed], ephemeral: true });
 			}
 
-			if (sub === "stats") {
+			if (sub === 'stats') {
 				await interaction.deferReply();
 
 				const total = await Streak.count({ where: { guildId } });
 				const maxStreak =
-					(await Streak.max("highestStreak", { where: { guildId } })) || 0;
+					(await Streak.max('highestStreak', { where: { guildId } })) || 0;
 
 				const avgStreak = await Streak.aggregateWithCache(
 					{
@@ -382,10 +382,10 @@ module.exports = {
 						attributes: [
 							[
 								Streak.sequelize.fn(
-									"AVG",
-									Streak.sequelize.col("currentStreak"),
+									'AVG',
+									Streak.sequelize.col('currentStreak'),
 								),
-								"avgStreak",
+								'avgStreak',
 							],
 						],
 						raw: true,
@@ -397,7 +397,7 @@ module.exports = {
 
 				const avg = avgStreak[0]?.avgStreak
 					? Number(avgStreak[0].avgStreak).toFixed(2)
-					: "0";
+					: '0';
 
 				const activeStreaks = await Streak.count({
 					where: {
@@ -409,12 +409,12 @@ module.exports = {
 				const topUser = await Streak.getCache({
 					guildId,
 					order: [
-						["highestStreak", "DESC"],
-						["currentStreak", "DESC"],
+						['highestStreak', 'DESC'],
+						['currentStreak', 'DESC'],
 					],
 				});
 
-				let topUserDisplay = "-";
+				let topUserDisplay = '-';
 				if (topUser) {
 					try {
 						const member = await interaction.guild.members.fetch(
@@ -422,7 +422,7 @@ module.exports = {
 						);
 						topUserDisplay = await t(
 							interaction,
-							"streak.streak.stats.topuser.text",
+							'streak.streak.stats.topuser.text',
 							{
 								username: member.displayName,
 								highest: topUser.highestStreak,
@@ -431,7 +431,7 @@ module.exports = {
 					} catch {
 						topUserDisplay = await t(
 							interaction,
-							"streak.streak.stats.topuser.unknown",
+							'streak.streak.stats.topuser.unknown',
 							{
 								id: topUser.userId.slice(0, 8),
 								highest: topUser.highestStreak,
@@ -442,66 +442,66 @@ module.exports = {
 
 				const lastClaim = await Streak.getCache({
 					guildId,
-					order: [["lastClaimTimestamp", "DESC"]],
+					order: [['lastClaimTimestamp', 'DESC']],
 				});
-				let lastClaimInfo = "-";
+				let lastClaimInfo = '-';
 				if (lastClaim?.lastClaimTimestamp) {
 					const date = new Date(lastClaim.lastClaimTimestamp);
 					lastClaimInfo = `<t:${Math.floor(date.getTime() / 1000)}:F>`;
 				}
 
 				const activePercent =
-					total > 0 ? ((activeStreaks / total) * 100).toFixed(1) : "0";
+					total > 0 ? ((activeStreaks / total) * 100).toFixed(1) : '0';
 
 				const totalFreeze =
-					(await Streak.sum("streakFreezes", { where: { guildId } })) || 0;
+					(await Streak.sum('streakFreezes', { where: { guildId } })) || 0;
 
 				const embed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "streak.streak.stats.title")}\n` +
+						`## ${await t(interaction, 'streak.streak.stats.title')}\n` +
 							[
-								await t(interaction, "streak.streak.stats.server", {
+								await t(interaction, 'streak.streak.stats.server', {
 									server: interaction.guild.name,
 								}),
-								await t(interaction, "streak.streak.stats.last.claim", {
+								await t(interaction, 'streak.streak.stats.last.claim', {
 									lastClaim: lastClaimInfo,
 								}),
-								await t(interaction, "streak.streak.stats.topuser.field", {
+								await t(interaction, 'streak.streak.stats.topuser.field', {
 									topUser: topUserDisplay,
 								}),
-								await t(interaction, "streak.streak.stats.total.freeze", {
+								await t(interaction, 'streak.streak.stats.total.freeze', {
 									totalFreeze,
 								}),
 								`\u200B`,
-							].join("\n"),
+							].join('\n'),
 					)
 					.addFields(
 						{
-							name: await t(interaction, "streak.streak.stats.field.total"),
+							name: await t(interaction, 'streak.streak.stats.field.total'),
 							value: `${total}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.stats.field.active", {
+							name: await t(interaction, 'streak.streak.stats.field.active', {
 								emoji: streakEmoji,
 							}),
 							value: `${activeStreaks} (${activePercent}%)`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.stats.field.avg"),
+							name: await t(interaction, 'streak.streak.stats.field.avg'),
 							value: `${avg}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.stats.field.max"),
-							value: `${maxStreak} ${await t(interaction, "streak.streak.unit.day")}`,
+							name: await t(interaction, 'streak.streak.stats.field.max'),
+							value: `${maxStreak} ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 					)
 					.setFooter({
-						text: await t(interaction, "streak.streak.stats.footer", {
+						text: await t(interaction, 'streak.streak.stats.footer', {
 							server: interaction.guild.name,
 						}),
 					})
@@ -510,15 +510,15 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			if (sub === "user") {
+			if (sub === 'user') {
 				await interaction.deferReply();
-				const target = interaction.options.getUser("target");
+				const target = interaction.options.getUser('target');
 				if (!target) {
 					const embed = new EmbedBuilder()
 						.setColor(kythia.bot.color)
 						.setDescription(
-							`## ${await t(interaction, "streak.streak.user.not.found.title")}\n` +
-								(await t(interaction, "streak.streak.user.not.found.desc")),
+							`## ${await t(interaction, 'streak.streak.user.not.found.title')}\n` +
+								(await t(interaction, 'streak.streak.user.not.found.desc')),
 						);
 					return interaction.editReply({ embeds: [embed], ephemeral: true });
 				}
@@ -530,8 +530,8 @@ module.exports = {
 					: null;
 				const status =
 					lastClaimDateStr === today
-						? await t(interaction, "streak.streak.me.status.claimed")
-						: await t(interaction, "streak.streak.me.status.not.claimed");
+						? await t(interaction, 'streak.streak.me.status.claimed')
+						: await t(interaction, 'streak.streak.me.status.not.claimed');
 
 				let member;
 				try {
@@ -544,31 +544,31 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "streak.streak.user.title.user", { username: displayName })}\n` +
+						`## ${await t(interaction, 'streak.streak.user.title.user', { username: displayName })}\n` +
 							status,
 					)
 					.addFields(
 						{
-							name: await t(interaction, "streak.streak.field.current", {
+							name: await t(interaction, 'streak.streak.field.current', {
 								emoji: streakEmoji,
 							}),
-							value: `**${streak.currentStreak}** ${await t(interaction, "streak.streak.unit.day")}`,
+							value: `**${streak.currentStreak}** ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.field.highest"),
-							value: `**${streak.highestStreak}** ${await t(interaction, "streak.streak.unit.day")}`,
+							name: await t(interaction, 'streak.streak.field.highest'),
+							value: `**${streak.highestStreak}** ${await t(interaction, 'streak.streak.unit.day')}`,
 							inline: true,
 						},
 						{
-							name: await t(interaction, "streak.streak.field.freeze"),
+							name: await t(interaction, 'streak.streak.field.freeze'),
 							value: `**${streak.streakFreezes ?? 0}**`,
 							inline: true,
 						},
 					)
 					.setThumbnail(target.displayAvatarURL())
 					.setFooter({
-						text: await t(interaction, "streak.streak.footer.requested.by", {
+						text: await t(interaction, 'streak.streak.footer.requested.by', {
 							username: interaction.user.username,
 						}),
 						iconURL: interaction.user.displayAvatarURL(),
@@ -577,12 +577,12 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 		} catch (error) {
-			console.error("Error executing streak command:", error);
+			console.error('Error executing streak command:', error);
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "streak.streak.error.title")}\n` +
-						(await t(interaction, "streak.streak.error.generic")),
+					`## ${await t(interaction, 'streak.streak.error.title')}\n` +
+						(await t(interaction, 'streak.streak.error.generic')),
 				);
 			if (interaction.deferred || interaction.replied) {
 				await interaction.followUp({ embeds: [embed], ephemeral: true });

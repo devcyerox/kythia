@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	slashCommand: (subcommand) =>
 		subcommand
-			.setName("pin")
-			.setDescription("📌 Pins a message in the channel.")
+			.setName('pin')
+			.setDescription('📌 Pins a message in the channel.')
 			.addStringOption((option) =>
 				option
-					.setName("message_id")
-					.setDescription("ID of the message to pin")
+					.setName('message_id')
+					.setDescription('ID of the message to pin')
 					.setRequired(true),
 			),
 	permissions: PermissionFlagsBits.PinMessages,
@@ -25,7 +25,7 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
-		const messageId = interaction.options.getString("message_id");
+		const messageId = interaction.options.getString('message_id');
 
 		let message;
 		try {
@@ -36,7 +36,7 @@ module.exports = {
 
 		if (!message) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.pin.not.found"),
+				content: await t(interaction, 'core.moderation.pin.not.found'),
 				ephemeral: true,
 			});
 		}
@@ -45,7 +45,7 @@ module.exports = {
 			await message.pin();
 		} catch (_e) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.pin.failed"),
+				content: await t(interaction, 'core.moderation.pin.failed'),
 				ephemeral: true,
 			});
 		}
@@ -53,10 +53,10 @@ module.exports = {
 		const embed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				await t(interaction, "core.moderation.pin.success", {
+				await t(interaction, 'core.moderation.pin.success', {
 					content:
 						message.content ||
-						(await t(interaction, "core.moderation.pin.no.content")),
+						(await t(interaction, 'core.moderation.pin.no.content')),
 				}),
 			)
 			.setThumbnail(interaction.client.user.displayAvatarURL())

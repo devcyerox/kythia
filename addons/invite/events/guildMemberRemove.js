@@ -3,11 +3,11 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const Invite = require("../database/models/Invite");
-const InviteHistory = require("../database/models/InviteHistory");
+const Invite = require('../database/models/Invite');
+const InviteHistory = require('../database/models/InviteHistory');
 
 module.exports = async (_bot, member) => {
 	if (!member || !member.guild) return;
@@ -16,11 +16,11 @@ module.exports = async (_bot, member) => {
 	const history = await InviteHistory.getCache({
 		guildId: guild.id,
 		memberId: memberId,
-		status: "active",
+		status: 'active',
 	});
 
 	if (history?.inviterId) {
-		history.status = "left";
+		history.status = 'left';
 		await history.save();
 
 		const inviterStats = await Invite.getCache({
@@ -34,11 +34,11 @@ module.exports = async (_bot, member) => {
 			const wasFake = accountAgeDays < 7;
 
 			if (wasFake) {
-				await inviterStats.decrement("fake");
+				await inviterStats.decrement('fake');
 			} else {
-				await inviterStats.decrement("invites");
+				await inviterStats.decrement('invites');
 			}
-			await inviterStats.increment("leaves");
+			await inviterStats.increment('leaves');
 
 			console.log(
 				`[INVITE TRACKER] ${member.user.tag} left. Updated stats for inviter ${history.inviterId}.`,

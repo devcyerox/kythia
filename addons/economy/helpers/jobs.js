@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
@@ -11,89 +11,89 @@ module.exports = {
 		requiredItem: null,
 		jobs: [
 			{
-				nameKey: "jobs.barista.name",
-				emoji: "☕",
+				nameKey: 'jobs.barista.name',
+				emoji: '☕',
 				basePay: [13, 18], // $13-18/jam
 				scenarios: [
 					{
-						descKey: "jobs.barista.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.barista.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.2,
 					},
 					{
-						descKey: "jobs.barista.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.barista.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.barista.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.barista.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.courier.name", // Kurir (mis. UPS, FedEx, DoorDash, dsb)
-				emoji: "📦",
+				nameKey: 'jobs.courier.name', // Kurir (mis. UPS, FedEx, DoorDash, dsb)
+				emoji: '📦',
 				basePay: [16, 22], // $16-22/jam
 				scenarios: [
 					{
-						descKey: "jobs.courier.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.courier.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.15,
 					},
 					{
-						descKey: "jobs.courier.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.courier.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.courier.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.courier.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.75,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.cashier.name",
-				emoji: "🛒",
+				nameKey: 'jobs.cashier.name',
+				emoji: '🛒',
 				basePay: [13, 16], // $13-16/jam
 				scenarios: [
 					{
-						descKey: "jobs.cashier.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.cashier.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.1,
 					},
 					{
-						descKey: "jobs.cashier.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.cashier.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.cashier.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.cashier.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.8,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.parking_attendant.name",
-				emoji: "🅿️",
+				nameKey: 'jobs.parking_attendant.name',
+				emoji: '🅿️',
 				basePay: [12, 17], // $12-17/jam
 				scenarios: [
 					{
-						descKey: "jobs.parking_attendant.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.parking_attendant.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.2,
 					},
 					{
-						descKey: "jobs.parking_attendant.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.parking_attendant.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.parking_attendant.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.parking_attendant.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
@@ -101,96 +101,96 @@ module.exports = {
 		],
 	},
 	tier2: {
-		requiredItem: "💻 Laptop",
+		requiredItem: '💻 Laptop',
 		jobs: [
 			{
-				nameKey: "jobs.programmer.name",
-				emoji: "💻",
+				nameKey: 'jobs.programmer.name',
+				emoji: '💻',
 				basePay: [35, 70], // Junior Programmer: $35-70/jam
-				requiredItem: "💻 Laptop",
+				requiredItem: '💻 Laptop',
 				scenarios: [
 					{
-						descKey: "jobs.programmer.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.programmer.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.18,
 					},
 					{
-						descKey: "jobs.programmer.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.programmer.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.programmer.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.programmer.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.5,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.graphic_designer.name",
-				emoji: "🎨",
+				nameKey: 'jobs.graphic_designer.name',
+				emoji: '🎨',
 				basePay: [22, 45], // $22-45/jam
-				requiredItem: "💻 Laptop",
+				requiredItem: '💻 Laptop',
 				scenarios: [
 					{
-						descKey: "jobs.graphic_designer.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.graphic_designer.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.15,
 					},
 					{
-						descKey: "jobs.graphic_designer.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.graphic_designer.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.graphic_designer.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.graphic_designer.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.social_media_admin.name",
-				emoji: "📱",
+				nameKey: 'jobs.social_media_admin.name',
+				emoji: '📱',
 				basePay: [18, 30], // $18-30/jam
-				requiredItem: "💻 Laptop",
+				requiredItem: '💻 Laptop',
 				scenarios: [
 					{
-						descKey: "jobs.social_media_admin.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.social_media_admin.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.15,
 					},
 					{
-						descKey: "jobs.social_media_admin.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.social_media_admin.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.social_media_admin.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.social_media_admin.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.8,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.freelance_writer.name",
-				emoji: "📝",
+				nameKey: 'jobs.freelance_writer.name',
+				emoji: '📝',
 				basePay: [21, 35], // $21-35/jam (rata-rata penulis lepas US)
-				requiredItem: "💻 Laptop",
+				requiredItem: '💻 Laptop',
 				scenarios: [
 					{
-						descKey: "jobs.freelance_writer.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.freelance_writer.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.13,
 					},
 					{
-						descKey: "jobs.freelance_writer.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.freelance_writer.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.freelance_writer.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.freelance_writer.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.8,
 					},
 				],
@@ -198,96 +198,96 @@ module.exports = {
 		],
 	},
 	tier3: {
-		requiredItem: "📱 Smartphone",
+		requiredItem: '📱 Smartphone',
 		jobs: [
 			{
-				nameKey: "jobs.influencer.name",
-				emoji: "🤳",
+				nameKey: 'jobs.influencer.name',
+				emoji: '🤳',
 				basePay: [28, 100], // $28-100/jam (bisa tinggi tapi biasanya di range ini untuk kecil/menengah)
-				requiredItem: "📱 Smartphone",
+				requiredItem: '📱 Smartphone',
 				scenarios: [
 					{
-						descKey: "jobs.influencer.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.influencer.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.2,
 					},
 					{
-						descKey: "jobs.influencer.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.influencer.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.influencer.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.influencer.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.5,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.ojek_driver.name",
-				emoji: "🛵",
+				nameKey: 'jobs.ojek_driver.name',
+				emoji: '🛵',
 				basePay: [16, 25], // ride-sharing (Uber, Lyft): $16-25/jam
-				requiredItem: "📱 Smartphone",
+				requiredItem: '📱 Smartphone',
 				scenarios: [
 					{
-						descKey: "jobs.ojek_driver.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.ojek_driver.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.1,
 					},
 					{
-						descKey: "jobs.ojek_driver.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.ojek_driver.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.ojek_driver.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.ojek_driver.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.6,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.online_seller.name",
-				emoji: "📦",
+				nameKey: 'jobs.online_seller.name',
+				emoji: '📦',
 				basePay: [17, 28], // $17-28/jam ≈ reseller, dropshipper rata-rata US (part time)
-				requiredItem: "📱 Smartphone",
+				requiredItem: '📱 Smartphone',
 				scenarios: [
 					{
-						descKey: "jobs.online_seller.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.online_seller.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.12,
 					},
 					{
-						descKey: "jobs.online_seller.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.online_seller.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.online_seller.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.online_seller.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.photographer.name",
-				emoji: "📸",
+				nameKey: 'jobs.photographer.name',
+				emoji: '📸',
 				basePay: [20, 40], // rata-rata freelance photographer US per jam
-				requiredItem: "📱 Smartphone",
+				requiredItem: '📱 Smartphone',
 				scenarios: [
 					{
-						descKey: "jobs.photographer.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.photographer.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.15,
 					},
 					{
-						descKey: "jobs.photographer.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.photographer.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.photographer.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.photographer.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.8,
 					},
 				],
@@ -295,96 +295,96 @@ module.exports = {
 		],
 	},
 	tier4: {
-		requiredItem: ["🖥️ PC Desktop", "🚗 Car"],
+		requiredItem: ['🖥️ PC Desktop', '🚗 Car'],
 		jobs: [
 			{
-				nameKey: "jobs.project_manager.name",
-				emoji: "🗂️",
+				nameKey: 'jobs.project_manager.name',
+				emoji: '🗂️',
 				basePay: [45, 85], // $45-85/jam (mid-level PM)
-				requiredItem: "🖥️ PC Desktop",
+				requiredItem: '🖥️ PC Desktop',
 				scenarios: [
 					{
-						descKey: "jobs.project_manager.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.project_manager.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.2,
 					},
 					{
-						descKey: "jobs.project_manager.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.project_manager.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.project_manager.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.project_manager.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.entrepreneur.name",
-				emoji: "🏢",
+				nameKey: 'jobs.entrepreneur.name',
+				emoji: '🏢',
 				basePay: [50, 150], // rata-rata owner bisnis kecil-menengah perhitungkan $50-150/jam profit
-				requiredItem: "🚗 Car",
+				requiredItem: '🚗 Car',
 				scenarios: [
 					{
-						descKey: "jobs.entrepreneur.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.entrepreneur.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.4,
 					},
 					{
-						descKey: "jobs.entrepreneur.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.entrepreneur.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.entrepreneur.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.entrepreneur.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.5,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.it_consultant.name",
-				emoji: "🧑‍💼",
+				nameKey: 'jobs.it_consultant.name',
+				emoji: '🧑‍💼',
 				basePay: [60, 120], // IT Consultant US: $60-120/jam
-				requiredItem: "🖥️ PC Desktop",
+				requiredItem: '🖥️ PC Desktop',
 				scenarios: [
 					{
-						descKey: "jobs.it_consultant.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.it_consultant.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.22,
 					},
 					{
-						descKey: "jobs.it_consultant.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.it_consultant.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.it_consultant.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.it_consultant.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.65,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.private_driver.name",
-				emoji: "🚗",
+				nameKey: 'jobs.private_driver.name',
+				emoji: '🚗',
 				basePay: [20, 35], // $20-35/jam untuk pengemudi privat/limousine
-				requiredItem: "🚗 Car",
+				requiredItem: '🚗 Car',
 				scenarios: [
 					{
-						descKey: "jobs.private_driver.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.private_driver.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.18,
 					},
 					{
-						descKey: "jobs.private_driver.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.private_driver.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.private_driver.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.private_driver.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
@@ -392,96 +392,96 @@ module.exports = {
 		],
 	},
 	tier5: {
-		requiredItem: ["🏠 Luxury House", "🏢 Company"],
+		requiredItem: ['🏠 Luxury House', '🏢 Company'],
 		jobs: [
 			{
-				nameKey: "jobs.ceo_startup.name",
-				emoji: "🦸‍♂️",
+				nameKey: 'jobs.ceo_startup.name',
+				emoji: '🦸‍♂️',
 				basePay: [120, 500], // CEO: $120-500/jam (Stock option CEO startup US)
-				requiredItem: "🏠 Luxury House",
+				requiredItem: '🏠 Luxury House',
 				scenarios: [
 					{
-						descKey: "jobs.ceo_startup.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.ceo_startup.scenarios.s1',
+						outcome: 'success',
 						modifier: 2.0,
 					},
 					{
-						descKey: "jobs.ceo_startup.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.ceo_startup.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.ceo_startup.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.ceo_startup.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.7,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.property_investor.name",
-				emoji: "🏦",
+				nameKey: 'jobs.property_investor.name',
+				emoji: '🏦',
 				basePay: [80, 350], // Investor: $80-350/jam (real deal, tergantung skala investasinya)
-				requiredItem: "🏠 Luxury House",
+				requiredItem: '🏠 Luxury House',
 				scenarios: [
 					{
-						descKey: "jobs.property_investor.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.property_investor.scenarios.s1',
+						outcome: 'success',
 						modifier: 1.85,
 					},
 					{
-						descKey: "jobs.property_investor.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.property_investor.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.property_investor.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.property_investor.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.6,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.company_director.name",
-				emoji: "🏢",
+				nameKey: 'jobs.company_director.name',
+				emoji: '🏢',
 				basePay: [150, 600], // Director: $150-600/jam (mid-large corp, US)
-				requiredItem: "🏢 Company",
+				requiredItem: '🏢 Company',
 				scenarios: [
 					{
-						descKey: "jobs.company_director.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.company_director.scenarios.s1',
+						outcome: 'success',
 						modifier: 2.4,
 					},
 					{
-						descKey: "jobs.company_director.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.company_director.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.company_director.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.company_director.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.5,
 					},
 				],
 			},
 			{
-				nameKey: "jobs.philanthropist.name",
-				emoji: "🤝",
+				nameKey: 'jobs.philanthropist.name',
+				emoji: '🤝',
 				basePay: [115, 400], // Philanthropist biasanya income-nya dari investasi, exekutif, dsb
-				requiredItem: "🏢 Company",
+				requiredItem: '🏢 Company',
 				scenarios: [
 					{
-						descKey: "jobs.philanthropist.scenarios.s1",
-						outcome: "success",
+						descKey: 'jobs.philanthropist.scenarios.s1',
+						outcome: 'success',
 						modifier: 2.1,
 					},
 					{
-						descKey: "jobs.philanthropist.scenarios.s2",
-						outcome: "neutral",
+						descKey: 'jobs.philanthropist.scenarios.s2',
+						outcome: 'neutral',
 						modifier: 1.0,
 					},
 					{
-						descKey: "jobs.philanthropist.scenarios.s3",
-						outcome: "failure",
+						descKey: 'jobs.philanthropist.scenarios.s3',
+						outcome: 'failure',
 						modifier: 0.6,
 					},
 				],

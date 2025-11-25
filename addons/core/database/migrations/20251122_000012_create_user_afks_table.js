@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("user_afks", {
+		await queryInterface.createTable('user_afks', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -22,7 +22,7 @@ module.exports = {
 			reason: {
 				type: DataTypes.STRING,
 				allowNull: false,
-				defaultValue: "No reason provided.",
+				defaultValue: 'No reason provided.',
 			},
 			timestamp: {
 				type: DataTypes.DATE,
@@ -30,12 +30,12 @@ module.exports = {
 			},
 		});
 
-		await queryInterface.addIndex("user_afks", ["userId"], {
-			name: "user_afks_userId",
+		await queryInterface.addIndex('user_afks', ['userId'], {
+			name: 'user_afks_userId',
 		});
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("user_afks");
+		await queryInterface.dropTable('user_afks');
 	},
 };

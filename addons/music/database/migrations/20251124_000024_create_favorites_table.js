@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("favorites", {
+		await queryInterface.createTable('favorites', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -24,11 +24,11 @@ module.exports = {
 			updatedAt: { type: DataTypes.DATE, allowNull: false },
 		});
 
-		await queryInterface.addIndex("favorites", ["userId", "identifier"], {
+		await queryInterface.addIndex('favorites', ['userId', 'identifier'], {
 			unique: true,
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("favorites");
+		await queryInterface.dropTable('favorites');
 	},
 };

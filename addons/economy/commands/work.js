@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../helpers/banks");
-const jobs = require("../helpers/jobs");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../helpers/banks');
+const jobs = require('../helpers/jobs');
 
 module.exports = {
 	subcommand: true,
-	aliases: ["work"],
+	aliases: ['work'],
 	data: (subcommand) =>
 		subcommand
-			.setName("work")
-			.setDescription("⚒️ Work to earn money with various scenarios!"),
+			.setName('work')
+			.setDescription('⚒️ Work to earn money with various scenarios!'),
 
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
@@ -30,7 +30,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setTimestamp()
@@ -48,9 +48,9 @@ module.exports = {
 
 		if (cooldown.remaining) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					`## ${await t(interaction, "economy.work.work.cooldown.title")}\n${await t(interaction, "economy.work.work.cooldown.desc", { time: cooldown.time })}`,
+					`## ${await t(interaction, 'economy.work.work.cooldown.title')}\n${await t(interaction, 'economy.work.work.cooldown.desc', { time: cooldown.time })}`,
 				)
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
@@ -85,9 +85,9 @@ module.exports = {
 
 		if (availableJobs.length === 0) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					`## ${await t(interaction, "economy.work.work.no.job.title")}\n${await t(interaction, "economy.work.work.no.job.desc")}`,
+					`## ${await t(interaction, 'economy.work.work.no.job.title')}\n${await t(interaction, 'economy.work.work.no.job.desc')}`,
 				)
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
@@ -117,49 +117,49 @@ module.exports = {
 		user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(finalEarning);
 		user.lastWork = new Date();
 
-		let levelUpText = "";
-		if (scenario.outcome === "success" && (user.careerLevel || 0) < 50) {
+		let levelUpText = '';
+		if (scenario.outcome === 'success' && (user.careerLevel || 0) < 50) {
 			user.careerLevel = (user.careerLevel || 0) + 1;
-			levelUpText = `\n\n${await t(interaction, "economy.work.work.levelup.text", { level: user.careerLevel })}`;
+			levelUpText = `\n\n${await t(interaction, 'economy.work.work.levelup.text', { level: user.careerLevel })}`;
 		}
 
-		user.changed("kythiaCoin", true);
+		user.changed('kythiaCoin', true);
 
 		await user.saveAndUpdateCache();
 
 		const outcomeColors = {
-			success: "Green",
-			neutral: "Blue",
-			failure: "Red",
+			success: 'Green',
+			neutral: 'Blue',
+			failure: 'Red',
 		};
 
 		const resultEmbed = new EmbedBuilder()
 			.setColor(outcomeColors[scenario.outcome])
 			.setAuthor({
-				name: await t(interaction, "economy.work.work.result.author", {
+				name: await t(interaction, 'economy.work.work.result.author', {
 					job: jobName,
 					emoji: job.emoji,
 				}),
 				iconURL: interaction.user.displayAvatarURL(),
 			})
 			.setDescription(
-				`${await t(interaction, "eco.work.result.title.outcome")}\n*${scenarioDesc}*${levelUpText}`,
+				`${await t(interaction, 'eco.work.result.title.outcome')}\n*${scenarioDesc}*${levelUpText}`,
 			)
 			.addFields(
 				{
-					name: await t(interaction, "economy.work.work.basepay.field"),
+					name: await t(interaction, 'economy.work.work.basepay.field'),
 					value: `🪙 ${baseEarning.toLocaleString()}`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "economy.work.work.bonus.field", {
+					name: await t(interaction, 'economy.work.work.bonus.field', {
 						modifier: scenario.modifier,
 					}),
 					value: `🪙 ${(finalEarning - baseEarning).toLocaleString()}`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "economy.work.work.total.field"),
+					name: await t(interaction, 'economy.work.work.total.field'),
 					value: `**💰 ${finalEarning.toLocaleString()}**`,
 					inline: true,
 				},

@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -18,7 +18,7 @@ const {
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
 	PermissionsBitField,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -32,13 +32,13 @@ module.exports = {
 		try {
 			const ticket = await Ticket.getCache({
 				channelId: interaction.channel.id,
-				status: "open",
+				status: 'open',
 			});
 			if (!ticket) {
-				const desc = await t(interaction, "ticket.errors.not_a_ticket");
+				const desc = await t(interaction, 'ticket.errors.not_a_ticket');
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -48,10 +48,10 @@ module.exports = {
 				id: ticket.ticketConfigId,
 			});
 			if (!ticketConfig) {
-				const desc = await t(interaction, "ticket.errors.config_missing");
+				const desc = await t(interaction, 'ticket.errors.config_missing');
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -65,22 +65,22 @@ module.exports = {
 			);
 
 			if (!isStaff && !isAdmin) {
-				const desc = await t(interaction, "ticket.errors.only_staff");
+				const desc = await t(interaction, 'ticket.errors.only_staff');
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 
 			if (ticket.claimedByUserId) {
-				const desc = await t(interaction, "ticket.claim.already_claimed", {
+				const desc = await t(interaction, 'ticket.claim.already_claimed', {
 					userId: ticket.claimedByUserId,
 				});
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -93,7 +93,7 @@ module.exports = {
 
 			const defaultMessage = await t(
 				interaction,
-				"ticket.v2.open_message_default",
+				'ticket.v2.open_message_default',
 				{
 					user: `<@${ticket.userId}>`,
 					staffRoleId: ticketConfig.staffRoleId,
@@ -101,12 +101,12 @@ module.exports = {
 			);
 			const openMessageRaw = ticketConfig.ticketOpenMessage || defaultMessage;
 			const openMessage = openMessageRaw
-				.replace("{user}", `<@${ticket.userId}>`)
-				.replace("{staffRole}", `<@&${ticketConfig.staffRoleId}>`);
+				.replace('{user}', `<@${ticket.userId}>`)
+				.replace('{staffRole}', `<@&${ticketConfig.staffRoleId}>`);
 
 			const accentColor = convertColor(kythiaConfig.bot.color, {
-				from: "hex",
-				to: "decimal",
+				from: 'hex',
+				to: 'decimal',
 			});
 
 			const mainContainer = new ContainerBuilder()
@@ -133,19 +133,19 @@ module.exports = {
 
 			const updatedRow = new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
-					.setCustomId("ticket-close")
-					.setLabel(await t(interaction, "ticket.v2.close_button"))
+					.setCustomId('ticket-close')
+					.setLabel(await t(interaction, 'ticket.v2.close_button'))
 					.setStyle(ButtonStyle.Secondary)
-					.setEmoji("🔒"),
+					.setEmoji('🔒'),
 				new ButtonBuilder()
-					.setCustomId("ticket-claim")
-					.setLabel(await t(interaction, "ticket.v2.claim_button"))
+					.setCustomId('ticket-claim')
+					.setLabel(await t(interaction, 'ticket.v2.claim_button'))
 					.setStyle(ButtonStyle.Secondary)
-					.setEmoji("🛄")
+					.setEmoji('🛄')
 					.setDisabled(true),
 			);
 
-			const footerText = await t(interaction, "common.container.footer", {
+			const footerText = await t(interaction, 'common.container.footer', {
 				username: interaction.client.user.username,
 			});
 
@@ -167,21 +167,21 @@ module.exports = {
 
 			await message.edit({ components: [mainContainer] });
 
-			const desc = await t(interaction, "ticket.claim.success", {
+			const desc = await t(interaction, 'ticket.claim.success', {
 				user: interaction.user.toString(),
 			});
 			await interaction.channel.send({
 				components: await simpleContainer(interaction, desc, {
-					color: "Green",
+					color: 'Green',
 				}),
 				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (error) {
-			console.error("Error claiming ticket:", error);
-			const descError = await t(interaction, "ticket.errors.generic");
+			console.error('Error claiming ticket:', error);
+			const descError = await t(interaction, 'ticket.errors.generic');
 			await interaction.followUp({
 				components: await simpleContainer(interaction, descError, {
-					color: "Red",
+					color: 'Red',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});

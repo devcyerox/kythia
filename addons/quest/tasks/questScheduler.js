@@ -3,11 +3,11 @@
  * @type: Scheduled Task
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const cron = require("node-cron");
-const { buildQuestNotification } = require("../helpers/questHelper");
-const { Op } = require("sequelize");
+const cron = require('node-cron');
+const { buildQuestNotification } = require('../helpers/questHelper');
+const { Op } = require('sequelize');
 
 /**
  * Try a list of API URLs and return the first successful quests response.
@@ -48,7 +48,7 @@ async function fetchQuestsFromAny(urls, logger) {
 		} catch (e) {
 			clearTimeout(timeoutId);
 
-			if (e.name === "AbortError") {
+			if (e.name === 'AbortError') {
 			} else {
 				logger.warn(`[QuestNotifier] Error fetching from ${url}: ${e.message}`);
 			}
@@ -61,17 +61,17 @@ async function fetchQuestsFromAny(urls, logger) {
 async function checkQuests(container) {
 	const { models, logger, client, kythiaConfig } = container;
 	const { QuestConfig, QuestGuildLog } = models;
-	logger.info("[QuestNotifier] Running cron job...");
+	logger.info('[QuestNotifier] Running cron job...');
 
-	const apiUrlsConfig = kythiaConfig.addons.quest.apiUrls || "";
+	const apiUrlsConfig = kythiaConfig.addons.quest.apiUrls || '';
 
 	const apiUrls = apiUrlsConfig
-		.split(",")
+		.split(',')
 		.map((v) => v.trim())
 		.filter((v) => v.length > 0);
 
 	if (apiUrls.length === 0) {
-		logger.error("[QuestNotifier] No API URLs configured!");
+		logger.error('[QuestNotifier] No API URLs configured!');
 		return;
 	}
 
@@ -80,7 +80,7 @@ async function checkQuests(container) {
 
 		if (!apiQuests) {
 			logger.error(
-				"[QuestNotifier] All API quest endpoints failed. No quests retrieved.",
+				'[QuestNotifier] All API quest endpoints failed. No quests retrieved.',
 			);
 			return;
 		}
@@ -99,13 +99,13 @@ async function checkQuests(container) {
 		});
 
 		if (validQuests.length === 0) {
-			logger.info("[QuestNotifier] No new quests found.");
+			logger.info('[QuestNotifier] No new quests found.');
 			return;
 		}
 
 		const allGuildConfigs = await QuestConfig.getAllCache();
 		if (allGuildConfigs.length === 0) {
-			logger.info("[QuestNotifier] No guilds have set up the notifier.");
+			logger.info('[QuestNotifier] No guilds have set up the notifier.');
 			return;
 		}
 
@@ -128,7 +128,7 @@ async function checkQuests(container) {
 						guildId: config.guildId,
 						questId: { [Op.in]: validQuestIds },
 					},
-					attributes: ["questId"],
+					attributes: ['questId'],
 				});
 				const sentQuestIds = new Set(sentLogs.map((log) => log.questId));
 
@@ -163,7 +163,7 @@ async function checkQuests(container) {
 				);
 			}
 		}
-		logger.info("[QuestNotifier] Cron job finished.");
+		logger.info('[QuestNotifier] Cron job finished.');
 	} catch (error) {
 		logger.error(`[QuestNotifier] CRON JOB FAILED: ${error.message}`);
 	}
@@ -173,9 +173,9 @@ function initializeQuestScheduler(bot) {
 	const container = bot.client.container;
 	const { logger } = container;
 
-	cron.schedule("*/30 * * * *", () => checkQuests(container));
+	cron.schedule('*/30 * * * *', () => checkQuests(container));
 
-	logger.info("⏰ [QuestNotifier] Cron job scheduled (every 30 minutes).");
+	logger.info('⏰ [QuestNotifier] Cron job scheduled (every 30 minutes).');
 
 	checkQuests(container);
 }

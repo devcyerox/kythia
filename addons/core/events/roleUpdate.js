@@ -3,11 +3,11 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
-const { rolePrefix } = require("../helpers");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
+const { rolePrefix } = require('../helpers');
 
 module.exports = async (bot, oldRole, newRole) => {
 	if (!newRole.guild) return;
@@ -42,59 +42,59 @@ module.exports = async (bot, oldRole, newRole) => {
 		if (!entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Yellow", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Yellow', { from: 'discord', to: 'decimal' }))
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`✏️ **Role Updated** by <@${entry.executor?.id || "Unknown"}>`,
+				`✏️ **Role Updated** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
-				{ name: "Role", value: `<@&${newRole.id}>`, inline: true },
-				{ name: "Old Name", value: oldRole.name, inline: true },
-				{ name: "New Name", value: newRole.name, inline: true },
+				{ name: 'Role', value: `<@&${newRole.id}>`, inline: true },
+				{ name: 'Old Name', value: oldRole.name, inline: true },
+				{ name: 'New Name', value: newRole.name, inline: true },
 				{
-					name: "Old Color",
-					value: oldRole.hexColor || "Default",
+					name: 'Old Color',
+					value: oldRole.hexColor || 'Default',
 					inline: true,
 				},
 				{
-					name: "New Color",
-					value: newRole.hexColor || "Default",
+					name: 'New Color',
+					value: newRole.hexColor || 'Default',
 					inline: true,
 				},
 				{
-					name: "Old Position",
+					name: 'Old Position',
 					value: oldRole.position.toString(),
 					inline: true,
 				},
 				{
-					name: "New Position",
+					name: 'New Position',
 					value: newRole.position.toString(),
 					inline: true,
 				},
 				{
-					name: "Mentionable",
-					value: newRole.mentionable ? "Yes" : "No",
+					name: 'Mentionable',
+					value: newRole.mentionable ? 'Yes' : 'No',
 					inline: true,
 				},
-				{ name: "Hoisted", value: newRole.hoist ? "Yes" : "No", inline: true },
+				{ name: 'Hoisted', value: newRole.hoist ? 'Yes' : 'No', inline: true },
 				{
-					name: "Managed",
-					value: newRole.managed ? "Yes" : "No",
+					name: 'Managed',
+					value: newRole.managed ? 'Yes' : 'No',
 					inline: true,
 				},
 			)
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in guildRoleUpdate audit log:", err);
+		console.error('Error in guildRoleUpdate audit log:', err);
 	}
 };

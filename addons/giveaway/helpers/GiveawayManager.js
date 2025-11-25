@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -15,7 +15,7 @@ const {
 	SeparatorBuilder,
 	SeparatorSpacingSize,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 class GiveawayManager {
 	constructor(container) {
@@ -40,12 +40,12 @@ class GiveawayManager {
 	}
 
 	async init() {
-		this.logger.info("🎁 Syncing Scheduler...");
+		this.logger.info('🎁 Syncing Scheduler...');
 		const active = await this.Giveaway.findAll({ where: { ended: false } });
 
 		for (const g of active) {
 			const endSec = Math.floor(new Date(g.endTime).getTime() / 1000);
-			await this.Giveaway.scheduleAdd("active_schedule", endSec, g.messageId);
+			await this.Giveaway.scheduleAdd('active_schedule', endSec, g.messageId);
 		}
 
 		this.startScheduler();
@@ -55,7 +55,7 @@ class GiveawayManager {
 		try {
 			await this.checkExpiredGiveaways();
 		} catch (e) {
-			this.logger.error("🎁 Giveaway Scheduler Error:", e);
+			this.logger.error('🎁 Giveaway Scheduler Error:', e);
 		} finally {
 			setTimeout(() => this.startScheduler(), this.CHECK_INTERVAL);
 		}
@@ -64,7 +64,7 @@ class GiveawayManager {
 	async checkExpiredGiveaways() {
 		const nowSec = Math.floor(Date.now() / 1000);
 		const expiredIds = await this.Giveaway.scheduleGetExpired(
-			"active_schedule",
+			'active_schedule',
 			nowSec,
 		);
 
@@ -74,7 +74,7 @@ class GiveawayManager {
 			);
 
 			for (const mid of expiredIds) {
-				await this.Giveaway.scheduleRemove("active_schedule", mid);
+				await this.Giveaway.scheduleRemove('active_schedule', mid);
 				const giveaway = await this.Giveaway.findOne({
 					where: { messageId: mid },
 				});
@@ -90,25 +90,25 @@ class GiveawayManager {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 		const { options, user, guild, channel } = interaction;
 
-		const durationInput = options.getString("duration");
-		const winnersCount = options.getInteger("winners");
-		const prize = options.getString("prize");
-		const color = options.getString("color") || this.config.bot.color;
-		const role = options.getRole("role");
-		const description = options.getString("description");
+		const durationInput = options.getString('duration');
+		const winnersCount = options.getInteger('winners');
+		const prize = options.getString('prize');
+		const color = options.getString('color') || this.config.bot.color;
+		const role = options.getRole('role');
+		const description = options.getString('description');
 
 		const durationMs = this.parseDuration(durationInput);
 		if (!durationMs || durationMs <= 0 || Number.isNaN(durationMs)) {
 			const desc = await this.t(
 				interaction,
-				"giveaway.giveaway.invalid.duration.desc",
+				'giveaway.giveaway.invalid.duration.desc',
 			);
 
 			const errContainer = await this.simpleContainer(interaction, desc, {
-				color: "Red",
+				color: 'Red',
 				title: await this.t(
 					interaction,
-					"giveaway.giveaway.invalid.duration.title",
+					'giveaway.giveaway.invalid.duration.title',
 				),
 			});
 			return interaction.editReply({
@@ -157,21 +157,21 @@ class GiveawayManager {
 			});
 
 			await this.Giveaway.scheduleAdd(
-				"active_schedule",
+				'active_schedule',
 				endTimestamp,
 				message.id,
 			);
 
 			const desc = await this.t(
 				interaction,
-				"giveaway.giveaway.start.success.desc",
+				'giveaway.giveaway.start.success.desc',
 			);
 
 			const successContainer = await this.simpleContainer(interaction, desc, {
-				color: "Green",
+				color: 'Green',
 				title: await this.t(
 					interaction,
-					"giveaway.giveaway.start.success.title",
+					'giveaway.giveaway.start.success.title',
 				),
 			});
 			await interaction.editReply({
@@ -179,15 +179,15 @@ class GiveawayManager {
 				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (error) {
-			this.logger.error("Failed to start giveaway:", error);
+			this.logger.error('Failed to start giveaway:', error);
 			const errTitle = await this.t(
 				interaction,
-				"giveaway.error.fatal.title",
-			).catch(() => "Fatal Error");
+				'giveaway.error.fatal.title',
+			).catch(() => 'Fatal Error');
 			const errContainer = await this.simpleContainer(
 				interaction,
 				error.message,
-				{ color: "Red", title: errTitle },
+				{ color: 'Red', title: errTitle },
 			);
 			await interaction.editReply({
 				components: errContainer,
@@ -199,9 +199,9 @@ class GiveawayManager {
 	async endGiveaway(giveawayData, interaction = null) {
 		let giveaway = giveawayData;
 
-		if (typeof giveawayData === "string" || (interaction && !giveaway.prize)) {
+		if (typeof giveawayData === 'string' || (interaction && !giveaway.prize)) {
 			const messageId =
-				interaction?.options.getString("giveaway") || giveawayData;
+				interaction?.options.getString('giveaway') || giveawayData;
 			giveaway = await this.Giveaway.findOne({ where: { messageId } });
 		}
 
@@ -209,12 +209,12 @@ class GiveawayManager {
 			if (interaction) {
 				const desc = await this.t(
 					interaction,
-					"giveaway.giveaway.not.found.desc",
+					'giveaway.giveaway.not.found.desc',
 				);
 
 				const err = await this.simpleContainer(interaction, desc, {
-					color: "Red",
-					title: "Error",
+					color: 'Red',
+					title: 'Error',
 				});
 				await interaction.reply({
 					components: err,
@@ -226,7 +226,7 @@ class GiveawayManager {
 
 		let participants = [];
 		try {
-			if (typeof giveaway.participants === "string") {
+			if (typeof giveaway.participants === 'string') {
 				participants = JSON.parse(giveaway.participants);
 			} else if (Array.isArray(giveaway.participants)) {
 				participants = giveaway.participants;
@@ -253,19 +253,19 @@ class GiveawayManager {
 			.fetch(giveaway.channelId)
 			.catch(() => null);
 		if (channel) {
-			const noWinnerMsg = await this.t(channel, "giveaway.no.valid.winner");
+			const noWinnerMsg = await this.t(channel, 'giveaway.no.valid.winner');
 			const winnerMentions =
 				winners.length > 0
-					? winners.map((id) => `<@${id}>`).join(", ")
+					? winners.map((id) => `<@${id}>`).join(', ')
 					: noWinnerMsg;
 
 			const announceContainer = new ContainerBuilder()
 				.setAccentColor(
-					this.convertColor("Gold", { from: "discord", to: "decimal" }),
+					this.convertColor('Gold', { from: 'discord', to: 'decimal' }),
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await this.t(channel, "giveaway.end.announce.title"),
+						await this.t(channel, 'giveaway.end.announce.title'),
 					),
 				)
 				.addSeparatorComponents(
@@ -275,7 +275,7 @@ class GiveawayManager {
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await this.t(channel, "giveaway.end.announce.desc", {
+						await this.t(channel, 'giveaway.end.announce.desc', {
 							winners: winnerMentions,
 							prize: giveaway.prize,
 							host: `<@${giveaway.hostId}>`,
@@ -293,7 +293,7 @@ class GiveawayManager {
 					try {
 						const user = await this.client.users.fetch(winnerId);
 
-						const dmContent = await this.t(user, "giveaway.dm.winner", {
+						const dmContent = await this.t(user, 'giveaway.dm.winner', {
 							prize: giveaway.prize,
 							server: channel.guild.name,
 							link: `https://discord.com/channels/${giveaway.guildId}/${giveaway.channelId}/${giveaway.messageId}`,
@@ -303,8 +303,8 @@ class GiveawayManager {
 							{ client: this.client, guild: null },
 							dmContent,
 							{
-								color: "Gold",
-								title: "🎉 Congratulations!",
+								color: 'Gold',
+								title: '🎉 Congratulations!',
 							},
 						);
 
@@ -342,13 +342,13 @@ class GiveawayManager {
 		if (interaction && !interaction.replied) {
 			const successMsg = await this.t(
 				interaction,
-				"giveaway.giveaway.end.admin_success",
+				'giveaway.giveaway.end.admin_success',
 			);
 
 			const successContainer = await this.simpleContainer(
 				interaction,
 				successMsg,
-				{ color: "Green" },
+				{ color: 'Green' },
 			);
 
 			await interaction.reply({
@@ -364,12 +364,12 @@ class GiveawayManager {
 		if (!giveaway || giveaway.ended) {
 			const desc = await this.t(
 				interaction,
-				"giveaway.giveaway.not.found.desc",
+				'giveaway.giveaway.not.found.desc',
 			);
 
 			const err = await this.simpleContainer(interaction, desc, {
-				color: "Red",
-				title: "Error",
+				color: 'Red',
+				title: 'Error',
 			});
 			return interaction.reply({
 				components: err,
@@ -378,7 +378,7 @@ class GiveawayManager {
 		}
 
 		try {
-			await this.Giveaway.scheduleRemove("active_schedule", messageId);
+			await this.Giveaway.scheduleRemove('active_schedule', messageId);
 		} catch (e) {
 			this.logger.warn(`Failed to remove ${messageId} from scheduler:`, e);
 		}
@@ -394,7 +394,7 @@ class GiveawayManager {
 			if (message) {
 				const cancelledText = await this.t(
 					channel,
-					"giveaway.ui.status.cancelled",
+					'giveaway.ui.status.cancelled',
 				);
 				const uiComponents = await this.buildGiveawayUI(channel, {
 					prize: giveaway.prize,
@@ -403,10 +403,10 @@ class GiveawayManager {
 					winnersCount: giveaway.winners,
 					participantsCount: (Array.isArray(giveaway.participants)
 						? giveaway.participants
-						: JSON.parse(giveaway.participants || "[]")
+						: JSON.parse(giveaway.participants || '[]')
 					).length,
 					ended: true,
-					color: this.convertColor("Red", { from: "discord", to: "hex" }),
+					color: this.convertColor('Red', { from: 'discord', to: 'hex' }),
 					roleId: giveaway.roleId,
 					winnerList: cancelledText,
 					description: giveaway.description,
@@ -416,12 +416,12 @@ class GiveawayManager {
 
 			const cancelAnnounce = await this.simpleContainer(
 				channel,
-				await this.t(channel, "giveaway.cancel.announce.desc", {
+				await this.t(channel, 'giveaway.cancel.announce.desc', {
 					prize: giveaway.prize,
 				}),
 				{
-					title: await this.t(channel, "giveaway.cancel.announce.title"),
-					color: "Red",
+					title: await this.t(channel, 'giveaway.cancel.announce.title'),
+					color: 'Red',
 				},
 			);
 
@@ -431,12 +431,12 @@ class GiveawayManager {
 			});
 		}
 
-		const successMsg = await this.t(interaction, "giveaway.cancel.success");
+		const successMsg = await this.t(interaction, 'giveaway.cancel.success');
 
 		const successContainer = await this.simpleContainer(
 			interaction,
 			successMsg,
-			{ color: "Green" },
+			{ color: 'Green' },
 		);
 		await interaction.reply({
 			components: successContainer,
@@ -449,10 +449,10 @@ class GiveawayManager {
 		const giveaway = await this.Giveaway.findOne({ where: { messageId } });
 
 		if (!giveaway || !giveaway.ended) {
-			const msg = await this.t(interaction, "giveaway.giveaway.not.ended.desc");
+			const msg = await this.t(interaction, 'giveaway.giveaway.not.ended.desc');
 			const err = await this.simpleContainer(interaction, msg, {
-				color: "Red",
-				title: "Error",
+				color: 'Red',
+				title: 'Error',
 			});
 			return interaction.reply({
 				components: err,
@@ -464,7 +464,7 @@ class GiveawayManager {
 		let participants = [];
 		try {
 			participants =
-				typeof giveaway.participants === "string"
+				typeof giveaway.participants === 'string'
 					? JSON.parse(giveaway.participants)
 					: giveaway.participants;
 		} catch (_e) {
@@ -474,10 +474,10 @@ class GiveawayManager {
 		if (participants.length === 0) {
 			const msg = await this.t(
 				interaction,
-				"giveaway.reroll.error.no_participants",
+				'giveaway.reroll.error.no_participants',
 			);
 			const err = await this.simpleContainer(interaction, msg, {
-				color: "Red",
+				color: 'Red',
 			});
 			return interaction.reply({
 				components: err,
@@ -496,7 +496,7 @@ class GiveawayManager {
 			pool.splice(index, 1);
 		}
 
-		const winnerMentions = winners.map((id) => `<@${id}>`).join(", ");
+		const winnerMentions = winners.map((id) => `<@${id}>`).join(', ');
 
 		const channel = await this.client.channels
 			.fetch(giveaway.channelId)
@@ -525,7 +525,7 @@ class GiveawayManager {
 
 			const announceMsg = await this.t(
 				channel,
-				"giveaway.reroll.announce.desc",
+				'giveaway.reroll.announce.desc',
 				{
 					winners: winnerMentions,
 					prize: giveaway.prize,
@@ -536,14 +536,14 @@ class GiveawayManager {
 
 			const announceTitle = await this.t(
 				channel,
-				"giveaway.reroll.announce.title",
+				'giveaway.reroll.announce.title',
 			);
 
 			const announceContainer = await this.simpleContainer(
 				interaction,
 				announceMsg,
 				{
-					color: "Gold",
+					color: 'Gold',
 					title: announceTitle,
 				},
 			);
@@ -554,11 +554,11 @@ class GiveawayManager {
 			});
 		}
 
-		const successMsg = await this.t(interaction, "giveaway.reroll.success");
+		const successMsg = await this.t(interaction, 'giveaway.reroll.success');
 		const successContainer = await this.simpleContainer(
 			interaction,
 			successMsg,
-			{ color: "Green" },
+			{ color: 'Green' },
 		);
 
 		await interaction.reply({
@@ -569,21 +569,21 @@ class GiveawayManager {
 	}
 
 	async buildGiveawayUI(context, data) {
-		const accentColor = this.convertColor(data.color || "Blue", {
-			from: "hex",
-			to: "decimal",
+		const accentColor = this.convertColor(data.color || 'Blue', {
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const joinBtn = new ButtonBuilder()
-			.setCustomId("giveaway-join")
-			.setLabel(await this.t(context, "giveaway.ui.button.join"))
+			.setCustomId('giveaway-join')
+			.setLabel(await this.t(context, 'giveaway.ui.button.join'))
 			.setStyle(ButtonStyle.Primary)
-			.setEmoji("🎉")
+			.setEmoji('🎉')
 			.setDisabled(data.ended);
 
 		const buttonRow = new ActionRowBuilder().addComponents(joinBtn);
 
-		const titleText = await this.t(context, "giveaway.ui.embed.title", {
+		const titleText = await this.t(context, 'giveaway.ui.embed.title', {
 			prize: data.prize,
 		});
 
@@ -596,15 +596,15 @@ class GiveawayManager {
 					.setDivider(true),
 			);
 
-		let desc = "";
+		let desc = '';
 		if (data.ended) {
-			desc = await this.t(context, "giveaway.ui.embed.desc_ended", {
+			desc = await this.t(context, 'giveaway.ui.embed.desc_ended', {
 				endTime: data.endTime,
 				hostId: data.hostId,
-				winners: data.winnerList || "...",
+				winners: data.winnerList || '...',
 			});
 		} else {
-			desc = await this.t(context, "giveaway.ui.embed.desc_active", {
+			desc = await this.t(context, 'giveaway.ui.embed.desc_active', {
 				endTime: data.endTime,
 				hostId: data.hostId,
 				winnersCount: data.winnersCount,
@@ -612,7 +612,7 @@ class GiveawayManager {
 		}
 
 		if (data.roleId) {
-			desc += await this.t(context, "giveaway.ui.embed.requirement", {
+			desc += await this.t(context, 'giveaway.ui.embed.requirement', {
 				roleId: data.roleId,
 			});
 		}
@@ -625,7 +625,7 @@ class GiveawayManager {
 				.setSpacing(SeparatorSpacingSize.Small)
 				.setDivider(true),
 		);
-		const partText = await this.t(context, "giveaway.ui.embed.participants", {
+		const partText = await this.t(context, 'giveaway.ui.embed.participants', {
 			count: data.participantsCount,
 		});
 		container.addTextDisplayComponents(
@@ -644,7 +644,7 @@ class GiveawayManager {
 		);
 		container.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await this.t(context, "giveaway.ui.embed.footer"),
+				await this.t(context, 'giveaway.ui.embed.footer'),
 			),
 		);
 

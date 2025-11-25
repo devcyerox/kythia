@@ -3,14 +3,14 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const marryButtonHandler = require("./buttons/marry.js");
+const marryButtonHandler = require('./buttons/marry.js');
 
 const initialize = (bot) => {
 	const summary = [];
 	try {
-		bot.registerButtonHandler("marry", marryButtonHandler.execute);
+		bot.registerButtonHandler('marry', marryButtonHandler.execute);
 
 		summary.push("  └─ Button: 'marry'");
 	} catch (error) {

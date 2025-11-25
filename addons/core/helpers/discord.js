@@ -3,25 +3,25 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ContainerBuilder,
 	TextDisplayBuilder,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
-} = require("discord.js");
+} = require('discord.js');
 
-const KythiaUser = require("@coreModels/KythiaUser");
-const KythiaTeam = require("@coreModels/KythiaTeam");
-const { t } = require("@coreHelpers/translator");
-const logger = require("./logger");
-const axios = require("axios");
+const KythiaUser = require('@coreModels/KythiaUser');
+const KythiaTeam = require('@coreModels/KythiaTeam');
+const { t } = require('@coreHelpers/translator');
+const logger = require('./logger');
+const axios = require('axios');
 
 const isOwner = (userId) => {
 	let ownerIds = kythia.owner.ids;
-	if (typeof ownerIds === "string") {
-		ownerIds = ownerIds.split(",").map((id) => id.trim());
+	if (typeof ownerIds === 'string') {
+		ownerIds = ownerIds.split(',').map((id) => id.trim());
 	}
 	if (Array.isArray(ownerIds) && ownerIds.includes(String(userId))) {
 		return true;
@@ -53,8 +53,8 @@ const embedFooter = async (source) => {
 
 	// Failsafe when client is not available
 	if (!client) {
-		logger.warn("❌ Cant find client in embedFooter");
-		return { text: "Kythia" }; // Fallback
+		logger.warn('❌ Cant find client in embedFooter');
+		return { text: 'Kythia' }; // Fallback
 	}
 
 	const botUser = client.user;
@@ -63,7 +63,7 @@ const embedFooter = async (source) => {
 	const translationContext = source.guild || source;
 
 	return {
-		text: await t(translationContext, "common.embed.footer", {
+		text: await t(translationContext, 'common.embed.footer', {
 			username: botUser?.username,
 		}),
 		iconURL: botUser?.displayAvatarURL({ dynamic: true }),
@@ -94,7 +94,7 @@ async function setVoiceChannelStatus(channel, status) {
 	// Validate channel
 	const botToken = kythia.bot.token;
 	if (!channel || !channel.isVoiceBased()) {
-		logger.warn("❌ Invalid voice channel provided.");
+		logger.warn('❌ Invalid voice channel provided.');
 		return;
 	}
 
@@ -106,7 +106,7 @@ async function setVoiceChannelStatus(channel, status) {
 		);
 	} catch (e) {
 		logger.warn(
-			"❌ Failed to set voice channel status:",
+			'❌ Failed to set voice channel status:',
 			e.response?.data || e.message,
 		);
 	}
@@ -141,9 +141,9 @@ async function simpleContainer(interaction, content, options = {}) {
 
 	// Get accent color
 	const accentColor = color
-		? convertColor(color, { from: "discord", to: "decimal" }) ||
-			convertColor(color, { from: "hex", to: "decimal" })
-		: convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" });
+		? convertColor(color, { from: 'discord', to: 'decimal' }) ||
+			convertColor(color, { from: 'hex', to: 'decimal' })
+		: convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' });
 
 	// Build container
 	const replyContainer = new ContainerBuilder()
@@ -156,7 +156,7 @@ async function simpleContainer(interaction, content, options = {}) {
 		)
 		.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await t(interaction, "common.container.footer", {
+				await t(interaction, 'common.container.footer', {
 					username: interaction.client.user.username,
 				}),
 			),

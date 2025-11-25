@@ -3,46 +3,46 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
 	getChecklistAndItems,
 	getScopeMeta,
 	safeReply,
-} = require("../../helpers");
-const { EmbedBuilder } = require("discord.js");
-const { embedFooter } = require("@coreHelpers/discord");
-const convertColor = require("kythia-core").utils.color;
-const { t } = require("@coreHelpers/translator");
+} = require('../../helpers');
+const { EmbedBuilder } = require('discord.js');
+const { embedFooter } = require('@coreHelpers/discord');
+const convertColor = require('kythia-core').utils.color;
+const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("toggle")
-			.setDescription("Toggle server checklist item complete/incomplete")
+			.setName('toggle')
+			.setDescription('Toggle server checklist item complete/incomplete')
 			.addIntegerOption((option) =>
 				option
-					.setName("index")
-					.setDescription("Item number to toggle")
+					.setName('index')
+					.setDescription('Item number to toggle')
 					.setRequired(true),
 			),
 
 	async execute(interaction) {
 		const guildId = interaction.guild?.id;
 		const userId = null; // Server scope
-		const group = "server";
+		const group = 'server';
 
-		const index = interaction.options.getInteger("index");
-		if (!index || typeof index !== "number" || index < 1) {
+		const index = interaction.options.getInteger('index');
+		if (!index || typeof index !== 'number' || index < 1) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setTitle(
-					await t(interaction, "checklist.server.toggle.invalid.index.title"),
+					await t(interaction, 'checklist.server.toggle.invalid.index.title'),
 				)
 				.setDescription(
-					await t(interaction, "checklist.server.toggle.invalid.index.desc"),
+					await t(interaction, 'checklist.server.toggle.invalid.index.desc'),
 				)
 				.setTimestamp();
 			return safeReply(interaction, { embeds: [embed], ephemeral: true });
@@ -57,14 +57,14 @@ module.exports = {
 		if (!checklist || !Array.isArray(items) || items.length === 0) {
 			const embed = new EmbedBuilder()
 				.setTitle(
-					await t(interaction, "checklist.server.toggle.empty.title", {
+					await t(interaction, 'checklist.server.toggle.empty.title', {
 						scope: await t(interaction, scopeKey),
 					}),
 				)
 				.setDescription(
-					await t(interaction, "checklist.server.toggle.toggle.empty.desc"),
+					await t(interaction, 'checklist.server.toggle.toggle.empty.desc'),
 				)
-				.setColor("Red")
+				.setColor('Red')
 				.setTimestamp();
 			return safeReply(interaction, { embeds: [embed], ephemeral });
 		}
@@ -72,12 +72,12 @@ module.exports = {
 		if (index < 1 || index > items.length) {
 			const embed = new EmbedBuilder()
 				.setTitle(
-					await t(interaction, "checklist.server.toggle.invalid.index.title"),
+					await t(interaction, 'checklist.server.toggle.invalid.index.title'),
 				)
 				.setDescription(
-					await t(interaction, "checklist.server.toggle.invalid.index.desc"),
+					await t(interaction, 'checklist.server.toggle.invalid.index.desc'),
 				)
-				.setColor("Red")
+				.setColor('Red')
 				.setTimestamp();
 			return safeReply(interaction, { embeds: [embed], ephemeral });
 		}
@@ -87,35 +87,35 @@ module.exports = {
 			await checklist.update({ items: JSON.stringify(items) });
 		} catch (_e) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setTitle("Checklist Error")
-				.setDescription("Failed to update checklist. Please try again.")
+				.setColor('Red')
+				.setTitle('Checklist Error')
+				.setDescription('Failed to update checklist. Please try again.')
 				.setTimestamp();
 			return safeReply(interaction, { embeds: [embed], ephemeral });
 		}
 
 		const checked = items[index - 1].checked;
 		const color = checked
-			? convertColor("Green", { from: "discord", to: "decimal" })
-			: convertColor("Yellow", { from: "discord", to: "decimal" });
+			? convertColor('Green', { from: 'discord', to: 'decimal' })
+			: convertColor('Yellow', { from: 'discord', to: 'decimal' });
 		const statusKey = checked
-			? "checklist.status.done"
-			: "checklist.status.undone";
+			? 'checklist.status.done'
+			: 'checklist.status.undone';
 
 		const embed = new EmbedBuilder()
 			.setTitle(
-				await t(interaction, "checklist.server.toggle.toggle.success.title", {
+				await t(interaction, 'checklist.server.toggle.toggle.success.title', {
 					scope: await t(interaction, scopeKey),
 				}),
 			)
 			.addFields(
 				{
-					name: await t(interaction, "checklist.server.toggle.item.field"),
+					name: await t(interaction, 'checklist.server.toggle.item.field'),
 					value: `\`${items[index - 1].text}\``,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "checklist.server.toggle.status.field"),
+					name: await t(interaction, 'checklist.server.toggle.status.field'),
 					value: await t(interaction, statusKey),
 					inline: true,
 				},

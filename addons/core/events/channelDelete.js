@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder, ChannelType } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder, ChannelType } = require('discord.js');
 
 /**
  * Handle anti-nuke system for channel deletion spam.
@@ -48,7 +48,7 @@ async function handleAntiNuke(bot, channel, entry) {
 			await member.kick(
 				await t(
 					channel.guild,
-					"core.events.channelDelete.events.channel.delete.antinuke.reason",
+					'core.events.channelDelete.events.channel.delete.antinuke.reason',
 				),
 			);
 
@@ -63,7 +63,7 @@ async function handleAntiNuke(bot, channel, entry) {
 			if (logChannel?.isTextBased()) {
 				const message = await t(
 					channel.guild,
-					"core.events.channelDelete.events.channel.delete.antinuke.kick.log",
+					'core.events.channelDelete.events.channel.delete.antinuke.kick.log',
 					{
 						user: member.user.tag,
 					},
@@ -103,7 +103,7 @@ module.exports = async (bot, channel) => {
 		if (!entry) {
 			entry = audit.entries.find(
 				(e) =>
-					e.changes?.some((c) => c.key === "name" && c.old === channel.name) &&
+					e.changes?.some((c) => c.key === 'name' && c.old === channel.name) &&
 					e.createdTimestamp > Date.now() - 5000,
 			);
 		}
@@ -123,34 +123,34 @@ module.exports = async (bot, channel) => {
 
 		// Humanize channel type (simple version)
 		const channelTypeNames = {
-			[ChannelType.GuildText]: "Text Channel",
-			[ChannelType.GuildVoice]: "Voice Channel",
-			[ChannelType.GuildCategory]: "Category",
-			[ChannelType.GuildAnnouncement]: "Announcement Channel",
-			[ChannelType.AnnouncementThread]: "Announcement Thread",
-			[ChannelType.PublicThread]: "Public Thread",
-			[ChannelType.PrivateThread]: "Private Thread",
-			[ChannelType.GuildStageVoice]: "Stage Channel",
-			[ChannelType.GuildForum]: "Forum Channel",
-			[ChannelType.GuildMedia]: "Media Channel",
-			[ChannelType.GuildDirectory]: "Directory Channel",
-			[ChannelType.GuildStore]: "Store Channel",
-			[ChannelType.DM]: "Direct Message",
-			[ChannelType.GroupDM]: "Group DM",
+			[ChannelType.GuildText]: 'Text Channel',
+			[ChannelType.GuildVoice]: 'Voice Channel',
+			[ChannelType.GuildCategory]: 'Category',
+			[ChannelType.GuildAnnouncement]: 'Announcement Channel',
+			[ChannelType.AnnouncementThread]: 'Announcement Thread',
+			[ChannelType.PublicThread]: 'Public Thread',
+			[ChannelType.PrivateThread]: 'Private Thread',
+			[ChannelType.GuildStageVoice]: 'Stage Channel',
+			[ChannelType.GuildForum]: 'Forum Channel',
+			[ChannelType.GuildMedia]: 'Media Channel',
+			[ChannelType.GuildDirectory]: 'Directory Channel',
+			[ChannelType.GuildStore]: 'Store Channel',
+			[ChannelType.DM]: 'Direct Message',
+			[ChannelType.GroupDM]: 'Group DM',
 		};
 		function humanChannelType(type) {
 			return (
 				channelTypeNames[type] ||
-				(typeof type === "number" ? `Unknown (${type})` : "Unknown")
+				(typeof type === 'number' ? `Unknown (${type})` : 'Unknown')
 			);
 		}
 
 		// Use the typical color utility if available, else fallback
 		let color;
 		try {
-			color = require("@utils/color")("Red", {
-				from: "discord",
-				to: "decimal",
+			color = require('@utils/color')('Red', {
+				from: 'discord',
+				to: 'decimal',
 			});
 		} catch (_e) {
 			color = 0xed4245; // default Discord red
@@ -159,30 +159,30 @@ module.exports = async (bot, channel) => {
 		const embed = new EmbedBuilder()
 			.setColor(color)
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`🗑️ **Channel Deleted** by <@${entry.executor?.id || "Unknown"}>`,
+				`🗑️ **Channel Deleted** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
 				{
-					name: "Channel Name",
-					value: channel.name || "Unknown",
+					name: 'Channel Name',
+					value: channel.name || 'Unknown',
 					inline: true,
 				},
-				{ name: "Type", value: humanChannelType(channel.type), inline: true },
+				{ name: 'Type', value: humanChannelType(channel.type), inline: true },
 			)
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error fetching audit logs for channelDelete:", err);
+		console.error('Error fetching audit logs for channelDelete:', err);
 		if (kythia.sentry.dsn) {
 			Sentry.captureException(err);
 		}

@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { getMarketData } = require("./market");
-const cron = require("node-cron");
+const { getMarketData } = require('./market');
+const cron = require('node-cron');
 
 async function processOrders(bot) {
 	const { models, logger } = bot.container;
@@ -17,7 +17,7 @@ async function processOrders(bot) {
 	logger.info(`[Economy] Processing market orders...`);
 	try {
 		const marketData = await getMarketData();
-		const openOrders = await MarketOrder.getAllCache({ status: "open" });
+		const openOrders = await MarketOrder.getAllCache({ status: 'open' });
 
 		for (const order of openOrders) {
 			const assetData = marketData[order.assetId];
@@ -27,20 +27,20 @@ async function processOrders(bot) {
 			let shouldExecute = false;
 
 			if (
-				order.type === "limit" &&
-				order.side === "buy" &&
+				order.type === 'limit' &&
+				order.side === 'buy' &&
 				currentPrice <= order.price
 			) {
 				shouldExecute = true;
 			} else if (
-				order.type === "limit" &&
-				order.side === "sell" &&
+				order.type === 'limit' &&
+				order.side === 'sell' &&
 				currentPrice >= order.price
 			) {
 				shouldExecute = true;
 			} else if (
-				order.type === "stoploss" &&
-				order.side === "sell" &&
+				order.type === 'stoploss' &&
+				order.side === 'sell' &&
 				currentPrice <= order.price
 			) {
 				shouldExecute = true;
@@ -50,7 +50,7 @@ async function processOrders(bot) {
 				const user = await KythiaUser.getCache({ userId: order.userId });
 				if (!user) continue;
 
-				if (order.side === "buy") {
+				if (order.side === 'buy') {
 					const _totalCost = order.quantity * order.price;
 
 					const portfolio = await MarketPortfolio.getCache({
@@ -75,11 +75,11 @@ async function processOrders(bot) {
 						});
 					}
 
-					order.status = "filled";
+					order.status = 'filled';
 					await MarketTransaction.create({
 						userId: order.userId,
 						assetId: order.assetId,
-						type: "buy",
+						type: 'buy',
 						quantity: order.quantity,
 						price: order.price,
 					});
@@ -88,13 +88,13 @@ async function processOrders(bot) {
 
 					user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalReceived);
 
-					user.changed("kythiaCoin", true);
+					user.changed('kythiaCoin', true);
 
-					order.status = "filled";
+					order.status = 'filled';
 					await MarketTransaction.create({
 						userId: order.userId,
 						assetId: order.assetId,
-						type: "sell",
+						type: 'sell',
 						quantity: order.quantity,
 						price: currentPrice,
 					});
@@ -105,7 +105,7 @@ async function processOrders(bot) {
 			}
 		}
 	} catch (error) {
-		logger.error("Error processing market orders:", error);
+		logger.error('Error processing market orders:', error);
 	}
 }
 
@@ -118,7 +118,7 @@ function initializeOrderProcessing(bot, options = {}) {
 	const kythiaConfig = bot.container.kythiaConfig;
 	const schedule = kythiaConfig.addons.economy.orderProcessorSchedule
 		? kythiaConfig.addons.economy.orderProcessorSchedule
-		: "*/5 * * * *";
+		: '*/5 * * * *';
 
 	cron.schedule(
 		schedule,

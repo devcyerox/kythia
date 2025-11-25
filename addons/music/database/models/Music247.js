@@ -3,15 +3,15 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class Music247 extends KythiaModel {
-	static cacheKeys = [["guildId"]];
+	static cacheKeys = [['guildId']];
 	static guarded = [];
-	static table = "music_247_status";
+	static table = 'music_247_status';
 
 	static get structure() {
 		return {

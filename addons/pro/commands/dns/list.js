@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -12,19 +12,19 @@ const {
 	TextDisplayBuilder,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("list")
-			.setDescription("🌐 Show all DNS records for one of your subdomains.")
+			.setName('list')
+			.setDescription('🌐 Show all DNS records for one of your subdomains.')
 			.addStringOption((option) =>
 				option
-					.setName("subdomain")
+					.setName('subdomain')
 					.setDescription(
-						"The subdomain name you want to view (e.g. my-project)",
+						'The subdomain name you want to view (e.g. my-project)',
 					)
 					.setRequired(true)
 					.setAutocomplete(true),
@@ -63,25 +63,25 @@ module.exports = {
 		const isVoter = await isVoterActive(interaction.user.id);
 
 		if (!isPremiumDonor && !isVoter) {
-			const desc = await t(interaction, "pro.dns.list.not_allowed");
+			const desc = await t(interaction, 'pro.dns.list.not_allowed');
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
-		const subdomainName = interaction.options.getString("subdomain");
+		const subdomainName = interaction.options.getString('subdomain');
 		const targetSubdomain = await Subdomain.getCache({
 			name: subdomainName,
 			userId: interaction.user.id,
 		});
 
 		if (!targetSubdomain) {
-			const desc = await t(interaction, "pro.dns.list.not_found", {
+			const desc = await t(interaction, 'pro.dns.list.not_found', {
 				subdomain: subdomainName,
 			});
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -94,18 +94,18 @@ module.exports = {
 		const fqdn = `${targetSubdomain.name}.${domainName}`;
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 		const mainContainer = new ContainerBuilder().setAccentColor(accentColor);
 
-		const title = await t(interaction, "pro.dns.list.title", { fqdn: fqdn });
+		const title = await t(interaction, 'pro.dns.list.title', { fqdn: fqdn });
 		let description;
 
 		if (records.length === 0) {
-			description = await t(interaction, "pro.dns.list.no_record");
+			description = await t(interaction, 'pro.dns.list.no_record');
 		} else {
-			description = await t(interaction, "pro.dns.list.has_record", {
+			description = await t(interaction, 'pro.dns.list.has_record', {
 				count: records.length,
 			});
 		}
@@ -121,11 +121,11 @@ module.exports = {
 					.setDivider(true),
 			);
 
-			const fieldTitle = await t(interaction, "pro.dns.list.record_title", {
+			const fieldTitle = await t(interaction, 'pro.dns.list.record_title', {
 				id: record.id,
 				type: record.type,
 			});
-			const fieldValue = await t(interaction, "pro.dns.list.record_value", {
+			const fieldValue = await t(interaction, 'pro.dns.list.record_value', {
 				name: record.name,
 				value: record.value,
 			});
@@ -143,7 +143,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "common.container.footer", {
+					await t(interaction, 'common.container.footer', {
 						username: interaction.client.user.username,
 					}),
 				),

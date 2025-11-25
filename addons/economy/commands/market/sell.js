@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const { getMarketData, ASSET_IDS } = require("../../helpers/market");
+const { EmbedBuilder } = require('discord.js');
+const { getMarketData, ASSET_IDS } = require('../../helpers/market');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("sell")
-			.setDescription("💰 Sell an asset to the global market.")
+			.setName('sell')
+			.setDescription('💰 Sell an asset to the global market.')
 			.addStringOption((option) =>
 				option
-					.setName("asset")
+					.setName('asset')
 					.setDescription(
-						"The symbol of the asset you want to sell (e.g., BTC, ETH)",
+						'The symbol of the asset you want to sell (e.g., BTC, ETH)',
 					)
 					.setRequired(true)
 					.addChoices(
@@ -27,9 +27,9 @@ module.exports = {
 			)
 			.addNumberOption((option) =>
 				option
-					.setName("quantity")
+					.setName('quantity')
 					.setDescription(
-						"The amount of the asset you want to sell (e.g., 0.5)",
+						'The amount of the asset you want to sell (e.g., 0.5)',
 					)
 					.setRequired(true)
 					.setMinValue(0.000001),
@@ -42,15 +42,15 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		const assetId = interaction.options.getString("asset");
-		const sellQuantity = interaction.options.getNumber("quantity");
+		const assetId = interaction.options.getString('asset');
+		const sellQuantity = interaction.options.getNumber('quantity');
 
 		const user = await KythiaUser.getCache({ userId: interaction.user.id });
 		if (!user) {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -66,7 +66,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "economy.market.sell.insufficient.asset.title")}\n${await t(interaction, "economy.market.sell.insufficient.asset.desc", { asset: assetId.toUpperCase() })}`,
+					`## ${await t(interaction, 'economy.market.sell.insufficient.asset.title')}\n${await t(interaction, 'economy.market.sell.insufficient.asset.desc', { asset: assetId.toUpperCase() })}`,
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -80,7 +80,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "economy.market.sell.asset.not.found.title")}\n${await t(interaction, "economy.market.sell.asset.not.found.desc")}`,
+					`## ${await t(interaction, 'economy.market.sell.asset.not.found.title')}\n${await t(interaction, 'economy.market.sell.asset.not.found.desc')}`,
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -102,7 +102,7 @@ module.exports = {
 			await MarketTransaction.create({
 				userId: interaction.user.id,
 				assetId: assetId,
-				type: "sell",
+				type: 'sell',
 				quantity: sellQuantity,
 				price: currentPrice,
 			});
@@ -113,9 +113,9 @@ module.exports = {
 			// We'll treat kythiaCoin as decimal (float) value here.
 			// Defensive: If it's integer string, parseInt, else parseFloat.
 			let kythiaCoinNumeric =
-				typeof user.kythiaCoin === "bigint"
+				typeof user.kythiaCoin === 'bigint'
 					? Number(user.kythiaCoin)
-					: typeof user.kythiaCoin === "number"
+					: typeof user.kythiaCoin === 'number'
 						? user.kythiaCoin
 						: /^\d+$/.test(user.kythiaCoin)
 							? parseInt(user.kythiaCoin, 10)
@@ -125,28 +125,28 @@ module.exports = {
 
 			user.kythiaCoin = kythiaCoinNumeric;
 
-			user.changed("kythiaCoin", true);
+			user.changed('kythiaCoin', true);
 
 			await user.saveAndUpdateCache();
 
 			const pnl = (currentPrice - holding.avgBuyPrice) * sellQuantity;
-			const pnlSign = pnl >= 0 ? "+" : "";
-			const pnlEmoji = pnl >= 0 ? "📈" : "📉";
+			const pnlSign = pnl >= 0 ? '+' : '';
+			const pnlEmoji = pnl >= 0 ? '📈' : '📉';
 
 			const successEmbed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					`## ${await t(interaction, "economy.market.sell.success.title")}\n${await t(interaction, "economy.market.sell.success.desc", { quantity: sellQuantity.toFixed(6), asset: assetId.toUpperCase(), amount: totalUsdReceived.toLocaleString(undefined, { maximumFractionDigits: 2 }), avgBuyPrice: holding.avgBuyPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), sellPrice: currentPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), pnlEmoji: pnlEmoji, pnlSign: pnlSign, pnl: pnl.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}`,
+					`## ${await t(interaction, 'economy.market.sell.success.title')}\n${await t(interaction, 'economy.market.sell.success.desc', { quantity: sellQuantity.toFixed(6), asset: assetId.toUpperCase(), amount: totalUsdReceived.toLocaleString(undefined, { maximumFractionDigits: 2 }), avgBuyPrice: holding.avgBuyPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), sellPrice: currentPrice.toLocaleString(undefined, { maximumFractionDigits: 2 }), pnlEmoji: pnlEmoji, pnlSign: pnlSign, pnl: pnl.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}`,
 				)
 				.setFooter(await embedFooter(interaction));
 
 			await interaction.editReply({ embeds: [successEmbed] });
 		} catch (error) {
-			console.error("Error during market sell:", error);
+			console.error('Error during market sell:', error);
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "economy.market.sell.error.title")}\n${await t(interaction, "economy.market.sell.error.desc")}`,
+					`## ${await t(interaction, 'economy.market.sell.error.title')}\n${await t(interaction, 'economy.market.sell.error.desc')}`,
 				)
 				.setFooter(await embedFooter(interaction));
 			await interaction.editReply({ embeds: [embed] });

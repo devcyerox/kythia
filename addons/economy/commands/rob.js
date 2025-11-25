@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("rob")
-			.setDescription("💵 Try to rob money from another user.")
+			.setName('rob')
+			.setDescription('💵 Try to rob money from another user.')
 			.addUserOption((option) =>
 				option
-					.setName("target")
-					.setDescription("The user you want to rob")
+					.setName('target')
+					.setDescription('The user you want to rob')
 					.setRequired(true),
 			),
 	async execute(interaction, container) {
@@ -29,11 +29,11 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		const targetUser = interaction.options.getUser("target");
+		const targetUser = interaction.options.getUser('target');
 		if (targetUser.id === interaction.user.id) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "economy.rob.rob.cannot.rob.self"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'economy.rob.rob.cannot.rob.self'))
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
@@ -44,7 +44,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -56,7 +56,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					await t(interaction, "economy.rob.rob.target.no.account.desc"),
+					await t(interaction, 'economy.rob.rob.target.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -71,9 +71,9 @@ module.exports = {
 
 		if (cooldown.remaining) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					await t(interaction, "economy.rob.rob.cooldown", {
+					await t(interaction, 'economy.rob.rob.cooldown', {
 						time: cooldown.time,
 					}),
 				)
@@ -84,13 +84,13 @@ module.exports = {
 
 		const guard = await Inventory.getCache({
 			userId: target.userId,
-			itemName: "🚓 Guard",
+			itemName: '🚓 Guard',
 		});
 		let poison = null;
 		if (!guard) {
 			poison = await Inventory.getCache({
 				userId: target.userId,
-				itemName: "🧪 Poison",
+				itemName: '🧪 Poison',
 			});
 		}
 
@@ -118,9 +118,9 @@ module.exports = {
 		if (success) {
 			if (target.kythiaCoin < robAmount) {
 				const embed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						await t(interaction, "economy.rob.rob.target.not.enough.money"),
+						await t(interaction, 'economy.rob.rob.target.not.enough.money'),
 					)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setFooter(await embedFooter(interaction));
@@ -131,17 +131,17 @@ module.exports = {
 			target.kythiaCoin = BigInt(target.kythiaCoin) - BigInt(robAmount);
 			user.lastRob = new Date();
 
-			user.changed("kythiaCoin", true);
-			target.changed("kythiaCoin", true);
+			user.changed('kythiaCoin', true);
+			target.changed('kythiaCoin', true);
 
-			await user.saveAndUpdateCache("userId");
-			await target.saveAndUpdateCache("userId");
+			await user.saveAndUpdateCache('userId');
+			await target.saveAndUpdateCache('userId');
 
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setDescription(
-					await t(interaction, "economy.rob.rob.success.text", {
+					await t(interaction, 'economy.rob.rob.success.text', {
 						amount: robAmount,
 						target: targetUser.username,
 					}),
@@ -150,10 +150,10 @@ module.exports = {
 			await interaction.editReply({ embeds: [embed] });
 
 			const embedToTarget = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setDescription(
-					await t(interaction, "economy.rob.rob.success.dm", {
+					await t(interaction, 'economy.rob.rob.success.dm', {
 						robber: interaction.user.username,
 						amount: robAmount,
 					}),
@@ -166,9 +166,9 @@ module.exports = {
 
 			if (user.kythiaCoin < basePenalty && !poison) {
 				const embed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						await t(interaction, "economy.rob.rob.user.not.enough.money.fail"),
+						await t(interaction, 'economy.rob.rob.user.not.enough.money.fail'),
 					)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setFooter(await embedFooter(interaction));
@@ -188,27 +188,27 @@ module.exports = {
 
 			user.lastRob = new Date();
 
-			user.changed("kythiaCoin", true);
-			target.changed("kythiaCoin", true);
+			user.changed('kythiaCoin', true);
+			target.changed('kythiaCoin', true);
 
-			await user.saveAndUpdateCache("userId");
-			await target.saveAndUpdateCache("userId");
+			await user.saveAndUpdateCache('userId');
+			await target.saveAndUpdateCache('userId');
 
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setDescription(
-					await t(interaction, "economy.rob.rob.fail.text", {
+					await t(interaction, 'economy.rob.rob.fail.text', {
 						target: targetUser.username,
 						penalty: poison
-							? await t(interaction, "economy.rob.rob.fail.penalty.all")
+							? await t(interaction, 'economy.rob.rob.fail.penalty.all')
 							: `${robAmount} kythia coin`,
 						guard: guard
-							? await t(interaction, "economy.rob.rob.fail.guard.text")
-							: "",
+							? await t(interaction, 'economy.rob.rob.fail.guard.text')
+							: '',
 						poison: poison
-							? await t(interaction, "economy.rob.rob.fail.poison")
-							: "",
+							? await t(interaction, 'economy.rob.rob.fail.poison')
+							: '',
 					}),
 				)
 				.setFooter(await embedFooter(interaction));
@@ -218,16 +218,16 @@ module.exports = {
 				.setColor(kythia.bot.color)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setDescription(
-					await t(interaction, "economy.rob.rob.fail.dm", {
+					await t(interaction, 'economy.rob.rob.fail.dm', {
 						robber: interaction.user.username,
 						amount: robAmount,
 						penalty: poison ? penalty : robAmount,
 						guard: guard
-							? await t(interaction, "economy.rob.rob.fail.guard.dm")
-							: "",
+							? await t(interaction, 'economy.rob.rob.fail.guard.dm')
+							: '',
 						poison: poison
-							? await t(interaction, "economy.rob.rob.fail.poison.dm")
-							: "",
+							? await t(interaction, 'economy.rob.rob.fail.poison.dm')
+							: '',
 					}),
 				)
 				.setFooter(await embedFooter(interaction));

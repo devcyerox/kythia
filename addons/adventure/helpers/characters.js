@@ -3,15 +3,15 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const CHARACTERS = {
 	shadow_blade: {
-		id: "shadow_blade",
-		name: "Elara",
-		emoji: "🗡️",
-		description: "Glass cannon assassin. High damage, low defense.",
+		id: 'shadow_blade',
+		name: 'Elara',
+		emoji: '🗡️',
+		description: 'Glass cannon assassin. High damage, low defense.',
 		strengthBonus: 7,
 		defenseBonus: -2,
 		hpBonusPercent: 0,
@@ -20,10 +20,10 @@ const CHARACTERS = {
 	},
 
 	iron_guardian: {
-		id: "iron_guardian",
-		name: "Kaelen",
-		emoji: "🛡️",
-		description: "Immovable sentinel. High defense and survivability.",
+		id: 'iron_guardian',
+		name: 'Kaelen',
+		emoji: '🛡️',
+		description: 'Immovable sentinel. High defense and survivability.',
 		strengthBonus: 0,
 		defenseBonus: 8,
 		hpBonusPercent: 15,
@@ -32,10 +32,10 @@ const CHARACTERS = {
 	},
 
 	stormcaller: {
-		id: "stormcaller",
-		name: "Lyra",
-		emoji: "⚡",
-		description: "Elemental adept. Balanced power with extra experience.",
+		id: 'stormcaller',
+		name: 'Lyra',
+		emoji: '⚡',
+		description: 'Elemental adept. Balanced power with extra experience.',
 		strengthBonus: 3,
 		defenseBonus: 2,
 		hpBonusPercent: 5,
@@ -44,10 +44,10 @@ const CHARACTERS = {
 	},
 
 	gilded_ranger: {
-		id: "gilded_ranger",
-		name: "Arion",
-		emoji: "🏹",
-		description: "Treasure seeker. Earns extra gold from victories.",
+		id: 'gilded_ranger',
+		name: 'Arion',
+		emoji: '🏹',
+		description: 'Treasure seeker. Earns extra gold from victories.',
 		strengthBonus: 2,
 		defenseBonus: 2,
 		hpBonusPercent: 0,
@@ -56,10 +56,10 @@ const CHARACTERS = {
 	},
 
 	aurora_monk: {
-		id: "aurora_monk",
-		name: "Sora",
-		emoji: "🧘",
-		description: "Disciplined fighter. Extra HP and steady growth.",
+		id: 'aurora_monk',
+		name: 'Sora',
+		emoji: '🧘',
+		description: 'Disciplined fighter. Extra HP and steady growth.',
 		strengthBonus: 2,
 		defenseBonus: 3,
 		hpBonusPercent: 10,

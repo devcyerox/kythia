@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("subdomains", {
+		await queryInterface.createTable('subdomains', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -20,9 +20,9 @@ module.exports = {
 			updatedAt: { type: DataTypes.DATE, allowNull: false },
 		});
 
-		await queryInterface.addIndex("subdomains", ["userId"]);
+		await queryInterface.addIndex('subdomains', ['userId']);
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("subdomains");
+		await queryInterface.dropTable('subdomains');
 	},
 };

@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -12,7 +12,7 @@ const {
 	ButtonStyle,
 	ComponentType,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -30,8 +30,8 @@ module.exports = {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.tv_delete.no_active"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.tv_delete.no_active'),
+					{ color: 'Red' },
 				),
 				flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
 			});
@@ -46,8 +46,8 @@ module.exports = {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.tv_delete.not_found"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.tv_delete.not_found'),
+					{ color: 'Red' },
 				),
 				flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
 			});
@@ -55,17 +55,17 @@ module.exports = {
 
 		const rowBtns = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("tv_delete_confirm")
-				.setLabel(await t(interaction, "tempvoice.tv_delete.delete_btn"))
+				.setCustomId('tv_delete_confirm')
+				.setLabel(await t(interaction, 'tempvoice.tv_delete.delete_btn'))
 				.setStyle(ButtonStyle.Danger)
-				.setEmoji("🗑️"),
+				.setEmoji('🗑️'),
 			new ButtonBuilder()
-				.setCustomId("tv_delete_cancel")
-				.setLabel(await t(interaction, "tempvoice.tv_delete.cancel_btn"))
+				.setCustomId('tv_delete_cancel')
+				.setLabel(await t(interaction, 'tempvoice.tv_delete.cancel_btn'))
 				.setStyle(ButtonStyle.Secondary),
 		);
 
-		const confirmText = await t(interaction, "tempvoice.tv_delete.confirm");
+		const confirmText = await t(interaction, 'tempvoice.tv_delete.confirm');
 
 		const confirmComponents = await simpleContainer(interaction, confirmText);
 
@@ -84,7 +84,7 @@ module.exports = {
 		const msg = await interaction.fetchReply();
 		const filter = (i) =>
 			i.user.id === interaction.user.id &&
-			(i.customId === "tv_delete_confirm" || i.customId === "tv_delete_cancel");
+			(i.customId === 'tv_delete_confirm' || i.customId === 'tv_delete_cancel');
 
 		const collector = msg.createMessageComponentCollector({
 			filter,
@@ -93,18 +93,18 @@ module.exports = {
 			max: 1,
 		});
 
-		collector.on("collect", async (btnInteraction) => {
+		collector.on('collect', async (btnInteraction) => {
 			let message, color;
 
-			if (btnInteraction.customId === "tv_delete_confirm") {
+			if (btnInteraction.customId === 'tv_delete_confirm') {
 				await channel.delete(
-					await t(btnInteraction, "tempvoice.tv_delete.deleted_reason"),
+					await t(btnInteraction, 'tempvoice.tv_delete.deleted_reason'),
 				);
-				message = await t(btnInteraction, "tempvoice.tv_delete.deleted");
-				color = "Green";
+				message = await t(btnInteraction, 'tempvoice.tv_delete.deleted');
+				color = 'Green';
 			} else {
-				message = await t(btnInteraction, "tempvoice.tv_delete.cancelled");
-				color = "Red";
+				message = await t(btnInteraction, 'tempvoice.tv_delete.cancelled');
+				color = 'Red';
 			}
 
 			await btnInteraction.update({
@@ -113,13 +113,13 @@ module.exports = {
 			});
 		});
 
-		collector.on("end", async (_collected, reason) => {
-			if (reason === "time" && msg.editable) {
-				const expiredMsg = await t(interaction, "tempvoice.tv_delete.expired");
+		collector.on('end', async (_collected, reason) => {
+			if (reason === 'time' && msg.editable) {
+				const expiredMsg = await t(interaction, 'tempvoice.tv_delete.expired');
 				await msg
 					.edit({
 						components: await simpleContainer(interaction, expiredMsg, {
-							color: "Grey",
+							color: 'Grey',
 						}),
 						flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
 						embeds: [],

@@ -3,10 +3,10 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { closeTicket } = require("../helpers");
-const { MessageFlags } = require("discord.js");
+const { closeTicket } = require('../helpers');
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -14,16 +14,16 @@ module.exports = {
 		const { simpleContainer } = helpers.discord;
 
 		try {
-			const reason = interaction.fields.getTextInputValue("reason");
+			const reason = interaction.fields.getTextInputValue('reason');
 
 			await closeTicket(interaction, container, reason);
 		} catch (error) {
-			console.error("Error submitting close w/ reason modal:", error);
-			const descError = await t(interaction, "ticket.errors.close_failed");
+			console.error('Error submitting close w/ reason modal:', error);
+			const descError = await t(interaction, 'ticket.errors.close_failed');
 			if (interaction.replied || interaction.deferred) {
 				await interaction.followUp({
 					components: await simpleContainer(interaction, descError, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});

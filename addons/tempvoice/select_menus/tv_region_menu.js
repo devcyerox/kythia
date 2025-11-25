@@ -3,23 +3,23 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 module.exports = {
 	execute: async (interaction, container) => {
 		const { models, client, t, helpers } = container;
 		const { simpleContainer } = helpers.discord;
 		const { TempVoiceChannel } = models;
-		const channelId = interaction.customId.split(":")[1];
+		const channelId = interaction.customId.split(':')[1];
 		const newRegion =
-			interaction.values[0] === "auto" ? null : interaction.values[0]; // 'auto' = null
+			interaction.values[0] === 'auto' ? null : interaction.values[0]; // 'auto' = null
 
 		if (!channelId)
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.no_channel_id"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.no_channel_id'),
+					{ color: 'Red' },
 				),
 			});
 		const activeChannel = await TempVoiceChannel.getCache({
@@ -30,8 +30,8 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.not_owner"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.not_owner'),
+					{ color: 'Red' },
 				),
 			});
 
@@ -42,9 +42,9 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.channel_not_found"),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
@@ -55,18 +55,18 @@ module.exports = {
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.region.success", {
-						region: newRegion || "Automatic",
+					await t(interaction, 'tempvoice.region.success', {
+						region: newRegion || 'Automatic',
 					}),
-					{ color: "Green" },
+					{ color: 'Green' },
 				),
 			});
 		} catch (_err) {
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.fail'),
+					{ color: 'Red' },
 				),
 			});
 		}

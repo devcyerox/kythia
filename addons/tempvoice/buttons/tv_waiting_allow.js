@@ -3,14 +3,14 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 module.exports = {
 	execute: async (interaction, container) => {
 		const { models, client, t } = container;
 		const { TempVoiceChannel } = models;
 
-		const [_, mainChannelId, userIdToMove] = interaction.customId.split(":");
+		const [_, mainChannelId, userIdToMove] = interaction.customId.split(':');
 
 		// 1. Cek kepemilikan
 		const activeChannel = await TempVoiceChannel.getCache({
@@ -19,7 +19,7 @@ module.exports = {
 		});
 		if (!activeChannel)
 			return interaction.reply({
-				content: await t(interaction, "tempvoice.common.not_owner"),
+				content: await t(interaction, 'tempvoice.common.not_owner'),
 				ephemeral: true,
 			});
 
@@ -33,7 +33,7 @@ module.exports = {
 
 		if (!mainChannel || !member)
 			return interaction.reply({
-				content: await t(interaction, "tempvoice.waiting.user_or_channel_gone"),
+				content: await t(interaction, 'tempvoice.waiting.user_or_channel_gone'),
 				ephemeral: true,
 			});
 
@@ -43,7 +43,7 @@ module.exports = {
 			await interaction.message.delete(); // Hapus pesan notif
 		} catch (_e) {
 			await interaction.reply({
-				content: await t(interaction, "tempvoice.waiting.move_fail"),
+				content: await t(interaction, 'tempvoice.waiting.move_fail'),
 				ephemeral: true,
 			});
 		}

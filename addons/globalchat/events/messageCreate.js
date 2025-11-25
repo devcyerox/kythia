@@ -3,11 +3,11 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { handleGlobalChat } = require("../helpers/handleGlobalChat");
-const GlobalChat = require("../database/models/GlobalChat");
+const { handleGlobalChat } = require('../helpers/handleGlobalChat');
+const GlobalChat = require('../database/models/GlobalChat');
 
 module.exports = async (bot, message) => {
 	if (!message.guild) return;

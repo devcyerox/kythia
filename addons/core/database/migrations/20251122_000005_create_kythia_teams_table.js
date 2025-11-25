@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("kythia_teams", {
+		await queryInterface.createTable('kythia_teams', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -27,6 +27,6 @@ module.exports = {
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("kythia_teams");
+		await queryInterface.dropTable('kythia_teams');
 	},
 };

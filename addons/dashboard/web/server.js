@@ -3,26 +3,26 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-require("module-alias/register");
+require('module-alias/register');
 
-const session = require("express-session");
-const SequelizeStore = require("connect-session-sequelize")(session.Store);
-const DiscordStrategy = require("passport-discord").Strategy;
-const CachedSessionStore = require("./helpers/session");
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const DiscordStrategy = require('passport-discord').Strategy;
+const CachedSessionStore = require('./helpers/session');
 // <--- Hapus, ambil dari container
 // const logger = require('@coreHelpers/logger'); // Idealnya dihapus, tapi kita biarin dulu import bawah
-const { Server } = require("socket.io");
-const passport = require("passport");
-const express = require("express");
-const path = require("node:path");
-const http = require("node:http");
-const fs = require("node:fs");
+const { Server } = require('socket.io');
+const passport = require('passport');
+const express = require('express');
+const path = require('node:path');
+const http = require('node:http');
+const fs = require('node:fs');
 
 // Impor logger SEBELUM dipakai (sementara)
-const logger = require("@coreHelpers/logger");
+const logger = require('@coreHelpers/logger');
 
 module.exports = (bot) => {
 	// --- AMBIL DEPENDENSI DARI CONTAINER ---
@@ -32,7 +32,7 @@ module.exports = (bot) => {
 
 	if (!sequelize) {
 		logger.error(
-			"❌ Dashboard Init Error: Sequelize instance not found in bot.container!",
+			'❌ Dashboard Init Error: Sequelize instance not found in bot.container!',
 		);
 		return;
 	}
@@ -61,19 +61,19 @@ module.exports = (bot) => {
 				clientID: kythiaConfig.bot.clientId,
 				clientSecret: kythiaConfig.bot.clientSecret,
 				callbackURL: `${kythiaConfig.addons.dashboard.url}/auth/discord/callback`,
-				scope: ["identify", "guilds"],
+				scope: ['identify', 'guilds'],
 			},
 			(_accessToken, _refreshToken, profile, done) => done(null, profile),
 		),
 	);
 
-	app.set("view engine", "ejs");
-	app.set("views", path.join(__dirname, "views"));
-	app.use(express.static(path.join(__dirname, "public")));
+	app.set('view engine', 'ejs');
+	app.set('views', path.join(__dirname, 'views'));
+	app.use(express.static(path.join(__dirname, 'public')));
 
 	app.use(
-		"/files",
-		express.static(path.join(__dirname, "..", "..", "..", "storage")),
+		'/files',
+		express.static(path.join(__dirname, '..', '..', '..', 'storage')),
 	);
 
 	app.use(
@@ -94,11 +94,11 @@ module.exports = (bot) => {
 		res.locals.user = req.user || null;
 		res.locals.currentPage = req.path;
 		res.locals.guild = null;
-		res.locals.page = "";
+		res.locals.page = '';
 		next();
 	});
 
-	app.set("botClient", bot);
+	app.set('botClient', bot);
 
 	// ... (Logika walkSync & loading routes biarin aja) ...
 
@@ -107,14 +107,14 @@ module.exports = (bot) => {
 			const fullPath = path.join(dir, file);
 			if (fs.statSync(fullPath).isDirectory()) {
 				walkSync(fullPath, filelist);
-			} else if (file.endsWith(".js") && !file.startsWith(".")) {
+			} else if (file.endsWith('.js') && !file.startsWith('.')) {
 				filelist.push(fullPath);
 			}
 		});
 		return filelist;
 	};
 
-	const routesDir = path.join(__dirname, "routes");
+	const routesDir = path.join(__dirname, 'routes');
 	const routeFiles = walkSync(routesDir);
 
 	logger.info(`✅ Route loaded`);
@@ -124,23 +124,23 @@ module.exports = (bot) => {
 		const isSubdirectory = relativePath.includes(path.sep);
 
 		if (isSubdirectory) {
-			const routePrefix = `/${relativePath.replace(/\\/g, "/").replace(/\.js$/, "")}`;
+			const routePrefix = `/${relativePath.replace(/\\/g, '/').replace(/\.js$/, '')}`;
 
 			app.use(routePrefix, require(fullPath));
 			logger.info(`  └─ ${routePrefix} (from ${relativePath})`);
 		} else {
-			app.use("/", require(fullPath));
+			app.use('/', require(fullPath));
 			logger.info(`  └─ / (from ${relativePath})`);
 		}
 	});
 
-	app.use("/", require("./routes/settings"));
+	app.use('/', require('./routes/settings'));
 	logger.info(`✅ Settings routes loaded`);
 
-	io.on("connection", (socket) => {
-		logger.info("🔌 Seorang pengguna terhubung ke dasbor via WebSocket.");
-		socket.on("disconnect", () => {
-			logger.info("🔌 Pengguna terputus.");
+	io.on('connection', (socket) => {
+		logger.info('🔌 Seorang pengguna terhubung ke dasbor via WebSocket.');
+		socket.on('disconnect', () => {
+			logger.info('🔌 Pengguna terputus.');
 		});
 	});
 
@@ -148,41 +148,41 @@ module.exports = (bot) => {
 		res.locals.user = req.user || null;
 		res.locals.currentPage = req.path;
 		res.locals.guild = null;
-		res.locals.page = "";
+		res.locals.page = '';
 		res.locals.botClientId = kythiaConfig.bot.clientId;
-		res.locals.botPermissions = "8";
+		res.locals.botPermissions = '8';
 		next();
 	});
 
 	app.use((req, res, _next) => {
-		res.status(404).render("layouts/main", {
-			viewName: "error",
-			title: "Halaman Tidak Ditemukan",
-			error: { message: "Maaf, halaman yang Anda cari tidak ada." },
+		res.status(404).render('layouts/main', {
+			viewName: 'error',
+			title: 'Halaman Tidak Ditemukan',
+			error: { message: 'Maaf, halaman yang Anda cari tidak ada.' },
 			user: req.user || null,
 			currentPage: req.path,
-			page: "error",
+			page: 'error',
 			guild: null,
 		});
 	});
 
 	app.use((err, req, res, _next) => {
-		logger.error("🔴 TERJADI ERROR DI SERVER:", err);
-		res.status(500).render("layouts/main", {
-			viewName: "error",
-			title: "Terjadi Kesalahan Server",
+		logger.error('🔴 TERJADI ERROR DI SERVER:', err);
+		res.status(500).render('layouts/main', {
+			viewName: 'error',
+			title: 'Terjadi Kesalahan Server',
 			error: {
 				message:
-					"Terjadi kesalahan internal pada server. Kami sedang menanganinya.",
+					'Terjadi kesalahan internal pada server. Kami sedang menanganinya.',
 			},
 			user: req.user || null,
 			currentPage: req.path,
-			page: "error",
+			page: 'error',
 			guild: null,
 		});
 	});
 
-	server.listen(PORT, "0.0.0.0", () => {
+	server.listen(PORT, '0.0.0.0', () => {
 		logger.info(`🚀 Dashboard server listening on 0.0.0.0:${PORT}`);
 		logger.info(
 			`🌐 Public URL (check Discord Dev Portal): ${kythiaConfig.addons.dashboard.url}`,

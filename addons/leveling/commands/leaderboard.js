@@ -3,18 +3,18 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const User = require("@coreModels/User");
-const { embedFooter } = require("@coreHelpers/discord");
-const { t } = require("@coreHelpers/translator");
+const { EmbedBuilder } = require('discord.js');
+const User = require('@coreModels/User');
+const { embedFooter } = require('@coreHelpers/discord');
+const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("leaderboard")
+			.setName('leaderboard')
 			.setDescription("See the server's level leaderboard."),
 
 	async execute(interaction) {
@@ -23,8 +23,8 @@ module.exports = {
 		const topUsers = await User.getAllCache({
 			where: { guildId: guildId },
 			order: [
-				["level", "DESC"],
-				["xp", "DESC"],
+				['level', 'DESC'],
+				['xp', 'DESC'],
 			],
 			limit: 10,
 			cacheTags: [`User:leaderboard:byGuild:${guildId}`],
@@ -34,7 +34,7 @@ module.exports = {
 		if (topUsers.length === 0) {
 			leaderboard = await t(
 				interaction,
-				"leveling.leaderboard.leveling.leaderboard.empty",
+				'leveling.leaderboard.leveling.leaderboard.empty',
 			);
 		} else {
 			leaderboard = (
@@ -43,7 +43,7 @@ module.exports = {
 						async (user, index) =>
 							await t(
 								interaction,
-								"leveling.leaderboard.leveling.leaderboard.entry",
+								'leveling.leaderboard.leveling.leaderboard.entry',
 								{
 									rank: index + 1,
 									userId: user.userId,
@@ -53,13 +53,13 @@ module.exports = {
 							),
 					),
 				)
-			).join("\n");
+			).join('\n');
 		}
 
 		const embed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				`## ${await t(interaction, "leveling.leaderboard.leveling.leaderboard.title")}\n${leaderboard}`,
+				`## ${await t(interaction, 'leveling.leaderboard.leveling.leaderboard.title')}\n${leaderboard}`,
 			)
 			.setTimestamp()
 			.setFooter(await embedFooter(interaction));

@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("ticket_configs", {
+		await queryInterface.createTable('ticket_configs', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -32,9 +32,9 @@ module.exports = {
 		});
 
 		// Indexing panelMessageId biar lookup config pas klik tombol cepet
-		await queryInterface.addIndex("ticket_configs", ["panelMessageId"]);
+		await queryInterface.addIndex('ticket_configs', ['panelMessageId']);
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("ticket_configs");
+		await queryInterface.dropTable('ticket_configs');
 	},
 };

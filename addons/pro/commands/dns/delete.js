@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { MessageFlags } = require("discord.js");
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 
 	data: (subcommand) =>
 		subcommand
-			.setName("delete")
-			.setDescription("🌐 Delete a DNS record from your subdomain.")
+			.setName('delete')
+			.setDescription('🌐 Delete a DNS record from your subdomain.')
 			.addStringOption((option) =>
 				option
-					.setName("record")
-					.setDescription("Select the record you want to delete")
+					.setName('record')
+					.setDescription('Select the record you want to delete')
 					.setRequired(true)
 					.setAutocomplete(true),
 			),
@@ -27,23 +27,23 @@ module.exports = {
 		const { models, logger, kythiaConfig } = container;
 		const { Subdomain, DnsRecord } = models;
 		const focusedValue =
-			interaction.options.getFocused()?.toLowerCase?.() || "";
+			interaction.options.getFocused()?.toLowerCase?.() || '';
 
-		const baseDomain = kythiaConfig.addons.pro.cloudflare.domain || "kyth.me";
+		const baseDomain = kythiaConfig.addons.pro.cloudflare.domain || 'kyth.me';
 
 		try {
 			const userRecords = await DnsRecord.getAllCache({
 				include: {
 					model: Subdomain,
-					as: "subdomain",
+					as: 'subdomain',
 					where: { userId: interaction.user.id },
-					attributes: ["name"],
+					attributes: ['name'],
 				},
 			});
 
 			if (!userRecords || userRecords.length === 0) {
 				return interaction.respond([
-					{ name: "You have no DNS records to delete.", value: "none" },
+					{ name: 'You have no DNS records to delete.', value: 'none' },
 				]);
 			}
 
@@ -59,7 +59,7 @@ module.exports = {
 
 			if (filtered.length === 0) {
 				return interaction.respond([
-					{ name: "No matching DNS records.", value: "none" },
+					{ name: 'No matching DNS records.', value: 'none' },
 				]);
 			}
 
@@ -67,7 +67,7 @@ module.exports = {
 				filtered.map((record) => {
 					const fqdn = `${record.subdomain.name}.${baseDomain}`;
 					const recordName =
-						record.name === "@" ? fqdn : `${record.name}.${fqdn}`;
+						record.name === '@' ? fqdn : `${record.name}.${fqdn}`;
 					const truncatedValue =
 						record.value.length > 30
 							? `${record.value.substring(0, 30)}...`
@@ -82,7 +82,7 @@ module.exports = {
 		} catch (err) {
 			logger.error(`[DNS Delete Autocomplete] Error: ${err.message}`);
 			await interaction.respond([
-				{ name: "Error loading DNS records.", value: "none" },
+				{ name: 'Error loading DNS records.', value: 'none' },
 			]);
 		}
 	},
@@ -99,20 +99,20 @@ module.exports = {
 		const isVoter = await isVoterActive(interaction.user.id);
 
 		if (!isPremiumDonatur && !isVoter) {
-			const desc = await t(interaction, "pro.dns.delete.error_notPremium");
+			const desc = await t(interaction, 'pro.dns.delete.error_notPremium');
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
-		const databaseRecordId = interaction.options.getString("record");
+		const databaseRecordId = interaction.options.getString('record');
 
-		if (databaseRecordId === "none") {
-			const desc = await t(interaction, "pro.dns.delete.error_noRecords");
+		if (databaseRecordId === 'none') {
+			const desc = await t(interaction, 'pro.dns.delete.error_noRecords');
 			return interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
-					color: "Yellow",
+					color: 'Yellow',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
@@ -122,23 +122,23 @@ module.exports = {
 			id: databaseRecordId,
 			include: {
 				model: Subdomain,
-				as: "subdomain",
-				attributes: ["userId", "name"],
+				as: 'subdomain',
+				attributes: ['userId', 'name'],
 			},
 		});
 
 		if (!recordToDelete) {
-			const desc = await t(interaction, "pro.dns.delete.error_notFound");
+			const desc = await t(interaction, 'pro.dns.delete.error_notFound');
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
 		if (recordToDelete.subdomain.userId !== interaction.user.id) {
-			const desc = await t(interaction, "pro.dns.delete.error_notOwner");
+			const desc = await t(interaction, 'pro.dns.delete.error_notOwner');
 			return interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -149,12 +149,12 @@ module.exports = {
 			);
 			await recordToDelete.destroy();
 
-			const title = await t(interaction, "pro.dns.delete.success_title");
-			const desc = await t(interaction, "pro.dns.delete.orphaned_desc");
+			const title = await t(interaction, 'pro.dns.delete.success_title');
+			const desc = await t(interaction, 'pro.dns.delete.orphaned_desc');
 			return interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
 					title: title,
-					color: "Green",
+					color: 'Green',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
@@ -173,14 +173,14 @@ module.exports = {
 				);
 			}
 
-			const title = await t(interaction, "pro.dns.delete.success_title");
-			const baseDomain = kythiaConfig.addons.pro.cloudflare.domain || "kyth.me";
+			const title = await t(interaction, 'pro.dns.delete.success_title');
+			const baseDomain = kythiaConfig.addons.pro.cloudflare.domain || 'kyth.me';
 			const recordName =
-				recordToDelete.name === "@"
+				recordToDelete.name === '@'
 					? `${recordToDelete.subdomain.name}.${baseDomain}`
 					: `${recordToDelete.name}.${recordToDelete.subdomain.name}.${baseDomain}`;
 
-			const desc = await t(interaction, "pro.dns.delete.success_desc", {
+			const desc = await t(interaction, 'pro.dns.delete.success_desc', {
 				type: recordToDelete.type,
 				name: recordName,
 				value: recordToDelete.value,
@@ -188,19 +188,19 @@ module.exports = {
 			return interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
 					title: title,
-					color: "Green",
+					color: 'Green',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		} else {
-			const title = await t(interaction, "pro.dns.delete.error_failedTitle");
-			const desc = await t(interaction, "pro.dns.delete.error_failedDesc", {
+			const title = await t(interaction, 'pro.dns.delete.error_failedTitle');
+			const desc = await t(interaction, 'pro.dns.delete.error_failedDesc', {
 				error: result.error,
 			});
 			return interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
 					title: title,
-					color: "Red",
+					color: 'Red',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});

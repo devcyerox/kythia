@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("user_pets", {
+		await queryInterface.createTable('user_pets', {
 			id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
 			userId: { type: DataTypes.STRING, allowNull: false },
 			petId: { type: DataTypes.INTEGER, allowNull: false },
@@ -22,6 +22,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("user_pets");
+		await queryInterface.dropTable('user_pets');
 	},
 };

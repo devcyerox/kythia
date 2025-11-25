@@ -22,17 +22,17 @@ function loadKythiaConfig() {
 		/** -------------------------------------------------------------------
 		 * I. GENERAL SETTINGS
 		 * ------------------------------------------------------------------- */
-		env: "local",
+		env: 'local',
 		// Bot version
-		version: require("./package.json").version,
+		version: require('./package.json').version,
 		// Bot owner
 		owner: {
 			// Discord User ID of the bot owner (for owner-only commands)
 			// can be multiple, seperate with comma (eg: 1158654757183959091,1358351229771710565)
-			ids: "1158654757183959091",
+			ids: '1158654757183959091',
 			// Display name of the owner
 			// can be multiple, seperate with comma (eg: kenndeclouv,kenoura_)
-			names: "kenndeclouv",
+			names: 'kenndeclouv',
 		},
 		/**
 		 * Sentry for error logging
@@ -49,7 +49,7 @@ function loadKythiaConfig() {
 		 * ------------------------------------------------------------------- */
 		bot: {
 			// Bot name
-			name: "Kythia",
+			name: 'Kythia',
 			// Discord bot token (keep this secret!)
 			token: process.env.DISCORD_BOT_TOKEN,
 			// Discord application client ID
@@ -62,35 +62,35 @@ function loadKythiaConfig() {
 			 * you can set it to 'auto' to let discord decide the best number of shards
 			 * or you can set it to a specific number of shards
 			 */
-			totalShards: "auto",
+			totalShards: 'auto',
 
 			// guild id for main server
-			mainGuildId: "",
+			mainGuildId: '',
 			// guild id for dev server
-			devGuildId: "",
+			devGuildId: '',
 
 			// Bot embed color (hex)
-			color: "#FFFFFF",
+			color: '#FFFFFF',
 			// Command prefixes, you can change it to your own prefixes
-			prefixes: ["!", "k!"],
+			prefixes: ['!', 'k!'],
 
 			// Bot status (e.g., 'online', 'idle', 'dnd')
-			status: "online",
+			status: 'online',
 			// Activity type (e.g., 'Playing', 'Watching', 'Listening', 'Custom')
-			activityType: "Playing",
+			activityType: 'Playing',
 			// Activity text shown in Discord
-			activity: "Minecraft with kenndeclouv",
+			activity: 'Minecraft with kenndeclouv',
 
 			// Global cooldown in seconds
 			globalCommandCooldown: 5,
 
 			// Bot language
-			language: "en",
+			language: 'en',
 			// Bot locale
-			locale: "en-US",
+			locale: 'en-US',
 			// Bot timezone
 			// list of timezone: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-			timezone: "Asia/Jakarta",
+			timezone: 'Asia/Jakarta',
 		},
 
 		/** -------------------------------------------------------------------
@@ -117,12 +117,12 @@ function loadKythiaConfig() {
 			dialectOptions: process.env.DB_DIALECT_OPTIONS,
 
 			// Optional: For MySQL/MariaDB, timezone
-			timezone: "+07:00",
+			timezone: '+07:00',
 			// Optional: For Redis, Redis URL
 			redis: process.env.REDIS_URLS,
 
 			// Optional: For Redis, Redis cache version
-			redisCacheVersion: "v1.0",
+			redisCacheVersion: 'v1.0',
 		},
 
 		/** -------------------------------------------------------------------
@@ -146,7 +146,7 @@ function loadKythiaConfig() {
 				active: true,
 				// gemini ai model
 				// list of models: https://ai.google.dev/gemini-api/docs/models
-				model: "gemini-2.5-flash",
+				model: 'gemini-2.5-flash',
 				// Comma-separated list of Gemini API keys (example: your_api_key_1,your_api_key_2,your_api_key_3)
 				geminiApiKeys: process.env.GEMINI_API_KEYS,
 				// ai read message history length
@@ -155,9 +155,9 @@ function loadKythiaConfig() {
 				// https://ai.google.dev/gemini-api/docs/rate-limits
 				perMinuteAiLimit: 10,
 				// allowed / command to use by ai
-				safeCommands: ["ping", "avatar"],
+				safeCommands: ['ping', 'avatar'],
 				// additional command keywords
-				additionalCommandKeywords: ["setting", "musik", "latency", "latensi"],
+				additionalCommandKeywords: ['setting', 'musik', 'latency', 'latensi'],
 				// ai persona prompt
 				personaPrompt: `You are Kythia, a friendly and helpful Discord assistant. You are cheerful, polite, and always ready to assist users with their questions. Your creator is kenndeclouv.`,
 				// owner interaction prompt
@@ -166,7 +166,7 @@ function loadKythiaConfig() {
 				dailyGreeter: false,
 				// daily greeter schedule
 				// format: https://crontab.guru/
-				dailyGreeterSchedule: "0 7 * * *",
+				dailyGreeterSchedule: '0 7 * * *',
 				// daily greeter prompt
 				dailyGreeterPrompt: `
                     Make a warm greeting for the members.
@@ -196,7 +196,7 @@ function loadKythiaConfig() {
 			dashboard: {
 				active: true,
 				// Dashboard base URL (for local dev, usually http://localhost:3000)
-				url: process.env.DASHBOARD_URL || "http://localhost:3000",
+				url: process.env.DASHBOARD_URL || 'http://localhost:3000',
 				// Dashboard port (default: 3000)
 				port: process.env.DASHBOARD_PORT || 3000,
 				// Session secret for dashboard authentication (keep this secret!)
@@ -208,14 +208,14 @@ function loadKythiaConfig() {
 				wordle: {
 					// lists of wordle words
 					words: [
-						"apple",
-						"grape",
-						"lemon",
-						"mango",
-						"peach",
-						"berry",
-						"melon",
-						"guava",
+						'apple',
+						'grape',
+						'lemon',
+						'mango',
+						'peach',
+						'berry',
+						'melon',
+						'guava',
 					],
 				},
 			},
@@ -226,8 +226,8 @@ function loadKythiaConfig() {
 			},
 			globalchat: {
 				enabled: true,
-				apiUrl: process.env.GLOBAL_CHAT_API_URL || "http://localhost:2000",
-				healthCheckSchedule: "*/30 * * * *",
+				apiUrl: process.env.GLOBAL_CHAT_API_URL || 'http://localhost:2000',
+				healthCheckSchedule: '*/30 * * * *',
 				healthCheckDelay: 1000,
 				apiKey: process.env.GLOBAL_CHAT_API_KEY,
 			},
@@ -246,7 +246,7 @@ function loadKythiaConfig() {
 			music: {
 				active: true,
 				// default music platform
-				defaultPlatform: "ytsearch",
+				defaultPlatform: 'ytsearch',
 				// use AI for lyrics feature
 				useAI: true,
 				// playlist limit
@@ -271,13 +271,13 @@ function loadKythiaConfig() {
 				 */
 				lavalink: {
 					// Comma-separated list of Lavalink hosts (example: localhost,localhost:2333,localhost:2334)
-					hosts: process.env.LAVALINK_HOSTS || "localhost",
+					hosts: process.env.LAVALINK_HOSTS || 'localhost',
 					// Comma-separated list of Lavalink ports (example: 2333,2334,2335)
-					ports: process.env.LAVALINK_PORTS || "2333",
+					ports: process.env.LAVALINK_PORTS || '2333',
 					// Comma-separated list of Lavalink passwords (example: youshallnotpass,youshallnotpass2,youshallnotpass3)
-					passwords: process.env.LAVALINK_PASSWORDS || "youshallnotpass",
+					passwords: process.env.LAVALINK_PASSWORDS || 'youshallnotpass',
 					// Comma-separated list of 'true'/'false' for secure (SSL) connections (example: true,false,true)
-					secures: process.env.LAVALINK_SECURES || "false",
+					secures: process.env.LAVALINK_SECURES || 'false',
 				},
 				spotify: {
 					// Spotify API client ID
@@ -291,7 +291,7 @@ function loadKythiaConfig() {
 					// get yours at: https://audd.io/
 					apiKey: process.env.AUDD_API_KEY,
 				},
-				artworkUrlStyle: "banner", // thumbnail, banner
+				artworkUrlStyle: 'banner', // thumbnail, banner
 			},
 			nsfw: {
 				active: true,
@@ -323,7 +323,7 @@ function loadKythiaConfig() {
 					 * Primary domain name used for this feature
 					 * (e.g., 'kyth.me')
 					 */
-					domain: process.env.CLOUDFLARE_DOMAIN || "kyth.me",
+					domain: process.env.CLOUDFLARE_DOMAIN || 'kyth.me',
 				},
 				maxSubdomains: 5,
 			},
@@ -350,7 +350,7 @@ function loadKythiaConfig() {
 			},
 			quest: {
 				active: true,
-				apiUrls: "http://.../quests,http://...", // seperate with comma
+				apiUrls: 'http://.../quests,http://...', // seperate with comma
 			},
 		},
 
@@ -376,31 +376,31 @@ function loadKythiaConfig() {
 		 * ------------------------------------------------------------------- */
 		settings: {
 			// all / warn,error,info,debug
-			logConsoleFilter: "all",
+			logConsoleFilter: 'all',
 			// Log format
 			// none, HH:mm:ss, HH:mm:ss.SSS
 			// more see at https://date-fns.org/v4.1.0/docs/format
-			logFormat: "HH:mm:ss",
+			logFormat: 'HH:mm:ss',
 			// Support server invite link
-			supportServer: "https://dsc.gg/kythia",
+			supportServer: 'https://dsc.gg/kythia',
 			// Bot invite link (auto-generated from client ID)
 			inviteLink: `https://discord.com/oauth2/authorize?client_id=${process.env.DISCORD_BOT_CLIENT_ID}&scope=bot%20applications.commands&permissions=8`,
 			// Owner's website
-			ownerWeb: "https://kenndeclouv.me",
+			ownerWeb: 'https://kenndeclouv.me',
 			// Kythia website
-			kythiaWeb: "https://kythia.my.id",
+			kythiaWeb: 'https://kythia.my.id',
 			// Banner image URL for embeds or dashboard
 			// you can host it on your own server
 			// or you can use a CDN like Cloudflare Images/ imagekit/ etc
-			bannerImage: "https://placehold.co/800x300",
-			voteBannerImage: "https://placehold.co/800x300",
-			gcBannerImage: "https://placehold.co/800x300",
-			statsBannerImage: "https://placehold.co/800x300",
-			helpBannerImage: "https://placehold.co/800x300",
-			aboutBannerImage: "https://placehold.co/800x300",
-			tempvoiceBannerImage: "https://placehold.co/800x300",
+			bannerImage: 'https://placehold.co/800x300',
+			voteBannerImage: 'https://placehold.co/800x300',
+			gcBannerImage: 'https://placehold.co/800x300',
+			statsBannerImage: 'https://placehold.co/800x300',
+			helpBannerImage: 'https://placehold.co/800x300',
+			aboutBannerImage: 'https://placehold.co/800x300',
+			tempvoiceBannerImage: 'https://placehold.co/800x300',
 			// link to error status page
-			statusPage: "https://status.kythia.my.id",
+			statusPage: 'https://status.kythia.my.id',
 			// webhook notification when error on or off
 			webhookErrorLogs: false,
 			// webhook kythia invite or leave guild on or off
@@ -433,19 +433,19 @@ function loadKythiaConfig() {
 		 * ------------------------------------------------------------------- */
 		emojis: {
 			// music emojis
-			musicPlayPause: "<:name:id>",
-			musicPlay: "<:name:id>",
-			musicPause: "<:name:id>",
-			musicSkip: "<:name:id>",
-			musicStop: "<:name:id>",
-			musicLoop: "<:name:id>",
-			musicAutoplay: "<:name:id>",
-			musicLyrics: "<:name:id>",
-			musicQueue: "<:name:id>",
-			musicShuffle: "<:name:id>",
-			musicFilter: "<:name:id>",
-			musicFavorite: "<:name:id>",
-			musicBack: "<:name:id>",
+			musicPlayPause: '<:name:id>',
+			musicPlay: '<:name:id>',
+			musicPause: '<:name:id>',
+			musicSkip: '<:name:id>',
+			musicStop: '<:name:id>',
+			musicLoop: '<:name:id>',
+			musicAutoplay: '<:name:id>',
+			musicLyrics: '<:name:id>',
+			musicQueue: '<:name:id>',
+			musicShuffle: '<:name:id>',
+			musicFilter: '<:name:id>',
+			musicFavorite: '<:name:id>',
+			musicBack: '<:name:id>',
 		},
 	};
 }

@@ -3,16 +3,16 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 // const { DataTypes } = require("sequelize");
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class User extends KythiaModel {
-	static cacheKeys = [["userId", "guildId"]];
-	static customInvalidationTags = ["User:leaderboard"];
+	static cacheKeys = [['userId', 'guildId']];
+	static customInvalidationTags = ['User:leaderboard'];
 
 	static guarded = [];
 }

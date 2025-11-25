@@ -3,15 +3,15 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class InviteHistory extends KythiaModel {
-	static cacheKeys = [["guildId"]];
+	static cacheKeys = [['guildId']];
 	static guarded = [];
-	static table = "invite_histories";
+	static table = 'invite_histories';
 
 	static get structure() {
 		return {

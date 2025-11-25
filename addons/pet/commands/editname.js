@@ -3,23 +3,23 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const UserPet = require("../database/models/UserPet");
-const Pet = require("../database/models/Pet");
-const { t } = require("@coreHelpers/translator");
-const _User = require("@coreModels/User");
-const { embedFooter } = require("@coreHelpers/discord");
+const { EmbedBuilder } = require('discord.js');
+const UserPet = require('../database/models/UserPet');
+const Pet = require('../database/models/Pet');
+const { t } = require('@coreHelpers/translator');
+const _User = require('@coreModels/User');
+const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("editname")
-			.setDescription("Edit your pet name!")
+			.setName('editname')
+			.setDescription('Edit your pet name!')
 			.addStringOption((option) =>
-				option.setName("name").setDescription("New pet name").setRequired(true),
+				option.setName('name').setDescription('New pet name').setRequired(true),
 			),
 	async execute(interaction) {
 		await interaction.deferReply();
@@ -27,17 +27,17 @@ module.exports = {
 		const userId = interaction.user.id;
 		const userPet = await UserPet.getCache({
 			userId: userId,
-			include: [{ model: Pet, as: "pet" }],
+			include: [{ model: Pet, as: 'pet' }],
 		});
-		const newName = interaction.options.getString("name");
+		const newName = interaction.options.getString('name');
 		userPet.petName = newName;
-		userPet.changed("petName", true);
-		await userPet.saveAndUpdateCache("userId");
+		userPet.changed('petName', true);
+		await userPet.saveAndUpdateCache('userId');
 		const embed = new EmbedBuilder()
 			.setDescription(
-				`## ${await t(interaction, "pet.editname.success.title")}\n${await t(
+				`## ${await t(interaction, 'pet.editname.success.title')}\n${await t(
 					interaction,
-					"pet.editname.success.desc",
+					'pet.editname.success.desc',
 					{
 						icon: userPet.pet.icon,
 						name: userPet.pet.name,

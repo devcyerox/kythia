@@ -3,13 +3,13 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class QuestConfig extends KythiaModel {
-	static guarded = ["guildId"];
+	static guarded = ['guildId'];
 
 	static get structure() {
 		return {

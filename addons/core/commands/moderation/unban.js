@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("unban")
-			.setDescription("🔓 Unbans a user from the server.")
+			.setName('unban')
+			.setDescription('🔓 Unbans a user from the server.')
 			.addStringOption((option) =>
 				option
-					.setName("userid")
-					.setDescription("User ID to unban")
+					.setName('userid')
+					.setDescription('User ID to unban')
 					.setRequired(true),
 			),
 	permissions: PermissionFlagsBits.BanMembers,
@@ -25,15 +25,15 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
-		const userId = interaction.options.getString("userid");
+		const userId = interaction.options.getString('userid');
 
 		try {
 			await interaction.guild.members.unban(userId);
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "core.moderation.unban.embed.title")}\n` +
-						(await t(interaction, "core.moderation.unban.embed.desc", {
+					`## ${await t(interaction, 'core.moderation.unban.embed.title')}\n` +
+						(await t(interaction, 'core.moderation.unban.embed.desc', {
 							user: `<@${userId}>`,
 						})),
 				)
@@ -43,7 +43,7 @@ module.exports = {
 			return interaction.editReply({ embeds: [embed] });
 		} catch (error) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.unban.failed", {
+				content: await t(interaction, 'core.moderation.unban.failed', {
 					error: error.message,
 				}),
 			});

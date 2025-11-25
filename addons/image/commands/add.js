@@ -3,14 +3,14 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const fs = require("node:fs").promises;
-const path = require("node:path");
-const { v4: uuidv4 } = require("uuid");
+const fs = require('node:fs').promises;
+const path = require('node:path');
+const { v4: uuidv4 } = require('uuid');
 // const logger = require('@coreHelpers/logger');
-const { EmbedBuilder, MessageFlags } = require("discord.js");
+const { EmbedBuilder, MessageFlags } = require('discord.js');
 // const { t } = require('@coreHelpers/translator');
 // const { embedFooter } = require('@coreHelpers/discord');
 
@@ -18,12 +18,12 @@ module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("add")
-			.setDescription("Add a new image")
+			.setName('add')
+			.setDescription('Add a new image')
 			.addAttachmentOption((option) =>
 				option
-					.setName("image")
-					.setDescription("The image to add")
+					.setName('image')
+					.setDescription('The image to add')
 					.setRequired(true),
 			),
 	async execute(interaction) {
@@ -35,16 +35,16 @@ module.exports = {
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const attachment = interaction.options.getAttachment("image");
+		const attachment = interaction.options.getAttachment('image');
 
-		if (!attachment.contentType.startsWith("image/")) {
+		if (!attachment.contentType.startsWith('image/')) {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
-				.setDescription(await t(interaction, "image.add.invalid.type.desc"));
+				.setDescription(await t(interaction, 'image.add.invalid.type.desc'));
 			return interaction.editReply({ embeds: [embed], ephemeral: true });
 		}
 
-		const storageDir = path.join(process.cwd(), "storage", "images");
+		const storageDir = path.join(process.cwd(), 'storage', 'images');
 		await fs.mkdir(storageDir, { recursive: true });
 
 		const fileExt = path.extname(attachment.name);
@@ -65,12 +65,12 @@ module.exports = {
 		});
 
 		const baseUrl =
-			kythiaConfig.addons.dashboard.url || "https://localhost:3000";
+			kythiaConfig.addons.dashboard.url || 'https://localhost:3000';
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
 			.setDescription(
-				await t(interaction, "image.add.success.desc", {
+				await t(interaction, 'image.add.success.desc', {
 					url: `${baseUrl}/files/images/${savedImage.filename}`,
 				}),
 			)

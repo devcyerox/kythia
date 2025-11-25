@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { automodSystem } = require("../helpers/automod");
+const { automodSystem } = require('../helpers/automod');
 
 module.exports = async (bot, message) => {
 	const container = bot.client.container;
@@ -23,10 +23,10 @@ module.exports = async (bot, message) => {
 				const isFlagged = await automodSystem(message, client);
 				if (isFlagged) return true;
 			} catch (err) {
-				console.error("Error in automodSystem (messageUpdate):", err);
+				console.error('Error in automodSystem (messageUpdate):', err);
 			}
 		}
 	} catch (err) {
-		console.error("Error in messageUpdate event handler:", err);
+		console.error('Error in messageUpdate event handler:', err);
 	}
 };

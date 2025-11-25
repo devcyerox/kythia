@@ -3,15 +3,15 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { ActivityType } = require("discord.js");
+const { ActivityType } = require('discord.js');
 
 function setBotPresence(client) {
 	const { logger, kythiaConfig } = client.container;
 	if (!client.user) {
-		logger.error("❌ client.user is undefined, cannot set presence.");
+		logger.error('❌ client.user is undefined, cannot set presence.');
 		return;
 	}
 
@@ -31,11 +31,11 @@ function setBotPresence(client) {
 					url: kythiaConfig.bot.streakUrl || null,
 				},
 			],
-			status: kythiaConfig.bot.status || "online",
+			status: kythiaConfig.bot.status || 'online',
 		});
-		logger.info("✅ Bot presence has been set.");
+		logger.info('✅ Bot presence has been set.');
 	} catch (err) {
-		logger.error("❌ Failed to set bot presence:", err);
+		logger.error('❌ Failed to set bot presence:', err);
 	}
 }
 

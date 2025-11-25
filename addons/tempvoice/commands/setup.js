@@ -3,42 +3,42 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { ChannelType, MessageFlags } = require("discord.js");
-const { buildInterface } = require("../helpers/interface");
+const { ChannelType, MessageFlags } = require('discord.js');
+const { buildInterface } = require('../helpers/interface');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("setup")
+			.setName('setup')
 			.setDescription(
 				'Set up "Join to Create" and send the static control panel.',
 			)
 			.addChannelOption((option) =>
 				option
-					.setName("trigger_channel")
+					.setName('trigger_channel')
 					.setDescription(
-						"Voice channel. (If empty, one will be created automatically)",
+						'Voice channel. (If empty, one will be created automatically)',
 					)
 					.setRequired(false)
 					.addChannelTypes(ChannelType.GuildVoice),
 			)
 			.addChannelOption((option) =>
 				option
-					.setName("category")
+					.setName('category')
 					.setDescription(
-						"Category. (If empty, one will be created automatically)",
+						'Category. (If empty, one will be created automatically)',
 					)
 					.setRequired(false)
 					.addChannelTypes(ChannelType.GuildCategory),
 			)
 			.addChannelOption((option) =>
 				option
-					.setName("control_panel")
+					.setName('control_panel')
 					.setDescription(
-						"Text channel. (If empty, one will be created automatically)",
+						'Text channel. (If empty, one will be created automatically)',
 					)
 					.setRequired(false)
 					.addChannelTypes(ChannelType.GuildText),
@@ -51,22 +51,22 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		let triggerChannel = interaction.options.getChannel("trigger_channel");
-		let category = interaction.options.getChannel("category");
-		let controlPanel = interaction.options.getChannel("control_panel");
+		let triggerChannel = interaction.options.getChannel('trigger_channel');
+		let category = interaction.options.getChannel('category');
+		let controlPanel = interaction.options.getChannel('control_panel');
 
-		const autoReason = await t(interaction, "tempvoice.setup.auto_reason");
+		const autoReason = await t(interaction, 'tempvoice.setup.auto_reason');
 
 		if (!category) {
 			category = await interaction.guild.channels.create({
-				name: await t(interaction, "tempvoice.setup.auto_category_name"),
+				name: await t(interaction, 'tempvoice.setup.auto_category_name'),
 				type: ChannelType.GuildCategory,
 				reason: autoReason,
 			});
 		}
 		if (!triggerChannel) {
 			triggerChannel = await interaction.guild.channels.create({
-				name: await t(interaction, "tempvoice.setup.auto_trigger_name"),
+				name: await t(interaction, 'tempvoice.setup.auto_trigger_name'),
 				type: ChannelType.GuildVoice,
 				parent: category.id,
 				reason: autoReason,
@@ -79,7 +79,7 @@ module.exports = {
 		}
 		if (!controlPanel) {
 			controlPanel = await interaction.guild.channels.create({
-				name: await t(interaction, "tempvoice.setup.auto_control_name"),
+				name: await t(interaction, 'tempvoice.setup.auto_control_name'),
 				type: ChannelType.GuildText,
 				parent: category.id,
 				reason: autoReason,
@@ -114,9 +114,9 @@ module.exports = {
 			return interaction.editReply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.setup.panel_send_fail"),
+					await t(interaction, 'tempvoice.setup.panel_send_fail'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
@@ -136,7 +136,7 @@ module.exports = {
 
 		const setupSuccessContent = await t(
 			interaction,
-			"tempvoice.setup.success_content",
+			'tempvoice.setup.success_content',
 			{
 				triggerChannel: triggerChannel.id,
 				categoryName: category.name,
@@ -146,7 +146,7 @@ module.exports = {
 
 		return interaction.editReply({
 			components: await simpleContainer(interaction, setupSuccessContent, {
-				color: "Green",
+				color: 'Green',
 			}),
 			flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 		});

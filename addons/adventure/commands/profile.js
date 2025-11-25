@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const characters = require("../helpers/characters");
+const { EmbedBuilder } = require('discord.js');
+const characters = require('../helpers/characters');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("profile")
-			.setNameLocalizations({ id: "profil", fr: "profil", ja: "プロフィール" })
-			.setDescription("📑 Look at your Adventure stats")
+			.setName('profile')
+			.setNameLocalizations({ id: 'profil', fr: 'profil', ja: 'プロフィール' })
+			.setDescription('📑 Look at your Adventure stats')
 			.setDescriptionLocalizations({
-				id: "📑 Lihat Statistik petualanganmu",
+				id: '📑 Lihat Statistik petualanganmu',
 				fr: "📑 Tes statistiques d'aventure",
-				ja: "📑 冒険のステータスを確認しよう",
+				ja: '📑 冒険のステータスを確認しよう',
 			}),
 	async execute(interaction, container) {
 		// Dependency
@@ -31,8 +31,8 @@ module.exports = {
 
 		if (!user) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "adventure.no.character"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'adventure.no.character'))
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
 		}
@@ -40,14 +40,14 @@ module.exports = {
 		const xpForNextLevel = 100 * user.level;
 		const xpProgress = Math.min(user.xp / xpForNextLevel, 1);
 		const progressBar =
-			"█".repeat(Math.round(20 * xpProgress)) +
-			"░".repeat(20 - Math.round(20 * xpProgress));
+			'█'.repeat(Math.round(20 * xpProgress)) +
+			'░'.repeat(20 - Math.round(20 * xpProgress));
 
 		const characterFields = [];
 		if (user.characterId) {
 			const c = characters.getChar(user.characterId);
 			if (c) {
-				const charTitle = await t(interaction, "adventure.stats.character");
+				const charTitle = await t(interaction, 'adventure.stats.character');
 				characterFields.push({
 					name: charTitle,
 					value: `${c.emoji} ${c.name}`,
@@ -60,41 +60,41 @@ module.exports = {
 			.setColor(kythiaConfig.bot.color)
 			.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
 			.setDescription(
-				await t(interaction, "adventure.stats.embed.desc", {
+				await t(interaction, 'adventure.stats.embed.desc', {
 					username: interaction.user.username,
 				}),
 			)
 			.addFields(
 				{
-					name: await t(interaction, "adventure.stats.level"),
+					name: await t(interaction, 'adventure.stats.level'),
 					value: `**${user.level}**`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "adventure.stats.hp"),
+					name: await t(interaction, 'adventure.stats.hp'),
 					value: `**${user.hp}**`,
 					inline: true,
 				},
-				{ name: "\u200B", value: "\u200B", inline: true },
+				{ name: '\u200B', value: '\u200B', inline: true },
 				{
-					name: await t(interaction, "adventure.stats.gold"),
+					name: await t(interaction, 'adventure.stats.gold'),
 					value: `**${user.gold}**`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "adventure.stats.strength"),
+					name: await t(interaction, 'adventure.stats.strength'),
 					value: `**${user.strength}**`,
 					inline: true,
 				},
-				{ name: "\u200B", value: "\u200B", inline: true },
+				{ name: '\u200B', value: '\u200B', inline: true },
 				{
-					name: await t(interaction, "adventure.stats.defense"),
+					name: await t(interaction, 'adventure.stats.defense'),
 					value: `**${user.defense}**`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "adventure.stats.xp.progress.text"),
-					value: await t(interaction, "adventure.stats.xp.progress.value", {
+					name: await t(interaction, 'adventure.stats.xp.progress.text'),
+					value: await t(interaction, 'adventure.stats.xp.progress.value', {
 						xp: user.xp,
 						xpForNextLevel,
 						progressBar,

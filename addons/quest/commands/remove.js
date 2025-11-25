@@ -3,16 +3,16 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { MessageFlags } = require("discord.js");
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("remove")
-			.setDescription("Stop receiving Discord Quest notifications."),
+			.setName('remove')
+			.setDescription('Stop receiving Discord Quest notifications.'),
 
 	async execute(interaction, container) {
 		const { models, t, helpers } = container;
@@ -24,10 +24,10 @@ module.exports = {
 
 		const config = await QuestConfig.getCache({ guildId: guildId });
 		if (!config) {
-			const content = await t(interaction, "questnotifier.unset.not_setup");
+			const content = await t(interaction, 'questnotifier.unset.not_setup');
 			return interaction.editReply({
 				components: await simpleContainer(interaction, content, {
-					color: "Yellow",
+					color: 'Yellow',
 				}),
 				flags: MessageFlags.IsComponentsV2,
 			});
@@ -38,9 +38,9 @@ module.exports = {
 		// const questLogs = await QuestGuildLog.getAllCache({ where: { guildId: guildId } });
 		// await questLogs.destroy();
 
-		const content = await t(interaction, "questnotifier.unset.success");
+		const content = await t(interaction, 'questnotifier.unset.success');
 		await interaction.editReply({
-			components: await simpleContainer(interaction, content, { color: "Red" }),
+			components: await simpleContainer(interaction, content, { color: 'Red' }),
 			flags: MessageFlags.IsComponentsV2,
 		});
 	},

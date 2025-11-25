@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
 		const { t, models } = interaction.client.container;
 		const { Embed } = models;
 
-		const [_, embedId, buttonIndex] = interaction.customId.split("-");
+		const [_, embedId, buttonIndex] = interaction.customId.split('-');
 		const embedData = await Embed.getCache({ messageId: embedId });
 		if (!embedData) return;
 
@@ -23,7 +23,7 @@ module.exports = {
 
 		if (!role) {
 			return interaction.reply({
-				content: await t(interaction, "core.buttons.reactrole.found"),
+				content: await t(interaction, 'core.buttons.reactrole.found'),
 				ephemeral: true,
 			});
 		}
@@ -31,7 +31,7 @@ module.exports = {
 		if (member.roles.cache.has(role.id)) {
 			await member.roles.remove(role);
 			await interaction.reply({
-				content: await t(interaction, "core.buttons.reactrole.removed", {
+				content: await t(interaction, 'core.buttons.reactrole.removed', {
 					roleName: role.name,
 				}),
 				ephemeral: true,
@@ -39,7 +39,7 @@ module.exports = {
 		} else {
 			await member.roles.add(role);
 			await interaction.reply({
-				content: await t(interaction, "core.buttons.reactrole.added", {
+				content: await t(interaction, 'core.buttons.reactrole.added', {
 					roleName: role.name,
 				}),
 				ephemeral: true,

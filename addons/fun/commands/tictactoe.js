@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -18,7 +18,7 @@ const {
 	SeparatorSpacingSize,
 	MessageFlags,
 	EmbedBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
 function createGame(interaction, opponent, mode) {
 	const playerX = interaction.user;
@@ -28,10 +28,10 @@ function createGame(interaction, opponent, mode) {
 		playerX,
 		playerO,
 		mode,
-		botDifficulty: mode.startsWith("bot_") ? mode : null,
+		botDifficulty: mode.startsWith('bot_') ? mode : null,
 		board: Array(9).fill(null),
 		currentPlayer: playerX,
-		symbols: { [playerX.id]: "X", [playerO.id]: "O" },
+		symbols: { [playerX.id]: 'X', [playerO.id]: 'O' },
 		isGameOver: false,
 		statusMessage: null,
 	};
@@ -55,21 +55,21 @@ async function buildGameUI(game) {
 
 	const turnText = isGameOver
 		? `**${statusMessage}**`
-		: await t(interaction, "fun.tictactoe.turn", {
+		: await t(interaction, 'fun.tictactoe.turn', {
 				mention: currentPlayer.toString(),
-				symbol: game.symbols[currentPlayer.id] === "X" ? "❌" : "⭕",
+				symbol: game.symbols[currentPlayer.id] === 'X' ? '❌' : '⭕',
 			});
 
 	const gameContainer = new ContainerBuilder()
 		.setAccentColor(
-			convertColor(isGameOver ? "#2ecc71" : "#3498db", {
-				from: "hex",
-				to: "decimal",
+			convertColor(isGameOver ? '#2ecc71' : '#3498db', {
+				from: 'hex',
+				to: 'decimal',
 			}),
 		)
 		.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				`${await t(interaction, "fun.tictactoe.title")}\n\`❌\` ${playerX.username}\n\`⭕\` ${playerO.username}`,
+				`${await t(interaction, 'fun.tictactoe.title')}\n\`❌\` ${playerX.username}\n\`⭕\` ${playerO.username}`,
 			),
 		);
 
@@ -80,14 +80,14 @@ async function buildGameUI(game) {
 			const cell = board[index];
 
 			let style = ButtonStyle.Secondary;
-			let symbol = "\u200B";
-			if (cell === "X") {
+			let symbol = '\u200B';
+			if (cell === 'X') {
 				style = ButtonStyle.Danger;
-				symbol = "❌";
+				symbol = '❌';
 			}
-			if (cell === "O") {
+			if (cell === 'O') {
 				style = ButtonStyle.Primary;
-				symbol = "⭕";
+				symbol = '⭕';
 			}
 
 			row.addComponents(
@@ -111,7 +111,7 @@ async function buildGameUI(game) {
 	);
 	gameContainer.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			await t(interaction, "common.container.footer", {
+			await t(interaction, 'common.container.footer', {
 				username: client.user.username,
 			}),
 		),
@@ -143,18 +143,18 @@ function checkDraw(board) {
 function botMove(game) {
 	let bestMove;
 	const board = game.board;
-	if (game.botDifficulty === "bot_easy") {
+	if (game.botDifficulty === 'bot_easy') {
 		bestMove = getRandomMove(board);
-	} else if (game.botDifficulty === "bot_medium") {
+	} else if (game.botDifficulty === 'bot_medium') {
 		bestMove =
-			findWinningMove(board, "O") ??
-			findWinningMove(board, "X") ??
+			findWinningMove(board, 'O') ??
+			findWinningMove(board, 'X') ??
 			getRandomMove(board);
-	} else if (game.botDifficulty === "bot_hard") {
-		bestMove = minimax(game, board.slice(), "O").index;
+	} else if (game.botDifficulty === 'bot_hard') {
+		bestMove = minimax(game, board.slice(), 'O').index;
 	}
-	if (typeof bestMove === "number") {
-		board[bestMove] = "O";
+	if (typeof bestMove === 'number') {
+		board[bestMove] = 'O';
 	}
 }
 
@@ -184,8 +184,8 @@ function minimax(game, newBoard, playerSymbol) {
 		.map((cell, i) => (cell === null ? i : null))
 		.filter((i) => i !== null);
 
-	if (checkWinBoard(newBoard, "X")) return { score: -10 };
-	if (checkWinBoard(newBoard, "O")) return { score: 10 };
+	if (checkWinBoard(newBoard, 'X')) return { score: -10 };
+	if (checkWinBoard(newBoard, 'O')) return { score: 10 };
 	if (emptyCells.length === 0) return { score: 0 };
 
 	const moves = [];
@@ -193,10 +193,10 @@ function minimax(game, newBoard, playerSymbol) {
 		const move = { index };
 		newBoard[index] = playerSymbol;
 
-		if (playerSymbol === "O") {
-			move.score = minimax(game, newBoard, "X").score;
+		if (playerSymbol === 'O') {
+			move.score = minimax(game, newBoard, 'X').score;
 		} else {
-			move.score = minimax(game, newBoard, "O").score;
+			move.score = minimax(game, newBoard, 'O').score;
 		}
 
 		newBoard[index] = null;
@@ -204,7 +204,7 @@ function minimax(game, newBoard, playerSymbol) {
 	}
 
 	let bestMove;
-	if (playerSymbol === "O") {
+	if (playerSymbol === 'O') {
 		let bestScore = -Infinity;
 		for (const move of moves) {
 			if (move.score > bestScore) {
@@ -246,46 +246,46 @@ function checkWinBoard(board, playerSymbol) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("tictactoe")
-		.setDescription("⭕ Play Tic Tac Toe with a friend or bot.")
+		.setName('tictactoe')
+		.setDescription('⭕ Play Tic Tac Toe with a friend or bot.')
 		.addUserOption((option) =>
 			option
-				.setName("opponent")
+				.setName('opponent')
 				.setDescription(
-					"Select an opponent to play with. you can play with me too!",
+					'Select an opponent to play with. you can play with me too!',
 				)
 				.setRequired(true),
 		)
 		.addStringOption((option) =>
 			option
-				.setName("difficulty")
+				.setName('difficulty')
 				.setDescription(
-					"Select the difficulty level of the bot (if playing against a bot).",
+					'Select the difficulty level of the bot (if playing against a bot).',
 				)
 				.setRequired(false)
 				.addChoices(
-					{ name: "Easy", value: "bot_easy" },
-					{ name: "Medium", value: "bot_medium" },
-					{ name: "Hard (Unbeatable)", value: "bot_hard" },
+					{ name: 'Easy', value: 'bot_easy' },
+					{ name: 'Medium', value: 'bot_medium' },
+					{ name: 'Hard (Unbeatable)', value: 'bot_hard' },
 				),
 		),
 
 	async execute(interaction, container) {
 		const { t } = container;
 
-		const opponent = interaction.options.getUser("opponent");
-		let mode = "player";
+		const opponent = interaction.options.getUser('opponent');
+		let mode = 'player';
 
 		if (opponent.bot) {
-			mode = interaction.options.getString("difficulty") || "bot_hard";
+			mode = interaction.options.getString('difficulty') || 'bot_hard';
 		} else if (opponent.id === interaction.user.id) {
 			// Tidak bisa lawan diri sendiri
 			return interaction.reply({
 				embeds: [
 					new EmbedBuilder()
-						.setColor("Red")
+						.setColor('Red')
 						.setDescription(
-							`${await t(interaction, "fun.tictactoe.error.title")}\n${await t(interaction, "fun.tictactoe.error.self")}`,
+							`${await t(interaction, 'fun.tictactoe.error.title')}\n${await t(interaction, 'fun.tictactoe.error.self')}`,
 						),
 				],
 				ephemeral: true,
@@ -313,8 +313,8 @@ module.exports = {
 				time: 120_000,
 			});
 
-			collector.on("collect", async (i) => {
-				if (i.customId === "tictactoe_rematch") {
+			collector.on('collect', async (i) => {
+				if (i.customId === 'tictactoe_rematch') {
 					if (
 						i.user.id !== gameInstance.playerX.id &&
 						i.user.id !== gameInstance.playerO.id
@@ -322,16 +322,16 @@ module.exports = {
 						return i.reply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor("Yellow")
+									.setColor('Yellow')
 									.setDescription(
-										`${await t(i, "fun.tictactoe.error.title")}\n${await t(i, "fun.tictactoe.error.rematch")}`,
+										`${await t(i, 'fun.tictactoe.error.title')}\n${await t(i, 'fun.tictactoe.error.rematch')}`,
 									),
 							],
 							ephemeral: true,
 						});
 					}
 					await i.deferUpdate();
-					collector.stop("rematch");
+					collector.stop('rematch');
 					const newGame = createGame(i, opponent, mode);
 					await runGame(newGame, i);
 					return;
@@ -341,9 +341,9 @@ module.exports = {
 					return i.reply({
 						embeds: [
 							new EmbedBuilder()
-								.setColor("Yellow")
+								.setColor('Yellow')
 								.setDescription(
-									`${await t(i, "fun.tictactoe.error.title")}\n${await t(i, "fun.tictactoe.error.turn")}`,
+									`${await t(i, 'fun.tictactoe.error.title')}\n${await t(i, 'fun.tictactoe.error.turn')}`,
 								),
 						],
 						ephemeral: true,
@@ -352,16 +352,16 @@ module.exports = {
 
 				await i.deferUpdate();
 
-				const index = parseInt(i.customId.split("_")[1], 10);
+				const index = parseInt(i.customId.split('_')[1], 10);
 				const playerSymbol = gameInstance.symbols[i.user.id];
 				gameInstance.board[index] = playerSymbol;
 
 				if (checkWin(gameInstance.board, playerSymbol)) {
 					gameInstance.isGameOver = true;
-					gameInstance.statusMessage = await t(i, "fun.tictactoe.win", {
+					gameInstance.statusMessage = await t(i, 'fun.tictactoe.win', {
 						user: i.user.toString(),
 					});
-					collector.stop("win");
+					collector.stop('win');
 					const updatedComponents = await buildGameUI(gameInstance);
 					await interaction.editReply({
 						components: updatedComponents,
@@ -370,8 +370,8 @@ module.exports = {
 				}
 				if (checkDraw(gameInstance.board)) {
 					gameInstance.isGameOver = true;
-					gameInstance.statusMessage = await t(i, "fun.tictactoe.draw");
-					collector.stop("draw");
+					gameInstance.statusMessage = await t(i, 'fun.tictactoe.draw');
+					collector.stop('draw');
 					const updatedComponents = await buildGameUI(gameInstance);
 					await interaction.editReply({
 						components: updatedComponents,
@@ -386,10 +386,10 @@ module.exports = {
 
 				if (gameInstance.botDifficulty) {
 					botMove(gameInstance);
-					if (checkWin(gameInstance.board, "O")) {
+					if (checkWin(gameInstance.board, 'O')) {
 						gameInstance.isGameOver = true;
-						gameInstance.statusMessage = await t(i, "fun.tictactoe.lose");
-						collector.stop("lose");
+						gameInstance.statusMessage = await t(i, 'fun.tictactoe.lose');
+						collector.stop('lose');
 						const updatedComponents = await buildGameUI(gameInstance);
 						await interaction.editReply({
 							components: updatedComponents,
@@ -398,8 +398,8 @@ module.exports = {
 					}
 					if (checkDraw(gameInstance.board)) {
 						gameInstance.isGameOver = true;
-						gameInstance.statusMessage = await t(i, "fun.tictactoe.draw");
-						collector.stop("draw");
+						gameInstance.statusMessage = await t(i, 'fun.tictactoe.draw');
+						collector.stop('draw');
 						const updatedComponents = await buildGameUI(gameInstance);
 						await interaction.editReply({
 							components: updatedComponents,
@@ -416,15 +416,15 @@ module.exports = {
 				});
 			});
 
-			collector.on("end", async (_collected, reason) => {
-				if (reason === "rematch") return;
+			collector.on('end', async (_collected, reason) => {
+				if (reason === 'rematch') return;
 
 				if (!gameInstance.isGameOver) {
 					gameInstance.isGameOver = true;
-					if (reason === "time") {
+					if (reason === 'time') {
 						gameInstance.statusMessage = await t(
 							interaction,
-							"fun.tictactoe.timeout",
+							'fun.tictactoe.timeout',
 						);
 					}
 				}

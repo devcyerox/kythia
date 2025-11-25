@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 // addons/core/helpers/events.js
-const logger = require("@coreHelpers/logger");
+const logger = require('@coreHelpers/logger');
 /**
  * Membuat objek interaction palsu dari sebuah Message.
  * VERSI PALING SEMPURNA: State management reply/defer/followUp/edit/delete, argumen, dan error handling sangat teliti.
@@ -29,15 +29,15 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 	// --- LOGIKA PARSING BARU (VERSI 2.4 - THE FINAL FINAL) ---
 	const commandDef = message.client?.commands?.get(commandName);
 	const potentialArgs =
-		typeof rawArgsString === "string" ? rawArgsString.split(/ +/) : [];
+		typeof rawArgsString === 'string' ? rawArgsString.split(/ +/) : [];
 	const plainTextArgs = [];
 
 	// 1. Pisahkan argumen key:value dari teks biasa
 	for (const arg of potentialArgs) {
-		if (arg.includes(":")) {
-			const [key, ...valueParts] = arg.split(":");
-			argsObject[key.toLowerCase()] = valueParts.join(":").trim();
-		} else if (arg.trim() !== "") {
+		if (arg.includes(':')) {
+			const [key, ...valueParts] = arg.split(':');
+			argsObject[key.toLowerCase()] = valueParts.join(':').trim();
+		} else if (arg.trim() !== '') {
 			plainTextArgs.push(arg);
 		}
 	}
@@ -72,12 +72,12 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 	}
 
 	// 3. Gabungkan sisa teks biasa untuk argumen default
-	const remainingPlainText = plainTextArgs.join(" ");
+	const remainingPlainText = plainTextArgs.join(' ');
 
 	// 4. Cek & Terapkan Argumen Default
 	const finalCommandKeyForDefaultArg =
-		`${commandName} ${subcommandGroup || ""} ${subcommand || ""}`
-			.replace(/ +/g, " ")
+		`${commandName} ${subcommandGroup || ''} ${subcommand || ''}`
+			.replace(/ +/g, ' ')
 			.trim();
 	const commandForDefaultArg =
 		message.client?.commands?.get(finalCommandKeyForDefaultArg) || commandDef;
@@ -151,9 +151,9 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 	// --- AKHIR LOGIKA PARSING BARU ---
 	// Helper untuk validasi dan normalisasi opsi reply
 	function normalizeReplyOptions(options) {
-		if (typeof options === "string") return { content: options };
-		if (typeof options === "object" && options !== null) return { ...options };
-		return { content: "" };
+		if (typeof options === 'string') return { content: options };
+		if (typeof options === 'object' && options !== null) return { ...options };
+		return { content: '' };
 	}
 
 	// Helper untuk cek apakah message sudah dihapus
@@ -169,13 +169,13 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 	// Helper untuk mengirim reply/followUp dengan fallback
 	async function safeSend(channel, options) {
 		try {
-			if (!channel || typeof channel.send !== "function")
-				throw new Error("Invalid channel");
+			if (!channel || typeof channel.send !== 'function')
+				throw new Error('Invalid channel');
 			return await channel.send(options);
 		} catch (_e) {
 			// Fallback: send to DM user if channel is not valid
 			try {
-				if (message.author && typeof message.author.send === "function") {
+				if (message.author && typeof message.author.send === 'function') {
 					return await message.author.send(options);
 				}
 			} catch (_e2) {
@@ -189,7 +189,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 	function resolveUser(val) {
 		try {
 			if (!val) return message.mentions?.users?.first?.() || null;
-			const userId = String(val).replace(/[<@!>]/g, "");
+			const userId = String(val).replace(/[<@!>]/g, '');
 			return (
 				message.client.users.cache.get(userId) ||
 				message.mentions?.users?.get?.(userId) ||
@@ -210,7 +210,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 	function resolveChannel(val) {
 		try {
 			if (!val) return message.mentions?.channels?.first?.() || null;
-			const channelId = String(val).replace(/[<#>]/g, "");
+			const channelId = String(val).replace(/[<#>]/g, '');
 			return (
 				message.client.channels.cache.get(channelId) ||
 				message.mentions?.channels?.get?.(channelId) ||
@@ -224,7 +224,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 		try {
 			if (!val || !message.guild)
 				return message.mentions?.roles?.first?.() || null;
-			const roleId = String(val).replace(/[<@&>]/g, "");
+			const roleId = String(val).replace(/[<@&>]/g, '');
 			return (
 				message.guild.roles.cache.get(roleId) ||
 				message.mentions?.roles?.get?.(roleId) ||
@@ -247,7 +247,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 		id: message.id,
 		applicationId: message.client?.application?.id || null,
 		type: 2, // Simulasi type interaction (application command)
-		locale: message.locale || "id",
+		locale: message.locale || 'id',
 		// --- State getter agar selalu up-to-date
 		get replied() {
 			return replied;
@@ -272,10 +272,10 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 		// --- INI BAGIAN PALING SEMPURNA UNTUK STATE MANAGEMENT ---
 		deferReply: async (options = {}) => {
 			if (deleted)
-				throw new Error("Interaction already deleted, cannot deferReply.");
+				throw new Error('Interaction already deleted, cannot deferReply.');
 			if (replied) {
 				throw new Error(
-					"Interaction already replied, cannot deferReply again.",
+					'Interaction already replied, cannot deferReply again.',
 				);
 			}
 			if (deferred) {
@@ -286,7 +286,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 			fakeInteraction.deferred = true;
 			try {
 				replyMessage = await safeSend(message.channel, {
-					content: "⏳ ...",
+					content: '⏳ ...',
 					...options,
 				});
 			} catch (_e) {
@@ -297,7 +297,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 
 		reply: async (options) => {
 			if (deleted)
-				throw new Error("Interaction already deleted, cannot reply.");
+				throw new Error('Interaction already deleted, cannot reply.');
 			options = normalizeReplyOptions(options);
 			if (deferred) {
 				// Jika sudah didefer, editReply
@@ -319,7 +319,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 
 		editReply: async (options) => {
 			if (deleted)
-				throw new Error("Interaction already deleted, cannot editReply.");
+				throw new Error('Interaction already deleted, cannot editReply.');
 			options = normalizeReplyOptions(options);
 			if (!replyMessage) {
 				// No reply/defer, reply new
@@ -327,9 +327,9 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 			}
 			if (
 				replyMessage.content &&
-				replyMessage.content.trim() === "⏳ ..." &&
+				replyMessage.content.trim() === '⏳ ...' &&
 				(!options ||
-					(typeof options === "object" && options.content !== "⏳ ..."))
+					(typeof options === 'object' && options.content !== '⏳ ...'))
 			) {
 				await safeDelete(replyMessage);
 				try {
@@ -345,7 +345,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 			}
 			// If not placeholder, edit like usual
 			try {
-				if (typeof replyMessage.edit === "function") {
+				if (typeof replyMessage.edit === 'function') {
 					const editedMessage = await replyMessage.edit(options);
 					replied = true;
 					deferred = false;
@@ -378,9 +378,9 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 
 		followUp: async (options) => {
 			if (deleted)
-				throw new Error("Interaction already deleted, cannot followUp.");
+				throw new Error('Interaction already deleted, cannot followUp.');
 			if (!replied && !deferred)
-				throw new Error("Cannot followUp before reply/defer.");
+				throw new Error('Cannot followUp before reply/defer.');
 			options = normalizeReplyOptions(options);
 			let msg = null;
 			try {
@@ -423,7 +423,7 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 					if (argsObject[key] !== undefined) return argsObject[key];
 					// Try to find with snake_case/kebabCase variation
 					for (const k of Object.keys(argsObject)) {
-						if (k.replace(/[-_ ]/g, "") === key.replace(/[-_ ]/g, ""))
+						if (k.replace(/[-_ ]/g, '') === key.replace(/[-_ ]/g, ''))
 							return argsObject[k];
 					}
 					return null;
@@ -437,8 +437,8 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 				try {
 					const val = fakeInteraction.options._getArg(name);
 					if (val === null || val === undefined) return null;
-					if (typeof val === "string") return val;
-					if (typeof val === "number" || typeof val === "boolean")
+					if (typeof val === 'string') return val;
+					if (typeof val === 'number' || typeof val === 'boolean')
 						return String(val);
 					return null;
 				} catch (_e) {
@@ -459,12 +459,12 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 				try {
 					const val = fakeInteraction.options._getArg(name);
 					if (val === null || val === undefined) return null;
-					if (typeof val === "boolean") return val;
-					if (typeof val === "number") return val !== 0;
-					if (typeof val === "string") {
+					if (typeof val === 'boolean') return val;
+					if (typeof val === 'number') return val !== 0;
+					if (typeof val === 'string') {
 						const s = val.trim().toLowerCase();
-						if (["true", "yes", "1", "y", "on"].includes(s)) return true;
-						if (["false", "no", "0", "n", "off"].includes(s)) return false;
+						if (['true', 'yes', '1', 'y', 'on'].includes(s)) return true;
+						if (['false', 'no', '0', 'n', 'off'].includes(s)) return false;
 					}
 					return null;
 				} catch (_e) {
@@ -567,15 +567,15 @@ function kythiaInteraction(message, commandName, rawArgsString) {
 
 	// Sempurnakan: pastikan semua properti penting tidak undefined/null
 	for (const key of [
-		"user",
-		"member",
-		"guild",
-		"channel",
-		"client",
-		"createdTimestamp",
-		"id",
+		'user',
+		'member',
+		'guild',
+		'channel',
+		'client',
+		'createdTimestamp',
+		'id',
 	]) {
-		if (typeof fakeInteraction[key] === "undefined") {
+		if (typeof fakeInteraction[key] === 'undefined') {
 			fakeInteraction[key] = null;
 		}
 	}
@@ -590,31 +590,31 @@ function kythiaInteraction(message, commandName, rawArgsString) {
  * @param {string} type - The specific scenario type (e.g., 'boost', 'unboost', 'default').
  * @returns {Promise<Array<any>>} An array of arguments for the event.
  */
-async function createMockEventArgs(eventName, interaction, type = "default") {
+async function createMockEventArgs(eventName, interaction, type = 'default') {
 	const { member, guild, channel, user, client } = interaction;
 
 	switch (eventName) {
-		case "messageCreate":
-		case "messageDelete":
+		case 'messageCreate':
+		case 'messageDelete':
 			return [
-				await channel.send({ content: "This is a dummy message for testing." }),
+				await channel.send({ content: 'This is a dummy message for testing.' }),
 			];
 
-		case "messageUpdate": {
+		case 'messageUpdate': {
 			const oldMessage = {
-				...(await channel.send({ content: "Old message content." })),
-				content: "Old message content.",
+				...(await channel.send({ content: 'Old message content.' })),
+				content: 'Old message content.',
 			};
 			const newMessage = await channel.messages.fetch(oldMessage.id);
-			newMessage.content = "This is the new, updated message content.";
+			newMessage.content = 'This is the new, updated message content.';
 			return [oldMessage, newMessage];
 		}
 
-		case "guildMemberAdd":
-		case "guildMemberRemove":
+		case 'guildMemberAdd':
+		case 'guildMemberRemove':
 			return [member];
 
-		case "guildMemberUpdate": {
+		case 'guildMemberUpdate': {
 			// Clone member untuk oldMember
 			const oldMember = Object.assign(
 				Object.create(Object.getPrototypeOf(member)),
@@ -623,11 +623,11 @@ async function createMockEventArgs(eventName, interaction, type = "default") {
 			const newMember = member;
 
 			switch (type) {
-				case "boost":
-					logger.info("[TEST EVENT] Simulating a BOOST event...");
+				case 'boost':
+					logger.info('[TEST EVENT] Simulating a BOOST event...');
 					// Skenario: Dulu belum nge-boost, sekarang nge-boost
 					oldMember.premiumSinceTimestamp = null;
-					Object.defineProperty(oldMember, "premiumSince", {
+					Object.defineProperty(oldMember, 'premiumSince', {
 						get: () => null,
 						configurable: true,
 					});
@@ -635,80 +635,80 @@ async function createMockEventArgs(eventName, interaction, type = "default") {
 					// Pastikan newMember punya premiumSinceTimestamp
 					if (!newMember.premiumSinceTimestamp) {
 						newMember.premiumSinceTimestamp = Date.now();
-						Object.defineProperty(newMember, "premiumSince", {
+						Object.defineProperty(newMember, 'premiumSince', {
 							get: () => new Date(newMember.premiumSinceTimestamp),
 							configurable: true,
 						});
 					}
 					return [oldMember, newMember];
 
-				case "unboost":
-					logger.info("[TEST EVENT] Simulating an UNBOOST event...");
+				case 'unboost':
+					logger.info('[TEST EVENT] Simulating an UNBOOST event...');
 					// Skenario: Dulu nge-boost, sekarang udah enggak
 					oldMember.premiumSinceTimestamp =
 						Date.now() - 1000 * 60 * 60 * 24 * 7; // 7 hari yang lalu
-					Object.defineProperty(oldMember, "premiumSince", {
+					Object.defineProperty(oldMember, 'premiumSince', {
 						get: () => new Date(oldMember.premiumSinceTimestamp),
 						configurable: true,
 					});
 
 					// Set newMember jadi tidak boost
 					newMember.premiumSinceTimestamp = null;
-					Object.defineProperty(newMember, "premiumSince", {
+					Object.defineProperty(newMember, 'premiumSince', {
 						get: () => null,
 						configurable: true,
 					});
 					return [oldMember, newMember];
 				default:
 					logger.info(
-						"[TEST EVENT] Simulating a default member update (nickname)...",
+						'[TEST EVENT] Simulating a default member update (nickname)...',
 					);
 					// Skenario default: perubahan nickname
-					oldMember.nickname = oldMember.nickname ? null : "OldNickname_123";
+					oldMember.nickname = oldMember.nickname ? null : 'OldNickname_123';
 					return [oldMember, newMember];
 			}
 		}
 
-		case "guildCreate":
-		case "guildDelete":
+		case 'guildCreate':
+		case 'guildDelete':
 			return [guild];
 
-		case "guildUpdate": {
+		case 'guildUpdate': {
 			const oldGuild = Object.assign(
 				Object.create(Object.getPrototypeOf(guild)),
 				guild,
 			);
-			oldGuild.name = "Old Server Name";
+			oldGuild.name = 'Old Server Name';
 			return [oldGuild, guild];
 		}
 
-		case "guildBanAdd":
-		case "guildBanRemove":
+		case 'guildBanAdd':
+		case 'guildBanRemove':
 			// Buat objek GuildBan palsu yang minimal
-			return [{ guild, user, reason: "Test ban from /testevent" }];
+			return [{ guild, user, reason: 'Test ban from /testevent' }];
 
-		case "channelCreate":
-		case "channelDelete":
+		case 'channelCreate':
+		case 'channelDelete':
 			return [channel];
 
-		case "roleCreate":
-		case "roleDelete":
-			return [guild.roles.cache.first() || { name: "fake-role", id: "12345" }];
+		case 'roleCreate':
+		case 'roleDelete':
+			return [guild.roles.cache.first() || { name: 'fake-role', id: '12345' }];
 
-		case "voiceStateUpdate": {
+		case 'voiceStateUpdate': {
 			// Simulasikan user pindah channel (dari null ke channel saat ini)
 			const oldState = { ...member.voice, channel: null, channelId: null };
 			const newState = member.voice;
 			return [oldState, newState];
 		}
 
-		case "ready":
+		case 'ready':
 			logger.warn(
 				`[TEST COMMAND] Triggering 'ready' event can have unintended side effects!`,
 			);
 			return [client];
 
-		case "interactionCreate":
+		case 'interactionCreate':
 			logger.warn(
 				`[TEST COMMAND] Triggering 'interactionCreate' can cause infinite loops!`,
 			);

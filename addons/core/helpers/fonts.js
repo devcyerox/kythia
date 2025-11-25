@@ -3,19 +3,19 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { registerFont } = require("canvas");
-const path = require("node:path");
-const fs = require("node:fs");
+const { registerFont } = require('canvas');
+const path = require('node:path');
+const fs = require('node:fs');
 
 /**
  * Loads and registers all fonts located under the core addon fonts directory.
  * Safely no-ops when the directory or font files are not present.
  */
 function loadFonts(logger) {
-	const fontsDir = path.join(__dirname, "..", "assets", "fonts");
+	const fontsDir = path.join(__dirname, '..', 'assets', 'fonts');
 	if (!fs.existsSync(fontsDir)) {
 		logger.warn(`🔠 Font directory not found: ${fontsDir}`);
 		return;
@@ -23,10 +23,10 @@ function loadFonts(logger) {
 
 	const fontFiles = fs
 		.readdirSync(fontsDir)
-		.filter((file) => file.endsWith(".ttf") || file.endsWith(".otf"));
+		.filter((file) => file.endsWith('.ttf') || file.endsWith('.otf'));
 
 	if (fontFiles.length === 0) {
-		logger.warn("🔠 No font files found in the directory.");
+		logger.warn('🔠 No font files found in the directory.');
 		return;
 	}
 

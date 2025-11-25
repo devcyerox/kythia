@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("unpin")
-			.setDescription("📌 Unpins a message in the channel.")
+			.setName('unpin')
+			.setDescription('📌 Unpins a message in the channel.')
 			.addStringOption((option) =>
 				option
-					.setName("message_id")
-					.setDescription("ID of the message to unpin")
+					.setName('message_id')
+					.setDescription('ID of the message to unpin')
 					.setRequired(true),
 			),
 	permissions: PermissionFlagsBits.ManageMessages,
@@ -25,7 +25,7 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
-		const messageId = interaction.options.getString("message_id");
+		const messageId = interaction.options.getString('message_id');
 
 		let message;
 		try {
@@ -36,7 +36,7 @@ module.exports = {
 
 		if (!message) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.unpin.not.found"),
+				content: await t(interaction, 'core.moderation.unpin.not.found'),
 			});
 		}
 
@@ -45,8 +45,8 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "core.moderation.unpin.embed.title")}\n` +
-						(await t(interaction, "core.moderation.unpin.embed.desc", {
+					`## ${await t(interaction, 'core.moderation.unpin.embed.title')}\n` +
+						(await t(interaction, 'core.moderation.unpin.embed.desc', {
 							messageId,
 						})),
 				)
@@ -56,7 +56,7 @@ module.exports = {
 			return interaction.editReply({ embeds: [embed] });
 		} catch (_e) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.unpin.failed"),
+				content: await t(interaction, 'core.moderation.unpin.failed'),
 			});
 		}
 	},

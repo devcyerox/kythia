@@ -3,17 +3,17 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { isAuthorized, checkServerAccess, renderDash } = require("../helpers");
-const ServerSetting = require("@coreModels/ServerSetting");
-const { PermissionsBitField } = require("discord.js");
-const ModLog = require("@coreModels/ModLog");
-const router = require("express").Router();
-const client = require("kythia-core").KythiaClient;
+const { isAuthorized, checkServerAccess, renderDash } = require('../helpers');
+const ServerSetting = require('@coreModels/ServerSetting');
+const { PermissionsBitField } = require('discord.js');
+const ModLog = require('@coreModels/ModLog');
+const router = require('express').Router();
+const client = require('kythia-core').KythiaClient;
 
-router.use("/dashboard", isAuthorized, (req, res, next) => {
+router.use('/dashboard', isAuthorized, (req, res, next) => {
 	const botClient = req.app.locals.bot;
 	const botGuilds = new Set(botClient.guilds.cache.map((g) => g.id));
 
@@ -31,10 +31,10 @@ router.use("/dashboard", isAuthorized, (req, res, next) => {
 	next();
 });
 
-router.get("/dashboard/servers", (req, res) => {
+router.get('/dashboard/servers', (req, res) => {
 	const botClient = req.app.locals.bot;
-	renderDash(res, "servers", {
-		title: "Servers",
+	renderDash(res, 'servers', {
+		title: 'Servers',
 		stats: {
 			memberCount: botClient.guilds.cache.reduce(
 				(acc, guild) => acc + guild.memberCount,
@@ -53,7 +53,7 @@ router.get("/dashboard/servers", (req, res) => {
 });
 
 router.get(
-	"/dashboard/:guildId",
+	'/dashboard/:guildId',
 	isAuthorized,
 	checkServerAccess,
 	async (req, res) => {
@@ -61,19 +61,19 @@ router.get(
 		try {
 			const logsFromDb = await ModLog.getAllCache({
 				where: { guildId: req.params.guildId },
-				order: [["createdAt", "DESC"]],
+				order: [['createdAt', 'DESC']],
 				limit: 5,
 			});
 			recentLogs = logsFromDb.map((log) => ({
 				moderator: log.moderatorTag,
 				target: log.targetTag,
 				action: log.action,
-				reason: log.reason || "Tidak ada alasan",
+				reason: log.reason || 'Tidak ada alasan',
 			}));
 		} catch (error) {
-			console.error("Gagal mengambil log dari database:", error);
+			console.error('Gagal mengambil log dari database:', error);
 		}
-		renderDash(res, "dashboard", {
+		renderDash(res, 'dashboard', {
 			guild: req.guild,
 			guildId: req.params.guildId,
 			stats: {
@@ -81,16 +81,16 @@ router.get(
 				channelCount: req.guild.channels.cache.size,
 				roleCount: req.guild.roles.cache.size,
 			},
-			currentPage: "/dashboard",
+			currentPage: '/dashboard',
 			logs: recentLogs,
-			page: "dashboard",
-			title: "Dashboard",
+			page: 'dashboard',
+			title: 'Dashboard',
 		});
 	},
 );
 
 router.get(
-	"/dashboard/:guildId/settings",
+	'/dashboard/:guildId/settings',
 	isAuthorized,
 	checkServerAccess,
 	(req, res) => {
@@ -100,22 +100,22 @@ router.get(
 			voice: guild.channels.cache.filter((c) => c.type === 2).toJSON(),
 		};
 		const roles = guild.roles.cache.toJSON();
-		renderDash(res, "settings", {
+		renderDash(res, 'settings', {
 			guild: guild,
 			guildId: guild.id,
 			settings: req.settings,
 			channels: channels,
 			roles: roles,
-			page: "settings",
-			title: "Settings",
+			page: 'settings',
+			title: 'Settings',
 			query: req.query,
-			currentPage: "/dashboard/settings",
+			currentPage: '/dashboard/settings',
 		});
 	},
 );
 
 router.post(
-	"/dashboard/:guildId/settings",
+	'/dashboard/:guildId/settings',
 	isAuthorized,
 	checkServerAccess,
 	async (req, res) => {
@@ -125,26 +125,26 @@ router.post(
 			const body = req.body;
 			const settingKeys = Object.keys(ServerSetting.getAttributes());
 			for (const key of settingKeys) {
-				if (["id", "guildId", "guildName"].includes(key)) continue;
+				if (['id', 'guildId', 'guildName'].includes(key)) continue;
 				const attribute = ServerSetting.getAttributes()[key];
 				const value = body[key];
-				if (attribute.type.key === "BOOLEAN") {
-					settings[key] = value === "on";
-				} else if (attribute.type.key === "JSON") {
+				if (attribute.type.key === 'BOOLEAN') {
+					settings[key] = value === 'on';
+				} else if (attribute.type.key === 'JSON') {
 					settings[key] = value ? (Array.isArray(value) ? value : [value]) : [];
 				} else if (value !== undefined) {
-					settings[key] = value === "" ? null : value;
+					settings[key] = value === '' ? null : value;
 				}
 			}
 			await settings.save();
 			res.redirect(`/dashboard/${guild.id}/settings?success=true`);
 		} catch (error) {
-			console.error("Error saat menyimpan pengaturan:", error);
-			renderDash(res, "error", {
-				title: "Gagal Menyimpan",
-				message: "Terjadi kesalahan saat mencoba menyimpan pengaturan Anda.",
-				page: "settings",
-				currentPage: "",
+			console.error('Error saat menyimpan pengaturan:', error);
+			renderDash(res, 'error', {
+				title: 'Gagal Menyimpan',
+				message: 'Terjadi kesalahan saat mencoba menyimpan pengaturan Anda.',
+				page: 'settings',
+				currentPage: '',
 				guild: req.guild || null,
 			});
 		}
@@ -152,26 +152,26 @@ router.post(
 );
 
 router.get(
-	"/dashboard/:guildId/welcomer",
+	'/dashboard/:guildId/welcomer',
 	isAuthorized,
 	checkServerAccess,
 	(req, res) => {
 		const channels = {
 			text: req.guild.channels.cache.filter((c) => c.type === 0).toJSON(),
 		};
-		renderDash(res, "welcomer", {
+		renderDash(res, 'welcomer', {
 			guild: req.guild,
 			settings: req.settings,
 			channels: channels,
-			page: "welcomer",
+			page: 'welcomer',
 			query: req.query,
-			currentPage: "",
+			currentPage: '',
 		});
 	},
 );
 
 router.post(
-	"/dashboard/:guildId/welcomer",
+	'/dashboard/:guildId/welcomer',
 	isAuthorized,
 	checkServerAccess,
 	async (req, res) => {
@@ -186,28 +186,28 @@ router.post(
 			await settings.save();
 			res.redirect(`/dashboard/${guild.id}/welcomer?success=true`);
 		} catch (error) {
-			console.error("Error saat menyimpan pengaturan welcomer:", error);
-			renderDash(res, "error", {
-				title: "Gagal Menyimpan",
+			console.error('Error saat menyimpan pengaturan welcomer:', error);
+			renderDash(res, 'error', {
+				title: 'Gagal Menyimpan',
 				message:
-					"Terjadi kesalahan saat mencoba menyimpan pengaturan welcomer.",
-				page: "welcomer",
-				currentPage: "",
+					'Terjadi kesalahan saat mencoba menyimpan pengaturan welcomer.',
+				page: 'welcomer',
+				currentPage: '',
 				guild: req.guild || null,
 			});
 		}
 	},
 );
 
-router.get("/admin/chat", (_req, res) => {
+router.get('/admin/chat', (_req, res) => {
 	const guilds = client.guilds.cache.map((guild) => ({
 		id: guild.id,
 		name: guild.name,
 		icon:
 			guild.iconURL({ dynamic: true, size: 128 }) ||
-			"https://cdn.discordapp.com/embed/avatars/0.png",
+			'https://cdn.discordapp.com/embed/avatars/0.png',
 	}));
-	res.render("chat", {
+	res.render('chat', {
 		guilds,
 		botUser: {
 			username: client.user.username,

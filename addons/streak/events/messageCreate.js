@@ -3,11 +3,11 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const Streak = require("../database/models/Streak");
-const ServerSetting = require("@coreModels/ServerSetting");
+const Streak = require('../database/models/Streak');
+const ServerSetting = require('@coreModels/ServerSetting');
 
 /**
  * Auto-claim streak on any message in a guild (except bots).
@@ -103,6 +103,6 @@ module.exports = async (_bot, message) => {
 		if (streak.currentStreak > (streak.highestStreak || 0)) {
 			streak.highestStreak = streak.currentStreak;
 		}
-		await streak.saveAndUpdateCache(["userId", "guildId"]);
+		await streak.saveAndUpdateCache(['userId', 'guildId']);
 	}
 };

@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const fetch = require("node-fetch");
-const { PermissionsBitField } = require("discord.js");
+const fetch = require('node-fetch');
+const { PermissionsBitField } = require('discord.js');
 
 /**
  * Attempts to automatically fix broken webhooks for guilds that failed delivery.
@@ -22,7 +22,7 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 	const apiUrl = kythiaConfig.addons.globalchat.apiUrl;
 	const apiKey = kythiaConfig.addons.globalchat.apiKey;
 	const webhookName =
-		kythiaConfig.addons.globalchat.webhookName || "Global Chat via Kythia";
+		kythiaConfig.addons.globalchat.webhookName || 'Global Chat via Kythia';
 
 	logger.info(
 		`🌏 [GlobalChat] Starting webhook fix process for ${failedGuilds.length} failed guild(s)...`,
@@ -30,10 +30,10 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 
 	let allGuildsData;
 	try {
-		logger.info("🌏 [GlobalChat] Fetching master guild list from API...");
+		logger.info('🌏 [GlobalChat] Fetching master guild list from API...');
 		const listResponse = await fetch(`${apiUrl}/list`, {
 			headers: {
-				"Content-Type": "application/json",
+				'Content-Type': 'application/json',
 				Authorization: `Bearer ${apiKey}`,
 			},
 		});
@@ -41,9 +41,9 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 			throw new Error(`API /list returned status ${listResponse.status}`);
 
 		const listData = await listResponse.json();
-		if (listData.status !== "ok" || !listData.data?.guilds) {
+		if (listData.status !== 'ok' || !listData.data?.guilds) {
 			throw new Error(
-				`API /list failed or returned invalid data: ${listData.message || listData.error || "Unknown error"}`,
+				`API /list failed or returned invalid data: ${listData.message || listData.error || 'Unknown error'}`,
 			);
 		}
 		allGuildsData = listData.data.guilds;
@@ -136,7 +136,7 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 
 					for (const [_id, webhook] of kythWebhooks) {
 						await webhook
-							.delete("Cleaning up old Kythia webhooks before creation")
+							.delete('Cleaning up old Kythia webhooks before creation')
 							.then(() =>
 								logger.debug(
 									`🗑️ [GlobalChat] Deleted old webhook: ${webhook.name} (${webhook.id})`,
@@ -167,7 +167,7 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 				newWebhook = await channel.createWebhook({
 					name: webhookName,
 					avatar: client.user.displayAvatarURL(),
-					reason: "Automatic webhook recreation for Kythia Global Chat",
+					reason: 'Automatic webhook recreation for Kythia Global Chat',
 				});
 				logger.info(`🌏 [GlobalChat] New webhook created: ${newWebhook.id}`);
 			} catch (webhookError) {
@@ -184,9 +184,9 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 					`🌏 [GlobalChat] Updating API with new webhook info for guild ${failedGuild.guildId}...`,
 				);
 				const updateResponse = await fetch(`${apiUrl}/add`, {
-					method: "POST",
+					method: 'POST',
 					headers: {
-						"Content-Type": "application/json",
+						'Content-Type': 'application/json',
 						Authorization: `Bearer ${apiKey}`,
 					},
 					body: JSON.stringify({
@@ -200,7 +200,7 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 					throw new Error(`API /add returned status ${updateResponse.status}`);
 				const updateResult = await updateResponse.json();
 
-				if (updateResult.status === "ok") {
+				if (updateResult.status === 'ok') {
 					logger.info(
 						`✅ [GlobalChat] Successfully fixed and updated webhook for guild ${failedGuild.guildName || failedGuild.guildId}`,
 					);
@@ -211,7 +211,7 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 						updateResult.message || updateResult.error || updateResult,
 					);
 					await newWebhook
-						.delete("Failed to update Global Chat API")
+						.delete('Failed to update Global Chat API')
 						.catch((delErr) =>
 							logger.warn(
 								`⚠️ [GlobalChat] Failed to delete orphaned webhook ${newWebhook.id}:`,
@@ -226,7 +226,7 @@ async function handleFailedGlobalChat(failedGuilds, container) {
 				);
 
 				await newWebhook
-					.delete("Failed to call Global Chat API /add")
+					.delete('Failed to call Global Chat API /add')
 					.catch((delErr) =>
 						logger.warn(
 							`⚠️ [GlobalChat] Failed to delete orphaned webhook ${newWebhook.id}:`,

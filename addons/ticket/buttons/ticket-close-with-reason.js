@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ModalBuilder,
@@ -11,7 +11,7 @@ const {
 	TextInputBuilder,
 	TextInputStyle,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -20,17 +20,17 @@ module.exports = {
 
 		try {
 			const modal = new ModalBuilder()
-				.setCustomId("tkt-close-reason-submit")
-				.setTitle(await t(interaction, "ticket.claim_modal.title"))
+				.setCustomId('tkt-close-reason-submit')
+				.setTitle(await t(interaction, 'ticket.claim_modal.title'))
 				.addLabelComponents(
 					new LabelBuilder()
-						.setLabel(await t(interaction, "ticket.claim_modal.label"))
+						.setLabel(await t(interaction, 'ticket.claim_modal.label'))
 						.setTextInputComponent(
 							new TextInputBuilder()
-								.setCustomId("reason")
+								.setCustomId('reason')
 								.setStyle(TextInputStyle.Paragraph)
 								.setPlaceholder(
-									await t(interaction, "ticket.claim_modal.placeholder"),
+									await t(interaction, 'ticket.claim_modal.placeholder'),
 								)
 								.setRequired(true)
 								.setMinLength(5)
@@ -39,12 +39,12 @@ module.exports = {
 				);
 			await interaction.showModal(modal);
 		} catch (error) {
-			console.error("Error showing close w/ reason modal:", error);
-			const desc = await t(interaction, "ticket.errors.modal_show_failed");
+			console.error('Error showing close w/ reason modal:', error);
+			const desc = await t(interaction, 'ticket.errors.modal_show_failed');
 			if (!interaction.replied && !interaction.deferred) {
 				await interaction.reply({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});

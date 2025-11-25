@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("quest_guild_logs", {
+		await queryInterface.createTable('quest_guild_logs', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -19,11 +19,11 @@ module.exports = {
 			sentAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
 		});
 
-		await queryInterface.addIndex("quest_guild_logs", ["guildId", "questId"], {
+		await queryInterface.addIndex('quest_guild_logs', ['guildId', 'questId'], {
 			unique: true,
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("quest_guild_logs");
+		await queryInterface.dropTable('quest_guild_logs');
 	},
 };

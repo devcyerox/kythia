@@ -3,14 +3,14 @@
  * @type: Command Group Definition
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { SlashCommandBuilder, InteractionContextType } = require("discord.js");
+const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	guildOnly: true,
 	data: new SlashCommandBuilder()
-		.setName("globalchat")
-		.setDescription("🌏 Manage global chat settings for this server")
+		.setName('globalchat')
+		.setDescription('🌏 Manage global chat settings for this server')
 		.setContexts(InteractionContextType.Guild),
 };

@@ -3,18 +3,18 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
-	aliases: ["daily"],
+	aliases: ['daily'],
 	data: (subcommand) =>
 		subcommand
-			.setName("daily")
-			.setDescription("💰 Collect your daily kythia coin."),
+			.setName('daily')
+			.setDescription('💰 Collect your daily kythia coin.'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { KythiaUser } = models;
@@ -28,7 +28,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -42,9 +42,9 @@ module.exports = {
 		);
 		if (cooldown.remaining) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					await t(interaction, "economy.daily.daily.cooldown", {
+					await t(interaction, 'economy.daily.daily.cooldown', {
 						time: cooldown.time,
 					}),
 				)
@@ -68,16 +68,16 @@ module.exports = {
 		user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(randomCoin);
 		user.lastDaily = Date.now();
 
-		user.changed("kythiaCoin", true);
-		user.changed("lastDaily", true);
+		user.changed('kythiaCoin', true);
+		user.changed('lastDaily', true);
 
-		await user.saveAndUpdateCache("userId");
+		await user.saveAndUpdateCache('userId');
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
 			.setThumbnail(interaction.user.displayAvatarURL())
 			.setDescription(
-				await t(interaction, "economy.daily.daily.success", {
+				await t(interaction, 'economy.daily.daily.success', {
 					amount: randomCoin,
 				}),
 			)

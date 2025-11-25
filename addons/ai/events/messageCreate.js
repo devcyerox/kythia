@@ -3,16 +3,16 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { buildSystemInstruction } = require("../helpers/promptBuilder");
-const { GoogleGenAI, createPartFromUri } = require("@google/genai");
-const { ChannelType } = require("discord.js");
-const fs = require("node:fs").promises;
-const path = require("node:path");
-const { getAndUseNextAvailableToken } = require("../helpers/gemini");
-const kythiaInteraction = require("../../core/helpers/events");
+const { buildSystemInstruction } = require('../helpers/promptBuilder');
+const { GoogleGenAI, createPartFromUri } = require('@google/genai');
+const { ChannelType } = require('discord.js');
+const fs = require('node:fs').promises;
+const path = require('node:path');
+const { getAndUseNextAvailableToken } = require('../helpers/gemini');
+const kythiaInteraction = require('../../core/helpers/events');
 
 const conversationCache = new Map();
 
@@ -28,9 +28,9 @@ const conversationCache = new Map();
  */
 function filterAiResponse(responseText, userId, isOwner, aiConfig) {
 	if (
-		typeof userId !== "undefined" &&
+		typeof userId !== 'undefined' &&
 		aiConfig?.ownerBypassFilter &&
-		typeof isOwner === "function" &&
+		typeof isOwner === 'function' &&
 		isOwner(userId)
 	) {
 		return { allowed: true };
@@ -38,7 +38,7 @@ function filterAiResponse(responseText, userId, isOwner, aiConfig) {
 	if (/@everyone|@here/i.test(responseText)) {
 		return {
 			allowed: false,
-			reason: "ai_events_messageCreate_filter_everyone_here",
+			reason: 'ai_events_messageCreate_filter_everyone_here',
 		};
 	}
 	return { allowed: true };
@@ -46,72 +46,72 @@ function filterAiResponse(responseText, userId, isOwner, aiConfig) {
 
 const factClassifiers = [
 	{
-		type: "birthday",
+		type: 'birthday',
 		regex: /(lahir|birthday|ulang tahun|born|kelahiran|tanggal lahir|dob)/i,
 	},
 	{
-		type: "name",
+		type: 'name',
 		regex: /(nama|name|panggil|nickname|alias|identitas|identity)/i,
 	},
 	{
-		type: "hobby",
+		type: 'hobby',
 		regex: /(hobi|hobby|kesukaan|suka|interest|kegemaran|favorit)/i,
 	},
-	{ type: "age", regex: /(umur|age|usia|tahun|years old)/i },
+	{ type: 'age', regex: /(umur|age|usia|tahun|years old)/i },
 	{
-		type: "location",
+		type: 'location',
 		regex:
 			/(alamat|tinggal|domisili|location|city|kota|asal|hometown|berasal dari)/i,
 	},
 	{
-		type: "job",
+		type: 'job',
 		regex: /(pekerjaan|job|profesi|kerja|bekerja|occupation|work)/i,
 	},
 	{
-		type: "education",
+		type: 'education',
 		regex:
 			/(sekolah|school|kuliah|universitas|kampus|pendidikan|study|belajar)/i,
 	},
 	{
-		type: "gender",
+		type: 'gender',
 		regex: /(gender|jenis kelamin|kelamin|pria|wanita|laki-laki|perempuan)/i,
 	},
-	{ type: "religion", regex: /(agama|religion|kepercayaan|faith)/i },
+	{ type: 'religion', regex: /(agama|religion|kepercayaan|faith)/i },
 	{
-		type: "relationship",
+		type: 'relationship',
 		regex:
 			/(status hubungan|relationship|menikah|married|single|jomblo|pacaran)/i,
 	},
-	{ type: "email", regex: /(email|e-mail|surel)/i },
-	{ type: "phone", regex: /(telepon|phone|no hp|nomor hp|wa|whatsapp)/i },
+	{ type: 'email', regex: /(email|e-mail|surel)/i },
+	{ type: 'phone', regex: /(telepon|phone|no hp|nomor hp|wa|whatsapp)/i },
 	{
-		type: "social",
+		type: 'social',
 		regex:
 			/(media sosial|social media|sosmed|instagram|ig|facebook|fb|twitter|x\.com|tiktok|youtube|yt|linkedin|github)/i,
 	},
-	{ type: "language", regex: /(bahasa|language|bilingual|multilingual)/i },
-	{ type: "physical", regex: /(tinggi|height|berat|weight)/i },
-	{ type: "color", regex: /(warna kesukaan|warna favorit|favorite color)/i },
+	{ type: 'language', regex: /(bahasa|language|bilingual|multilingual)/i },
+	{ type: 'physical', regex: /(tinggi|height|berat|weight)/i },
+	{ type: 'color', regex: /(warna kesukaan|warna favorit|favorite color)/i },
 	{
-		type: "food",
+		type: 'food',
 		regex:
 			/(makanan kesukaan|makanan favorit|favorite food|minuman kesukaan|favorite drink)/i,
 	},
 	{
-		type: "animal",
+		type: 'animal',
 		regex: /(hewan kesukaan|hewan favorit|favorite animal|binatang kesukaan)/i,
 	},
-	{ type: "movie", regex: /(film kesukaan|film favorit|favorite movie)/i },
+	{ type: 'movie', regex: /(film kesukaan|film favorit|favorite movie)/i },
 	{
-		type: "music",
+		type: 'music',
 		regex:
 			/(musik kesukaan|musik favorit|favorite music|penyanyi favorit|band favorit)/i,
 	},
 	{
-		type: "book",
+		type: 'book',
 		regex: /(buku kesukaan|buku favorit|favorite book|penulis favorit)/i,
 	},
-	{ type: "game", regex: /(game kesukaan|game favorit|favorite game)/i },
+	{ type: 'game', regex: /(game kesukaan|game favorit|favorite game)/i },
 ];
 
 /**
@@ -126,7 +126,7 @@ function classifyFact(fact) {
 			return classifier.type;
 		}
 	}
-	return "other";
+	return 'other';
 }
 
 /**
@@ -152,37 +152,37 @@ async function appendUserFact(userId, fact, UserFact, logger) {
 			},
 		});
 
-		return created ? "added" : "duplicate";
+		return created ? 'added' : 'duplicate';
 	} catch (error) {
-		logger.error("Error in appendUserFact:", error);
-		return "error";
+		logger.error('Error in appendUserFact:', error);
+		return 'error';
 	}
 }
 
 const typeLabels = {
-	birthday: "Ulang Tahun",
-	name: "Nama",
-	hobby: "Hobi",
-	age: "Umur",
-	location: "Lokasi",
-	job: "Pekerjaan",
-	education: "Pendidikan",
-	gender: "Gender",
-	religion: "Agama",
-	relationship: "Status Hubungan",
-	email: "Email",
-	phone: "Kontak",
-	social: "Media Sosial",
-	language: "Bahasa",
-	physical: "Info Fisik",
-	color: "Warna Favorit",
-	food: "Makanan/Minuman Favorit",
-	animal: "Hewan Favorit",
-	movie: "Film Favorit",
-	music: "Musik Favorit",
-	book: "Buku Favorit",
-	game: "Game Favorit",
-	other: "Fakta Lain",
+	birthday: 'Ulang Tahun',
+	name: 'Nama',
+	hobby: 'Hobi',
+	age: 'Umur',
+	location: 'Lokasi',
+	job: 'Pekerjaan',
+	education: 'Pendidikan',
+	gender: 'Gender',
+	religion: 'Agama',
+	relationship: 'Status Hubungan',
+	email: 'Email',
+	phone: 'Kontak',
+	social: 'Media Sosial',
+	language: 'Bahasa',
+	physical: 'Info Fisik',
+	color: 'Warna Favorit',
+	food: 'Makanan/Minuman Favorit',
+	animal: 'Hewan Favorit',
+	movie: 'Film Favorit',
+	music: 'Musik Favorit',
+	book: 'Buku Favorit',
+	game: 'Game Favorit',
+	other: 'Fakta Lain',
 };
 
 /**
@@ -195,30 +195,30 @@ const typeLabels = {
 async function getUserFactsString(userId, UserFact) {
 	const userFacts = await UserFact.getAllCache({
 		where: { userId: userId },
-		order: [["createdAt", "DESC"]],
+		order: [['createdAt', 'DESC']],
 		limit: 50,
 		cacheTags: [`UserFact:byUser:${userId}`],
 	});
 
-	if (!userFacts || userFacts.length === 0) return "";
+	if (!userFacts || userFacts.length === 0) return '';
 
 	const grouped = {};
 	for (const f of userFacts) {
-		const label = typeLabels[f.type] || "Lainnya";
+		const label = typeLabels[f.type] || 'Lainnya';
 		if (!grouped[label]) grouped[label] = [];
 		grouped[label].push(f.fact);
 	}
 
-	let result = "";
+	let result = '';
 	for (const label in grouped) {
-		result += `- ${label}: ${grouped[label].join("; ")}\n`;
+		result += `- ${label}: ${grouped[label].join('; ')}\n`;
 	}
 	return result.trim();
 }
 
 let tempDir;
 (async () => {
-	tempDir = path.join(__dirname, "..", "temp");
+	tempDir = path.join(__dirname, '..', 'temp');
 	try {
 		await fs.mkdir(tempDir, { recursive: true });
 	} catch (_e) {}
@@ -250,7 +250,7 @@ async function _summarizeAndStoreFacts(
 			return;
 		}
 
-		const GEMINI_API_KEY = config.addons.ai.geminiApiKeys.split(",")[tokenIdx];
+		const GEMINI_API_KEY = config.addons.ai.geminiApiKeys.split(',')[tokenIdx];
 		const GEMINI_MODEL = config.addons.ai.model;
 		const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
@@ -270,7 +270,7 @@ async function _summarizeAndStoreFacts(
 		const response = await ai.models.generateContent({
 			model: GEMINI_MODEL,
 			contents: [
-				{ role: "model", parts: [{ text: summarizationInstruction }] },
+				{ role: 'model', parts: [{ text: summarizationInstruction }] },
 				...conversationHistory.map((msg) => ({
 					role: msg.role,
 					parts: [{ text: msg.content }],
@@ -280,17 +280,17 @@ async function _summarizeAndStoreFacts(
 
 		// safely extract text & handle undefined
 		let summaryText;
-		if (response && typeof response.text === "function") {
+		if (response && typeof response.text === 'function') {
 			summaryText = response.text();
-		} else if (response && typeof response.text === "string") {
+		} else if (response && typeof response.text === 'string') {
 			summaryText = response.text;
 		}
-		summaryText = typeof summaryText === "string" ? summaryText.trim() : "";
+		summaryText = typeof summaryText === 'string' ? summaryText.trim() : '';
 
-		if (summaryText && summaryText !== "NO_NEW_FACTS") {
+		if (summaryText && summaryText !== 'NO_NEW_FACTS') {
 			const newFacts = summaryText
-				.split("\n")
-				.map((fact) => fact.replace(/^- /, "").trim())
+				.split('\n')
+				.map((fact) => fact.replace(/^- /, '').trim())
 				.filter(Boolean);
 
 			if (newFacts.length > 0) {
@@ -339,16 +339,16 @@ setInterval(
 async function getUserBio(userId, client) {
 	try {
 		const user = await client.users.fetch(userId, { force: true });
-		return user.bio || "Not set";
+		return user.bio || 'Not set';
 	} catch {
-		return "Cannot get bio";
+		return 'Cannot get bio';
 	}
 }
 
 function addToHistory(conversation, role, content) {
 	const lastMessage = conversation.history[conversation.history.length - 1];
 
-	if (lastMessage && lastMessage.role === role && role === "user") {
+	if (lastMessage && lastMessage.role === role && role === 'user') {
 		lastMessage.content += `\n${content}`;
 	} else {
 		conversation.history.push({ role, content });
@@ -369,8 +369,8 @@ function addToHistory(conversation, role, content) {
 async function sendSplitMessage(message, text, t, isOwner, aiConfig) {
 	const CHUNK_SIZE = 2000;
 	// Ensure text is a string to prevent .split on undefined/null
-	text = typeof text === "string" ? text : "";
-	const parts = text.split("[SPLIT]");
+	text = typeof text === 'string' ? text : '';
+	const parts = text.split('[SPLIT]');
 
 	let hasReplied = false;
 
@@ -386,14 +386,14 @@ async function sendSplitMessage(message, text, t, isOwner, aiConfig) {
 		);
 		if (!filterResult.allowed) {
 			await message.reply(
-				await t(message, "ai.events.messageCreate.filter.blocked"),
+				await t(message, 'ai.events.messageCreate.filter.blocked'),
 			);
 			return;
 		}
 
 		if (chunk.length > CHUNK_SIZE) {
 			const subChunks =
-				chunk.match(new RegExp(`.{1,${CHUNK_SIZE}}`, "gs")) || [];
+				chunk.match(new RegExp(`.{1,${CHUNK_SIZE}}`, 'gs')) || [];
 			for (const subChunk of subChunks) {
 				const filterResultSub = filterAiResponse(
 					subChunk,
@@ -403,7 +403,7 @@ async function sendSplitMessage(message, text, t, isOwner, aiConfig) {
 				);
 				if (!filterResultSub.allowed) {
 					await message.reply(
-						await t(message, "ai.events.messageCreate.filter.blocked"),
+						await t(message, 'ai.events.messageCreate.filter.blocked'),
 					);
 					return;
 				}
@@ -442,17 +442,17 @@ function determineAiPathway(content, aiConfig, logger) {
 		? [...safeCommands, ...additionalCommandKeywords]
 		: additionalCommandKeywords;
 
-	const commandRegex = new RegExp(`\\b(${commandKeywords.join("|")})\\b`, "i");
+	const commandRegex = new RegExp(`\\b(${commandKeywords.join('|')})\\b`, 'i');
 
 	if (commandRegex.test(clean)) {
 		logger.info(
-			"🧠 Intent detected as Command. Using Function Calling pathway.",
+			'🧠 Intent detected as Command. Using Function Calling pathway.',
 		);
-		return "function_calling";
+		return 'function_calling';
 	}
 
-	logger.info("🧠 Intent not specific. Using Google Search pathway (Default).");
-	return "google_search";
+	logger.info('🧠 Intent not specific. Using Google Search pathway (Default).');
+	return 'google_search';
 }
 
 /**
@@ -474,7 +474,7 @@ module.exports = async (bot, message) => {
 	if (message.author?.bot) return;
 
 	const content =
-		typeof message.content === "string" ? message.content.trim() : "";
+		typeof message.content === 'string' ? message.content.trim() : '';
 	if (
 		Array.isArray(config?.bot?.prefixes) &&
 		config.bot.prefixes.some((prefix) => prefix && content.startsWith(prefix))
@@ -498,15 +498,15 @@ module.exports = async (bot, message) => {
 				isAiChannel = true;
 			}
 		} catch (e) {
-			logger.error("Error getting ServerSetting:", e);
+			logger.error('Error getting ServerSetting:', e);
 		}
 	}
 
 	let typingInterval;
 
 	if (isAiChannel || isDm || isMentioned) {
-		const totalTokens = (aiConfig.geminiApiKeys || "")
-			.split(",")
+		const totalTokens = (aiConfig.geminiApiKeys || '')
+			.split(',')
 			.map((k) => k.trim())
 			.filter(Boolean).length;
 		let success = false;
@@ -516,7 +516,7 @@ module.exports = async (bot, message) => {
 			await message.channel.sendTyping();
 			typingInterval = setInterval(() => {
 				message.channel.sendTyping().catch((err) => {
-					logger.warn("❌ Error sending typing indicator:", err.message);
+					logger.warn('❌ Error sending typing indicator:', err.message);
 					clearInterval(typingInterval);
 				});
 			}, 8000);
@@ -531,8 +531,8 @@ module.exports = async (bot, message) => {
 				UserFact,
 			);
 			const userBio = await getUserBio(message.author.id, client);
-			const guildName = message.guild?.name || "Direct Message";
-			const channelName = message.channel.name || "Direct Message";
+			const guildName = message.guild?.name || 'Direct Message';
+			const channelName = message.channel.name || 'Direct Message';
 
 			const context = {
 				userId: message.author.id,
@@ -548,13 +548,13 @@ module.exports = async (bot, message) => {
 			const mediaParts = [];
 			if (message.attachments && message.attachments.size > 0) {
 				for (const attachment of message.attachments.values()) {
-					if (attachment.contentType?.startsWith("image/")) {
+					if (attachment.contentType?.startsWith('image/')) {
 						try {
 							logger.info(`🖼️ Image detected: ${attachment.name}...`);
 							const res = await fetch(attachment.url);
 							const arrayBuffer = await res.arrayBuffer();
 							const buffer = Buffer.from(arrayBuffer);
-							const base64Image = buffer.toString("base64");
+							const base64Image = buffer.toString('base64');
 							mediaParts.push({
 								inlineData: {
 									mimeType: attachment.contentType,
@@ -562,11 +562,11 @@ module.exports = async (bot, message) => {
 								},
 							});
 						} catch (err) {
-							logger.error("❌ Error processing image:", err);
+							logger.error('❌ Error processing image:', err);
 						}
 					} else if (
-						attachment.contentType?.startsWith("video/") ||
-						attachment.contentType?.startsWith("audio/")
+						attachment.contentType?.startsWith('video/') ||
+						attachment.contentType?.startsWith('audio/')
 					) {
 						try {
 							logger.info(
@@ -574,11 +574,11 @@ module.exports = async (bot, message) => {
 							);
 							const fetchRes = await fetch(attachment.url);
 							const buffer = Buffer.from(await fetchRes.arrayBuffer());
-							const tmp = require("tmp");
-							const { promises: fsp } = require("node:fs");
+							const tmp = require('tmp');
+							const { promises: fsp } = require('node:fs');
 
 							const tmpobj = tmp.fileSync({
-								postfix: path.extname(attachment.name || ".mp4"),
+								postfix: path.extname(attachment.name || '.mp4'),
 								dir: tempDir,
 							});
 							await fsp.writeFile(tmpobj.name, buffer);
@@ -589,17 +589,17 @@ module.exports = async (bot, message) => {
 							);
 							try {
 								uploadedFile = await new GoogleGenAI({
-									apiKey: aiConfig.geminiApiKeys.split(",")[0],
+									apiKey: aiConfig.geminiApiKeys.split(',')[0],
 								}).files.upload({
 									file: tmpobj.name,
 									config: { mimeType: attachment.contentType },
 								});
 							} catch (uploadErr) {
-								if (uploadErr?.details?.includes?.("not in an ACTIVE state")) {
-									logger.warn("File not active, retrying upload...");
+								if (uploadErr?.details?.includes?.('not in an ACTIVE state')) {
+									logger.warn('File not active, retrying upload...');
 									await new Promise((res) => setTimeout(res, 2000));
 									uploadedFile = await new GoogleGenAI({
-										apiKey: aiConfig.geminiApiKeys.split(",")[0],
+										apiKey: aiConfig.geminiApiKeys.split(',')[0],
 									}).files.upload({
 										file: tmpobj.name,
 										config: { mimeType: attachment.contentType },
@@ -613,16 +613,16 @@ module.exports = async (bot, message) => {
 								`⏳ Waiting for file ${uploadedFile.name} to become active...`,
 							);
 							let safetyNet = 0;
-							while (uploadedFile.state === "PROCESSING" && safetyNet < 15) {
+							while (uploadedFile.state === 'PROCESSING' && safetyNet < 15) {
 								await new Promise((resolve) => setTimeout(resolve, 2000));
 								uploadedFile = await new GoogleGenAI({
-									apiKey: aiConfig.geminiApiKeys.split(",")[0],
+									apiKey: aiConfig.geminiApiKeys.split(',')[0],
 								}).files.get({ name: uploadedFile.name });
 								logger.info(`  - Current state: ${uploadedFile.state}`);
 								safetyNet++;
 							}
 
-							if (uploadedFile.state !== "ACTIVE") {
+							if (uploadedFile.state !== 'ACTIVE') {
 								throw new Error(
 									`File did not become active. Final state: ${uploadedFile.state}`,
 								);
@@ -635,12 +635,12 @@ module.exports = async (bot, message) => {
 							);
 							tmpobj.removeCallback();
 						} catch (err) {
-							logger.error("❌ Error processing video/audio:", err);
+							logger.error('❌ Error processing video/audio:', err);
 							await message.channel
-								.send(await t(message, "ai.events.messageCreate.error"))
+								.send(await t(message, 'ai.events.messageCreate.error'))
 								.catch(() => {});
 						}
-					} else if (attachment.contentType?.startsWith("application/pdf")) {
+					} else if (attachment.contentType?.startsWith('application/pdf')) {
 						try {
 							logger.info(
 								`📄 Document detected: ${attachment.name} (${attachment.contentType})...`,
@@ -648,7 +648,7 @@ module.exports = async (bot, message) => {
 							const res = await fetch(attachment.url);
 							const arrayBuffer = await res.arrayBuffer();
 							const buffer = Buffer.from(arrayBuffer);
-							const base64File = buffer.toString("base64");
+							const base64File = buffer.toString('base64');
 							mediaParts.push({
 								inlineData: {
 									mimeType: attachment.contentType,
@@ -661,7 +661,7 @@ module.exports = async (bot, message) => {
 								err,
 							);
 							await message.channel
-								.send(await t(message, "ai.events.messageCreate.error"))
+								.send(await t(message, 'ai.events.messageCreate.error'))
 								.catch(() => {});
 						}
 					}
@@ -671,7 +671,7 @@ module.exports = async (bot, message) => {
 			const youtubeRegex =
 				/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
 			const matches =
-				typeof message.content === "string"
+				typeof message.content === 'string'
 					? message.content.matchAll(youtubeRegex)
 					: [];
 			for (const match of matches) {
@@ -689,39 +689,39 @@ module.exports = async (bot, message) => {
 			}
 
 			const cleanContent =
-				typeof message.content === "string"
+				typeof message.content === 'string'
 					? message.content
-							.replace(/<@!?\d+>/g, "")
+							.replace(/<@!?\d+>/g, '')
 							.trim()
 							.slice(0, 1500)
-					: "";
+					: '';
 			if (!cleanContent && mediaParts.length === 0) {
 				if (typingInterval) clearInterval(typingInterval);
 				return;
 			}
 
 			const memoryKeywords = [
-				"ingat(?: ya)?",
-				"catat",
-				"simpan",
-				"tambahkan",
-				"tulis",
-				"remember",
-				"note",
-				"save",
-				"store",
-				"add",
-				"keep",
-			].join("|");
+				'ingat(?: ya)?',
+				'catat',
+				'simpan',
+				'tambahkan',
+				'tulis',
+				'remember',
+				'note',
+				'save',
+				'store',
+				'add',
+				'keep',
+			].join('|');
 			const memoryRegex = new RegExp(
 				`^(?:<@!?\\d+>|kythia)?[\\s,.]*?(?:tolong\\s+)?(?:${memoryKeywords})[\\s,.:]+(.+)$`,
-				"i",
+				'i',
 			);
 			const memoryMatch = cleanContent.match(memoryRegex);
 
 			if (memoryMatch?.[1]) {
 				let fact = memoryMatch[1].trim();
-				fact = fact.replace(/^(<@!?\d+>|kythia)[\s,.:]*/i, "").trim();
+				fact = fact.replace(/^(<@!?\d+>|kythia)[\s,.:]*/i, '').trim();
 				if (fact.length > 0) {
 					const status = await appendUserFact(
 						message.author.id,
@@ -729,18 +729,18 @@ module.exports = async (bot, message) => {
 						UserFact,
 						logger,
 					);
-					if (status === "added") {
+					if (status === 'added') {
 						await message.reply(
-							await t(message, "ai.events.messageCreate.memory.added"),
+							await t(message, 'ai.events.messageCreate.memory.added'),
 						);
-					} else if (status === "duplicate") {
+					} else if (status === 'duplicate') {
 						await message.reply(
-							await t(message, "ai.events.messageCreate.memory.duplicate"),
+							await t(message, 'ai.events.messageCreate.memory.duplicate'),
 						);
 					}
 				} else {
 					await message.reply(
-						await t(message, "ai.events.messageCreate.memory.empty"),
+						await t(message, 'ai.events.messageCreate.memory.empty'),
 					);
 				}
 				if (typingInterval) clearInterval(typingInterval);
@@ -772,11 +772,11 @@ module.exports = async (bot, message) => {
 				const initialHistory = [];
 				for (const msg of relevantMessages) {
 					const c =
-						typeof msg.content === "string"
-							? msg.content.replace(/<@!?\d+>/g, "").trim()
-							: "";
+						typeof msg.content === 'string'
+							? msg.content.replace(/<@!?\d+>/g, '').trim()
+							: '';
 					if (!c && msg.attachments.size === 0) continue;
-					const role = msg.author.id === client.user.id ? "model" : "user";
+					const role = msg.author.id === client.user.id ? 'model' : 'user';
 					initialHistory.push({ role, content: c });
 				}
 
@@ -784,17 +784,17 @@ module.exports = async (bot, message) => {
 				conversationCache.set(message.author.id, userConv);
 			}
 			userConv.lastActive = Date.now();
-			addToHistory(userConv, "user", cleanContent);
+			addToHistory(userConv, 'user', cleanContent);
 
 			const contents = userConv.history.map((msg) => ({
-				role: msg.role === "model" ? "model" : "user",
-				parts: [{ text: typeof msg.content === "string" ? msg.content : "" }],
+				role: msg.role === 'model' ? 'model' : 'user',
+				parts: [{ text: typeof msg.content === 'string' ? msg.content : '' }],
 			}));
 
 			if (mediaParts.length > 0) {
 				let lastUserIdx = -1;
 				for (let i = contents.length - 1; i >= 0; i--) {
-					if (contents[i].role === "user") {
+					if (contents[i].role === 'user') {
 						lastUserIdx = i;
 						break;
 					}
@@ -802,14 +802,14 @@ module.exports = async (bot, message) => {
 				if (lastUserIdx !== -1) {
 					contents[lastUserIdx].parts = [
 						...mediaParts,
-						{ text: cleanContent || "Describe this image/video." },
+						{ text: cleanContent || 'Describe this image/video.' },
 					];
 				} else {
 					contents.push({
-						role: "user",
+						role: 'user',
 						parts: [
 							...mediaParts,
-							{ text: cleanContent || "Describe this image/video." },
+							{ text: cleanContent || 'Describe this image/video.' },
 						],
 					});
 				}
@@ -819,11 +819,11 @@ module.exports = async (bot, message) => {
 
 			const toolsConfig = [];
 
-			if (pathway === "google_search") {
-				logger.info("🧠 Using Google Search pathway.");
+			if (pathway === 'google_search') {
+				logger.info('🧠 Using Google Search pathway.');
 				toolsConfig.push({ googleSearch: {} });
 			} else {
-				logger.info("🧠 Using Function Calling pathway (Default).");
+				logger.info('🧠 Using Function Calling pathway (Default).');
 				if (bot.aiCommandSchema && bot.aiCommandSchema.length > 0) {
 					toolsConfig.push({
 						functionDeclarations: bot.aiCommandSchema,
@@ -837,12 +837,12 @@ module.exports = async (bot, message) => {
 				const tokenIdx = await getAndUseNextAvailableToken();
 				if (tokenIdx === -1) {
 					logger.warn(
-						"⚠️ All tokens are locally rate-limited. Stopping retries.",
+						'⚠️ All tokens are locally rate-limited. Stopping retries.',
 					);
 					break;
 				}
 
-				const GEMINI_API_KEY = aiConfig.geminiApiKeys.split(",")[tokenIdx];
+				const GEMINI_API_KEY = aiConfig.geminiApiKeys.split(',')[tokenIdx];
 				if (!GEMINI_API_KEY) {
 					logger.warn(`Token index ${tokenIdx} is invalid. Skipping.`);
 					continue;
@@ -869,16 +869,16 @@ module.exports = async (bot, message) => {
 				} catch (err) {
 					if (
 						err.message &&
-						(err.message.includes("429") ||
-							err.toString().includes("RESOURCE_EXHAUSTED"))
+						(err.message.includes('429') ||
+							err.toString().includes('RESOURCE_EXHAUSTED'))
 					) {
 						logger.warn(
 							`Token index ${tokenIdx} hit 429 limit. Retrying with next token...`,
 						);
 					} else {
-						logger.error("❌ AI Message Error (non-429):", err);
+						logger.error('❌ AI Message Error (non-429):', err);
 						await message.channel
-							.send(await t(message, "ai.events.messageCreate.error"))
+							.send(await t(message, 'ai.events.messageCreate.error'))
 							.catch(() => {});
 						if (typingInterval) clearInterval(typingInterval);
 						return;
@@ -890,13 +890,13 @@ module.exports = async (bot, message) => {
 
 			if (success && finalResponse) {
 				// Defensive extract of .text (could be function, string, or undefined/null)
-				let replyText = "";
-				if (finalResponse && typeof finalResponse.text === "function") {
+				let replyText = '';
+				if (finalResponse && typeof finalResponse.text === 'function') {
 					replyText = finalResponse.text();
-				} else if (finalResponse && typeof finalResponse.text === "string") {
+				} else if (finalResponse && typeof finalResponse.text === 'string') {
 					replyText = finalResponse.text;
 				}
-				replyText = typeof replyText === "string" ? replyText.trim() : "";
+				replyText = typeof replyText === 'string' ? replyText.trim() : '';
 
 				if (
 					finalResponse.functionCalls &&
@@ -906,14 +906,14 @@ module.exports = async (bot, message) => {
 					const fullFunctionName = call.name;
 					const argsFromAi = call.args;
 
-					const nameParts = fullFunctionName.split("_");
+					const nameParts = fullFunctionName.split('_');
 					const baseCommandName = nameParts[0];
 
 					const command = client.commands.get(baseCommandName);
 
 					if (!command) {
 						await message.reply(
-							await t(message, "ai.events.messageCreate.command.not.found"),
+							await t(message, 'ai.events.messageCreate.command.not.found'),
 						);
 						return;
 					}
@@ -936,15 +936,15 @@ module.exports = async (bot, message) => {
 						);
 
 						const genAI = new GoogleGenAI({
-							apiKey: aiConfig.geminiApiKeys.split(",")[0],
+							apiKey: aiConfig.geminiApiKeys.split(',')[0],
 						});
 						const followUpResponse = await genAI.models.generateContent({
 							model: GEMINI_MODEL,
 							contents: [
 								...contents,
-								{ role: "model", parts: [{ functionCall: call }] },
+								{ role: 'model', parts: [{ functionCall: call }] },
 								{
-									role: "function",
+									role: 'function',
 									parts: [
 										{
 											functionResponse: {
@@ -965,17 +965,17 @@ module.exports = async (bot, message) => {
 						let finalReply;
 						if (
 							followUpResponse &&
-							typeof followUpResponse.text === "function"
+							typeof followUpResponse.text === 'function'
 						) {
 							finalReply = followUpResponse.text();
 						} else if (
 							followUpResponse &&
-							typeof followUpResponse.text === "string"
+							typeof followUpResponse.text === 'string'
 						) {
 							finalReply = followUpResponse.text;
 						}
 						finalReply =
-							typeof finalReply === "string" ? finalReply.trim() : "";
+							typeof finalReply === 'string' ? finalReply.trim() : '';
 
 						const filterResult = filterAiResponse(
 							finalReply,
@@ -985,16 +985,16 @@ module.exports = async (bot, message) => {
 						);
 						if (!filterResult.allowed) {
 							await message.reply(
-								await t(message, "ai.events.messageCreate.filter.blocked"),
+								await t(message, 'ai.events.messageCreate.filter.blocked'),
 							);
 							return;
 						}
 						await sendSplitMessage(message, finalReply, t, isOwner, aiConfig);
-						addToHistory(userConv, "model", finalReply);
+						addToHistory(userConv, 'model', finalReply);
 					} catch (err) {
 						logger.error(`🧠 Error running '${fullFunctionName}':`, err);
 						await message.channel.send(
-							await t(message, "ai.events.messageCreate.command.error"),
+							await t(message, 'ai.events.messageCreate.command.error'),
 						);
 					}
 					return;
@@ -1008,23 +1008,23 @@ module.exports = async (bot, message) => {
 					);
 					if (!filterResult.allowed) {
 						await message.reply(
-							await t(message, "ai.events.messageCreate.filter.blocked"),
+							await t(message, 'ai.events.messageCreate.filter.blocked'),
 						);
 						return;
 					}
 					await sendSplitMessage(message, replyText, t, isOwner, aiConfig);
-					addToHistory(userConv, "model", replyText);
+					addToHistory(userConv, 'model', replyText);
 				}
 			} else {
-				logger.error("❌ All AI tokens failed (likely 429). Informing user.");
+				logger.error('❌ All AI tokens failed (likely 429). Informing user.');
 				await message
-					.reply(await t(message, "ai.events.messageCreate.memory.token.limit"))
+					.reply(await t(message, 'ai.events.messageCreate.memory.token.limit'))
 					.catch(() => {});
 			}
 		} catch (err) {
-			logger.error("❌ AI Pre-flight Error:", err);
+			logger.error('❌ AI Pre-flight Error:', err);
 			await message.channel
-				.send(await t(message, "ai.events.messageCreate.error"))
+				.send(await t(message, 'ai.events.messageCreate.error'))
 				.catch(() => {});
 			if (typingInterval) clearInterval(typingInterval);
 		}

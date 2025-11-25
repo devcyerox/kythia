@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
 
 module.exports = async (bot, member) => {
 	if (!member.guild) return;
@@ -37,39 +37,39 @@ module.exports = async (bot, member) => {
 
 		if (kickEntry) {
 			const embed = new EmbedBuilder()
-				.setColor(convertColor("Red", { from: "discord", to: "decimal" }))
+				.setColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
 				.setAuthor({
-					name: kickEntry.executor?.tag || "Unknown",
+					name: kickEntry.executor?.tag || 'Unknown',
 					iconURL: kickEntry.executor?.displayAvatarURL?.(),
 				})
 				.setDescription(
-					`👢 **Member Kicked** by <@${kickEntry.executor?.id || "Unknown"}>`,
+					`👢 **Member Kicked** by <@${kickEntry.executor?.id || 'Unknown'}>`,
 				)
 				.addFields(
 					{
-						name: "User",
+						name: 'User',
 						value: `${member.user.tag} (${member.user.id})`,
 						inline: true,
 					},
 					{
-						name: "Account Created",
+						name: 'Account Created',
 						value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:F>`,
 						inline: true,
 					},
 					{
-						name: "Joined Server",
+						name: 'Joined Server',
 						value: member.joinedAt
 							? `<t:${Math.floor(member.joinedAt.getTime() / 1000)}:F>`
-							: "Unknown",
+							: 'Unknown',
 						inline: true,
 					},
 				)
 				.setThumbnail(member.user.displayAvatarURL())
-				.setFooter({ text: `User ID: ${kickEntry.executor?.id || "Unknown"}` })
+				.setFooter({ text: `User ID: ${kickEntry.executor?.id || 'Unknown'}` })
 				.setTimestamp();
 
 			if (kickEntry.reason) {
-				embed.addFields({ name: "Reason", value: kickEntry.reason });
+				embed.addFields({ name: 'Reason', value: kickEntry.reason });
 			}
 
 			await logChannel.send({ embeds: [embed] });
@@ -78,24 +78,24 @@ module.exports = async (bot, member) => {
 
 		// Regular leave (not kicked)
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Orange", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Orange', { from: 'discord', to: 'decimal' }))
 			.setDescription(`👋 **Member Left**`)
 			.addFields(
 				{
-					name: "User",
+					name: 'User',
 					value: `${member.user.tag} (${member.user.id})`,
 					inline: true,
 				},
 				{
-					name: "Account Created",
+					name: 'Account Created',
 					value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:F>`,
 					inline: true,
 				},
 				{
-					name: "Joined Server",
+					name: 'Joined Server',
 					value: member.joinedAt
 						? `<t:${Math.floor(member.joinedAt.getTime() / 1000)}:F>`
-						: "Unknown",
+						: 'Unknown',
 					inline: true,
 				},
 			)
@@ -104,6 +104,6 @@ module.exports = async (bot, member) => {
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in guildMemberRemove audit log:", err);
+		console.error('Error in guildMemberRemove audit log:', err);
 	}
 };

@@ -3,35 +3,35 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { embedFooter } = require("@coreHelpers/discord");
-const { t } = require("@coreHelpers/translator");
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { embedFooter } = require('@coreHelpers/discord');
+const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("guessnumber")
-		.setDescription("Guess the number the bot is thinking of 😋")
+		.setName('guessnumber')
+		.setDescription('Guess the number the bot is thinking of 😋')
 		.addStringOption((option) =>
 			option
-				.setName("mode")
-				.setDescription("Choose difficulty level")
+				.setName('mode')
+				.setDescription('Choose difficulty level')
 				.setRequired(true)
 				.addChoices(
-					{ name: "Easy (1 - 50)", value: "easy" },
-					{ name: "Medium (1 - 100)", value: "medium" },
-					{ name: "Hard (1 - 500)", value: "hard" },
+					{ name: 'Easy (1 - 50)', value: 'easy' },
+					{ name: 'Medium (1 - 100)', value: 'medium' },
+					{ name: 'Hard (1 - 500)', value: 'hard' },
 				),
 		),
 
 	async execute(interaction) {
-		const mode = interaction.options.getString("mode");
+		const mode = interaction.options.getString('mode');
 		let maxNumber = 100;
 
-		if (mode === "easy") maxNumber = 50;
-		if (mode === "medium") maxNumber = 100;
-		if (mode === "hard") maxNumber = 500;
+		if (mode === 'easy') maxNumber = 50;
+		if (mode === 'medium') maxNumber = 100;
+		if (mode === 'hard') maxNumber = 500;
 
 		const number = Math.floor(Math.random() * maxNumber) + 1;
 		let attempts = 0;
@@ -41,23 +41,23 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setDescription(
-				(await t(interaction, "fun.guessnumber.desc", { maxNumber })) +
-					"\n\n-# " +
-					(await t(interaction, "fun.guessnumber.hint")),
+				(await t(interaction, 'fun.guessnumber.desc', { maxNumber })) +
+					'\n\n-# ' +
+					(await t(interaction, 'fun.guessnumber.hint')),
 			)
 			.addFields(
 				{
-					name: await t(interaction, "fun.guessnumber.mode.field"),
+					name: await t(interaction, 'fun.guessnumber.mode.field'),
 					value: `${mode.toUpperCase()}`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "fun.guessnumber.timeleft.field"),
+					name: await t(interaction, 'fun.guessnumber.timeleft.field'),
 					value: `<t:${endTime}:R>`,
 					inline: true,
 				},
 			)
-			.setColor("Blue")
+			.setColor('Blue')
 			.setFooter(await embedFooter(interaction))
 			.setTimestamp();
 
@@ -66,8 +66,8 @@ module.exports = {
 			const dm = await interaction.user.createDM();
 			await dm.send({ embeds: [embed] });
 			const dmEmbed = new EmbedBuilder()
-				.setDescription(await t(interaction, "fun.guessnumber.dm.sent.desc"))
-				.setColor("Blue")
+				.setDescription(await t(interaction, 'fun.guessnumber.dm.sent.desc'))
+				.setColor('Blue')
 				.setFooter(await embedFooter(interaction))
 				.setTimestamp();
 			return interaction.reply({ embeds: [dmEmbed], ephemeral: true });
@@ -88,7 +88,7 @@ module.exports = {
 		let lastUserMessage;
 		let lastBotReply;
 
-		collector.on("collect", async (m) => {
+		collector.on('collect', async (m) => {
 			const guess = parseInt(m.content, 10);
 			attempts++;
 
@@ -107,16 +107,16 @@ module.exports = {
 			lastUserMessage = m;
 
 			if (guess === number) {
-				collector.stop("guessed");
+				collector.stop('guessed');
 
 				const winEmbed = new EmbedBuilder()
 					.setDescription(
-						await t(interaction, "fun.guessnumber.win.desc", {
+						await t(interaction, 'fun.guessnumber.win.desc', {
 							number,
 							attempts,
 						}),
 					)
-					.setColor("Green")
+					.setColor('Green')
 					.setFooter(await embedFooter(interaction))
 					.setTimestamp();
 
@@ -131,18 +131,18 @@ module.exports = {
 			}
 
 			const distance = Math.abs(guess - number);
-			let feedbackKey = "";
+			let feedbackKey = '';
 
 			if (distance <= 5) {
 				feedbackKey =
 					guess < number
-						? "fun_guessnumber_feedback_almost_low"
-						: "fun_guessnumber_feedback_almost_high";
+						? 'fun_guessnumber_feedback_almost_low'
+						: 'fun_guessnumber_feedback_almost_high';
 			} else {
 				feedbackKey =
 					guess < number
-						? "fun_guessnumber_feedback_low"
-						: "fun_guessnumber_feedback_high";
+						? 'fun_guessnumber_feedback_low'
+						: 'fun_guessnumber_feedback_high';
 			}
 
 			const feedback = await t(interaction, feedbackKey);
@@ -150,7 +150,7 @@ module.exports = {
 			// Send feedback as embed
 			const feedbackEmbed = new EmbedBuilder()
 				.setDescription(feedback)
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setFooter(await embedFooter(interaction))
 				.setTimestamp();
 
@@ -159,13 +159,13 @@ module.exports = {
 			});
 		});
 
-		collector.on("end", async (_, reason) => {
-			if (reason !== "guessed") {
+		collector.on('end', async (_, reason) => {
+			if (reason !== 'guessed') {
 				const loseEmbed = new EmbedBuilder()
 					.setDescription(
-						await t(interaction, "fun.guessnumber.lose.desc", { number }),
+						await t(interaction, 'fun.guessnumber.lose.desc', { number }),
 					)
-					.setColor("Red")
+					.setColor('Red')
 					.setFooter(await embedFooter(interaction))
 					.setTimestamp();
 

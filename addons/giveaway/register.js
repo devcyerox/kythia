@@ -3,11 +3,11 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const GiveawayManager = require("./helpers/GiveawayManager");
-const giveawayJoinButton = require("./buttons/giveaway-join");
+const GiveawayManager = require('./helpers/GiveawayManager');
+const giveawayJoinButton = require('./buttons/giveaway-join');
 
 module.exports = {
 	async initialize(bot) {
@@ -16,14 +16,14 @@ module.exports = {
 
 		container.giveawayManager = new GiveawayManager(container);
 
-		bot.registerButtonHandler("giveaway-join", (interaction) => {
+		bot.registerButtonHandler('giveaway-join', (interaction) => {
 			return giveawayJoinButton.execute(interaction, container);
 		});
 		bot.addClientReadyHook(async () => {
 			await container.giveawayManager.init();
 		});
 
-		summary.push("   └─ 🎁 Giveaway Manager (Scheduler Queued)");
+		summary.push('   └─ 🎁 Giveaway Manager (Scheduler Queued)');
 
 		return summary;
 	},

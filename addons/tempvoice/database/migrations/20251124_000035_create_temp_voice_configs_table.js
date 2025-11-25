@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("temp_voice_configs", {
+		await queryInterface.createTable('temp_voice_configs', {
 			guildId: {
 				type: DataTypes.STRING,
 				primaryKey: true,
@@ -23,6 +23,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("temp_voice_configs");
+		await queryInterface.dropTable('temp_voice_configs');
 	},
 };

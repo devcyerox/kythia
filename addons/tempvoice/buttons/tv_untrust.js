@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ActionRowBuilder,
@@ -11,7 +11,7 @@ const {
 	ContainerBuilder,
 	TextDisplayBuilder,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -25,7 +25,7 @@ module.exports = {
 		});
 		if (!activeChannel) {
 			return interaction.reply({
-				content: await t(interaction, "tempvoice.untrust.no_active_channel"),
+				content: await t(interaction, 'tempvoice.untrust.no_active_channel'),
 				ephemeral: true,
 			});
 		}
@@ -33,7 +33,7 @@ module.exports = {
 		const selectMenu = new UserSelectMenuBuilder()
 			.setCustomId(`tv_untrust_menu:${activeChannel.channelId}`)
 			.setPlaceholder(
-				await t(interaction, "tempvoice.untrust.menu.placeholder"),
+				await t(interaction, 'tempvoice.untrust.menu.placeholder'),
 			)
 			.setMinValues(1)
 			.setMaxValues(10);
@@ -41,15 +41,15 @@ module.exports = {
 		const row = new ActionRowBuilder().addComponents(selectMenu);
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const containerComponent = new ContainerBuilder()
 			.setAccentColor(accentColor)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "tempvoice.untrust.menu.content"),
+					await t(interaction, 'tempvoice.untrust.menu.content'),
 				),
 			)
 			.addActionRowComponents(row);

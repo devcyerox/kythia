@@ -3,21 +3,21 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 const symbols = {
-	"🍒": { weight: 25, payout: { two: 1.5, three: 5 } },
-	"🍋": { weight: 25, payout: { two: 1.5, three: 5 } },
-	"🍊": { weight: 20, payout: { two: 2, three: 10 } },
-	"🍉": { weight: 15, payout: { two: 2.5, three: 15 } },
-	"🔔": { weight: 10, payout: { two: 3, three: 25 } },
-	"⭐": { weight: 4, payout: { two: 5, three: 50 } },
-	"💎": { weight: 2, payout: { two: 10, three: 100 } },
-	"💰": { weight: 1, payout: { two: 20, three: 250 } },
-	"🌸": { weight: 0.5, payout: { two: 40, three: 550 } },
+	'🍒': { weight: 25, payout: { two: 1.5, three: 5 } },
+	'🍋': { weight: 25, payout: { two: 1.5, three: 5 } },
+	'🍊': { weight: 20, payout: { two: 2, three: 10 } },
+	'🍉': { weight: 15, payout: { two: 2.5, three: 15 } },
+	'🔔': { weight: 10, payout: { two: 3, three: 25 } },
+	'⭐': { weight: 4, payout: { two: 5, three: 50 } },
+	'💎': { weight: 2, payout: { two: 10, three: 100 } },
+	'💰': { weight: 1, payout: { two: 20, three: 250 } },
+	'🌸': { weight: 0.5, payout: { two: 40, three: 550 } },
 };
 
 function getRandomSymbol() {
@@ -39,14 +39,14 @@ module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("slots")
+			.setName('slots')
 			.setDescription(
 				`🎰 Play the Las Vegas Kythia slot machine! (Warning: Addictive!)`,
 			)
 			.addIntegerOption((option) =>
 				option
-					.setName("bet")
-					.setDescription("The amount of money to bet")
+					.setName('bet')
+					.setDescription('The amount of money to bet')
 					.setRequired(true)
 					.setMinValue(10),
 			),
@@ -56,14 +56,14 @@ module.exports = {
 		const { KythiaUser } = models;
 		const { embedFooter } = helpers.discord;
 
-		const bet = interaction.options.getInteger("bet");
+		const bet = interaction.options.getInteger('bet');
 		const user = await KythiaUser.getCache({ userId: interaction.user.id });
 
 		if (!user) {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -72,9 +72,9 @@ module.exports = {
 
 		if (user.kythiaCoin < bet) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "economy.slots.slots.not.enough.cash", {
+					await t(interaction, 'economy.slots.slots.not.enough.cash', {
 						bet: bet.toLocaleString(),
 						cash: user.kythiaCoin.toLocaleString(),
 					}),
@@ -84,9 +84,9 @@ module.exports = {
 		}
 
 		const spinningEmbed = new EmbedBuilder()
-			.setColor("Yellow")
+			.setColor('Yellow')
 			.setDescription(
-				`## ${await t(interaction, "economy.slots.slots.spinning.title")}\n${await t(interaction, "economy.slots.slots.spinning.desc")}\n\n🎰 | 🎰 | 🎰`,
+				`## ${await t(interaction, 'economy.slots.slots.spinning.title')}\n${await t(interaction, 'economy.slots.slots.spinning.desc')}\n\n🎰 | 🎰 | 🎰`,
 			)
 			.setFooter(await embedFooter(interaction));
 
@@ -99,16 +99,16 @@ module.exports = {
 		const reels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 		const [r1, r2, r3] = reels;
 
-		let resultKey = "eco.slots.lose.title";
-		let resultColor = "Red";
+		let resultKey = 'eco.slots.lose.title';
+		let resultColor = 'Red';
 		let winnings = 0;
 		let payoutMultiplier = 0;
 
 		if (r1.emoji === r2.emoji && r2.emoji === r3.emoji) {
 			payoutMultiplier = r1.payout.three;
 			winnings = Math.floor(bet * payoutMultiplier);
-			resultKey = "eco.slots.jackpot.title";
-			resultColor = "Gold";
+			resultKey = 'eco.slots.jackpot.title';
+			resultColor = 'Gold';
 		} else if (
 			r1.emoji === r2.emoji ||
 			r1.emoji === r3.emoji ||
@@ -120,39 +120,39 @@ module.exports = {
 			else pairSymbol = r2;
 			payoutMultiplier = pairSymbol.payout.two;
 			winnings = Math.floor(bet * payoutMultiplier);
-			resultKey = "eco.slots.bigwin.title";
-			resultColor = "Green";
-		} else if (reels.some((r) => r.emoji === "💰")) {
+			resultKey = 'eco.slots.bigwin.title';
+			resultColor = 'Green';
+		} else if (reels.some((r) => r.emoji === '💰')) {
 			winnings = bet;
 			payoutMultiplier = 1;
-			resultKey = "eco.slots.lucky.title";
-			resultColor = "Blue";
+			resultKey = 'eco.slots.lucky.title';
+			resultColor = 'Blue';
 		}
 
 		if (winnings > 0) {
 			user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(winnings);
 		}
 
-		user.changed("kythiaCoin", true);
+		user.changed('kythiaCoin', true);
 
 		await user.saveAndUpdateCache();
 
 		const fakeRow = () =>
 			`${getRandomSymbol().emoji}  |  ${getRandomSymbol().emoji}  |  ${getRandomSymbol().emoji}`;
 		const slotDisplay = [
-			"```",
+			'```',
 			`  ${fakeRow()}`,
-			"-----------------",
+			'-----------------',
 			`► ${r1.emoji} | ${r2.emoji} | ${r3.emoji} ◄`,
-			"-----------------",
+			'-----------------',
 			`  ${fakeRow()}`,
-			"```",
-		].join("\n");
+			'```',
+		].join('\n');
 
 		const finalEmbed = new EmbedBuilder()
 			.setColor(resultColor)
 			.setAuthor({
-				name: await t(interaction, "economy.slots.slots.author", {
+				name: await t(interaction, 'economy.slots.slots.author', {
 					username: interaction.user.username,
 				}),
 				iconURL: interaction.user.displayAvatarURL(),
@@ -160,17 +160,17 @@ module.exports = {
 			.setDescription(`## ${await t(interaction, resultKey)}\n${slotDisplay}`)
 			.addFields(
 				{
-					name: await t(interaction, "economy.slots.slots.bet.field"),
+					name: await t(interaction, 'economy.slots.slots.bet.field'),
 					value: `🪙 ${bet.toLocaleString()}`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "economy.slots.slots.win.field"),
+					name: await t(interaction, 'economy.slots.slots.win.field'),
 					value: `🪙 ${winnings.toLocaleString()} (${payoutMultiplier}x)`,
 					inline: true,
 				},
 				{
-					name: await t(interaction, "economy.slots.slots.cash.field"),
+					name: await t(interaction, 'economy.slots.slots.cash.field'),
 					value: `💰 ${user.kythiaCoin.toLocaleString()}`,
 					inline: true,
 				},

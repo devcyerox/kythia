@@ -3,21 +3,21 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { MessageFlags } = require("discord.js");
-const { refreshTicketPanel } = require("../../helpers");
+const { MessageFlags } = require('discord.js');
+const { refreshTicketPanel } = require('../../helpers');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("reload")
-			.setDescription("Refreshes a ticket panel (updates buttons & menus).")
+			.setName('reload')
+			.setDescription('Refreshes a ticket panel (updates buttons & menus).')
 			.addStringOption((option) =>
 				option
-					.setName("message_id")
-					.setDescription("Select the panel to refresh.")
+					.setName('message_id')
+					.setDescription('Select the panel to refresh.')
 					.setAutocomplete(true)
 					.setRequired(true),
 			),
@@ -56,25 +56,25 @@ module.exports = {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		try {
-			const panelMessageId = interaction.options.getString("message_id");
+			const panelMessageId = interaction.options.getString('message_id');
 
 			await refreshTicketPanel(panelMessageId, container);
 
-			const desc = await t(interaction, "ticket.panel.reload_success", {
+			const desc = await t(interaction, 'ticket.panel.reload_success', {
 				id: panelMessageId,
 			});
 
 			await interaction.editReply({
 				components: await simpleContainer(interaction, desc, {
-					color: "Green",
+					color: 'Green',
 				}),
 				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (error) {
-			console.error("Error reloading panel:", error);
-			const desc = await t(interaction, "ticket.errors.generic");
+			console.error('Error reloading panel:', error);
+			const desc = await t(interaction, 'ticket.errors.generic');
 			await interaction.editReply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 			});
 		}
 	},

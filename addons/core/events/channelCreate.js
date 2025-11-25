@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder, ChannelType } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder, ChannelType } = require('discord.js');
 
 async function handleAntiNuke(bot, channel, entry) {
 	const container = bot.client.container;
@@ -45,7 +45,7 @@ async function handleAntiNuke(bot, channel, entry) {
 			await member.kick(
 				await t(
 					channel.guild,
-					"core.events.channelCreate.events.channel.create.antinuke.reason",
+					'core.events.channelCreate.events.channel.create.antinuke.reason',
 				),
 			);
 
@@ -60,7 +60,7 @@ async function handleAntiNuke(bot, channel, entry) {
 			if (logChannel?.isTextBased()) {
 				const message = await t(
 					channel.guild,
-					"core.events.channelCreate.events.channel.create.antinuke.kick.log",
+					'core.events.channelCreate.events.channel.create.antinuke.kick.log',
 					{
 						user: member.user,
 					},
@@ -116,42 +116,42 @@ module.exports = async (bot, channel) => {
 		if (!logChannel || !logChannel.isTextBased() || !entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor("Blurple")
+			.setColor('Blurple')
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`📢 **Channel Created** by <@${entry.executor?.id || "Unknown"}>`,
+				`📢 **Channel Created** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
 				{
-					name: "Channel",
+					name: 'Channel',
 					value: `<#${channel.id}> (${channel.name})`,
 					inline: true,
 				},
 				{
-					name: "Type",
+					name: 'Type',
 					value:
 						channel.type === ChannelType.GuildText
-							? "Text Channel"
+							? 'Text Channel'
 							: channel.type === ChannelType.GuildVoice
-								? "Voice Channel"
+								? 'Voice Channel'
 								: channel.type === ChannelType.GuildCategory
-									? "Category"
+									? 'Category'
 									: `Unknown (${channel.type})`,
 					inline: true,
 				},
 			)
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error fetching audit logs for channelCreate:", err);
+		console.error('Error fetching audit logs for channelCreate:', err);
 	}
 };

@@ -3,11 +3,11 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const ServerSetting = require("@addons/core/database/models/ServerSetting");
-const { addXp } = require("../helpers");
+const ServerSetting = require('@addons/core/database/models/ServerSetting');
+const { addXp } = require('../helpers');
 const cooldown = new Map();
 
 /**
@@ -24,9 +24,9 @@ module.exports = async (_bot, message) => {
 	if (!setting || !setting.levelingOn) return;
 
 	const xpPerMessage =
-		typeof setting.levelingXp === "number" ? setting.levelingXp : 15;
+		typeof setting.levelingXp === 'number' ? setting.levelingXp : 15;
 	const cooldownTime =
-		typeof setting.levelingCooldown === "number"
+		typeof setting.levelingCooldown === 'number'
 			? setting.levelingCooldown
 			: 60000;
 	const key = `${guildId}-${userId}`;

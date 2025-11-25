@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { t } = require("@coreHelpers/translator");
-const logger = require("@coreHelpers/logger");
+const { t } = require('@coreHelpers/translator');
+const logger = require('@coreHelpers/logger');
 
 /**
  * Set role prefix to member nicknames, with translation for logs.
@@ -25,7 +25,7 @@ async function rolePrefix(guild, _interaction) {
 			const match = role.name.match(prefixPattern);
 			return {
 				roleId: role.id,
-				prefix: match ? match[1] : "",
+				prefix: match ? match[1] : '',
 				position: role.position,
 			};
 		});
@@ -38,7 +38,7 @@ async function rolePrefix(guild, _interaction) {
 
 		if (!member.manageable && !isBotSelf) {
 			const logMsg =
-				"Member cannot be managed: " +
+				'Member cannot be managed: ' +
 				(member.nickname || member.user.username);
 			logger.info(logMsg);
 			continue;
@@ -48,7 +48,7 @@ async function rolePrefix(guild, _interaction) {
 		if (!matching) continue;
 
 		const currentNick = member.nickname || member.user.username;
-		const baseName = currentNick.replace(prefixPattern, "").trimStart();
+		const baseName = currentNick.replace(prefixPattern, '').trimStart();
 		const newNick = `${matching.prefix} ${baseName}`;
 
 		if (currentNick !== newNick) {
@@ -57,9 +57,9 @@ async function rolePrefix(guild, _interaction) {
 				updated++;
 			} catch (err) {
 				const warnMsg =
-					"❌ Failed to update nickname for " +
+					'❌ Failed to update nickname for ' +
 					member.user.tag +
-					": " +
+					': ' +
 					err.message;
 				logger.warn(warnMsg);
 			}
@@ -85,7 +85,7 @@ async function roleUnprefix(guild, interaction) {
 		if (!member.manageable && !isBotSelf) {
 			const logMsg = await t(
 				interaction,
-				"core.helpers.index.member.not.manageable",
+				'core.helpers.index.member.not.manageable',
 				{
 					name: member.nickname || member.user.username,
 				},
@@ -97,7 +97,7 @@ async function roleUnprefix(guild, interaction) {
 		const currentNick = member.nickname;
 		if (!currentNick || !prefixPattern.test(currentNick)) continue;
 
-		const baseName = currentNick.replace(prefixPattern, "");
+		const baseName = currentNick.replace(prefixPattern, '');
 
 		if (currentNick !== baseName) {
 			try {
@@ -106,7 +106,7 @@ async function roleUnprefix(guild, interaction) {
 			} catch (err) {
 				const warnMsg = await t(
 					interaction,
-					"core.helpers.index.failed.nick.update",
+					'core.helpers.index.failed.nick.update',
 					{
 						tag: member.user.tag,
 						error: err.message,
@@ -126,8 +126,8 @@ async function roleUnprefix(guild, interaction) {
  * @param {object} interaction - Discord interaction/message for translation context
  */
 async function cleanupUserCache(userCache) {
-	if (!userCache || typeof userCache.entries !== "function") {
-		const warnMsg = "⚠️ User cache is invalid or not iterable.";
+	if (!userCache || typeof userCache.entries !== 'function') {
+		const warnMsg = '⚠️ User cache is invalid or not iterable.';
 		logger.warn(warnMsg);
 		return;
 	}
@@ -148,7 +148,7 @@ async function cleanupUserCache(userCache) {
 			userCache.delete(key);
 		}
 	}
-	const logMsg = "🧹 [CACHE CLEANUP] userCache cleaned";
+	const logMsg = '🧹 [CACHE CLEANUP] userCache cleaned';
 	logger.info(logMsg);
 }
 

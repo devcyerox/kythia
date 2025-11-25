@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("temp_voice_channels", {
+		await queryInterface.createTable('temp_voice_channels', {
 			channelId: {
 				type: DataTypes.STRING,
 				primaryKey: true,
@@ -26,10 +26,10 @@ module.exports = {
 			updatedAt: { type: DataTypes.DATE, allowNull: false },
 		});
 
-		await queryInterface.addIndex("temp_voice_channels", ["guildId"]);
-		await queryInterface.addIndex("temp_voice_channels", ["ownerId"]);
+		await queryInterface.addIndex('temp_voice_channels', ['guildId']);
+		await queryInterface.addIndex('temp_voice_channels', ['ownerId']);
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("temp_voice_channels");
+		await queryInterface.dropTable('temp_voice_channels');
 	},
 };

@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const _UserPet = require("../database/models/UserPet");
+const _UserPet = require('../database/models/UserPet');
 
 function updatePetStatus(pet) {
 	const now = Date.now();

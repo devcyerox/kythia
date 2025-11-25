@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("invites", {
+		await queryInterface.createTable('invites', {
 			id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
 			guildId: { type: DataTypes.STRING, allowNull: false },
 			userId: { type: DataTypes.STRING, allowNull: false },
@@ -17,11 +17,11 @@ module.exports = {
 			leaves: { type: DataTypes.INTEGER, defaultValue: 0 },
 		});
 
-		await queryInterface.addIndex("invites", ["guildId", "userId"], {
+		await queryInterface.addIndex('invites', ['guildId', 'userId'], {
 			unique: true,
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("invites");
+		await queryInterface.dropTable('invites');
 	},
 };

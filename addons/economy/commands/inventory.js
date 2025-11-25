@@ -3,16 +3,16 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("inventory")
-			.setDescription("🛄 View all items in your inventory."),
+			.setName('inventory')
+			.setDescription('🛄 View all items in your inventory.'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { KythiaUser, Inventory } = models;
@@ -24,7 +24,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -37,7 +37,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.inventory.inventory.empty"),
+					await t(interaction, 'economy.inventory.inventory.empty'),
 				)
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
@@ -50,7 +50,7 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
-			.setDescription(await t(interaction, "economy.inventory.inventory.title"))
+			.setDescription(await t(interaction, 'economy.inventory.inventory.title'))
 			.setTimestamp()
 			.setFooter(await embedFooter(interaction));
 
@@ -68,12 +68,12 @@ module.exports = {
 					fields.push({
 						name: await t(
 							interaction,
-							"economy.inventory.inventory.item.field.name",
+							'economy.inventory.inventory.item.field.name',
 							{ itemName, count },
 						),
 						value: await t(
 							interaction,
-							"economy.inventory.inventory.item.field.value",
+							'economy.inventory.inventory.item.field.value',
 							{ count },
 						),
 						inline: true,
@@ -82,8 +82,8 @@ module.exports = {
 				} else {
 					// If no more items, but we need to fill the slot, add a filler
 					fields.push({
-						name: "\u200B",
-						value: "\u200B",
+						name: '\u200B',
+						value: '\u200B',
 						inline: true,
 					});
 					i++;
@@ -91,8 +91,8 @@ module.exports = {
 			}
 			// Always add a filler after every 2 items
 			fields.push({
-				name: "\u200B",
-				value: "\u200B",
+				name: '\u200B',
+				value: '\u200B',
 				inline: true,
 			});
 		}

@@ -3,14 +3,14 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { reloadConfig } = require("@coreHelpers/reload-config");
+const { reloadConfig } = require('@coreHelpers/reload-config');
 
 async function reloadLavalinkNodes(client) {
 	const logger = client.container.logger;
-	logger.info("🔄 Attempting to reload Lavalink nodes...");
+	logger.info('🔄 Attempting to reload Lavalink nodes...');
 	reloadConfig();
 
 	for (const node of client.poru.nodes.values()) {
@@ -24,26 +24,26 @@ async function reloadLavalinkNodes(client) {
 		}
 	}
 	client.poru.nodes.clear();
-	logger.info("All old nodes have been cleared.");
+	logger.info('All old nodes have been cleared.');
 
-	const newNodes = (kythia.addons.music.lavalink.hosts || "localhost")
-		.split(",")
+	const newNodes = (kythia.addons.music.lavalink.hosts || 'localhost')
+		.split(',')
 		.map((host, i) => ({
 			name: `Kythia Nodes #${i + 1}`,
 			host: host.trim(),
 			port: parseInt(
-				(kythia.addons.music.lavalink.ports || "2333").split(",")[i] || "2333",
+				(kythia.addons.music.lavalink.ports || '2333').split(',')[i] || '2333',
 				10,
 			),
 			password:
-				(kythia.addons.music.lavalink.passwords || "youshallnotpass").split(
-					",",
-				)[i] || "youshallnotpass",
+				(kythia.addons.music.lavalink.passwords || 'youshallnotpass').split(
+					',',
+				)[i] || 'youshallnotpass',
 			secure:
 				(
-					(kythia.addons.music.lavalink.secures || "false").split(",")[i] ||
-					"false"
-				).toLowerCase() === "true",
+					(kythia.addons.music.lavalink.secures || 'false').split(',')[i] ||
+					'false'
+				).toLowerCase() === 'true',
 		}));
 
 	for (const nodeConfig of newNodes) {
@@ -82,7 +82,7 @@ async function reloadLavalinkNodes(client) {
 			}
 			logger.info(`🚀 Moved ${movedPlayers} player(s) successfully.`);
 		} else {
-			throw new Error("New node failed to connect within the time limit.");
+			throw new Error('New node failed to connect within the time limit.');
 		}
 
 		return true;

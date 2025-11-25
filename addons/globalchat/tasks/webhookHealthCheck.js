@@ -3,12 +3,12 @@
  * @type: Scheduled Task
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const fetch = require("node-fetch");
-const cron = require("node-cron");
-const { handleFailedGlobalChat } = require("../helpers/handleFailedGlobalChat");
+const fetch = require('node-fetch');
+const cron = require('node-cron');
+const { handleFailedGlobalChat } = require('../helpers/handleFailedGlobalChat');
 
 /**
  * Sleep for ms milliseconds
@@ -34,7 +34,7 @@ function initializeWebhookHealthCheck(bot) {
 	const apiUrl = kythiaConfig.addons.globalchat.apiUrl;
 	const apiKey = kythiaConfig.addons.globalchat.apiKey;
 	const schedule =
-		kythiaConfig.addons.globalchat.healthCheckSchedule || "0 */1 * * *";
+		kythiaConfig.addons.globalchat.healthCheckSchedule || '0 */1 * * *';
 	const checkDelayMs = kythiaConfig.addons.globalchat.healthCheckDelay || 1000;
 
 	logger.info(
@@ -45,7 +45,7 @@ function initializeWebhookHealthCheck(bot) {
 		schedule,
 		async () => {
 			logger.info(
-				"🌏 [GlobalChat] Starting webhook health check (API+DB sync, then probe)...",
+				'🌏 [GlobalChat] Starting webhook health check (API+DB sync, then probe)...',
 			);
 
 			// Step 1: Get list from API
@@ -53,16 +53,16 @@ function initializeWebhookHealthCheck(bot) {
 			try {
 				const apiRes = await fetch(`${apiUrl}/list`, {
 					headers: {
-						"Content-Type": "application/json",
+						'Content-Type': 'application/json',
 						Authorization: `Bearer ${apiKey}`,
 					},
 				});
 				if (!apiRes.ok)
 					throw new Error(`API /list returned status ${apiRes.status}`);
 				const apiData = await apiRes.json();
-				if (apiData.status !== "ok" || !Array.isArray(apiData.data?.guilds)) {
+				if (apiData.status !== 'ok' || !Array.isArray(apiData.data?.guilds)) {
 					throw new Error(
-						`API /list failed or returned invalid data: ${apiData.message || apiData.error || "Unknown error"}`,
+						`API /list failed or returned invalid data: ${apiData.message || apiData.error || 'Unknown error'}`,
 					);
 				}
 				apiGuilds = apiData.data.guilds;
@@ -80,7 +80,7 @@ function initializeWebhookHealthCheck(bot) {
 				dbGuilds = await GlobalChat.getAllCache();
 			} catch (err) {
 				logger.error(
-					"❌ [GlobalChat-Cron] Failed to fetch guild list from local DB:",
+					'❌ [GlobalChat-Cron] Failed to fetch guild list from local DB:',
 					err,
 				);
 				return;
@@ -175,7 +175,7 @@ function initializeWebhookHealthCheck(bot) {
 								(await client.guilds.fetch(guildInfo.guildId).catch(() => null))
 									?.name ||
 								guildInfo.guildId,
-							error: "Proactive check failed: 404 Not Found",
+							error: 'Proactive check failed: 404 Not Found',
 						};
 						handleFailedGlobalChat([failedGuild], container).catch((err) => {
 							logger.error(
@@ -198,7 +198,7 @@ function initializeWebhookHealthCheck(bot) {
 			}
 
 			logger.info(
-				"🌏 [GlobalChat] Webhook health check (API+DB sync & probe) finished.",
+				'🌏 [GlobalChat] Webhook health check (API+DB sync & probe) finished.',
 			);
 		},
 		{

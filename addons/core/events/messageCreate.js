@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { kythiaInteraction } = require("../helpers/events");
+const { kythiaInteraction } = require('../helpers/events');
 const {
 	EmbedBuilder,
 	ChannelType,
@@ -20,10 +20,10 @@ const {
 	SeparatorSpacingSize,
 	Collection,
 	WebhookClient,
-} = require("discord.js");
-const { automodSystem } = require("../helpers/automod");
+} = require('discord.js');
+const { automodSystem } = require('../helpers/automod');
 
-const moment = require("moment");
+const moment = require('moment');
 
 module.exports = async (bot, message) => {
 	const client = bot.client;
@@ -60,7 +60,7 @@ module.exports = async (bot, message) => {
 
 			if (!baseCommand) return;
 
-			const remainingArgsString = args.join(" ");
+			const remainingArgsString = args.join(' ');
 			const fakeInteraction = kythiaInteraction(
 				message,
 				commandName,
@@ -123,13 +123,13 @@ module.exports = async (bot, message) => {
 				} catch (_error) {
 					const container = new ContainerBuilder().setAccentColor(
 						convertColor(kythiaConfig.bot.color, {
-							from: "hex",
-							to: "decimal",
+							from: 'hex',
+							to: 'decimal',
 						}),
 					);
 					container.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(message, "common.error.not.in.main.guild.text", {
+							await t(message, 'common.error.not.in.main.guild.text', {
 								name: mainGuild.name,
 							}),
 						),
@@ -145,7 +145,7 @@ module.exports = async (bot, message) => {
 								.setLabel(
 									await t(
 										message,
-										"common.error.not.in.main.guild.button.join",
+										'common.error.not.in.main.guild.button.join',
 									),
 								)
 								.setStyle(ButtonStyle.Link)
@@ -154,7 +154,7 @@ module.exports = async (bot, message) => {
 					);
 					container.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(message, "common.container.footer", {
+							await t(message, 'common.container.footer', {
 								username: message.client.user.username,
 							}),
 						),
@@ -173,13 +173,13 @@ module.exports = async (bot, message) => {
 				if (!voter || voter.votedAt < twelveHoursAgo) {
 					const container = new ContainerBuilder().setAccentColor(
 						convertColor(kythiaConfig.bot.color, {
-							from: "hex",
-							to: "decimal",
+							from: 'hex',
+							to: 'decimal',
 						}),
 					);
 					container.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(message, "common.error.vote.locked.text"),
+							await t(message, 'common.error.vote.locked.text'),
 						),
 					);
 					container.addSeparatorComponents(
@@ -191,7 +191,7 @@ module.exports = async (bot, message) => {
 						new ActionRowBuilder().addComponents(
 							new ButtonBuilder()
 								.setLabel(
-									await t(message, "common.error.vote.locked.button", {
+									await t(message, 'common.error.vote.locked.button', {
 										botName: message.client.user.username,
 									}),
 								)
@@ -206,7 +206,7 @@ module.exports = async (bot, message) => {
 					);
 					container.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(message, "common.container.footer"),
+							await t(message, 'common.container.footer'),
 						),
 					);
 					return message.reply({
@@ -233,7 +233,7 @@ module.exports = async (bot, message) => {
 						timestamps.get(message.author.id) + cooldownAmount;
 					if (now < expirationTime) {
 						const timeLeft = (expirationTime - now) / 1000;
-						const reply = await t(message, "common.error.cooldown", {
+						const reply = await t(message, 'common.error.cooldown', {
 							time: timeLeft.toFixed(1),
 						});
 						return message
@@ -249,12 +249,12 @@ module.exports = async (bot, message) => {
 			}
 
 			try {
-				if (typeof finalCommand.execute === "function") {
+				if (typeof finalCommand.execute === 'function') {
 					await finalCommand.execute(fakeInteraction, client.container);
 				} else {
 					const helpMessage = await t(
 						message,
-						"core.events.messageCreate.subcommand.required",
+						'core.events.messageCreate.subcommand.required',
 						{ command: commandName },
 					);
 					await message.reply(helpMessage);
@@ -266,7 +266,7 @@ module.exports = async (bot, message) => {
 				);
 				await message
 					.reply(
-						await t(message, "core.events.messageCreate.error", {
+						await t(message, 'core.events.messageCreate.error', {
 							command: finalCommandKey,
 						}),
 					)
@@ -278,7 +278,7 @@ module.exports = async (bot, message) => {
 		if (message.guild) {
 			if (
 				isOwner(message.author.id) ||
-				message.member?.permissions.has(["Administrator", "ManageGuild"])
+				message.member?.permissions.has(['Administrator', 'ManageGuild'])
 			) {
 				const isFlagged = await automodSystem(message, client);
 				if (isFlagged) return true;
@@ -300,7 +300,7 @@ module.exports = async (bot, message) => {
 					);
 					const welcomeBackMessage = await t(
 						message,
-						"core.events.messageCreate.back",
+						'core.events.messageCreate.back',
 						{
 							user: message.author.toString(),
 							duration: duration,
@@ -311,7 +311,7 @@ module.exports = async (bot, message) => {
 						.setColor(kythiaConfig.bot.color)
 						.setDescription(welcomeBackMessage)
 						.setFooter({
-							text: await t(message, "common.embed.footer", {
+							text: await t(message, 'common.embed.footer', {
 								username: client.user.username,
 							}),
 						});
@@ -333,25 +333,25 @@ module.exports = async (bot, message) => {
 					await afkData.destroy({ individualHooks: true });
 				}
 			} catch (error) {
-				logger.error("Error when user returned from UserAFK:", error);
+				logger.error('Error when user returned from UserAFK:', error);
 
 				try {
 					const errorMessage = await t(
 						message,
-						"core.events.messageCreate.error",
+						'core.events.messageCreate.error',
 					);
 					const embed = new EmbedBuilder()
 						.setColor(kythiaConfig.bot.color)
 						.setDescription(errorMessage)
 						.setFooter({
-							text: await t(message, "common.embed.footer", {
+							text: await t(message, 'common.embed.footer', {
 								username: message.author.toString(),
 							}),
 						});
 					await message.author.send({ embeds: [embed] });
 				} catch (dmError) {
 					logger.error(
-						"Failed to send DM error from UserAFK to user:",
+						'Failed to send DM error from UserAFK to user:',
 						dmError,
 					);
 				}
@@ -360,7 +360,7 @@ module.exports = async (bot, message) => {
 					await afkData
 						.destroy()
 						.catch((e) =>
-							logger.error("Failed to delete UserAFK data after error:", e),
+							logger.error('Failed to delete UserAFK data after error:', e),
 						);
 				}
 			}
@@ -384,7 +384,7 @@ module.exports = async (bot, message) => {
 							const reason = mentionedAfkData.reason;
 							const afkReplyLine = await t(
 								message,
-								"core.events.messageCreate.line",
+								'core.events.messageCreate.line',
 								{
 									user: user.tag,
 									reason: reason,
@@ -402,12 +402,12 @@ module.exports = async (bot, message) => {
 				}
 
 				if (afkReplies.length > 0) {
-					const combinedReply = afkReplies.join("\n");
+					const combinedReply = afkReplies.join('\n');
 					const embed = new EmbedBuilder()
 						.setColor(kythiaConfig.bot.color)
 						.setDescription(combinedReply)
 						.setFooter({
-							text: await t(message, "common.embed.footer", {
+							text: await t(message, 'common.embed.footer', {
 								username: client.user.username,
 							}),
 						});
@@ -429,36 +429,36 @@ module.exports = async (bot, message) => {
 					}
 					const stickyEmbed = new EmbedBuilder()
 						.setTitle(
-							await t(message, "core.events.messageCreate.sticky.title"),
+							await t(message, 'core.events.messageCreate.sticky.title'),
 						)
 						.setDescription(sticky.message)
 						.setColor(kythiaConfig.bot.color)
 						.setFooter({
-							text: await t(message, "common.embed.footer", {
+							text: await t(message, 'common.embed.footer', {
 								username: client.user.username,
 							}),
 						});
 
 					const sent = await message.channel.send({ embeds: [stickyEmbed] });
 					sticky.messageId = sent.id;
-					sticky.changed("messageId", true);
-					await sticky.saveAndUpdateCache("channelId");
+					sticky.changed('messageId', true);
+					await sticky.saveAndUpdateCache('channelId');
 				}
 			} catch (err) {
-				logger.error("❌ Error loading sticky:", err);
+				logger.error('❌ Error loading sticky:', err);
 			}
 		}
 	} catch (error) {
 		// Begin enhanced error formatting and reporting
 		logger.error(
-			`Error in messageCreate handler for ${message.author ? message.author.tag : "???"}:`,
+			`Error in messageCreate handler for ${message.author ? message.author.tag : '???'}:`,
 			error,
 		);
 
 		// Sentry report (if available)
 		if (
 			kythiaConfig.sentry?.dsn &&
-			typeof Sentry !== "undefined" &&
+			typeof Sentry !== 'undefined' &&
 			Sentry.withScope
 		) {
 			try {
@@ -470,10 +470,10 @@ module.exports = async (bot, message) => {
 						});
 					}
 					if (message.content) {
-						scope.setTag("content", message.content);
+						scope.setTag('content', message.content);
 					}
 					if (message.guild) {
-						scope.setContext("guild", {
+						scope.setContext('guild', {
 							id: message.guild.id,
 							name: message.guild.name,
 						});
@@ -481,24 +481,24 @@ module.exports = async (bot, message) => {
 					Sentry.captureException(error);
 				});
 			} catch (err) {
-				logger.error("Failed to send error to Sentry from messageCreate:", err);
+				logger.error('Failed to send error to Sentry from messageCreate:', err);
 			}
 		}
 
 		// Container Builder user error message
 		try {
 			const ownerFirstId = kythiaConfig.owner?.ids
-				? kythiaConfig.owner.ids.split(",")[0].trim()
-				: "";
+				? kythiaConfig.owner.ids.split(',')[0].trim()
+				: '';
 
 			const components = [
 				new ContainerBuilder()
 					.setAccentColor(
-						convertColor("Red", { from: "discord", to: "decimal" }),
+						convertColor('Red', { from: 'discord', to: 'decimal' }),
 					)
 					.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							await t(message, "common.error.generic"),
+							await t(message, 'common.error.generic'),
 						),
 					)
 					.addSeparatorComponents(
@@ -511,25 +511,25 @@ module.exports = async (bot, message) => {
 							new ButtonBuilder()
 								.setStyle(ButtonStyle.Link)
 								.setLabel(
-									await t(message, "common.error.button.join.support.server"),
+									await t(message, 'common.error.button.join.support.server'),
 								)
 								.setURL(kythiaConfig.settings.supportServer),
 							new ButtonBuilder()
 								.setStyle(ButtonStyle.Link)
-								.setLabel(await t(message, "common.error.button.contact.owner"))
+								.setLabel(await t(message, 'common.error.button.contact.owner'))
 								.setURL(`discord://-/users/${ownerFirstId}`),
 						),
 					),
 			];
 
-			if (message.channel && typeof message.reply === "function") {
+			if (message.channel && typeof message.reply === 'function') {
 				await message
 					.reply({
 						components,
 						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
 					})
 					.catch(() => {});
-			} else if (message.author && typeof message.author.send === "function") {
+			} else if (message.author && typeof message.author.send === 'function') {
 				await message.author
 					.send({
 						components,
@@ -538,7 +538,7 @@ module.exports = async (bot, message) => {
 					.catch(() => {});
 			}
 		} catch (e) {
-			logger.error("Failed to send messageCreate error message to user:", e);
+			logger.error('Failed to send messageCreate error message to user:', e);
 		}
 
 		// Webhook logging
@@ -552,21 +552,21 @@ module.exports = async (bot, message) => {
 					url: kythiaConfig.api.webhookErrorLogs,
 				});
 				const errorEmbed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						`## ❌ Error at ${message.author ? message.author.tag : "???"}\n` +
+						`## ❌ Error at ${message.author ? message.author.tag : '???'}\n` +
 							`\`\`\`${error?.stack ? error.stack : `${error}`}\`\`\``,
 					)
 					.setFooter({
 						text: message.guild
 							? `Error from server ${message.guild.name}`
-							: "Error from DM",
+							: 'Error from DM',
 					})
 					.setTimestamp();
 				await webhookClient.send({ embeds: [errorEmbed] });
 			}
 		} catch (webhookErr) {
-			logger.error("Error sending messageCreate error webhook:", webhookErr);
+			logger.error('Error sending messageCreate error webhook:', webhookErr);
 		}
 	}
 };

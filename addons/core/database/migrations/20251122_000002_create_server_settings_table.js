@@ -3,16 +3,16 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("server_settings", {
+		await queryInterface.createTable('server_settings', {
 			// GENERAL SETTING
 			guildId: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
 			guildName: { type: DataTypes.STRING, allowNull: false },
-			lang: { type: DataTypes.STRING, defaultValue: "en" },
+			lang: { type: DataTypes.STRING, defaultValue: 'en' },
 
 			// AUTOMOD
 			whitelist: { type: DataTypes.JSON, defaultValue: [] },
@@ -72,14 +72,14 @@ module.exports = {
 			welcomeInForegroundUrl: { type: DataTypes.STRING, allowNull: true },
 			welcomeInOverlayColor: {
 				type: DataTypes.STRING,
-				defaultValue: "rgba(0,0,0,0.4)",
+				defaultValue: 'rgba(0,0,0,0.4)',
 			},
 
 			welcomeInAvatarEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
 			welcomeInAvatarSize: { type: DataTypes.INTEGER, defaultValue: 128 },
 			welcomeInAvatarShape: {
-				type: DataTypes.ENUM("circle", "square"),
-				defaultValue: "circle",
+				type: DataTypes.ENUM('circle', 'square'),
+				defaultValue: 'circle',
 			},
 			welcomeInAvatarYOffset: { type: DataTypes.INTEGER, defaultValue: -20 },
 			welcomeInAvatarBorderWidth: {
@@ -88,24 +88,24 @@ module.exports = {
 			},
 			welcomeInAvatarBorderColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 
 			welcomeInMainTextContent: {
 				type: DataTypes.TEXT,
-				defaultValue: "WELCOMEIn, {username}!",
+				defaultValue: 'WELCOMEIn, {username}!',
 			},
 			welcomeInMainTextFont: {
 				type: DataTypes.STRING,
-				defaultValue: "bold 42px Poppins-Bold",
+				defaultValue: 'bold 42px Poppins-Bold',
 			},
 			welcomeInMainTextFontFamily: {
 				type: DataTypes.STRING,
-				defaultValue: "Poppins-Bold",
+				defaultValue: 'Poppins-Bold',
 			},
 			welcomeInMainTextColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 			welcomeInMainTextYOffset: {
 				type: DataTypes.INTEGER,
@@ -114,37 +114,37 @@ module.exports = {
 
 			welcomeInSubTextContent: {
 				type: DataTypes.TEXT,
-				defaultValue: "You are the #{memberCount} member",
+				defaultValue: 'You are the #{memberCount} member',
 			},
 			welcomeInSubTextFont: {
 				type: DataTypes.STRING,
-				defaultValue: "32px Poppins-Bold",
+				defaultValue: '32px Poppins-Bold',
 			},
 			welcomeInSubTextFontFamily: {
 				type: DataTypes.STRING,
-				defaultValue: "Poppins-Bold",
+				defaultValue: 'Poppins-Bold',
 			},
 			welcomeInSubTextColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 			welcomeInSubTextYOffset: { type: DataTypes.INTEGER, defaultValue: 100 },
 
 			welcomeInShadowColor: {
 				type: DataTypes.STRING,
-				defaultValue: "rgba(0,0,0,0.5)",
+				defaultValue: 'rgba(0,0,0,0.5)',
 			},
 			welcomeInShadowBlur: { type: DataTypes.INTEGER, defaultValue: 5 },
 
 			welcomeInBorderColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 			welcomeInBorderWidth: { type: DataTypes.INTEGER, defaultValue: 4 },
 
 			welcomeInExtraDraw: {
 				type: DataTypes.STRING,
-				defaultValue: "classicCentered",
+				defaultValue: 'classicCentered',
 			},
 
 			// WELCOME OUT (mirror of WELCOME IN)
@@ -155,7 +155,7 @@ module.exports = {
 			welcomeOutForegroundUrl: { type: DataTypes.STRING, allowNull: true },
 			welcomeOutOverlayColor: {
 				type: DataTypes.STRING,
-				defaultValue: "rgba(0,0,0,0.4)",
+				defaultValue: 'rgba(0,0,0,0.4)',
 			},
 
 			welcomeOutAvatarEnabled: {
@@ -164,8 +164,8 @@ module.exports = {
 			},
 			welcomeOutAvatarSize: { type: DataTypes.INTEGER, defaultValue: 128 },
 			welcomeOutAvatarShape: {
-				type: DataTypes.ENUM("circle", "square"),
-				defaultValue: "circle",
+				type: DataTypes.ENUM('circle', 'square'),
+				defaultValue: 'circle',
 			},
 			welcomeOutAvatarYOffset: { type: DataTypes.INTEGER, defaultValue: -20 },
 			welcomeOutAvatarBorderWidth: {
@@ -174,24 +174,24 @@ module.exports = {
 			},
 			welcomeOutAvatarBorderColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 
 			welcomeOutMainTextContent: {
 				type: DataTypes.TEXT,
-				defaultValue: "Goodbye, {username}!",
+				defaultValue: 'Goodbye, {username}!',
 			},
 			welcomeOutMainTextFont: {
 				type: DataTypes.STRING,
-				defaultValue: "bold 42px Poppins-Bold",
+				defaultValue: 'bold 42px Poppins-Bold',
 			},
 			welcomeOutMainTextFontFamily: {
 				type: DataTypes.STRING,
-				defaultValue: "Poppins-Bold",
+				defaultValue: 'Poppins-Bold',
 			},
 			welcomeOutMainTextColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 			welcomeOutMainTextYOffset: {
 				type: DataTypes.INTEGER,
@@ -200,19 +200,19 @@ module.exports = {
 
 			welcomeOutSubTextContent: {
 				type: DataTypes.TEXT,
-				defaultValue: "We hope to see you again",
+				defaultValue: 'We hope to see you again',
 			},
 			welcomeOutSubTextFont: {
 				type: DataTypes.STRING,
-				defaultValue: "32px Poppins-Bold",
+				defaultValue: '32px Poppins-Bold',
 			},
 			welcomeOutSubTextFontFamily: {
 				type: DataTypes.STRING,
-				defaultValue: "Poppins-Bold",
+				defaultValue: 'Poppins-Bold',
 			},
 			welcomeOutSubTextColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 			welcomeOutSubTextYOffset: {
 				type: DataTypes.INTEGER,
@@ -221,19 +221,19 @@ module.exports = {
 
 			welcomeOutShadowColor: {
 				type: DataTypes.STRING,
-				defaultValue: "rgba(0,0,0,0.5)",
+				defaultValue: 'rgba(0,0,0,0.5)',
 			},
 			welcomeOutShadowBlur: { type: DataTypes.INTEGER, defaultValue: 5 },
 
 			welcomeOutBorderColor: {
 				type: DataTypes.STRING,
-				defaultValue: "#FFFFFF",
+				defaultValue: '#FFFFFF',
 			},
 			welcomeOutBorderWidth: { type: DataTypes.INTEGER, defaultValue: 4 },
 
 			welcomeOutExtraDraw: {
 				type: DataTypes.STRING,
-				defaultValue: "classicCentered",
+				defaultValue: 'classicCentered',
 			},
 
 			// MINECRAFT
@@ -258,9 +258,9 @@ module.exports = {
 			// STORE
 			openCloseType: {
 				type: DataTypes.ENUM(
-					"channelname",
-					"channelmessage",
-					"channelnameandmessage",
+					'channelname',
+					'channelmessage',
+					'channelnameandmessage',
 				),
 				allowNull: true,
 			},
@@ -272,7 +272,7 @@ module.exports = {
 
 			// STREAK
 			streakRoleRewards: { type: DataTypes.JSON, defaultValue: [] },
-			streakEmoji: { type: DataTypes.STRING, defaultValue: "🔥" },
+			streakEmoji: { type: DataTypes.STRING, defaultValue: '🔥' },
 			streakMinimum: { type: DataTypes.INTEGER, defaultValue: 3 },
 
 			announcementChannelId: { type: DataTypes.STRING, allowNull: true },
@@ -284,6 +284,6 @@ module.exports = {
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("server_settings");
+		await queryInterface.dropTable('server_settings');
 	},
 };

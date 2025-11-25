@@ -3,10 +3,10 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const CloudflareApi = require("./helpers/CloudflareApi");
+const CloudflareApi = require('./helpers/CloudflareApi');
 
 module.exports = {
 	async initialize(bot) {
@@ -19,40 +19,40 @@ module.exports = {
 
 			if (KythiaUser && Subdomain) {
 				KythiaUser.hasMany(Subdomain, {
-					foreignKey: "userId",
-					as: "subdomains",
-					onDelete: "CASCADE",
+					foreignKey: 'userId',
+					as: 'subdomains',
+					onDelete: 'CASCADE',
 				});
 				Subdomain.belongsTo(KythiaUser, {
-					foreignKey: "userId",
-					as: "kythiaUser",
+					foreignKey: 'userId',
+					as: 'kythiaUser',
 				});
 			}
 
 			if (Subdomain && DnsRecord) {
 				Subdomain.hasMany(DnsRecord, {
-					foreignKey: "subdomainId",
-					as: "dnsRecords",
-					onDelete: "CASCADE",
+					foreignKey: 'subdomainId',
+					as: 'dnsRecords',
+					onDelete: 'CASCADE',
 				});
 				DnsRecord.belongsTo(Subdomain, {
-					foreignKey: "subdomainId",
-					as: "subdomain",
+					foreignKey: 'subdomainId',
+					as: 'subdomain',
 				});
 			}
 
 			if (KythiaUser && Monitor) {
 				KythiaUser.hasMany(Monitor, {
-					foreignKey: "userId",
-					as: "monitors",
-					onDelete: "CASCADE",
+					foreignKey: 'userId',
+					as: 'monitors',
+					onDelete: 'CASCADE',
 				});
 				Monitor.belongsTo(KythiaUser, {
-					foreignKey: "userId",
-					as: "kythiaUser",
+					foreignKey: 'userId',
+					as: 'kythiaUser',
 				});
 			}
-			summary.push(" └─ DnsRecord & Monitor model associations registered.");
+			summary.push(' └─ DnsRecord & Monitor model associations registered.');
 
 			try {
 				const cloudflareService = new CloudflareApi({
@@ -67,13 +67,13 @@ module.exports = {
 
 				bot.client.container.services.cloudflare = cloudflareService;
 
-				summary.push(" └─ ✅ Cloudflare Service ready.");
+				summary.push(' └─ ✅ Cloudflare Service ready.');
 			} catch (error) {
 				logger.error(
-					"🔥 FATAL: Failed to initialize Cloudflare Service:",
+					'🔥 FATAL: Failed to initialize Cloudflare Service:',
 					error,
 				);
-				summary.push(" └─ ❌ FAILED to load Cloudflare Service.");
+				summary.push(' └─ ❌ FAILED to load Cloudflare Service.');
 			}
 		});
 

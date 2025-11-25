@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ContainerBuilder,
@@ -18,11 +18,11 @@ const {
 	MessageFlags,
 	SectionBuilder,
 	ThumbnailBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
-const DISCORD_ASSET_URL = "https://cdn.discordapp.com/";
+const DISCORD_ASSET_URL = 'https://cdn.discordapp.com/';
 const ORB_URL =
-	"https://cdn.discordapp.com/assets/content/fb761d9c206f93cd8c4e7301798abe3f623039a4054f2e7accd019e1bb059fc8.webm?format=webp";
+	'https://cdn.discordapp.com/assets/content/fb761d9c206f93cd8c4e7301798abe3f623039a4054f2e7accd019e1bb059fc8.webm?format=webp';
 
 async function buildQuestNotification(container, quest, role) {
 	const { kythiaConfig, helpers, t } = container;
@@ -30,8 +30,8 @@ async function buildQuestNotification(container, quest, role) {
 
 	const { config } = quest;
 	const accentColor = convertColor(kythiaConfig.bot.color, {
-		from: "hex",
-		to: "decimal",
+		from: 'hex',
+		to: 'decimal',
 	});
 	const fakeInteraction = { client: container.client };
 
@@ -47,7 +47,7 @@ async function buildQuestNotification(container, quest, role) {
 
 	if (reward.orb_quantity && reward.orb_quantity > 0) {
 		rewardAssetUrl = ORB_URL;
-	} else if (reward.asset && !reward.asset.endsWith(".mp4")) {
+	} else if (reward.asset && !reward.asset.endsWith('.mp4')) {
 		rewardAssetUrl = `${DISCORD_ASSET_URL}${reward.asset}`;
 	}
 	const ctaLink = `https://discord.com/quests/${config.id}`;
@@ -57,7 +57,7 @@ async function buildQuestNotification(container, quest, role) {
 	);
 
 	function formatDuration(seconds) {
-		if (seconds === 0) return "0 sec";
+		if (seconds === 0) return '0 sec';
 		const mins = Math.floor(seconds / 60);
 		const secs = seconds % 60;
 		if (mins > 0 && secs > 0) {
@@ -72,7 +72,7 @@ async function buildQuestNotification(container, quest, role) {
 
 	const taskList = tasks
 		.map((task) => {
-			let platform = task.type.replace(/_/g, " ").toLowerCase();
+			let platform = task.type.replace(/_/g, ' ').toLowerCase();
 			platform = platform.charAt(0).toUpperCase() + platform.slice(1);
 
 			const durationStr = formatDuration(task.target);
@@ -114,7 +114,7 @@ async function buildQuestNotification(container, quest, role) {
 						`### Game: \n${gameTitle}\n` +
 						`### Publisher: \n${gamePublisher}\n` +
 						`### Expires: \n<t:${expiresTimestamp}:f> (<t:${expiresTimestamp}:R>)\n` +
-						`${role ? `### Notify: \n${role}\n` : ""}`,
+						`${role ? `### Notify: \n${role}\n` : ''}`,
 				),
 			)
 			.setThumbnailAccessory(
@@ -140,10 +140,10 @@ async function buildQuestNotification(container, quest, role) {
 		containerBuilder.addActionRowComponents(
 			new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
-					.setLabel("View Quest")
+					.setLabel('View Quest')
 					.setStyle(ButtonStyle.Link)
 					.setURL(ctaLink)
-					.setEmoji("🌸"),
+					.setEmoji('🌸'),
 			),
 		);
 	}
@@ -156,7 +156,7 @@ async function buildQuestNotification(container, quest, role) {
 
 	containerBuilder.addTextDisplayComponents(
 		new TextDisplayBuilder().setContent(
-			await t(fakeInteraction, "common.container.footer", {
+			await t(fakeInteraction, 'common.container.footer', {
 				username: kythiaConfig.bot.name,
 			}),
 		),

@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("kick")
-			.setDescription("⚠️ Kick a user from the server.")
+			.setName('kick')
+			.setDescription('⚠️ Kick a user from the server.')
 			.addUserOption((option) =>
-				option.setName("user").setDescription("User to kick").setRequired(true),
+				option.setName('user').setDescription('User to kick').setRequired(true),
 			)
 			.addStringOption((option) =>
 				option
-					.setName("reason")
-					.setDescription("Reason for kick (optional)")
+					.setName('reason')
+					.setDescription('Reason for kick (optional)')
 					.setRequired(false),
 			),
 	permissions: PermissionFlagsBits.KickMembers,
@@ -30,15 +30,15 @@ module.exports = {
 
 		await interaction.deferReply();
 		const setting = ServerSetting.getCache({ guildId: interaction.guild.id });
-		const user = interaction.options.getUser("user");
+		const user = interaction.options.getUser('user');
 		const reason =
-			interaction.options.getString("reason") ||
-			(await t(interaction, "core.moderation.kick.default.reason"));
+			interaction.options.getString('reason') ||
+			(await t(interaction, 'core.moderation.kick.default.reason'));
 
 		// Prevent self-kick
 		if (user.id === interaction.user.id) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.kick.cannot.self"),
+				content: await t(interaction, 'core.moderation.kick.cannot.self'),
 				ephemeral: true,
 			});
 		}
@@ -58,10 +58,10 @@ module.exports = {
 				);
 				if (modLogChannel) {
 					const modLogEmbed = new EmbedBuilder()
-						.setColor("Red")
-						.setTitle(await t(interaction, "core.moderation.kick.modlog.title"))
+						.setColor('Red')
+						.setTitle(await t(interaction, 'core.moderation.kick.modlog.title'))
 						.setDescription(
-							await t(interaction, "core.moderation.kick.modlog.desc", {
+							await t(interaction, 'core.moderation.kick.modlog.desc', {
 								member: user.tag,
 								kicker: interaction.user.tag,
 								reason,
@@ -75,10 +75,10 @@ module.exports = {
 				}
 			}
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setTitle(await t(interaction, "core.moderation.kick.embed.title"))
+				.setColor('Red')
+				.setTitle(await t(interaction, 'core.moderation.kick.embed.title'))
 				.setDescription(
-					await t(interaction, "core.moderation.kick.embed.desc", {
+					await t(interaction, 'core.moderation.kick.embed.desc', {
 						member: user.tag,
 						kicker: interaction.user.tag,
 						reason,
@@ -90,7 +90,7 @@ module.exports = {
 			return interaction.editReply({ embeds: [embed] });
 		} else {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.kick.user.not.found"),
+				content: await t(interaction, 'core.moderation.kick.user.not.found'),
 				ephemeral: true,
 			});
 		}

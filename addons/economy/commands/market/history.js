@@ -3,16 +3,16 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("history")
-			.setDescription("View your transaction history."),
+			.setName('history')
+			.setDescription('View your transaction history.'),
 
 	async execute(interaction, container) {
 		const { t, models, helpers } = container;
@@ -26,7 +26,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -36,7 +36,7 @@ module.exports = {
 		try {
 			const transactions = await MarketTransaction.getAllCache({
 				where: { userId: interaction.user.id },
-				order: [["createdAt", "DESC"]],
+				order: [['createdAt', 'DESC']],
 				limit: 10,
 				cacheTags: [`MarketTransaction:byUser:${interaction.user.id}`],
 			});
@@ -45,7 +45,7 @@ module.exports = {
 				const emptyEmbed = new EmbedBuilder()
 					.setColor(kythia.bot.color)
 					.setDescription(
-						`## ${await t(interaction, "economy.market.history.empty.title")}\n${await t(interaction, "economy.market.history.empty.desc")}`,
+						`## ${await t(interaction, 'economy.market.history.empty.title')}\n${await t(interaction, 'economy.market.history.empty.desc')}`,
 					)
 					.setFooter(await embedFooter(interaction));
 				return interaction.editReply({ embeds: [emptyEmbed] });
@@ -54,15 +54,15 @@ module.exports = {
 			const description = transactions
 				.map((tx) => {
 					const side = tx.type.charAt(0).toUpperCase() + tx.type.slice(1);
-					const emoji = tx.type === "buy" ? "🟢" : "🔴";
+					const emoji = tx.type === 'buy' ? '🟢' : '🔴';
 					return `${emoji} **${side} ${tx.quantity.toFixed(6)} ${tx.assetId.toUpperCase()}** at $${tx.price.toLocaleString()} each\n*${new Date(tx.createdAt).toLocaleString()}*`;
 				})
-				.join("\n\n");
+				.join('\n\n');
 
 			const historyEmbed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setTitle(
-					await t(interaction, "economy.market.history.title", {
+					await t(interaction, 'economy.market.history.title', {
 						username: interaction.user.username,
 					}),
 				)
@@ -71,11 +71,11 @@ module.exports = {
 
 			await interaction.editReply({ embeds: [historyEmbed] });
 		} catch (error) {
-			console.error("Error in history command:", error);
+			console.error('Error in history command:', error);
 			const errorEmbed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					`## ${await t(interaction, "economy.market.history.error.title")}\n${await t(interaction, "economy.market.history.error.desc")}`,
+					`## ${await t(interaction, 'economy.market.history.error.title')}\n${await t(interaction, 'economy.market.history.error.desc')}`,
 				);
 			await interaction.editReply({ embeds: [errorEmbed] });
 		}

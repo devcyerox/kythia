@@ -3,9 +3,9 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { PermissionsBitField, MessageFlags } = require("discord.js");
+const { PermissionsBitField, MessageFlags } = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -13,14 +13,14 @@ module.exports = {
 		const { simpleContainer } = helpers.discord;
 		const { TempVoiceChannel } = models;
 
-		const channelId = interaction.customId.split(":")[1];
+		const channelId = interaction.customId.split(':')[1];
 
 		if (!channelId)
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.no_channel_id"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.no_channel_id'),
+					{ color: 'Red' },
 				),
 			});
 		const activeChannel = await TempVoiceChannel.getCache({
@@ -31,8 +31,8 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.not_owner"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.not_owner'),
+					{ color: 'Red' },
 				),
 			});
 
@@ -43,9 +43,9 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.channel_not_found"),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
@@ -57,9 +57,9 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.transfer.transfer_to_self"),
+					await t(interaction, 'tempvoice.transfer.transfer_to_self'),
 					{
-						color: "Yellow",
+						color: 'Yellow',
 					},
 				),
 			});
@@ -72,8 +72,8 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.transfer.user_not_found"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.transfer.user_not_found'),
+					{ color: 'Red' },
 				),
 			});
 
@@ -94,16 +94,16 @@ module.exports = {
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.transfer.success", {
+					await t(interaction, 'tempvoice.transfer.success', {
 						user: newOwnerMember.displayName,
 					}),
-					{ color: "Green" },
+					{ color: 'Green' },
 				),
 			});
 			try {
 				const newOwnerMsgContent = await t(
 					interaction,
-					"tempvoice.transfer.newowner",
+					'tempvoice.transfer.newowner',
 					{
 						user: `<@${newOwnerId}>`,
 					},
@@ -111,7 +111,7 @@ module.exports = {
 
 				await channel.send({
 					components: await simpleContainer(interaction, newOwnerMsgContent, {
-						color: "Green",
+						color: 'Green',
 					}),
 					flags: MessageFlags.IsComponentsV2, // Pastiin pake V2
 				});
@@ -124,8 +124,8 @@ module.exports = {
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.fail'),
+					{ color: 'Red' },
 				),
 			});
 		}

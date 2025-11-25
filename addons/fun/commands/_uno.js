@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -14,64 +14,64 @@ const {
 	StringSelectMenuBuilder,
 	EmbedBuilder,
 	ComponentType,
-} = require("discord.js");
-const { UnoGame } = require("../helpers/unoGame"); // Sesuaikan path
+} = require('discord.js');
+const { UnoGame } = require('../helpers/unoGame'); // Sesuaikan path
 
 // Helper tidak berubah
 const createBotUser = (id, name) => ({ id, username: name, bot: true });
 const formatCard = (card) => {
 	const colors = {
-		RED: "🟥",
-		YELLOW: "🟨",
-		GREEN: "🟩",
-		BLUE: "🟦",
-		WILD: "🌈",
+		RED: '🟥',
+		YELLOW: '🟨',
+		GREEN: '🟩',
+		BLUE: '🟦',
+		WILD: '🌈',
 	};
 	const values = {
-		SKIP: "🚫",
-		REVERSE: "🔄",
-		DRAW_2: "+2",
-		WILD: "Wild",
-		WILD_DRAW_4: "+4",
+		SKIP: '🚫',
+		REVERSE: '🔄',
+		DRAW_2: '+2',
+		WILD: 'Wild',
+		WILD_DRAW_4: '+4',
 	};
 	const color = card.color ? colors[card.color] : colors.WILD;
-	const value = card.type === "NUMBER" ? card.value : values[card.type];
+	const value = card.type === 'NUMBER' ? card.value : values[card.type];
 	return `${color} ${value}`;
 };
 const getEmbedColor = (color) => {
 	const map = {
-		RED: "#ff5555",
-		YELLOW: "#ffaa00",
-		GREEN: "#55aa55",
-		BLUE: "#5555ff",
+		RED: '#ff5555',
+		YELLOW: '#ffaa00',
+		GREEN: '#55aa55',
+		BLUE: '#5555ff',
 	};
-	return map[color] || "#ffffff";
+	return map[color] || '#ffffff';
 };
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("uno")
-		.setDescription("Mulai permainan UNO dengan teman atau bot!")
+		.setName('uno')
+		.setDescription('Mulai permainan UNO dengan teman atau bot!')
 		.addUserOption((option) =>
-			option.setName("lawan").setDescription("Tantang teman atau bot."),
+			option.setName('lawan').setDescription('Tantang teman atau bot.'),
 		)
 		.addUserOption((option) =>
-			option.setName("player3").setDescription("Pemain ketiga."),
+			option.setName('player3').setDescription('Pemain ketiga.'),
 		)
 		.addUserOption((option) =>
-			option.setName("player4").setDescription("Pemain keempat."),
+			option.setName('player4').setDescription('Pemain keempat.'),
 		),
 
 	async execute(interaction) {
 		const players = [interaction.user];
 		const mentionedUsers = new Set([interaction.user.id]);
 
-		for (const opt of ["lawan", "player3", "player4"]) {
+		for (const opt of ['lawan', 'player3', 'player4']) {
 			const user = interaction.options.getUser(opt);
 			if (user) {
 				if (mentionedUsers.has(user.id))
 					return interaction.reply({
-						content: "Tidak bisa mengundang pemain yang sama dua kali!",
+						content: 'Tidak bisa mengundang pemain yang sama dua kali!',
 						ephemeral: true,
 					});
 				players.push(user);
@@ -79,17 +79,17 @@ module.exports = {
 			}
 		}
 		if (players.length < 2) {
-			players.push(createBotUser("uno-bot-1", "UNO Bot 🤖"));
+			players.push(createBotUser('uno-bot-1', 'UNO Bot 🤖'));
 		}
 
 		const game = new UnoGame(players, interaction.client);
 		game.startGame();
 
 		await interaction.reply(
-			`🎲 Permainan UNO dimulai: ${players.map((p) => p.username).join(", ")}!`,
+			`🎲 Permainan UNO dimulai: ${players.map((p) => p.username).join(', ')}!`,
 		);
 		const mainMessage = await interaction.channel.send(
-			"Mempersiapkan meja permainan...",
+			'Mempersiapkan meja permainan...',
 		);
 
 		const gameLoop = async () => {
@@ -100,7 +100,7 @@ module.exports = {
 			const currentPlayer = game.currentPlayer;
 
 			const gameEmbed = new EmbedBuilder()
-				.setTitle("UNO Game!")
+				.setTitle('UNO Game!')
 				.setDescription(
 					`**Kartu Teratas:** ${formatCard(game.topCard)}\n\nSekarang giliran **${currentPlayer.username}**!`,
 				)
@@ -112,13 +112,13 @@ module.exports = {
 					})),
 				)
 				.setColor(getEmbedColor(game.topCard.color))
-				.setThumbnail("https://i.imgur.com/E1f6tAD.png");
+				.setThumbnail('https://i.imgur.com/E1f6tAD.png');
 
 			if (game.aiPlayerIds.has(currentPlayer.id)) {
 				// --- GILIRAN AI ---
 				const publicActionRow = new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
-						.setCustomId("uno_placeholder_ai")
+						.setCustomId('uno_placeholder_ai')
 						.setLabel(`Giliran ${currentPlayer.username}...`)
 						.setStyle(ButtonStyle.Secondary)
 						.setDisabled(true),
@@ -141,16 +141,16 @@ module.exports = {
 				// --- GILIRAN MANUSIA (DIREFAKTOR TOTAL) ---
 				const publicActionRow = new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
-						.setCustomId("uno_play")
-						.setLabel("Mainkan Kartu")
+						.setCustomId('uno_play')
+						.setLabel('Mainkan Kartu')
 						.setStyle(ButtonStyle.Primary),
 					new ButtonBuilder()
-						.setCustomId("uno_draw")
-						.setLabel("Tarik Kartu 🃏")
+						.setCustomId('uno_draw')
+						.setLabel('Tarik Kartu 🃏')
 						.setStyle(ButtonStyle.Secondary),
 					new ButtonBuilder()
-						.setCustomId("uno_call")
-						.setLabel("UNO!")
+						.setCustomId('uno_call')
+						.setLabel('UNO!')
 						.setStyle(ButtonStyle.Success),
 				);
 				await mainMessage.edit({
@@ -167,19 +167,19 @@ module.exports = {
 
 					let cardPlayed = null;
 
-					if (i.customId === "uno_draw") {
+					if (i.customId === 'uno_draw') {
 						const drawnCard = game.drawCard(currentPlayer.id);
 						await i.reply({
 							content: `Kamu menarik kartu: ${formatCard(drawnCard)}`,
 							ephemeral: true,
 						});
-						cardPlayed = { type: "DRAW_ACTION" };
-					} else if (i.customId === "uno_call") {
-						await i.reply({ content: "Kamu teriak UNO!", ephemeral: true });
+						cardPlayed = { type: 'DRAW_ACTION' };
+					} else if (i.customId === 'uno_call') {
+						await i.reply({ content: 'Kamu teriak UNO!', ephemeral: true });
 						game.unoCalled.add(currentPlayer.id);
 						gameLoop();
 						return;
-					} else if (i.customId === "uno_play") {
+					} else if (i.customId === 'uno_play') {
 						cardPlayed = await promptAndPlayCard(i, game, currentPlayer);
 						if (!cardPlayed) {
 							gameLoop();
@@ -201,7 +201,7 @@ module.exports = {
 						.catch(() => {});
 					game.drawCard(currentPlayer.id);
 					game.drawCard(currentPlayer.id);
-					game.nextTurn({ type: "TIMEOUT" });
+					game.nextTurn({ type: 'TIMEOUT' });
 					gameLoop();
 				}
 			}
@@ -220,7 +220,7 @@ async function promptAndPlayCard(interaction, game, currentPlayer) {
 		const totalPages = Math.ceil(hand.length / 25) || 1;
 		if (currentPage > totalPages) currentPage = totalPages;
 
-		const handString = hand.map((c) => formatCard(c)).join("  ");
+		const handString = hand.map((c) => formatCard(c)).join('  ');
 		const playableCards = hand
 			.map((card, index) => ({ card, index }))
 			.filter((item) => game.isCardPlayable(item.card));
@@ -237,7 +237,7 @@ async function promptAndPlayCard(interaction, game, currentPlayer) {
 			components.push(
 				new ActionRowBuilder().addComponents(
 					new StringSelectMenuBuilder()
-						.setCustomId("uno_select_card")
+						.setCustomId('uno_select_card')
 						.setPlaceholder(
 							`Pilih kartu (Halaman ${currentPage}/${totalPages})...`,
 						)
@@ -248,13 +248,13 @@ async function promptAndPlayCard(interaction, game, currentPlayer) {
 		if (totalPages > 1) {
 			const nav = new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
-					.setCustomId("uno_page_prev")
-					.setLabel("⬅️")
+					.setCustomId('uno_page_prev')
+					.setLabel('⬅️')
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(currentPage === 1),
 				new ButtonBuilder()
-					.setCustomId("uno_page_next")
-					.setLabel("➡️")
+					.setCustomId('uno_page_next')
+					.setLabel('➡️')
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(currentPage === totalPages),
 			);
@@ -279,11 +279,11 @@ async function promptAndPlayCard(interaction, game, currentPlayer) {
 			time: 60_000,
 		});
 
-		const cardIndex = parseInt(selectInteraction.values[0].split("_")[1], 10);
+		const cardIndex = parseInt(selectInteraction.values[0].split('_')[1], 10);
 		const card = game.hands.get(currentPlayer.id)[cardIndex];
 
 		let chosenColor = null;
-		if (card.type.startsWith("WILD")) {
+		if (card.type.startsWith('WILD')) {
 			chosenColor = await askColor(selectInteraction);
 			if (!chosenColor) {
 				await controlMessage.delete().catch(() => {});
@@ -315,26 +315,26 @@ async function promptAndPlayCard(interaction, game, currentPlayer) {
 async function askColor(selectInteraction) {
 	const colorRow = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId("color_RED")
-			.setLabel("🟥")
+			.setCustomId('color_RED')
+			.setLabel('🟥')
 			.setStyle(ButtonStyle.Secondary),
 		new ButtonBuilder()
-			.setCustomId("color_YELLOW")
-			.setLabel("🟨")
+			.setCustomId('color_YELLOW')
+			.setLabel('🟨')
 			.setStyle(ButtonStyle.Secondary),
 		new ButtonBuilder()
-			.setCustomId("color_GREEN")
-			.setLabel("🟩")
+			.setCustomId('color_GREEN')
+			.setLabel('🟩')
 			.setStyle(ButtonStyle.Secondary),
 		new ButtonBuilder()
-			.setCustomId("color_BLUE")
-			.setLabel("🟦")
+			.setCustomId('color_BLUE')
+			.setLabel('🟦')
 			.setStyle(ButtonStyle.Secondary),
 	);
 
 	// Gunakan UPDATE pada interaksi select menu, bukan reply/followUp
 	await selectInteraction.update({
-		content: "Pilih warna untuk kartu Wild!",
+		content: 'Pilih warna untuk kartu Wild!',
 		components: [colorRow],
 	});
 	const askMsg = await selectInteraction.fetchReply();
@@ -345,7 +345,7 @@ async function askColor(selectInteraction) {
 			time: 30_000,
 		});
 		// Kita tidak perlu menghapus pesannya, karena update dari select menu akan menghapusnya
-		return buttonInteraction.customId.split("_")[1];
+		return buttonInteraction.customId.split('_')[1];
 	} catch {
 		return null;
 	}
@@ -355,9 +355,9 @@ function checkWinCondition(mainMessage, player, game) {
 	if (game.hands.get(player.id).length === 0) {
 		game.isGameOver = true;
 		const winEmbed = new EmbedBuilder()
-			.setTitle("🏆 UNO!")
+			.setTitle('🏆 UNO!')
 			.setDescription(`${player.username} telah memenangkan permainan!`)
-			.setColor("Gold");
+			.setColor('Gold');
 		mainMessage.edit({ embeds: [winEmbed], components: [] });
 		return true;
 	}

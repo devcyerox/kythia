@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -22,10 +22,10 @@ const {
 	ThumbnailBuilder,
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
-} = require("discord.js");
-const { createProgressBar, hasControlPermission } = require(".");
-const { Spotify } = require("poru-spotify");
-const { Poru } = require("poru");
+} = require('discord.js');
+const { createProgressBar, hasControlPermission } = require('.');
+const { Spotify } = require('poru-spotify');
+const { Poru } = require('poru');
 
 const MASTER_TITLE_CLEAN_REGEX =
 	/[[\]()]|(?:\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s{2,}/g;
@@ -67,34 +67,34 @@ class MusicManager {
 	}
 
 	async init() {
-		this.logger.info("🎵 Initializing Music Manager Service...");
+		this.logger.info('🎵 Initializing Music Manager Service...');
 		// Config Check
 		if (!this.config.addons.music.lavalink.hosts) {
-			this.logger.warn("⚠️ Lavalink config missing.");
+			this.logger.warn('⚠️ Lavalink config missing.');
 			return;
 		}
 
 		// Setup Nodes
-		const nodes = (this.config.addons.music.lavalink.hosts || "localhost")
-			.split(",")
+		const nodes = (this.config.addons.music.lavalink.hosts || 'localhost')
+			.split(',')
 			.map((host, i) => ({
 				name: `Kythia Nodes #${i + 1}`,
 				host: host.trim(),
 				port: parseInt(
-					(this.config.addons.music.lavalink.ports || "2333").split(",")[i] ||
-						"2333",
+					(this.config.addons.music.lavalink.ports || '2333').split(',')[i] ||
+						'2333',
 					10,
 				),
 				password:
 					(
-						this.config.addons.music.lavalink.passwords || "youshallnotpass"
-					).split(",")[i] || "youshallnotpass",
+						this.config.addons.music.lavalink.passwords || 'youshallnotpass'
+					).split(',')[i] || 'youshallnotpass',
 				secure:
 					(
-						(this.config.addons.music.lavalink.secures || "false").split(",")[
+						(this.config.addons.music.lavalink.secures || 'false').split(',')[
 							i
-						] || "false"
-					).toLowerCase() === "true",
+						] || 'false'
+					).toLowerCase() === 'true',
 			}));
 
 		// Setup Plugins
@@ -113,8 +113,8 @@ class MusicManager {
 
 		// Init Poru
 		this.client.poru = new Poru(this.client, nodes, {
-			library: "discord.js",
-			defaultPlatform: this.config.addons.music.defaultPlatform || "ytsearch",
+			library: 'discord.js',
+			defaultPlatform: this.config.addons.music.defaultPlatform || 'ytsearch',
 			plugins: plugins,
 		});
 
@@ -122,7 +122,7 @@ class MusicManager {
 		this.registerPoruEvents();
 
 		// Start UI ticker
-		this.client.once("clientReady", () => {
+		this.client.once('clientReady', () => {
 			this.client.poru.init(this.client);
 			this.logger.info(
 				`🎵 Music UI Ticker started (${this.TICKER_INTERVAL}ms)`,
@@ -131,14 +131,14 @@ class MusicManager {
 		});
 
 		// Register Dropdown Handler
-		this.client.on("interactionCreate", this.handleInteraction.bind(this));
+		this.client.on('interactionCreate', this.handleInteraction.bind(this));
 	}
 
 	registerPoruEvents() {
 		const poru = this.client.poru;
 
 		// Clean player setup
-		poru.on("playerCreate", (player) => {
+		poru.on('playerCreate', (player) => {
 			player.autoplay = false;
 			player.nowPlayingMessage = null;
 			player.updateInterval = null;
@@ -151,11 +151,11 @@ class MusicManager {
 			player.disconnectTimeout = null;
 		});
 
-		poru.on("nodeConnect", (node) =>
+		poru.on('nodeConnect', (node) =>
 			this.logger.info(`🎚️  Node "${node.name}" connected.`),
 		);
 
-		poru.on("nodeError", (node, error) => {
+		poru.on('nodeError', (node, error) => {
 			const poruLavalinkPatternNode =
 				/\[Poru Websocket\] Unable to connect with (.+?) node after (\d+) tries/;
 			if (error?.message && poruLavalinkPatternNode.test(error.message)) {
@@ -170,7 +170,7 @@ class MusicManager {
 		/**
 		 * ▶️ Handles when a new track starts playing.
 		 */
-		poru.on("trackStart", async (player, track) => {
+		poru.on('trackStart', async (player, track) => {
 			// Handle disconnect timeout
 			if (player.disconnectTimeout) {
 				clearTimeout(player.disconnectTimeout);
@@ -193,7 +193,7 @@ class MusicManager {
 				}
 			} catch (err) {
 				this.logger.error(
-					"❌ Error checking voice channel members (on trackStart):",
+					'❌ Error checking voice channel members (on trackStart):',
 					err,
 				);
 			}
@@ -215,7 +215,7 @@ class MusicManager {
 				);
 				await this.setVoiceChannelStatus(
 					voiceChannel,
-					`🎵 ${track.info?.title ? track.info.title.substring(0, 90) : "Unknown"}`,
+					`🎵 ${track.info?.title ? track.info.title.substring(0, 90) : 'Unknown'}`,
 				);
 			} catch (_e) {}
 
@@ -230,7 +230,7 @@ class MusicManager {
 
 			if (player.buttonCollector) {
 				try {
-					player.buttonCollector.stop("newTrack");
+					player.buttonCollector.stop('newTrack');
 				} catch (_e) {}
 				player.buttonCollector = null;
 			}
@@ -241,16 +241,16 @@ class MusicManager {
 				const searchUrl = `https://www.youtube.com/watch?v=${track.info.identifier}&list=RD${track.info.identifier}`;
 				const res = await this.client.poru.resolve({
 					query: searchUrl,
-					source: "ytsearch",
+					source: 'ytsearch',
 					requester: track.info.requester,
 				});
-				if (res.loadType === "playlist" && res.tracks.length) {
+				if (res.loadType === 'playlist' && res.tracks.length) {
 					recommendations = res.tracks
 						.filter((t) => t.info.identifier !== track.info.identifier)
 						.slice(0, this.config.addons.music.suggestionLimit || 5);
 				}
 			} catch (e) {
-				this.logger.error("Failed to fetch recommendations for dropdown:", e);
+				this.logger.error('Failed to fetch recommendations for dropdown:', e);
 			}
 
 			player.playedTrackIdentifiers.add(track.info.identifier);
@@ -262,7 +262,7 @@ class MusicManager {
 		/**
 		 * ⏭️ Handles when a track ends (either naturally or by skip/stop).
 		 */
-		poru.on("trackEnd", async (player, track) => {
+		poru.on('trackEnd', async (player, track) => {
 			let state = this.guildStates.get(player.guildId);
 
 			if (!state) {
@@ -279,7 +279,7 @@ class MusicManager {
 
 			if (player.buttonCollector) {
 				try {
-					player.buttonCollector.stop("trackEnd");
+					player.buttonCollector.stop('trackEnd');
 				} catch (_e) {}
 				player.buttonCollector = null;
 			}
@@ -293,7 +293,7 @@ class MusicManager {
 		/**
 		 * 🔄 Handles when the queue ends, including autoplay logic.
 		 */
-		poru.on("queueEnd", async (player) => {
+		poru.on('queueEnd', async (player) => {
 			const channel = this.client.channels.cache.get(player.textChannel);
 			let shouldContinue = true;
 			try {
@@ -309,7 +309,7 @@ class MusicManager {
 					}
 				}
 			} catch (err) {
-				this.logger.error("❌ Error checking voice channel members:", err);
+				this.logger.error('❌ Error checking voice channel members:', err);
 			}
 
 			if (!shouldContinue) {
@@ -317,11 +317,11 @@ class MusicManager {
 					channel.send({
 						embeds: [
 							new EmbedBuilder()
-								.setColor("Orange")
+								.setColor('Orange')
 								.setDescription(
 									await this.t(
 										channel,
-										"music.helpers.musicManager.manager.no.listener",
+										'music.helpers.musicManager.manager.no.listener',
 									),
 								),
 						],
@@ -353,7 +353,7 @@ class MusicManager {
 
 			if (player.buttonCollector) {
 				try {
-					player.buttonCollector.stop("queueEnd");
+					player.buttonCollector.stop('queueEnd');
 				} catch (_e) {}
 				player.buttonCollector = null;
 			}
@@ -373,7 +373,7 @@ class MusicManager {
 									.setDescription(
 										await this.t(
 											channel,
-											"music.helpers.musicManager.manager.searching",
+											'music.helpers.musicManager.manager.searching',
 											{
 												title: lastTrack.info.title,
 											},
@@ -386,15 +386,15 @@ class MusicManager {
 					const searchUrl = `https://www.youtube.com/watch?v=${lastTrack.info.identifier}&list=RD${lastTrack.info.identifier}`;
 					const res = await this.client.poru.resolve({
 						query: searchUrl,
-						source: "ytsearch",
+						source: 'ytsearch',
 						requester: lastTrack.info.requester,
 					});
 
-					if (res.loadType !== "playlist" || !res.tracks.length) {
+					if (res.loadType !== 'playlist' || !res.tracks.length) {
 						throw new Error(
 							await this.t(
 								channel,
-								"music.helpers.musicManager.manager.recommendation",
+								'music.helpers.musicManager.manager.recommendation',
 							),
 						);
 					}
@@ -406,11 +406,11 @@ class MusicManager {
 					if (!potentialNextTracks.length) {
 						if (channel) {
 							const embed = new EmbedBuilder()
-								.setColor("Orange")
+								.setColor('Orange')
 								.setDescription(
 									await this.t(
 										channel,
-										"music.helpers.musicManager.manager.played",
+										'music.helpers.musicManager.manager.played',
 									),
 								);
 
@@ -442,11 +442,11 @@ class MusicManager {
 				} catch (err) {
 					if (channel) {
 						const embed = new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
 								await this.t(
 									channel,
-									"music.helpers.musicManager.manager.failed",
+									'music.helpers.musicManager.manager.failed',
 									{ error: err.message },
 								),
 							);
@@ -472,7 +472,7 @@ class MusicManager {
 					player.voiceChannel,
 				);
 				try {
-					this.setVoiceChannelStatus(voiceChannel, "idle");
+					this.setVoiceChannelStatus(voiceChannel, 'idle');
 				} catch (_e) {}
 
 				const lastPlayable = player.currentTrack || lastTrack;
@@ -496,10 +496,10 @@ class MusicManager {
 					if (channel) {
 						await channel.send({
 							embeds: [
-								new EmbedBuilder().setColor("Orange").setDescription(
+								new EmbedBuilder().setColor('Orange').setDescription(
 									await this.t(
 										channel,
-										"music.helpers.musicManager.manager.idleDisconnect",
+										'music.helpers.musicManager.manager.idleDisconnect',
 										{
 											seconds: IDLE_TIMEOUT_MS / 1000,
 										},
@@ -516,19 +516,19 @@ class MusicManager {
 		/**
 		 * 🛑 Handles when the player is destroyed (e.g., bot leaves voice channel).
 		 */
-		poru.on("playerDestroy", async (player) => {
+		poru.on('playerDestroy', async (player) => {
 			if (player.updateInterval) clearInterval(player.updateInterval);
 			if (player.buttonCollector) {
 				try {
-					player.buttonCollector.stop("playerDestroy");
+					player.buttonCollector.stop('playerDestroy');
 				} catch (_e) {}
 				player.buttonCollector = null;
 			}
 			const voiceChannel = this.client.channels.cache.get(player.voiceChannel);
 			try {
-				this.setVoiceChannelStatus(voiceChannel, "idle");
+				this.setVoiceChannelStatus(voiceChannel, 'idle');
 			} catch (e) {
-				this.logger.error("❌ Failed to set voice channel status", e);
+				this.logger.error('❌ Failed to set voice channel status', e);
 			}
 
 			const lastTrack =
@@ -547,7 +547,7 @@ class MusicManager {
 	async handleInteraction(interaction) {
 		if (
 			interaction.isStringSelectMenu() &&
-			interaction.customId === "music_suggest"
+			interaction.customId === 'music_suggest'
 		) {
 			await interaction.deferReply();
 			const player = this.client.poru.players.get(interaction.guildId);
@@ -556,11 +556,11 @@ class MusicManager {
 				return await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
 								await this.t(
 									interaction,
-									"music.helpers.musicManager.manager.ended",
+									'music.helpers.musicManager.manager.ended',
 								),
 							),
 					],
@@ -570,11 +570,11 @@ class MusicManager {
 				return await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
 								await this.t(
 									interaction,
-									"music.helpers.musicManager.manager.simple",
+									'music.helpers.musicManager.manager.simple',
 								),
 							),
 					],
@@ -584,11 +584,11 @@ class MusicManager {
 				return await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
 								await this.t(
 									interaction,
-									"music.helpers.musicManager.manager.required",
+									'music.helpers.musicManager.manager.required',
 								),
 							),
 					],
@@ -600,18 +600,18 @@ class MusicManager {
 			try {
 				const res = await this.client.poru.resolve({
 					query: selectedSongUri,
-					source: "ytsearch",
+					source: 'ytsearch',
 					requester: interaction.user,
 				});
-				if (res.loadType === "error" || !res.tracks.length) {
+				if (res.loadType === 'error' || !res.tracks.length) {
 					return await interaction.editReply({
 						embeds: [
 							new EmbedBuilder()
-								.setColor("Red")
+								.setColor('Red')
 								.setDescription(
 									await this.t(
 										interaction,
-										"music.helpers.musicManager.manager.track",
+										'music.helpers.musicManager.manager.track',
 									),
 								),
 						],
@@ -625,7 +625,7 @@ class MusicManager {
 						new EmbedBuilder().setColor(this.config.bot.color).setDescription(
 							await this.t(
 								interaction,
-								"music.helpers.musicManager.manager.queue",
+								'music.helpers.musicManager.manager.queue',
 								{
 									title: res.tracks[0].info.title,
 									url: res.tracks[0].info.uri,
@@ -638,11 +638,11 @@ class MusicManager {
 				await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
-							.setColor("Red")
+							.setColor('Red')
 							.setDescription(
 								await this.t(
 									interaction,
-									"music.helpers.musicManager.manager.track",
+									'music.helpers.musicManager.manager.track',
 								),
 							),
 					],
@@ -707,7 +707,7 @@ class MusicManager {
 			const currentTrack = options.track || player.currentTrack;
 			const channel = client.channels.cache.get(player.textChannel);
 			if (!currentTrack || !channel) return;
-			if (typeof player.nowPlayingMessage === "undefined")
+			if (typeof player.nowPlayingMessage === 'undefined')
 				player.nowPlayingMessage = null;
 
 			// Only allow message edit if sending for ticker, else on first draw do send.
@@ -731,11 +731,11 @@ class MusicManager {
 
 			const cleanTitle = currentTrack.info.title.replace(
 				MASTER_TITLE_CLEAN_REGEX,
-				"",
+				'',
 			);
 			const updatedNowPlayingText = await t(
 				channel,
-				"music.helpers.musicManager.manager.playing",
+				'music.helpers.musicManager.manager.playing',
 				{
 					title: cleanTitle,
 					url: currentTrack.info.uri,
@@ -744,13 +744,13 @@ class MusicManager {
 			const updatedProgress = createProgressBar(player);
 			const updatedArtistText = await t(
 				channel,
-				"music.helpers.musicManager.manager.channel",
+				'music.helpers.musicManager.manager.channel',
 				{ author: currentTrack.info.author },
 			);
 
 			let userString;
 			if (currentTrack.info.isAutoplay) {
-				const username = currentTrack.info.requester?.username || "User";
+				const username = currentTrack.info.requester?.username || 'User';
 				userString = `Autoplay (${username})`;
 			} else {
 				userString = currentTrack.info.requester?.username
@@ -759,7 +759,7 @@ class MusicManager {
 			}
 			const updatedRequestedByText = await t(
 				channel,
-				"music.helpers.musicManager.manager.requested.by",
+				'music.helpers.musicManager.manager.requested.by',
 				{
 					user: userString,
 				},
@@ -779,7 +779,7 @@ class MusicManager {
 						label: song.info.title.substring(0, 95),
 						description: await t(
 							channel,
-							"music.helpers.musicManager.manager.by",
+							'music.helpers.musicManager.manager.by',
 							{
 								author: song.info.author.substring(0, 90),
 							},
@@ -788,9 +788,9 @@ class MusicManager {
 					});
 				}
 				const suggestionMenu = new StringSelectMenuBuilder()
-					.setCustomId("music_suggest")
+					.setCustomId('music_suggest')
 					.setPlaceholder(
-						await t(channel, "music.helpers.musicManager.manager.placeholder"),
+						await t(channel, 'music.helpers.musicManager.manager.placeholder'),
 					)
 					.addOptions(suggestionOptions)
 					.setDisabled(false);
@@ -807,10 +807,10 @@ class MusicManager {
 
 			// UI container
 			const updatedContainer = new ContainerBuilder().setAccentColor(
-				this.convertColor(kythia.bot.color, { from: "hex", to: "decimal" }),
+				this.convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }),
 			);
 
-			if (kythia.addons.music.artworkUrlStyle === "banner") {
+			if (kythia.addons.music.artworkUrlStyle === 'banner') {
 				if (currentTrack.info.artworkUrl || currentTrack.info.image) {
 					updatedContainer.addMediaGalleryComponents(
 						new MediaGalleryBuilder().addItems([
@@ -882,7 +882,7 @@ class MusicManager {
 			);
 			updatedContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(channel, "common.container.footer", {
+					await t(channel, 'common.container.footer', {
 						username: client.user.username,
 					}),
 				),
@@ -902,14 +902,14 @@ class MusicManager {
 					i.isButton() &&
 					i.message.id === message.id &&
 					i.guildId === player.guildId &&
-					i.customId.startsWith("music_");
+					i.customId.startsWith('music_');
 				const collector = message.createMessageComponentCollector({
 					componentType: ComponentType.Button,
 					filter,
 				});
 				player.buttonCollector = collector;
 
-				collector.on("collect", async (interaction) => {
+				collector.on('collect', async (interaction) => {
 					if (
 						!interaction.member.voice.channelId ||
 						interaction.member.voice.channelId !== player.voiceChannel
@@ -917,11 +917,11 @@ class MusicManager {
 						return interaction.reply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor("Red")
+									.setColor('Red')
 									.setDescription(
 										await t(
 											interaction,
-											"music.helpers.musicManager.manager.required",
+											'music.helpers.musicManager.manager.required',
 										),
 									),
 							],
@@ -931,13 +931,13 @@ class MusicManager {
 						return interaction.reply({
 							content: await t(
 								interaction,
-								"music.helpers.musicManager.music.permission.denied",
+								'music.helpers.musicManager.music.permission.denied',
 							),
 							ephemeral: true,
 						});
 					}
 					switch (interaction.customId) {
-						case "music_back": {
+						case 'music_back': {
 							await this.handlers.handleBack(
 								interaction,
 								player,
@@ -945,39 +945,39 @@ class MusicManager {
 							);
 							break;
 						}
-						case "music_pause_resume": {
+						case 'music_pause_resume': {
 							await this.handlers.handlePauseResume(interaction, player);
 							break;
 						}
-						case "music_skip": {
+						case 'music_skip': {
 							await this.handlers.handleSkip(interaction, player);
 							break;
 						}
-						case "music_stop": {
+						case 'music_stop': {
 							await this.handlers.handleStop(interaction, player);
 							break;
 						}
-						case "music_loop": {
+						case 'music_loop': {
 							await this.handlers.handleLoop(interaction, player);
 							break;
 						}
-						case "music_autoplay": {
+						case 'music_autoplay': {
 							await this.handlers.handleAutoplay(interaction, player);
 							break;
 						}
-						case "music_lyrics": {
+						case 'music_lyrics': {
 							await this.handlers.handleLyrics(interaction, player);
 							break;
 						}
-						case "music_queue": {
+						case 'music_queue': {
 							await this.handlers.handleQueue(interaction, player);
 							break;
 						}
-						case "music_shuffle": {
+						case 'music_shuffle': {
 							await this.handlers.handleShuffle(interaction, player);
 							break;
 						}
-						case "music_favorite_add": {
+						case 'music_favorite_add': {
 							await this.handlers.handleFavorite(interaction, player);
 							break;
 						}
@@ -1016,11 +1016,11 @@ class MusicManager {
 			if (track?.info) {
 				const cleanTitle = track.info.title.replace(
 					MASTER_TITLE_CLEAN_REGEX,
-					"",
+					'',
 				);
 				endedText = await t(
 					channel,
-					"music.helpers.musicManager.manager.now.ended",
+					'music.helpers.musicManager.manager.now.ended',
 					{
 						title: cleanTitle,
 						url: track.info.uri,
@@ -1028,13 +1028,13 @@ class MusicManager {
 				);
 				artistText = await t(
 					channel,
-					"music.helpers.musicManager.manager.channel",
+					'music.helpers.musicManager.manager.channel',
 					{ author: track.info.author },
 				);
 
 				let userString;
 				if (track.info.isAutoplay) {
-					const username = track.info.requester?.username || "User";
+					const username = track.info.requester?.username || 'User';
 					userString = `Autoplay (${username})`;
 				} else {
 					userString = track.info.requester?.username
@@ -1043,7 +1043,7 @@ class MusicManager {
 				}
 				requestedByText = await t(
 					channel,
-					"music.helpers.musicManager.manager.requested.by",
+					'music.helpers.musicManager.manager.requested.by',
 					{
 						user: userString,
 					},
@@ -1055,20 +1055,20 @@ class MusicManager {
 			} else {
 				endedText = await t(
 					channel,
-					"music.helpers.musicManager.manager.simple",
+					'music.helpers.musicManager.manager.simple',
 				);
-				artistText = "";
-				requestedByText = "";
+				artistText = '';
+				requestedByText = '';
 				artworkUrl = null;
-				title = "";
-				_url = "";
+				title = '';
+				_url = '';
 			}
 
 			const container = new ContainerBuilder().setAccentColor(
-				this.convertColor("Red", { from: "discord", to: "decimal" }),
+				this.convertColor('Red', { from: 'discord', to: 'decimal' }),
 			);
 
-			if (kythia.addons.music.artworkUrlStyle === "banner" && artworkUrl) {
+			if (kythia.addons.music.artworkUrlStyle === 'banner' && artworkUrl) {
 				container.addMediaGalleryComponents(
 					new MediaGalleryBuilder().addItems([
 						artworkUrl
@@ -1119,7 +1119,7 @@ class MusicManager {
 			);
 			container.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(channel, "common.container.footer", {
+					await t(channel, 'common.container.footer', {
 						username: client.user.username,
 					}),
 				),
@@ -1143,73 +1143,73 @@ class MusicManager {
 		kythia = kythia || this.config;
 		return new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("music_autoplay")
+				.setCustomId('music_autoplay')
 				[
-					typeof kythia.emojis.musicAutoplay !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicAutoplay !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicAutoplay !== "undefined"
+					typeof kythia.emojis.musicAutoplay !== 'undefined'
 						? kythia.emojis.musicAutoplay
-						: "Autoplay",
+						: 'Autoplay',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_back")
+				.setCustomId('music_back')
 				[
-					typeof kythia.emojis.musicBack !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicBack !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicBack !== "undefined"
+					typeof kythia.emojis.musicBack !== 'undefined'
 						? kythia.emojis.musicBack
-						: "Back",
+						: 'Back',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled || !hasHistory),
 			new ButtonBuilder()
-				.setCustomId("music_pause_resume")
+				.setCustomId('music_pause_resume')
 				[
-					typeof kythia.emojis.musicPlay !== "undefined" &&
-					typeof kythia.emojis.musicPause !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicPlay !== 'undefined' &&
+					typeof kythia.emojis.musicPause !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicPlay !== "undefined" &&
-						typeof kythia.emojis.musicPause !== "undefined"
+					typeof kythia.emojis.musicPlay !== 'undefined' &&
+						typeof kythia.emojis.musicPause !== 'undefined'
 						? isPaused
 							? kythia.emojis.musicPlay
 							: kythia.emojis.musicPause
 						: isPaused
-							? "Play"
-							: "Pause",
+							? 'Play'
+							: 'Pause',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_skip")
+				.setCustomId('music_skip')
 				[
-					typeof kythia.emojis.musicSkip !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicSkip !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicSkip !== "undefined"
+					typeof kythia.emojis.musicSkip !== 'undefined'
 						? kythia.emojis.musicSkip
-						: "Skip",
+						: 'Skip',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_loop")
+				.setCustomId('music_loop')
 				[
-					typeof kythia.emojis.musicLoop !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicLoop !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicLoop !== "undefined"
+					typeof kythia.emojis.musicLoop !== 'undefined'
 						? kythia.emojis.musicLoop
-						: "Loop",
+						: 'Loop',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
@@ -1220,67 +1220,67 @@ class MusicManager {
 		kythia = kythia || this.config;
 		return new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("music_lyrics")
+				.setCustomId('music_lyrics')
 				[
-					typeof kythia.emojis.musicLyrics !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicLyrics !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicLyrics !== "undefined"
+					typeof kythia.emojis.musicLyrics !== 'undefined'
 						? kythia.emojis.musicLyrics
-						: "Lyrics",
+						: 'Lyrics',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_queue")
+				.setCustomId('music_queue')
 				[
-					typeof kythia.emojis.musicQueue !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicQueue !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicQueue !== "undefined"
+					typeof kythia.emojis.musicQueue !== 'undefined'
 						? kythia.emojis.musicQueue
-						: "Queue",
+						: 'Queue',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_stop")
+				.setCustomId('music_stop')
 				[
-					typeof kythia.emojis.musicStop !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicStop !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicStop !== "undefined"
+					typeof kythia.emojis.musicStop !== 'undefined'
 						? kythia.emojis.musicStop
-						: "Stop",
+						: 'Stop',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_shuffle")
+				.setCustomId('music_shuffle')
 				[
-					typeof kythia.emojis.musicShuffle !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicShuffle !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicShuffle !== "undefined"
+					typeof kythia.emojis.musicShuffle !== 'undefined'
 						? kythia.emojis.musicShuffle
-						: "Shuffle",
+						: 'Shuffle',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 			new ButtonBuilder()
-				.setCustomId("music_favorite_add")
+				.setCustomId('music_favorite_add')
 				[
-					typeof kythia.emojis.musicFavorite !== "undefined"
-						? "setEmoji"
-						: "setLabel"
+					typeof kythia.emojis.musicFavorite !== 'undefined'
+						? 'setEmoji'
+						: 'setLabel'
 				](
-					typeof kythia.emojis.musicFavorite !== "undefined"
+					typeof kythia.emojis.musicFavorite !== 'undefined'
 						? kythia.emojis.musicFavorite
-						: "Favorite",
+						: 'Favorite',
 				)
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),

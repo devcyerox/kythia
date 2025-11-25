@@ -3,56 +3,56 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
 	ActivityType,
 	InteractionContextType,
-} = require("discord.js");
+} = require('discord.js');
 
 const STATUS_OPTIONS = [
-	{ name: "Online", value: "online" },
-	{ name: "Idle", value: "idle" },
-	{ name: "Do Not Disturb", value: "dnd" },
-	{ name: "Invisible", value: "invisible" },
+	{ name: 'Online', value: 'online' },
+	{ name: 'Idle', value: 'idle' },
+	{ name: 'Do Not Disturb', value: 'dnd' },
+	{ name: 'Invisible', value: 'invisible' },
 ];
 
 // ActivityType.Custom (nilai 4) tidak bisa di-set oleh bot, jadi kita filter
 const ACTIVITY_TYPE_OPTIONS = Object.entries(ActivityType)
-	.filter(([_k, v]) => typeof v === "number")
+	.filter(([_k, v]) => typeof v === 'number')
 	.map(([k, _v]) => ({ name: k, value: k }));
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("presence")
-		.setDescription("🔄 Change bot presence")
+		.setName('presence')
+		.setDescription('🔄 Change bot presence')
 		.addStringOption((opt) =>
 			opt
-				.setName("status")
-				.setDescription("Bot status (online, idle, dnd, invisible)")
+				.setName('status')
+				.setDescription('Bot status (online, idle, dnd, invisible)')
 				.setRequired(true)
 				.addChoices(...STATUS_OPTIONS),
 		)
 		.addStringOption((opt) =>
 			opt
-				.setName("type")
+				.setName('type')
 				.setDescription(
-					"Activity type (Playing, Streaming, Listening, Watching, Competing)",
+					'Activity type (Playing, Streaming, Listening, Watching, Competing)',
 				)
 				.setRequired(true)
 				.addChoices(...ACTIVITY_TYPE_OPTIONS),
 		)
 		.addStringOption((opt) =>
-			opt.setName("activity").setDescription("Activity name").setRequired(true),
+			opt.setName('activity').setDescription('Activity name').setRequired(true),
 		)
 		// TAMBAHKAN OPSI BARU UNTUK URL
 		.addStringOption(
 			(opt) =>
 				opt
-					.setName("url")
+					.setName('url')
 					.setDescription(
-						"Streaming URL (Twitch/YouTube), wajib untuk tipe Streaming",
+						'Streaming URL (Twitch/YouTube), wajib untuk tipe Streaming',
 					)
 					.setRequired(false), // Opsional untuk tipe lain
 		)
@@ -63,10 +63,10 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const status = interaction.options.getString("status");
-		const type = interaction.options.getString("type");
-		const activityName = interaction.options.getString("activity");
-		const url = interaction.options.getString("url"); // Ambil URL
+		const status = interaction.options.getString('status');
+		const type = interaction.options.getString('type');
+		const activityName = interaction.options.getString('activity');
+		const url = interaction.options.getString('url'); // Ambil URL
 
 		const activityPayload = {
 			name: activityName,
@@ -78,11 +78,11 @@ module.exports = {
 			// Validasi URL
 			if (
 				!url ||
-				(!url.startsWith("https://www.twitch.tv/") &&
-					!url.startsWith("https://www.youtube.com/"))
+				(!url.startsWith('https://www.twitch.tv/') &&
+					!url.startsWith('https://www.youtube.com/'))
 			) {
 				return interaction.editReply({
-					content: await t(interaction, "core.utils.presence.invalid.url"), // Buat terjemahan baru
+					content: await t(interaction, 'core.utils.presence.invalid.url'), // Buat terjemahan baru
 					ephemeral: true,
 				});
 			}
@@ -96,7 +96,7 @@ module.exports = {
 			});
 
 			return interaction.editReply({
-				content: await t(interaction, "core.utils.presence.success", {
+				content: await t(interaction, 'core.utils.presence.success', {
 					type,
 					activity: activityName,
 					status,
@@ -105,7 +105,7 @@ module.exports = {
 		} catch (err) {
 			console.error(err);
 			return interaction.editReply({
-				content: await t(interaction, "core.utils.presence.error"),
+				content: await t(interaction, 'core.utils.presence.error'),
 				ephemeral: true,
 			});
 		}

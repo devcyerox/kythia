@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	version,
@@ -15,24 +15,24 @@ const {
 	MessageFlags,
 	MediaGalleryItemBuilder,
 	MediaGalleryBuilder,
-} = require("discord.js");
-const fs = require("node:fs");
-const path = require("node:path");
-const os = require("node:os");
+} = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
 
 function getKythiaCoreVersion() {
 	try {
-		const corePkgPath = require.resolve("kythia-core/package.json");
-		const pkg = JSON.parse(fs.readFileSync(corePkgPath, "utf8"));
+		const corePkgPath = require.resolve('kythia-core/package.json');
+		const pkg = JSON.parse(fs.readFileSync(corePkgPath, 'utf8'));
 		return pkg.version;
 	} catch {
 		try {
-			const mainPkgPath = path.join(process.cwd(), "package.json");
+			const mainPkgPath = path.join(process.cwd(), 'package.json');
 			if (fs.existsSync(mainPkgPath)) {
-				const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, "utf8"));
+				const mainPkg = JSON.parse(fs.readFileSync(mainPkgPath, 'utf8'));
 				return (
-					mainPkg.dependencies?.["kythia-core"] ||
-					mainPkg.devDependencies?.["kythia-core"] ||
+					mainPkg.dependencies?.['kythia-core'] ||
+					mainPkg.devDependencies?.['kythia-core'] ||
 					null
 				);
 			}
@@ -46,14 +46,14 @@ function getGitCommitId() {
 	if (process.env.COMMIT_SHA) return process.env.COMMIT_SHA.substring(0, 7);
 
 	try {
-		const gitHeadPath = path.join(process.cwd(), ".git", "HEAD");
+		const gitHeadPath = path.join(process.cwd(), '.git', 'HEAD');
 		if (fs.existsSync(gitHeadPath)) {
-			const head = fs.readFileSync(gitHeadPath, "utf8").trim();
-			if (head.startsWith("ref:")) {
-				const refPath = head.split(" ")[1];
-				const refFullPath = path.join(process.cwd(), ".git", refPath);
+			const head = fs.readFileSync(gitHeadPath, 'utf8').trim();
+			if (head.startsWith('ref:')) {
+				const refPath = head.split(' ')[1];
+				const refFullPath = path.join(process.cwd(), '.git', refPath);
 				if (fs.existsSync(refFullPath)) {
-					const commit = fs.readFileSync(refFullPath, "utf8").trim();
+					const commit = fs.readFileSync(refFullPath, 'utf8').trim();
 					return commit.substring(0, 7);
 				}
 			} else if (/^[0-9a-f]{40}$/i.test(head)) {
@@ -65,9 +65,9 @@ function getGitCommitId() {
 }
 
 module.exports = {
-	aliases: ["s", "📊"],
+	aliases: ['s', '📊'],
 	data: new SlashCommandBuilder()
-		.setName("stats")
+		.setName('stats')
 		.setDescription(`📊 Displays kythia statistics.`),
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers, models } = container;
@@ -79,7 +79,7 @@ module.exports = {
 			? Object.getPrototypeOf(models[anyModelKey])
 			: null;
 
-		let cacheStatus = "N/A";
+		let cacheStatus = 'N/A';
 		let cacheHits = 0;
 		let cacheMisses = 0;
 
@@ -105,14 +105,14 @@ module.exports = {
 							statusList.push(`⚪ ${name} (Standby)`);
 						}
 					});
-					cacheStatus = statusList.join("\n");
+					cacheStatus = statusList.join('\n');
 				} else {
-					cacheStatus = "> `✅` **Kythia Redis (Online)**";
+					cacheStatus = '> `✅` **Kythia Redis (Online)**';
 				}
 			} else if (!KythiaModel.isShardMode) {
-				cacheStatus = "> `⚠️` **In-Memory (Fallback)**";
+				cacheStatus = '> `⚠️` **In-Memory (Fallback)**';
 			} else {
-				cacheStatus = "> `❌` **DISABLED (Sharding)**";
+				cacheStatus = '> `❌` **DISABLED (Sharding)**';
 			}
 		}
 
@@ -141,10 +141,10 @@ module.exports = {
 		const apiLatency = Math.round(client.ws.ping);
 		const owner = `${kythiaConfig.owner.names} (${kythiaConfig.owner.ids})`;
 		const kythiaVersion = kythiaConfig.version;
-		const kythiaCoreVersion = getKythiaCoreVersion() || "N/A";
+		const kythiaCoreVersion = getKythiaCoreVersion() || 'N/A';
 		const githubCommit = getGitCommitId();
 
-		const desc = await t(interaction, "core.utils.stats.embed.desc", {
+		const desc = await t(interaction, 'core.utils.stats.embed.desc', {
 			username,
 			uptime,
 			memory,
@@ -158,7 +158,7 @@ module.exports = {
 			owner,
 			kythiaVersion,
 			kythiaCoreVersion,
-			githubCommit: githubCommit || "N/A",
+			githubCommit: githubCommit || 'N/A',
 
 			cacheStatus: cacheStatus,
 			cacheHits: cacheHits,
@@ -168,7 +168,7 @@ module.exports = {
 		const bannerUrl = kythiaConfig.settings.statsBannerImage;
 
 		const mainContainer = new ContainerBuilder().setAccentColor(
-			convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 		);
 
 		if (bannerUrl) {
@@ -195,7 +195,7 @@ module.exports = {
 				.setDivider(true),
 		);
 
-		const footerText = await t(interaction, "common.container.footer", {
+		const footerText = await t(interaction, 'common.container.footer', {
 			username: interaction.client.user.username,
 		});
 		mainContainer.addTextDisplayComponents(

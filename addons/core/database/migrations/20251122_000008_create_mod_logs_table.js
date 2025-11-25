@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("mod_logs", {
+		await queryInterface.createTable('mod_logs', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -57,12 +57,12 @@ module.exports = {
 			},
 		});
 
-		await queryInterface.addIndex("mod_logs", ["guildId"], {
-			name: "mod_logs_guildId",
+		await queryInterface.addIndex('mod_logs', ['guildId'], {
+			name: 'mod_logs_guildId',
 		});
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("mod_logs");
+		await queryInterface.dropTable('mod_logs');
 	},
 };

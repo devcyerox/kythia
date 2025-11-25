@@ -3,22 +3,22 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { createCanvas, loadImage, registerFont } = require("canvas");
-const axios = require("axios");
-const path = require("node:path");
-const os = require("node:os");
-const fs = require("node:fs").promises;
-const logger = require("@coreHelpers/logger");
+const { createCanvas, loadImage, registerFont } = require('canvas');
+const axios = require('axios');
+const path = require('node:path');
+const os = require('node:os');
+const fs = require('node:fs').promises;
+const logger = require('@coreHelpers/logger');
 
 async function _loadImageHelper(source) {
 	if (!source) return null;
 	try {
-		if (source.startsWith("http")) {
-			const response = await axios.get(source, { responseType: "arraybuffer" });
-			return await loadImage(Buffer.from(response.data, "binary"));
+		if (source.startsWith('http')) {
+			const response = await axios.get(source, { responseType: 'arraybuffer' });
+			return await loadImage(Buffer.from(response.data, 'binary'));
 		}
 		return await loadImage(source);
 	} catch (err) {
@@ -61,12 +61,12 @@ const EXTRADRAW = {
 		}
 
 		// Gambar teks
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
 		if (config.mainText?.content) {
 			ctx.font = config.mainText.font;
 			ctx.fillStyle = config.mainText.color;
-			ctx.shadowColor = config.mainText.shadow?.color || "transparent";
+			ctx.shadowColor = config.mainText.shadow?.color || 'transparent';
 			ctx.shadowBlur = config.mainText.shadow?.blur || 0;
 			ctx.fillText(
 				_replacePlaceholders(config.mainText.content, data),
@@ -77,7 +77,7 @@ const EXTRADRAW = {
 		if (config.subText?.content) {
 			ctx.font = config.subText.font;
 			ctx.fillStyle = config.subText.color;
-			ctx.shadowColor = config.subText.shadow?.color || "transparent";
+			ctx.shadowColor = config.subText.shadow?.color || 'transparent';
 			ctx.shadowBlur = config.subText.shadow?.blur || 0;
 			ctx.fillText(
 				_replacePlaceholders(config.subText.content, data),
@@ -94,7 +94,7 @@ const EXTRADRAW = {
 		let fgImage = null;
 		if (
 			data &&
-			typeof data.foregroundURL === "string" &&
+			typeof data.foregroundURL === 'string' &&
 			data.foregroundURL.length > 0
 		) {
 			fgImage = await _loadImageHelper(data.foregroundURL);
@@ -102,20 +102,20 @@ const EXTRADRAW = {
 
 		// Teks Vertikal
 		ctx.save();
-		ctx.font = `110px "${data?.fontFamily || "BagelFatOne-Regular"}"`;
-		ctx.fillStyle = "#F791A8";
+		ctx.font = `110px "${data?.fontFamily || 'BagelFatOne-Regular'}"`;
+		ctx.fillStyle = '#F791A8';
 		ctx.translate(config.width - 210, 80);
 		ctx.rotate(Math.PI / 2);
-		ctx.fillText((data?.username || "").toUpperCase().slice(0, 11), 0, 0);
+		ctx.fillText((data?.username || '').toUpperCase().slice(0, 11), 0, 0);
 		ctx.restore();
 
 		// Member Count
 		if (data?.memberCount) {
 			ctx.save();
-			ctx.font = `32px "${data.fontFamily || "BagelFatOne-Regular"}"`;
-			ctx.fillStyle = "#FFFFFF";
-			ctx.textAlign = "right";
-			ctx.textBaseline = "bottom";
+			ctx.font = `32px "${data.fontFamily || 'BagelFatOne-Regular'}"`;
+			ctx.fillStyle = '#FFFFFF';
+			ctx.textAlign = 'right';
+			ctx.textBaseline = 'bottom';
 			ctx.fillText(
 				`#${data.memberCount}`,
 				config.width - 15,
@@ -207,7 +207,7 @@ async function _registerFontFromUrl(url, fontFamily) {
 		// Jika belum ada, download font-nya
 		try {
 			logger.info(`🔠 Downloading font from ${url}...`);
-			const response = await axios.get(url, { responseType: "arraybuffer" });
+			const response = await axios.get(url, { responseType: 'arraybuffer' });
 			await fs.writeFile(tempFontPath, response.data);
 			logger.info(`🔠 Font saved to temporary path: ${tempFontPath}`);
 		} catch (downloadError) {
@@ -246,11 +246,11 @@ async function generateBanner(options = {}) {
 		width: 1024,
 		height: 512,
 		backgroundURL:
-			"https://images.unsplash.com/photo-1579546929518-9e396f3cc809",
+			'https://images.unsplash.com/photo-1579546929518-9e396f3cc809',
 		foregroundURL: undefined,
 		// fontPath: "./fonts/Poppins-Bold.ttf",
-		fontFamily: "Poppins-Bold",
-		fallbackBgColor: "#23272A",
+		fontFamily: 'Poppins-Bold',
+		fallbackBgColor: '#23272A',
 		avatar: {
 			enabled: !!options.avatarURL,
 			url: options.avatarURL,
@@ -265,13 +265,13 @@ async function generateBanner(options = {}) {
 			{
 				text: options.welcomeText || null,
 				font: options.font || 'bold 42px "Poppins-Bold"',
-				color: options.color || "#FFFFFF",
-				align: options.align || "center",
-				baseline: options.baseline || "middle",
+				color: options.color || '#FFFFFF',
+				align: options.align || 'center',
+				baseline: options.baseline || 'middle',
 				x: null, // auto center
 				y: null, // auto
 				shadow: {
-					color: options.shadow?.color || "rgba(0,0,0,0.4)",
+					color: options.shadow?.color || 'rgba(0,0,0,0.4)',
 					blur: options.shadow?.blur || 6,
 				},
 				maxWidth: null,
@@ -280,13 +280,13 @@ async function generateBanner(options = {}) {
 			{
 				text: options.username,
 				font: options.font || 'bold 32px "Poppins-Bold"',
-				color: options.color || "#FFFFFF",
-				align: options.align || "center",
-				baseline: options.baseline || "middle",
+				color: options.color || '#FFFFFF',
+				align: options.align || 'center',
+				baseline: options.baseline || 'middle',
 				x: null,
 				y: null,
 				shadow: {
-					color: options.shadow?.color || "rgba(0,0,0,0.4)",
+					color: options.shadow?.color || 'rgba(0,0,0,0.4)',
 					blur: options.shadow?.blur || 6,
 				},
 				maxWidth: null,
@@ -294,9 +294,9 @@ async function generateBanner(options = {}) {
 				// translateKey: null
 			},
 		],
-		overlay: { color: "rgba(0,0,0,0.4)" },
+		overlay: { color: 'rgba(0,0,0,0.4)' },
 		border: { color: kythia.bot.color, width: 6 },
-		extraDraw: options.extraDraw || "classicCentered",
+		extraDraw: options.extraDraw || 'classicCentered',
 	};
 
 	// Merge config, deep merge untuk avatar, texts, overlay, border, extraDraw
@@ -330,7 +330,7 @@ async function generateBanner(options = {}) {
 								? (options.width || defaultConfig.width) * 0.9
 								: (options.width || defaultConfig.width) * 0.8,
 				})),
-		extraDraw: EXTRADRAW[options.extraDraw || "classicCentered"],
+		extraDraw: EXTRADRAW[options.extraDraw || 'classicCentered'],
 	};
 
 	// Daftarkan font jika ada
@@ -344,23 +344,23 @@ async function generateBanner(options = {}) {
 
 	// Siapkan canvas
 	const canvas = createCanvas(config.width, config.height);
-	const ctx = canvas.getContext("2d");
+	const ctx = canvas.getContext('2d');
 
 	// 1. Gambar background
 	try {
 		let bgImage;
-		if (config.backgroundURL?.startsWith("http")) {
+		if (config.backgroundURL?.startsWith('http')) {
 			const response = await axios.get(config.backgroundURL, {
-				responseType: "arraybuffer",
+				responseType: 'arraybuffer',
 			});
-			bgImage = await loadImage(Buffer.from(response.data, "binary"));
+			bgImage = await loadImage(Buffer.from(response.data, 'binary'));
 		} else if (config.backgroundURL) {
 			bgImage = await loadImage(config.backgroundURL);
 		}
 		if (bgImage) {
 			ctx.drawImage(bgImage, 0, 0, config.width, config.height);
 		} else {
-			throw new Error("No background image");
+			throw new Error('No background image');
 		}
 	} catch (_e) {
 		ctx.fillStyle = config.fallbackBgColor;
@@ -410,7 +410,7 @@ async function generateBanner(options = {}) {
 					Math.PI * 2,
 					true,
 				);
-				ctx.strokeStyle = config.avatar.border.color || "#fff";
+				ctx.strokeStyle = config.avatar.border.color || '#fff';
 				ctx.lineWidth = config.avatar.border.width;
 				ctx.stroke();
 				ctx.restore();
@@ -432,15 +432,15 @@ async function generateBanner(options = {}) {
 
 		ctx.save();
 		ctx.font = textCfg.font || '32px "Poppins-Bold"';
-		ctx.fillStyle = textCfg.color || "#fff";
-		ctx.textAlign = textCfg.align || "left";
-		ctx.textBaseline = textCfg.baseline || "alphabetic";
+		ctx.fillStyle = textCfg.color || '#fff';
+		ctx.textAlign = textCfg.align || 'left';
+		ctx.textBaseline = textCfg.baseline || 'alphabetic';
 		if (textCfg.shadow) {
-			ctx.shadowColor = textCfg.shadow.color || "rgba(0,0,0,0.4)";
+			ctx.shadowColor = textCfg.shadow.color || 'rgba(0,0,0,0.4)';
 			ctx.shadowBlur = textCfg.shadow.blur || 6;
 		}
-		const x = typeof textCfg.x === "number" ? textCfg.x : config.width / 2;
-		const y = typeof textCfg.y === "number" ? textCfg.y : config.height / 2;
+		const x = typeof textCfg.x === 'number' ? textCfg.x : config.width / 2;
+		const y = typeof textCfg.y === 'number' ? textCfg.y : config.height / 2;
 		let drawText = text;
 		if (textCfg.maxWidth) {
 			drawText = fitText(ctx, text, textCfg.maxWidth);
@@ -452,14 +452,14 @@ async function generateBanner(options = {}) {
 	// 6. Border (optional)
 	if (config.border && config.border.width > 0) {
 		ctx.save();
-		ctx.strokeStyle = config.border.color || "#3498DB";
+		ctx.strokeStyle = config.border.color || '#3498DB';
 		ctx.lineWidth = config.border.width;
 		ctx.strokeRect(0, 0, config.width, config.height);
 		ctx.restore();
 	}
 
 	// 7. Extra custom draw (optional)
-	if (typeof config.extraDraw === "function") {
+	if (typeof config.extraDraw === 'function') {
 		// Pass a safe data object to extraDraw to avoid undefined property errors
 		// Use options as data, but always provide empty object fallback
 		await config.extraDraw(ctx, canvas, config, options || {});
@@ -469,11 +469,11 @@ async function generateBanner(options = {}) {
 	if (config.foregroundURL) {
 		try {
 			let fgImage;
-			if (config.foregroundURL.startsWith("http")) {
+			if (config.foregroundURL.startsWith('http')) {
 				const response = await axios.get(config.foregroundURL, {
-					responseType: "arraybuffer",
+					responseType: 'arraybuffer',
 				});
-				fgImage = await loadImage(Buffer.from(response.data, "binary"));
+				fgImage = await loadImage(Buffer.from(response.data, 'binary'));
 			} else {
 				fgImage = await loadImage(config.foregroundURL);
 			}
@@ -483,7 +483,7 @@ async function generateBanner(options = {}) {
 		}
 	}
 
-	return canvas.toBuffer("image/png");
+	return canvas.toBuffer('image/png');
 }
 
 module.exports = {

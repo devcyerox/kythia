@@ -3,18 +3,18 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 // templates.js
-const fs = require("node:fs");
-const path = require("node:path");
-const { EmbedBuilder } = require("discord.js");
+const fs = require('node:fs');
+const path = require('node:path');
+const { EmbedBuilder } = require('discord.js');
 
 const TYPE_MAP = { text: 0, voice: 2, forum: 15 }; // ChannelType enum minimal
 
 function validateTemplate(tpl) {
-	if (!tpl?.meta?.key) throw new Error("meta.key is required");
+	if (!tpl?.meta?.key) throw new Error('meta.key is required');
 	if (!Array.isArray(tpl.roles)) tpl.roles = [];
 	if (!Array.isArray(tpl.categories)) tpl.categories = [];
 	// normalize type string -> number
@@ -24,7 +24,7 @@ function validateTemplate(tpl) {
 			continue;
 		}
 		for (const ch of cat.channels) {
-			if (typeof ch.type === "string") {
+			if (typeof ch.type === 'string') {
 				const mapped = TYPE_MAP[ch.type];
 				if (mapped === undefined) throw new Error(`Unknown type: ${ch.type}`);
 				ch.type = mapped;
@@ -35,7 +35,7 @@ function validateTemplate(tpl) {
 }
 
 function readJsonSafe(file) {
-	const raw = fs.readFileSync(file, "utf8");
+	const raw = fs.readFileSync(file, 'utf8');
 	try {
 		return JSON.parse(raw);
 	} catch (e) {
@@ -52,7 +52,7 @@ function loadTemplates(dir, embedded = {}) {
 	}
 	// 2) from folder
 	if (dir && fs.existsSync(dir)) {
-		const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json"));
+		const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json'));
 		for (const f of files) {
 			const tpl = validateTemplate(readJsonSafe(path.join(dir, f)));
 			result[tpl.meta.key] = tpl; // override embedded if same key
@@ -70,7 +70,7 @@ function buildEmbeds(embedArray = []) {
 		if (e.color) embed.setColor(e.color);
 		if (e.footer)
 			embed.setFooter(
-				typeof e.footer === "string" ? { text: e.footer } : e.footer,
+				typeof e.footer === 'string' ? { text: e.footer } : e.footer,
 			);
 		if (e.thumbnail?.url) embed.setThumbnail(e.thumbnail.url);
 		if (e.image?.url) embed.setImage(e.image.url);

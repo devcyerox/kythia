@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -13,7 +13,7 @@ const {
 	TextInputStyle,
 	StringSelectMenuBuilder,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -28,10 +28,10 @@ module.exports = {
 				guildId: interaction.guild.id,
 			});
 			if (!panels || panels.length === 0) {
-				const desc = await t(interaction, "ticket.errors.no_panels_found");
+				const desc = await t(interaction, 'ticket.errors.no_panels_found');
 				return interaction.reply({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -45,66 +45,66 @@ module.exports = {
 
 			const modal = new ModalBuilder()
 				.setCustomId(`tkt-type-step1-submit:${messageId}`)
-				.setTitle("Create Type - Step 1/2: Basic Info")
+				.setTitle('Create Type - Step 1/2: Basic Info')
 				.addLabelComponents(
 					new LabelBuilder()
-						.setLabel("Select Target Panel")
+						.setLabel('Select Target Panel')
 						.setStringSelectMenuComponent(
 							new StringSelectMenuBuilder()
-								.setCustomId("panelId")
-								.setPlaceholder("Select panel...")
+								.setCustomId('panelId')
+								.setPlaceholder('Select panel...')
 								.setOptions(panelOptions)
 								.setMinValues(1)
 								.setMaxValues(1),
 						),
 					new LabelBuilder()
-						.setLabel("Ticket Type Name (Menu Label)")
+						.setLabel('Ticket Type Name (Menu Label)')
 						.setTextInputComponent(
 							new TextInputBuilder()
-								.setCustomId("typeName")
+								.setCustomId('typeName')
 								.setStyle(TextInputStyle.Short)
-								.setPlaceholder("e.g. Bug Report")
+								.setPlaceholder('e.g. Bug Report')
 								.setRequired(true),
 						),
 					new LabelBuilder()
-						.setLabel("Type Emoji (Optional)")
+						.setLabel('Type Emoji (Optional)')
 						.setTextInputComponent(
 							new TextInputBuilder()
-								.setCustomId("typeEmoji")
+								.setCustomId('typeEmoji')
 								.setStyle(TextInputStyle.Short)
-								.setPlaceholder("e.g. 🎟️")
+								.setPlaceholder('e.g. 🎟️')
 								.setRequired(false),
 						),
 					new LabelBuilder()
-						.setLabel("Ticket Opening Message (Optional)")
+						.setLabel('Ticket Opening Message (Optional)')
 						.setTextInputComponent(
 							new TextInputBuilder()
-								.setCustomId("ticketOpenMessage")
+								.setCustomId('ticketOpenMessage')
 								.setStyle(TextInputStyle.Paragraph)
 								.setPlaceholder(
-									"This message will be sent in the new ticket channel.",
+									'This message will be sent in the new ticket channel.',
 								)
 								.setRequired(false),
 						),
 					new LabelBuilder()
-						.setLabel("Ticket Opening Image (Optional)")
+						.setLabel('Ticket Opening Image (Optional)')
 						.setTextInputComponent(
 							new TextInputBuilder()
-								.setCustomId("ticketOpenImage")
+								.setCustomId('ticketOpenImage')
 								.setStyle(TextInputStyle.Short)
-								.setPlaceholder("https://... (Image URL)")
+								.setPlaceholder('https://... (Image URL)')
 								.setRequired(false),
 						),
 				);
 
 			await interaction.showModal(modal);
 		} catch (error) {
-			console.error("Error in tkt-type-step1-show handler:", error);
+			console.error('Error in tkt-type-step1-show handler:', error);
 			if (!interaction.replied && !interaction.deferred) {
-				const desc = await t(interaction, "ticket.errors.modal_show_failed");
+				const desc = await t(interaction, 'ticket.errors.modal_show_failed');
 				await interaction.reply({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});

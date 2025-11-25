@@ -3,19 +3,19 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const router = require("express").Router();
-const { ChannelType, MessageFlags, EmbedBuilder } = require("discord.js");
-const parseDiscordMarkdown = require("../helpers/parser");
-const KythiaVoter = require("@coreModels/KythiaVoter");
-const KythiaUser = require("@coreModels/KythiaUser");
-const convertColor = require("kythia-core").utils.color;
-const logger = require("@coreHelpers/logger");
-const client = require("kythia-core").KythiaClient;
+const router = require('express').Router();
+const { ChannelType, MessageFlags, EmbedBuilder } = require('discord.js');
+const parseDiscordMarkdown = require('../helpers/parser');
+const KythiaVoter = require('@coreModels/KythiaVoter');
+const KythiaUser = require('@coreModels/KythiaUser');
+const convertColor = require('kythia-core').utils.color;
+const logger = require('@coreHelpers/logger');
+const client = require('kythia-core').KythiaClient;
 
-router.get("/api/guilds/:guildId/channels", async (req, res) => {
+router.get('/api/guilds/:guildId/channels', async (req, res) => {
 	try {
 		const guild = await client.guilds.fetch(req.params.guildId);
 		const allChannels = guild.channels.cache;
@@ -28,7 +28,7 @@ router.get("/api/guilds/:guildId/channels", async (req, res) => {
 			.filter(
 				(c) =>
 					c.type === ChannelType.GuildText &&
-					c.permissionsFor(client.user).has("ViewChannel"),
+					c.permissionsFor(client.user).has('ViewChannel'),
 			)
 			.sort((a, b) => a.position - b.position)
 			.forEach((channel) => {
@@ -45,22 +45,22 @@ router.get("/api/guilds/:guildId/channels", async (req, res) => {
 		if (channelsWithoutCategory.length > 0) {
 			result.push({
 				id: null,
-				name: "TANPA KATEGORI",
+				name: 'TANPA KATEGORI',
 				channels: channelsWithoutCategory,
 			});
 		}
 		res.json(result);
 	} catch (error) {
-		console.error("Error fetching grouped channels:", error);
-		res.status(500).json({ message: "Gagal mengambil kanal" });
+		console.error('Error fetching grouped channels:', error);
+		res.status(500).json({ message: 'Gagal mengambil kanal' });
 	}
 });
 
-router.get("/api/channels/:channelId/messages", async (req, res) => {
+router.get('/api/channels/:channelId/messages', async (req, res) => {
 	try {
 		const limit = parseInt(req.query.limit, 10) || 50;
 		const channel = await client.channels.fetch(req.params.channelId);
-		if (!channel.permissionsFor(client.user).has("ReadMessageHistory")) {
+		if (!channel.permissionsFor(client.user).has('ReadMessageHistory')) {
 			return res
 				.status(403)
 				.json({ message: "Bot tidak punya izin 'Read Message History'." });
@@ -99,9 +99,9 @@ router.get("/api/channels/:channelId/messages", async (req, res) => {
 					username: msg.author.username,
 					avatar: msg.author.displayAvatarURL({ dynamic: true }),
 				},
-				timestamp: msg.createdAt.toLocaleString("id-ID", {
-					dateStyle: "medium",
-					timeStyle: "short",
+				timestamp: msg.createdAt.toLocaleString('id-ID', {
+					dateStyle: 'medium',
+					timeStyle: 'short',
 				}),
 				attachments: msg.attachments.map((att) => att.url),
 				embeds: embeds,
@@ -109,45 +109,45 @@ router.get("/api/channels/:channelId/messages", async (req, res) => {
 		});
 		res.json(formattedMessages.reverse());
 	} catch (error) {
-		console.error("Error fetching messages:", error);
-		res.status(500).json({ message: "Gagal mengambil pesan." });
+		console.error('Error fetching messages:', error);
+		res.status(500).json({ message: 'Gagal mengambil pesan.' });
 	}
 });
 
-router.post("/api/channels/:channelId/messages", async (req, res) => {
+router.post('/api/channels/:channelId/messages', async (req, res) => {
 	try {
 		const { message } = req.body;
 		if (!message) {
-			return res.status(400).json({ message: "Isi pesan tidak boleh kosong." });
+			return res.status(400).json({ message: 'Isi pesan tidak boleh kosong.' });
 		}
 		const channel = await client.channels.fetch(req.params.channelId);
-		if (!channel.permissionsFor(client.user).has("SendMessages")) {
+		if (!channel.permissionsFor(client.user).has('SendMessages')) {
 			return res.status(403).json({
 				message: "Bot tidak punya izin 'Send Messages' di kanal ini.",
 			});
 		}
 		await channel.send(message);
-		res.status(201).json({ success: true, message: "Pesan terkirim!" });
+		res.status(201).json({ success: true, message: 'Pesan terkirim!' });
 	} catch (error) {
-		console.error("Error sending message:", error);
-		res.status(500).json({ message: "Gagal mengirim pesan." });
+		console.error('Error sending message:', error);
+		res.status(500).json({ message: 'Gagal mengirim pesan.' });
 	}
 });
 
-router.post("/api/topgg-webhook", async (req, res) => {
-	const client = req.app.get("botClient");
+router.post('/api/topgg-webhook', async (req, res) => {
+	const client = req.app.get('botClient');
 	const { topgg, webhookVoteLogs } = kythia.api;
 
-	if (req.header("Authorization") !== topgg.authToken) {
-		logger.warn("[Webhook] Unauthorized Top.gg request received.");
-		return res.status(401).send("Unauthorized");
+	if (req.header('Authorization') !== topgg.authToken) {
+		logger.warn('[Webhook] Unauthorized Top.gg request received.');
+		return res.status(401).send('Unauthorized');
 	}
 
 	try {
 		const userId = req.body.user;
 		if (!userId) {
-			logger.warn("[Webhook] Authorized request received but missing user ID.");
-			return res.status(400).send("Bad Request: Missing user ID");
+			logger.warn('[Webhook] Authorized request received but missing user ID.');
+			return res.status(400).send('Bad Request: Missing user ID');
 		}
 
 		const kythiaVoter = await KythiaVoter.getCache({ userId: userId });
@@ -218,8 +218,8 @@ router.post("/api/topgg-webhook", async (req, res) => {
 				const user = await client.users.fetch(userId);
 
 				const webhookUrl = new URL(webhookVoteLogs);
-				webhookUrl.searchParams.append("wait", "true");
-				webhookUrl.searchParams.append("with_components", "true");
+				webhookUrl.searchParams.append('wait', 'true');
+				webhookUrl.searchParams.append('with_components', 'true');
 
 				const payload = {
 					flags: MessageFlags.IsComponentsV2,
@@ -227,8 +227,8 @@ router.post("/api/topgg-webhook", async (req, res) => {
 						{
 							type: 17,
 							accent_color: convertColor(kythia.bot.color, {
-								from: "hex",
-								to: "decimal",
+								from: 'hex',
+								to: 'decimal',
 							}),
 							components: [
 								{
@@ -276,8 +276,8 @@ router.post("/api/topgg-webhook", async (req, res) => {
 				};
 
 				const response = await fetch(webhookUrl.href, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(payload),
 				});
 
@@ -293,10 +293,10 @@ router.post("/api/topgg-webhook", async (req, res) => {
 				);
 			}
 		}
-		res.status(200).send("OK");
+		res.status(200).send('OK');
 	} catch (error) {
-		logger.error("[Webhook] Error processing vote:", error);
-		res.status(500).send("Internal Server Error");
+		logger.error('[Webhook] Error processing vote:', error);
+		res.status(500).send('Internal Server Error');
 	}
 });
 

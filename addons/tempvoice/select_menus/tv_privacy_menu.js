@@ -3,9 +3,9 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { PermissionsBitField } = require("discord.js");
+const { PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	execute: async (interaction) => {
@@ -15,14 +15,14 @@ module.exports = {
 		const { TempVoiceChannel } = models;
 
 		const selectedOp = interaction.values[0];
-		const channelId = interaction.customId.split(":")[1];
+		const channelId = interaction.customId.split(':')[1];
 		if (!channelId) {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.privacy.menu.no_channel_id"),
+					await t(interaction, 'tempvoice.privacy.menu.no_channel_id'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
@@ -36,8 +36,8 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.privacy.menu.not_owner"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.privacy.menu.not_owner'),
+					{ color: 'Red' },
 				),
 			});
 		}
@@ -49,16 +49,16 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.privacy.menu.channel_not_found"),
+					await t(interaction, 'tempvoice.privacy.menu.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
 		}
 
 		const everyoneRole = interaction.guild.roles.everyone;
-		let resultKey = "";
+		let resultKey = '';
 
 		const currentPerms = channel.permissionsFor(everyoneRole);
 		const newPerms = {
@@ -66,20 +66,20 @@ module.exports = {
 			Connect: currentPerms.has(PermissionsBitField.Flags.Connect),
 		};
 
-		if (selectedOp === "lock_channel") {
+		if (selectedOp === 'lock_channel') {
 			newPerms.Connect = false;
-			resultKey = "tempvoice.privacy.menu.lock_success";
-		} else if (selectedOp === "unlock_channel") {
+			resultKey = 'tempvoice.privacy.menu.lock_success';
+		} else if (selectedOp === 'unlock_channel') {
 			newPerms.Connect = true;
-			resultKey = "tempvoice.privacy.menu.unlock_success";
-		} else if (selectedOp === "invisible_channel") {
+			resultKey = 'tempvoice.privacy.menu.unlock_success';
+		} else if (selectedOp === 'invisible_channel') {
 			newPerms.ViewChannel = false;
 			newPerms.Connect = false;
-			resultKey = "tempvoice.privacy.menu.invisible_success";
-		} else if (selectedOp === "visible_channel") {
+			resultKey = 'tempvoice.privacy.menu.invisible_success';
+		} else if (selectedOp === 'visible_channel') {
 			newPerms.ViewChannel = true;
 			newPerms.Connect = true;
-			resultKey = "tempvoice.privacy.menu.visible_success";
+			resultKey = 'tempvoice.privacy.menu.visible_success';
 		}
 
 		try {
@@ -92,7 +92,7 @@ module.exports = {
 				components: await simpleContainer(
 					interaction,
 					await t(interaction, resultKey),
-					{ color: "Green" },
+					{ color: 'Green' },
 				),
 			});
 		} catch (err) {
@@ -101,8 +101,8 @@ module.exports = {
 			await interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.privacy.menu.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.privacy.menu.fail'),
+					{ color: 'Red' },
 				),
 			});
 		}

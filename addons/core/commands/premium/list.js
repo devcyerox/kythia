@@ -3,13 +3,13 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const { Op } = require("sequelize");
+const { EmbedBuilder } = require('discord.js');
+const { Op } = require('sequelize');
 module.exports = {
 	data: (subcommand) =>
-		subcommand.setName("list").setDescription("View list of premium users"),
+		subcommand.setName('list').setDescription('View list of premium users'),
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers, models } = container;
 		const { embedFooter } = helpers.discord;
@@ -23,32 +23,32 @@ module.exports = {
 				isPremium: true,
 				premiumExpiresAt: { [Op.gt]: now },
 			},
-			order: [["premiumExpiresAt", "ASC"]],
-			cacheTags: ["KythiaUser:premium:list"],
+			order: [['premiumExpiresAt', 'ASC']],
+			cacheTags: ['KythiaUser:premium:list'],
 		});
 
 		if (!list.length) {
 			return interaction.editReply(
-				await t(interaction, "core.premium.premium.list.empty"),
+				await t(interaction, 'core.premium.premium.list.empty'),
 			);
 		}
 
 		const embed = new EmbedBuilder()
 			.setColor(kythiaConfig.bot.color)
-			.setTitle(await t(interaction, "core.premium.premium.list.title"))
+			.setTitle(await t(interaction, 'core.premium.premium.list.title'))
 			.setDescription(
 				(
 					await Promise.all(
 						list.map(
 							async (p, i) =>
-								await t(interaction, "core.premium.premium.list.item", {
+								await t(interaction, 'core.premium.premium.list.item', {
 									index: i + 1,
 									user: `<@${p.userId}>`,
 									expires: `<t:${Math.floor(new Date(p.premiumExpiresAt).getTime() / 1000)}:R>`,
 								}),
 						),
 					)
-				).join("\n"),
+				).join('\n'),
 			)
 			.setFooter(await embedFooter(interaction));
 

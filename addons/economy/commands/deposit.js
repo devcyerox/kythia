@@ -3,31 +3,31 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("deposit")
-			.setDescription("💰 Deposit your kythia coin into kythia bank.")
+			.setName('deposit')
+			.setDescription('💰 Deposit your kythia coin into kythia bank.')
 			.addStringOption((option) =>
 				option
-					.setName("type")
-					.setDescription("Choose deposit type: all or partial")
+					.setName('type')
+					.setDescription('Choose deposit type: all or partial')
 					.setRequired(true)
 					.addChoices(
-						{ name: "Deposit All", value: "all" },
-						{ name: "Deposit Partial", value: "partial" },
+						{ name: 'Deposit All', value: 'all' },
+						{ name: 'Deposit Partial', value: 'partial' },
 					),
 			)
 			.addIntegerOption((option) =>
 				option
-					.setName("amount")
-					.setDescription("Amount to deposit")
+					.setName('amount')
+					.setDescription('Amount to deposit')
 					.setRequired(false)
 					.setMinValue(1),
 			),
@@ -37,29 +37,29 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply();
-		const type = interaction.options.getString("type");
-		let amount = interaction.options.getInteger("amount");
+		const type = interaction.options.getString('type');
+		let amount = interaction.options.getInteger('amount');
 
 		const user = await KythiaUser.getCache({ userId: interaction.user.id });
 		if (!user) {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
 		}
 
-		if (type === "all") {
+		if (type === 'all') {
 			amount = user.kythiaCoin;
-		} else if (type === "partial") {
+		} else if (type === 'partial') {
 			if (amount === null) {
 				const embed = new EmbedBuilder()
-					.setColor("Yellow")
+					.setColor('Yellow')
 					.setDescription(
-						await t(interaction, "economy.deposit.deposit.amount.required"),
+						await t(interaction, 'economy.deposit.deposit.amount.required'),
 					)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setFooter(await embedFooter(interaction));
@@ -69,9 +69,9 @@ module.exports = {
 
 		if (amount <= 0) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					await t(interaction, "economy.deposit.deposit.invalid.amount"),
+					await t(interaction, 'economy.deposit.deposit.invalid.amount'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -80,9 +80,9 @@ module.exports = {
 
 		if (user.kythiaCoin < amount) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "economy.deposit.deposit.not.enough.cash"),
+					await t(interaction, 'economy.deposit.deposit.not.enough.cash'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -91,9 +91,9 @@ module.exports = {
 
 		if (amount === 0) {
 			const embed = new EmbedBuilder()
-				.setColor("Yellow")
+				.setColor('Yellow')
 				.setDescription(
-					await t(interaction, "economy.deposit.deposit.zero.cash"),
+					await t(interaction, 'economy.deposit.deposit.zero.cash'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -105,9 +105,9 @@ module.exports = {
 
 		if (user.kythiaBank + amount > maxBalance) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "economy.deposit.deposit.max.balance", {
+					await t(interaction, 'economy.deposit.deposit.max.balance', {
 						max: maxBalance.toLocaleString(),
 					}),
 				)
@@ -119,8 +119,8 @@ module.exports = {
 		user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(amount);
 		user.kythiaBank = BigInt(user.kythiaBank) + BigInt(amount);
 
-		user.changed("kythiaCoin", true);
-		user.changed("kythiaBank", true);
+		user.changed('kythiaCoin', true);
+		user.changed('kythiaBank', true);
 
 		await user.saveAndUpdateCache();
 
@@ -128,7 +128,7 @@ module.exports = {
 			.setColor(kythiaConfig.bot.color)
 			.setThumbnail(interaction.user.displayAvatarURL())
 			.setDescription(
-				await t(interaction, "economy.deposit.deposit.success", { amount }),
+				await t(interaction, 'economy.deposit.deposit.success', { amount }),
 			)
 			.setFooter(await embedFooter(interaction));
 

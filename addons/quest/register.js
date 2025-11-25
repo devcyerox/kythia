@@ -3,9 +3,9 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { initializeQuestScheduler } = require("./tasks/questScheduler");
+const { initializeQuestScheduler } = require('./tasks/questScheduler');
 
 module.exports = {
 	async initialize(bot) {
@@ -15,7 +15,7 @@ module.exports = {
 			initializeQuestScheduler(bot);
 		});
 
-		summary.push(" └─ ⏰ Quest Notifier cron task registered.");
+		summary.push(' └─ ⏰ Quest Notifier cron task registered.');
 		return summary;
 	},
 };

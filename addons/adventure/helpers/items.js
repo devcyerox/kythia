@@ -3,46 +3,46 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const items = {
 	equipment: [
 		{
-			id: "shield",
-			emoji: "🛡️",
-			nameKey: "adventure.shop.items.shield.name",
-			descKey: "adventure.shop.items.shield.desc",
+			id: 'shield',
+			emoji: '🛡️',
+			nameKey: 'adventure.shop.items.shield.name',
+			descKey: 'adventure.shop.items.shield.desc',
 			price: 10,
 			buyable: true,
 			sellPrice: 5,
-			type: "equipment",
+			type: 'equipment',
 			stats: {
 				defense: 5,
 			},
 		},
 		{
-			id: "sword",
-			emoji: "⚔️",
-			nameKey: "adventure.shop.items.sword.name",
-			descKey: "adventure.shop.items.sword.desc",
+			id: 'sword',
+			emoji: '⚔️',
+			nameKey: 'adventure.shop.items.sword.name',
+			descKey: 'adventure.shop.items.sword.desc',
 			price: 15,
 			buyable: true,
 			sellPrice: 8,
-			type: "equipment",
+			type: 'equipment',
 			stats: {
 				attack: 7,
 			},
 		},
 		{
-			id: "armor",
-			emoji: "🥋",
-			nameKey: "adventure.shop.items.armor.name",
-			descKey: "adventure.shop.items.armor.desc",
+			id: 'armor',
+			emoji: '🥋',
+			nameKey: 'adventure.shop.items.armor.name',
+			descKey: 'adventure.shop.items.armor.desc',
 			price: 30,
 			buyable: true,
 			sellPrice: 15,
-			type: "equipment",
+			type: 'equipment',
 			stats: {
 				defense: 10,
 				health: 20,
@@ -51,27 +51,27 @@ const items = {
 	],
 	consumables: [
 		{
-			id: "revival",
-			emoji: "🍶",
-			nameKey: "adventure.shop.items.revival.name",
-			descKey: "adventure.shop.items.revival.desc",
+			id: 'revival',
+			emoji: '🍶',
+			nameKey: 'adventure.shop.items.revival.name',
+			descKey: 'adventure.shop.items.revival.desc',
 			price: 35,
 			buyable: true,
 			sellPrice: 15,
-			type: "consumable",
-			effect: "revive",
+			type: 'consumable',
+			effect: 'revive',
 			uses: 1,
 		},
 		{
-			id: "health_potion",
-			emoji: "❤️",
-			nameKey: "adventure.shop.items.health.potion.name",
-			descKey: "adventure.shop.items.health.potion.desc",
+			id: 'health_potion',
+			emoji: '❤️',
+			nameKey: 'adventure.shop.items.health.potion.name',
+			descKey: 'adventure.shop.items.health.potion.desc',
 			price: 20,
 			buyable: true,
 			sellPrice: 8,
-			type: "consumable",
-			effect: "heal",
+			type: 'consumable',
+			effect: 'heal',
 			amount: 50,
 			uses: 1,
 		},
@@ -84,7 +84,7 @@ const items = {
  * @returns {object|null} Item object if found, else null.
  */
 function getItem(itemName) {
-	const categories = ["equipment", "consumables"];
+	const categories = ['equipment', 'consumables'];
 	for (const cat of categories) {
 		for (const item of items[cat]) {
 			const localizedName = `${item.emoji} ${getLocalizedItemName(item)}`;
@@ -111,8 +111,8 @@ function getLocalizedItemName(item) {
 	if (item.nameKey) {
 		return (
 			item.emoji +
-			" " +
-			item.id.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase())
+			' ' +
+			item.id.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())
 		);
 	}
 	return `${item.emoji} ${item.id}`;
@@ -124,9 +124,9 @@ function getLocalizedItemName(item) {
  */
 function getLocalizedItemDesc(item) {
 	if (item.descKey) {
-		return "No description.";
+		return 'No description.';
 	}
-	return "";
+	return '';
 }
 
 module.exports = {

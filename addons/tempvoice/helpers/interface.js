@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ContainerBuilder,
@@ -16,7 +16,7 @@ const {
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 /**
  * Generate TempVoice control interface components (component v2).
@@ -31,13 +31,13 @@ async function buildInterface(interaction) {
 	const bannerUrl = kythiaConfig?.settings?.tempvoiceBannerImage;
 
 	const header = new TextDisplayBuilder().setContent(
-		`${await t(interaction, "tempvoice.interface.header")}`,
+		`${await t(interaction, 'tempvoice.interface.header')}`,
 	);
 	const banner = new MediaGalleryBuilder().addItems([
 		new MediaGalleryItemBuilder().setURL(bannerUrl),
 	]);
 	const ctrlInfo = new TextDisplayBuilder().setContent(
-		await t(interaction, "tempvoice.interface.ctrlInfo"),
+		await t(interaction, 'tempvoice.interface.ctrlInfo'),
 	);
 	const divider = new SeparatorBuilder()
 		.setSpacing(SeparatorSpacingSize.Small)
@@ -45,97 +45,97 @@ async function buildInterface(interaction) {
 
 	const row1_static = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId("tv_rename")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.rename"))
+			.setCustomId('tv_rename')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.rename'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("⌨️"),
+			.setEmoji('⌨️'),
 		new ButtonBuilder()
-			.setCustomId("tv_limit")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.limit"))
+			.setCustomId('tv_limit')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.limit'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("👥"),
+			.setEmoji('👥'),
 		new ButtonBuilder()
-			.setCustomId("tv_privacy")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.privacy"))
+			.setCustomId('tv_privacy')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.privacy'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🛡️"),
+			.setEmoji('🛡️'),
 		new ButtonBuilder()
-			.setCustomId("tv_waiting")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.waiting"))
+			.setCustomId('tv_waiting')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.waiting'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("⏲️"),
+			.setEmoji('⏲️'),
 		new ButtonBuilder()
-			.setCustomId("tv_stage")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.stage"))
+			.setCustomId('tv_stage')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.stage'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🎙️"),
+			.setEmoji('🎙️'),
 	);
 
 	const row2_static = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId("tv_trust")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.trust"))
+			.setCustomId('tv_trust')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.trust'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🤝"),
+			.setEmoji('🤝'),
 		new ButtonBuilder()
-			.setCustomId("tv_untrust")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.untrust"))
+			.setCustomId('tv_untrust')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.untrust'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("✂️"),
+			.setEmoji('✂️'),
 		new ButtonBuilder()
-			.setCustomId("tv_invite")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.invite"))
+			.setCustomId('tv_invite')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.invite'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("📞"),
+			.setEmoji('📞'),
 		new ButtonBuilder()
-			.setCustomId("tv_kick")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.kick"))
+			.setCustomId('tv_kick')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.kick'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("👢"),
+			.setEmoji('👢'),
 		new ButtonBuilder()
-			.setCustomId("tv_region")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.region"))
+			.setCustomId('tv_region')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.region'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🌐"),
+			.setEmoji('🌐'),
 	);
 
 	const row3_static = new ActionRowBuilder().addComponents(
 		new ButtonBuilder()
-			.setCustomId("tv_block")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.block"))
+			.setCustomId('tv_block')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.block'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🚫"),
+			.setEmoji('🚫'),
 		new ButtonBuilder()
-			.setCustomId("tv_unblock")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.unblock"))
+			.setCustomId('tv_unblock')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.unblock'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🟢"),
+			.setEmoji('🟢'),
 		new ButtonBuilder()
-			.setCustomId("tv_claim")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.claim"))
+			.setCustomId('tv_claim')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.claim'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("👑"),
+			.setEmoji('👑'),
 		new ButtonBuilder()
-			.setCustomId("tv_transfer")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.transfer"))
+			.setCustomId('tv_transfer')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.transfer'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🔁"),
+			.setEmoji('🔁'),
 		new ButtonBuilder()
-			.setCustomId("tv_delete")
-			.setLabel(await t(interaction, "tempvoice.interface.buttons.delete"))
+			.setCustomId('tv_delete')
+			.setLabel(await t(interaction, 'tempvoice.interface.buttons.delete'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji("🗑️"),
+			.setEmoji('🗑️'),
 	);
 
 	const footer = new TextDisplayBuilder().setContent(
-		await t(interaction, "common.container.footer", {
+		await t(interaction, 'common.container.footer', {
 			username: interaction.client.user.username,
 		}),
 	);
 
 	const containerComponent = new ContainerBuilder()
 		.setAccentColor(
-			convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 		)
 		.addTextDisplayComponents(header)
 		.addSeparatorComponents(divider)

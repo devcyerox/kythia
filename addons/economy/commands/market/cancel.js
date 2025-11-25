@@ -3,20 +3,20 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("cancel")
-			.setDescription("Cancel an open order.")
+			.setName('cancel')
+			.setDescription('Cancel an open order.')
 			.addStringOption((option) =>
 				option
-					.setName("order_id")
-					.setDescription("The ID of the order to cancel")
+					.setName('order_id')
+					.setDescription('The ID of the order to cancel')
 					.setRequired(true),
 			),
 
@@ -25,31 +25,31 @@ module.exports = {
 		const { KythiaUser, MarketPortfolio, MarketOrder } = models;
 
 		await interaction.deferReply();
-		const orderId = interaction.options.getString("order_id");
+		const orderId = interaction.options.getString('order_id');
 
 		try {
 			const order = await MarketOrder.getCache({
 				id: orderId,
 				userId: interaction.user.id,
-				status: "open",
+				status: 'open',
 			});
 
 			if (!order) {
 				const notFoundEmbed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						`## ${await t(interaction, "economy.market.cancel.not.found.title")}\n${await t(interaction, "economy.market.cancel.not.found.desc")}`,
+						`## ${await t(interaction, 'economy.market.cancel.not.found.title')}\n${await t(interaction, 'economy.market.cancel.not.found.desc')}`,
 					);
 				return interaction.editReply({ embeds: [notFoundEmbed] });
 			}
 
-			if (order.side === "buy") {
+			if (order.side === 'buy') {
 				const user = await KythiaUser.getCache({ userId: interaction.user.id });
 				const totalCost = order.quantity * order.price;
 
 				user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalCost);
 
-				user.changed("kythiaCoin", true);
+				user.changed('kythiaCoin', true);
 
 				await user.saveAndUpdateCache();
 			} else {
@@ -70,21 +70,21 @@ module.exports = {
 				}
 			}
 
-			order.status = "cancelled";
+			order.status = 'cancelled';
 			await order.save();
 
 			const successEmbed = new EmbedBuilder()
-				.setColor("Green")
+				.setColor('Green')
 				.setDescription(
-					`## ${await t(interaction, "economy.market.cancel.success.title")}\n${await t(interaction, "economy.market.cancel.success.desc", { orderId: order.id })}`,
+					`## ${await t(interaction, 'economy.market.cancel.success.title')}\n${await t(interaction, 'economy.market.cancel.success.desc', { orderId: order.id })}`,
 				);
 			await interaction.editReply({ embeds: [successEmbed] });
 		} catch (error) {
-			console.error("Error in cancel order:", error);
+			console.error('Error in cancel order:', error);
 			const errorEmbed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					`## ${await t(interaction, "economy.market.cancel.error.title")}\n${await t(interaction, "economy.market.cancel.error.desc")}`,
+					`## ${await t(interaction, 'economy.market.cancel.error.title')}\n${await t(interaction, 'economy.market.cancel.error.desc')}`,
 				);
 			await interaction.editReply({ embeds: [errorEmbed] });
 		}

@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("unmute")
-			.setDescription("🔊 Unmutes a user in a voice channel.")
+			.setName('unmute')
+			.setDescription('🔊 Unmutes a user in a voice channel.')
 			.addUserOption((option) =>
 				option
-					.setName("user")
-					.setDescription("User to unmute")
+					.setName('user')
+					.setDescription('User to unmute')
 					.setRequired(true),
 			),
 	permissions: PermissionFlagsBits.MuteMembers,
@@ -25,7 +25,7 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
-		const user = interaction.options.getUser("user");
+		const user = interaction.options.getUser('user');
 
 		let member;
 		try {
@@ -35,12 +35,12 @@ module.exports = {
 		}
 
 		if (member) {
-			await member.voice.setMute(false, "Unmuted by command.");
+			await member.voice.setMute(false, 'Unmuted by command.');
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					`## ${await t(interaction, "core.moderation.unmute.embed.title")}\n` +
-						(await t(interaction, "core.moderation.unmute.embed.desc", {
+					`## ${await t(interaction, 'core.moderation.unmute.embed.title')}\n` +
+						(await t(interaction, 'core.moderation.unmute.embed.desc', {
 							user: `<@${user.id}>`,
 						})),
 				)
@@ -50,7 +50,7 @@ module.exports = {
 			return interaction.editReply({ embeds: [embed] });
 		} else {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.unmute.user.not.found"),
+				content: await t(interaction, 'core.moderation.unmute.user.not.found'),
 			});
 		}
 	},

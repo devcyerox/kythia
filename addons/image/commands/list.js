@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -12,7 +12,7 @@ const {
 	SeparatorBuilder,
 	SeparatorSpacingSize,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 // const convertColor = require('kythia-core').utils.color;
 // const { t } = require('@coreHelpers/translator');
@@ -20,7 +20,7 @@ const {
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
-		subcommand.setName("list").setDescription("List all your uploaded images"),
+		subcommand.setName('list').setDescription('List all your uploaded images'),
 	async execute(interaction) {
 		const { models, helpers, translator, kythiaConfig } =
 			interaction.client.container;
@@ -39,19 +39,19 @@ module.exports = {
 		}
 		if (!images.length) {
 			return interaction.editReply(
-				await t(interaction, "image.commands.list.empty"),
+				await t(interaction, 'image.commands.list.empty'),
 			);
 		}
 		const baseUrl =
-			kythiaConfig.addons.dashboard.url || "https://localhost:3000";
+			kythiaConfig.addons.dashboard.url || 'https://localhost:3000';
 
 		const items = images.map((img) => ({
 			code: img.filename,
 			url: `${baseUrl}/files/${img.storagePath}`,
 		}));
 		const color = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const chunkSize = 25;
@@ -63,8 +63,8 @@ module.exports = {
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
 						i === 0
-							? await t(interaction, "image.commands.list.title.text")
-							: await t(interaction, "image.commands.list.title.empty"),
+							? await t(interaction, 'image.commands.list.title.text')
+							: await t(interaction, 'image.commands.list.title.empty'),
 					),
 				)
 				.addSeparatorComponents(
@@ -76,7 +76,7 @@ module.exports = {
 			for (const img of pageItems) {
 				container.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "image.commands.list.item", {
+						await t(interaction, 'image.commands.list.item', {
 							code: img.code,
 							url: img.url,
 						}),
@@ -97,7 +97,7 @@ module.exports = {
 				);
 				container.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "image.commands.list.footer.help"),
+						await t(interaction, 'image.commands.list.footer.help'),
 					),
 				);
 			}
@@ -109,7 +109,7 @@ module.exports = {
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "common.container.footer", {
+						await t(interaction, 'common.container.footer', {
 							username: interaction.client.user.username,
 						}),
 					),

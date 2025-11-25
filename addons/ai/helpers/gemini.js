@@ -3,13 +3,13 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { Mutex } = require("async-mutex");
-const fs = require("node:fs").promises;
-const path = require("node:path");
-const { GoogleGenAI } = require("@google/genai");
+const { Mutex } = require('async-mutex');
+const fs = require('node:fs').promises;
+const path = require('node:path');
+const { GoogleGenAI } = require('@google/genai');
 
 let _logger = console;
 let _aiConfig = {};
@@ -18,8 +18,8 @@ let _GEMINI_TOKEN_COUNT = 0;
 let _PER_MINUTE_AI_LIMIT = 60;
 
 const tokenMutex = new Mutex();
-const tempDirPath = path.join(__dirname, "..", "temp");
-const aiUsageFilePath = path.join(tempDirPath, "ai_usage.json");
+const tempDirPath = path.join(__dirname, '..', 'temp');
+const aiUsageFilePath = path.join(tempDirPath, 'ai_usage.json');
 
 /**
  * 💉 Injects dependencies needed by this module.
@@ -30,12 +30,12 @@ const aiUsageFilePath = path.join(tempDirPath, "ai_usage.json");
  */
 function init({ logger, config }) {
 	if (!logger || !config) {
-		throw new Error("Gemini helper requires logger and config during init.");
+		throw new Error('Gemini helper requires logger and config during init.');
 	}
 	_logger = logger;
 	_aiConfig = config.addons?.ai || {};
-	_GEMINI_API_KEYS = (_aiConfig.geminiApiKeys || "")
-		.split(",")
+	_GEMINI_API_KEYS = (_aiConfig.geminiApiKeys || '')
+		.split(',')
 		.map((t) => t.trim())
 		.filter(Boolean);
 	_GEMINI_TOKEN_COUNT = _GEMINI_API_KEYS.length;
@@ -62,11 +62,11 @@ async function ensureTempDir() {
 async function loadUsageData() {
 	await ensureTempDir();
 	try {
-		const raw = await fs.readFile(aiUsageFilePath, "utf-8");
+		const raw = await fs.readFile(aiUsageFilePath, 'utf-8');
 		const data = JSON.parse(raw);
 		const minuteKey = new Date().toISOString().slice(0, 16);
 		if (!Array.isArray(data) || data.length !== _GEMINI_TOKEN_COUNT) {
-			throw new Error("Invalid usage data or token count changed.");
+			throw new Error('Invalid usage data or token count changed.');
 		}
 		let needsSave = false;
 		for (let i = 0; i < data.length; i++) {
@@ -101,7 +101,7 @@ async function saveUsageData(data) {
 	try {
 		await fs.writeFile(aiUsageFilePath, JSON.stringify(data, null, 2));
 	} catch (err) {
-		_logger.error("❌ Failed to save AI usage data:", err);
+		_logger.error('❌ Failed to save AI usage data:', err);
 	}
 }
 
@@ -116,7 +116,7 @@ async function getUsageMeta(file, key) {
 	const metaPath = path.join(tempDirPath, file);
 	await ensureTempDir();
 	try {
-		const data = await fs.readFile(metaPath, "utf-8");
+		const data = await fs.readFile(metaPath, 'utf-8');
 		return JSON.parse(data);
 	} catch {
 		const initialMeta = { [key]: 0 };
@@ -155,12 +155,12 @@ async function getAndUseNextAvailableToken() {
 	try {
 		const usageData = await loadUsageData();
 		if (_GEMINI_TOKEN_COUNT === 0) {
-			_logger.warn("⚠️ No Gemini API keys configured.");
+			_logger.warn('⚠️ No Gemini API keys configured.');
 			return -1;
 		}
-		const meta = await getUsageMeta("ai_usage_meta.json", "lastIndex");
+		const meta = await getUsageMeta('ai_usage_meta.json', 'lastIndex');
 		const startIdx =
-			typeof meta.lastIndex === "number" &&
+			typeof meta.lastIndex === 'number' &&
 			meta.lastIndex >= 0 &&
 			meta.lastIndex < _GEMINI_TOKEN_COUNT
 				? meta.lastIndex
@@ -171,12 +171,12 @@ async function getAndUseNextAvailableToken() {
 				usageData[idx].count++;
 				await saveUsageData(usageData);
 				meta.lastIndex = (idx + 1) % _GEMINI_TOKEN_COUNT;
-				await setUsageMeta("ai_usage_meta.json", meta);
+				await setUsageMeta('ai_usage_meta.json', meta);
 				_logger.debug(`🎉 AI Token ${idx} selected.`);
 				return idx;
 			}
 		}
-		_logger.warn("⚠️ All Gemini tokens are currently rate-limited.");
+		_logger.warn('⚠️ All Gemini tokens are currently rate-limited.');
 		return -1;
 	} finally {
 		release();
@@ -193,7 +193,7 @@ async function generateContent(promptOrContents) {
 	const tokenIdx = await getAndUseNextAvailableToken();
 	if (tokenIdx === -1) {
 		_logger.error(
-			"❌ Cannot generate content: All AI tokens are rate-limited.",
+			'❌ Cannot generate content: All AI tokens are rate-limited.',
 		);
 		return null;
 	}
@@ -204,13 +204,13 @@ async function generateContent(promptOrContents) {
 		);
 		return null;
 	}
-	const GEMINI_MODEL = _aiConfig.model || "gemini-pro";
+	const GEMINI_MODEL = _aiConfig.model || 'gemini-pro';
 
 	try {
 		const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 		const contents =
-			typeof promptOrContents === "string"
-				? [{ role: "user", parts: [{ text: promptOrContents }] }]
+			typeof promptOrContents === 'string'
+				? [{ role: 'user', parts: [{ text: promptOrContents }] }]
 				: Array.isArray(promptOrContents)
 					? promptOrContents
 					: [promptOrContents];

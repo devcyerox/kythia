@@ -3,7 +3,7 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ChannelType,
@@ -16,7 +16,7 @@ const {
 	SeparatorSpacingSize,
 	TextDisplayBuilder,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = async (bot, oldState, newState) => {
 	const container = bot.client.container;
@@ -110,7 +110,7 @@ module.exports = async (bot, oldState, newState) => {
 
 					const msgContent = await t(
 						fakeInteraction,
-						"tempvoice.waiting.join_request",
+						'tempvoice.waiting.join_request',
 						{
 							owner: `<@${owner.id}>`,
 							user: `<@${member.id}>`,
@@ -133,19 +133,19 @@ module.exports = async (bot, oldState, newState) => {
 										`tv_waiting_allow:${mainChannel.channelId}:${member.id}`,
 									)
 									.setLabel(
-										await t(fakeInteraction, "tempvoice.waiting.allow_btn"),
+										await t(fakeInteraction, 'tempvoice.waiting.allow_btn'),
 									)
 									.setStyle(ButtonStyle.Success)
-									.setEmoji("✅"),
+									.setEmoji('✅'),
 								new ButtonBuilder()
 									.setCustomId(
 										`tv_waiting_deny:${mainChannel.channelId}:${member.id}`,
 									)
 									.setLabel(
-										await t(fakeInteraction, "tempvoice.waiting.deny_btn"),
+										await t(fakeInteraction, 'tempvoice.waiting.deny_btn'),
 									)
 									.setStyle(ButtonStyle.Danger)
-									.setEmoji("❌"),
+									.setEmoji('❌'),
 							),
 						);
 
@@ -181,13 +181,13 @@ module.exports = async (bot, oldState, newState) => {
 				logger.info(
 					`[TempVoice] Main channel ${oldChannelId} is now empty, deleting...`,
 				);
-				await channel.delete("Temp channel empty.");
+				await channel.delete('Temp channel empty.');
 
 				if (activeMainChannel.waitingRoomChannelId) {
 					const wr = await client.channels
 						.fetch(activeMainChannel.waitingRoomChannelId, { force: true })
 						.catch(() => null);
-					if (wr) await wr.delete("Main temp channel deleted.");
+					if (wr) await wr.delete('Main temp channel deleted.');
 				}
 
 				await activeMainChannel.destroy();

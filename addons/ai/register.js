@@ -3,13 +3,13 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { generateCommandSchema } = require("./helpers/commandSchema");
-const { initializeAiTasks } = require("./tasks/dailyGreeter");
-const geminiHelper = require("./helpers/gemini");
-const promptBuilder = require("./helpers/promptBuilder");
+const { generateCommandSchema } = require('./helpers/commandSchema');
+const { initializeAiTasks } = require('./tasks/dailyGreeter');
+const geminiHelper = require('./helpers/gemini');
+const promptBuilder = require('./helpers/promptBuilder');
 
 module.exports = {
 	async initialize(bot) {
@@ -19,11 +19,11 @@ module.exports = {
 
 		// Initialize Gemini Helper
 		geminiHelper.init({ logger, config: bot.container.kythiaConfig });
-		summery.push("   └─ Gemini Helper initialized.");
+		summery.push('   └─ Gemini Helper initialized.');
 
 		// Initialize Prompt Builder
 		promptBuilder.init({ isOwner, config: bot.container.kythiaConfig });
-		summery.push("   └─ Prompt Builder initialized.");
+		summery.push('   └─ Prompt Builder initialized.');
 
 		bot.addClientReadyHook(() => {
 			bot.aiCommandSchema = generateCommandSchema(bot.client);
@@ -33,9 +33,9 @@ module.exports = {
 
 			if (bot.container.kythiaConfig.addons.ai.dailyGreeter === true) {
 				initializeAiTasks(bot);
-				summery.push("   └─ Task: Daily Greeter (Cron Job) On");
+				summery.push('   └─ Task: Daily Greeter (Cron Job) On');
 			} else {
-				summery.push("   └─ Task: Daily Greeter (Cron Job) Off");
+				summery.push('   └─ Task: Daily Greeter (Cron Job) Off');
 			}
 		});
 

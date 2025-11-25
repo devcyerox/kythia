@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -16,12 +16,12 @@ const {
 	ModalBuilder,
 	TextInputBuilder,
 	TextInputStyle,
-} = require("discord.js");
+} = require('discord.js');
 
 const WORD_LIST = kythia.addons.fun.wordle.words;
-const EMOJI_CORRECT = "🟩";
-const EMOJI_PRESENT = "🟨";
-const EMOJI_ABSENT = "⬛";
+const EMOJI_CORRECT = '🟩';
+const EMOJI_PRESENT = '🟨';
+const EMOJI_ABSENT = '⬛';
 const games = {};
 
 function pickRandomWord() {
@@ -31,21 +31,21 @@ function isValidWord(word) {
 	return WORD_LIST.includes(word);
 }
 function checkGuess(guess, answer) {
-	const result = Array(5).fill("absent");
-	const answerArr = answer.split("");
-	const guessArr = guess.split("");
+	const result = Array(5).fill('absent');
+	const answerArr = answer.split('');
+	const guessArr = guess.split('');
 	const used = Array(5).fill(false);
 	for (let i = 0; i < 5; i++) {
 		if (guessArr[i] === answerArr[i]) {
-			result[i] = "correct";
+			result[i] = 'correct';
 			used[i] = true;
 		}
 	}
 	for (let i = 0; i < 5; i++) {
-		if (result[i] === "correct") continue;
+		if (result[i] === 'correct') continue;
 		for (let j = 0; j < 5; j++) {
 			if (!used[j] && guessArr[i] === answerArr[j]) {
-				result[i] = "present";
+				result[i] = 'present';
 				used[j] = true;
 				break;
 			}
@@ -54,10 +54,10 @@ function checkGuess(guess, answer) {
 	return result;
 }
 function renderGuessRow(guess, feedback) {
-	let row = "";
+	let row = '';
 	for (let i = 0; i < 5; i++) {
-		if (feedback[i] === "correct") row += EMOJI_CORRECT;
-		else if (feedback[i] === "present") row += EMOJI_PRESENT;
+		if (feedback[i] === 'correct') row += EMOJI_CORRECT;
+		else if (feedback[i] === 'present') row += EMOJI_PRESENT;
 		else row += EMOJI_ABSENT;
 	}
 	row += `  \`${guess.toUpperCase()}\``;
@@ -74,7 +74,7 @@ function renderBoard(guesses, answer) {
 	while (lines.length < 6) {
 		lines.push(`${EMOJI_ABSENT.repeat(5)}  \`     \``);
 	}
-	return lines.join("\n");
+	return lines.join('\n');
 }
 
 async function buildGameEmbed(interaction, game) {
@@ -82,32 +82,32 @@ async function buildGameEmbed(interaction, game) {
 	const { t } = interaction.client.container;
 	if (game.isOver) {
 		if (game.win) {
-			description += `\n\n${await t(interaction, "fun.wordle.win", { answer: game.answer.toUpperCase() })}`;
+			description += `\n\n${await t(interaction, 'fun.wordle.win', { answer: game.answer.toUpperCase() })}`;
 		} else {
-			description += `\n\n${await t(interaction, "fun.wordle.lose", { answer: game.answer.toUpperCase() })}`;
+			description += `\n\n${await t(interaction, 'fun.wordle.lose', { answer: game.answer.toUpperCase() })}`;
 		}
 	} else {
-		description += `\n\n${await t(interaction, "fun.wordle.remaining", { remaining: 6 - game.guesses.length })}`;
+		description += `\n\n${await t(interaction, 'fun.wordle.remaining', { remaining: 6 - game.guesses.length })}`;
 	}
 
 	return new EmbedBuilder()
 		.setDescription(
-			`${await t(interaction, "fun.wordle.title")}\n${description}`,
+			`${await t(interaction, 'fun.wordle.title')}\n${description}`,
 		)
 		.setColor(
-			game.isOver ? (game.win ? "#2ecc71" : "#e74c3c") : kythia.bot.color,
+			game.isOver ? (game.win ? '#2ecc71' : '#e74c3c') : kythia.bot.color,
 		)
 		.setFooter({
 			text: game.isOver
-				? await t(interaction, "fun.wordle.footer.end")
-				: await t(interaction, "fun.wordle.footer.play"),
+				? await t(interaction, 'fun.wordle.footer.end')
+				: await t(interaction, 'fun.wordle.footer.play'),
 		});
 }
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("wordle")
-		.setDescription("🔡 Play Wordle! Guess the 5-letter word in 6 tries."),
+		.setName('wordle')
+		.setDescription('🔡 Play Wordle! Guess the 5-letter word in 6 tries.'),
 
 	async execute(interaction, container) {
 		const { t } = container;
@@ -116,8 +116,8 @@ module.exports = {
 
 		if (games[userId] && !games[userId].isOver) {
 			const embed = new EmbedBuilder()
-				.setColor("#e67e22")
-				.setDescription(await t(interaction, "fun.wordle.already.playing"));
+				.setColor('#e67e22')
+				.setDescription(await t(interaction, 'fun.wordle.already.playing'));
 			return interaction.reply({ embeds: [embed], ephemeral: true });
 		}
 
@@ -133,8 +133,8 @@ module.exports = {
 		const embed = await buildGameEmbed(interaction, game);
 		const row = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("wordle_guess_button")
-				.setLabel(await t(interaction, "fun.wordle.button.guess"))
+				.setCustomId('wordle_guess_button')
+				.setLabel(await t(interaction, 'fun.wordle.button.guess'))
 				.setStyle(ButtonStyle.Primary),
 		);
 
@@ -149,21 +149,21 @@ module.exports = {
 			time: 300_000,
 		});
 
-		collector.on("collect", async (i) => {
+		collector.on('collect', async (i) => {
 			if (i.user.id !== userId) {
 				const embed = new EmbedBuilder()
-					.setColor("#e67e22")
-					.setDescription(await t(i, "fun.wordle.not.your.game"));
+					.setColor('#e67e22')
+					.setDescription(await t(i, 'fun.wordle.not.your.game'));
 				return i.reply({ embeds: [embed], ephemeral: true });
 			}
 
 			const modal = new ModalBuilder()
 				.setCustomId(`wordle_modal_${userId}`)
-				.setTitle(await t(i, "fun.wordle.modal.title"));
+				.setTitle(await t(i, 'fun.wordle.modal.title'));
 
 			const wordInput = new TextInputBuilder()
-				.setCustomId("wordle_input")
-				.setLabel(await t(i, "fun.wordle.modal.label"))
+				.setCustomId('wordle_input')
+				.setLabel(await t(i, 'fun.wordle.modal.label'))
 				.setStyle(TextInputStyle.Short)
 				.setMinLength(5)
 				.setMaxLength(5)
@@ -175,20 +175,20 @@ module.exports = {
 			try {
 				const modalSubmit = await i.awaitModalSubmit({ time: 60_000 });
 				const guess = modalSubmit.fields
-					.getTextInputValue("wordle_input")
+					.getTextInputValue('wordle_input')
 					.toLowerCase();
 
 				if (!isValidWord(guess)) {
 					const embed = new EmbedBuilder()
-						.setColor("#e74c3c")
+						.setColor('#e74c3c')
 						.setDescription(
-							await t(modalSubmit, "fun.wordle.invalid.word", { word: guess }),
+							await t(modalSubmit, 'fun.wordle.invalid.word', { word: guess }),
 						);
 					return modalSubmit.reply({ embeds: [embed], ephemeral: true });
 				}
 				if (game.guesses.includes(guess)) {
-					const embed = new EmbedBuilder().setColor("#e67e22").setDescription(
-						await t(modalSubmit, "fun.wordle.already.guessed", {
+					const embed = new EmbedBuilder().setColor('#e67e22').setDescription(
+						await t(modalSubmit, 'fun.wordle.already.guessed', {
 							word: guess,
 						}),
 					);
@@ -201,10 +201,10 @@ module.exports = {
 				if (guess === game.answer) {
 					game.isOver = true;
 					game.win = true;
-					collector.stop("win");
+					collector.stop('win');
 				} else if (game.guesses.length >= 6) {
 					game.isOver = true;
-					collector.stop("lose");
+					collector.stop('lose');
 				}
 
 				const updatedEmbed = await buildGameEmbed(interaction, game);
@@ -212,7 +212,7 @@ module.exports = {
 			} catch (_err) {}
 		});
 
-		collector.on("end", async (_collected, _reason) => {
+		collector.on('end', async (_collected, _reason) => {
 			if (!game.isOver) game.isOver = true;
 
 			delete games[userId];
@@ -220,8 +220,8 @@ module.exports = {
 			const finalEmbed = await buildGameEmbed(interaction, game);
 			const finalRow = new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
-					.setCustomId("wordle_guess_button")
-					.setLabel(await t(interaction, "fun.wordle.button.end"))
+					.setCustomId('wordle_guess_button')
+					.setLabel(await t(interaction, 'fun.wordle.button.end'))
 					.setStyle(ButtonStyle.Secondary)
 					.setDisabled(true),
 			);

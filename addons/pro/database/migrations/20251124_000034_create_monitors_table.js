@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("monitors", {
+		await queryInterface.createTable('monitors', {
 			userId: {
 				type: DataTypes.STRING,
 				primaryKey: true,
@@ -16,12 +16,12 @@ module.exports = {
 			},
 			urlToPing: { type: DataTypes.STRING, allowNull: false },
 			lastStatus: {
-				type: DataTypes.ENUM("UP", "DOWN", "PENDING"),
-				defaultValue: "PENDING",
+				type: DataTypes.ENUM('UP', 'DOWN', 'PENDING'),
+				defaultValue: 'PENDING',
 			},
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("monitors");
+		await queryInterface.dropTable('monitors');
 	},
 };

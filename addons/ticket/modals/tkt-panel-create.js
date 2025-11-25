@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ContainerBuilder,
@@ -14,7 +14,7 @@ const {
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
 	ChannelType,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -26,32 +26,32 @@ module.exports = {
 		await interaction.deferUpdate();
 
 		try {
-			const originalMessageId = interaction.customId.split(":")[1];
+			const originalMessageId = interaction.customId.split(':')[1];
 			if (!originalMessageId) {
-				const desc = await t(interaction, "ticket.errors.no_message_id");
+				const desc = await t(interaction, 'ticket.errors.no_message_id');
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 
 			const channelId = interaction.fields
-				.getSelectedChannels("channelId")
+				.getSelectedChannels('channelId')
 				.first()?.id;
-			const title = interaction.fields.getTextInputValue("title");
-			const description = interaction.fields.getTextInputValue("description");
-			const image = interaction.fields.getTextInputValue("image");
+			const title = interaction.fields.getTextInputValue('title');
+			const description = interaction.fields.getTextInputValue('description');
+			const image = interaction.fields.getTextInputValue('image');
 
 			if (!channelId) {
 				const desc = await t(
 					interaction,
-					"ticket.errors.panel_channel_required",
+					'ticket.errors.panel_channel_required',
 				);
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -63,19 +63,19 @@ module.exports = {
 			if (!channel || channel.type !== ChannelType.GuildText) {
 				const desc = await t(
 					interaction,
-					"ticket.errors.panel_channel_invalid",
+					'ticket.errors.panel_channel_invalid',
 				);
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 
 			const accentColor = convertColor(kythiaConfig.bot.color, {
-				from: "hex",
-				to: "decimal",
+				from: 'hex',
+				to: 'decimal',
 			});
 			const panelContainer = new ContainerBuilder()
 				.setAccentColor(accentColor)
@@ -96,7 +96,7 @@ module.exports = {
 
 			if (
 				image &&
-				(image.startsWith("http://") || image.startsWith("https://"))
+				(image.startsWith('http://') || image.startsWith('https://'))
 			) {
 				panelContainer.addSeparatorComponents(
 					new SeparatorBuilder()
@@ -117,7 +117,7 @@ module.exports = {
 			);
 			panelContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "ticket.panel.no_types"),
+					await t(interaction, 'ticket.panel.no_types'),
 				),
 			);
 
@@ -135,24 +135,24 @@ module.exports = {
 				image: image || null,
 			});
 
-			const descSuccess = await t(interaction, "ticket.panel.create_success", {
+			const descSuccess = await t(interaction, 'ticket.panel.create_success', {
 				channel: channel.toString(),
 			});
 			const successContainer = await simpleContainer(
 				interaction,
 				`${descSuccess}`,
-				{ color: "Green" },
+				{ color: 'Green' },
 			);
 
 			await interaction.channel.messages.edit(originalMessageId, {
 				components: successContainer,
 			});
 		} catch (error) {
-			console.error("Error in tkt-panel-create modal handler:", error);
-			const desc = await t(interaction, "ticket.errors.generic");
+			console.error('Error in tkt-panel-create modal handler:', error);
+			const desc = await t(interaction, 'ticket.errors.generic');
 
 			await interaction.followUp({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}

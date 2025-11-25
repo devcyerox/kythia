@@ -3,18 +3,18 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const UserPet = require("../database/models/UserPet");
-const Pet = require("../database/models/Pet");
-const { embedFooter } = require("@coreHelpers/discord");
-const { t } = require("@coreHelpers/translator");
+const { EmbedBuilder } = require('discord.js');
+const UserPet = require('../database/models/UserPet');
+const Pet = require('../database/models/Pet');
+const { embedFooter } = require('@coreHelpers/discord');
+const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
-		subcommand.setName("play").setDescription("Play with your pet!"),
+		subcommand.setName('play').setDescription('Play with your pet!'),
 	async execute(interaction) {
 		await interaction.deferReply();
 
@@ -22,12 +22,12 @@ module.exports = {
 		// Get user's pet
 		const userPet = await UserPet.getCache({
 			userId: userId,
-			include: [{ model: Pet, as: "pet" }],
+			include: [{ model: Pet, as: 'pet' }],
 		});
 		if (!userPet) {
 			const embed = new EmbedBuilder()
 				.setDescription(
-					`## ${await t(interaction, "pet.play.no.pet.title")}\n${await t(interaction, "pet.play.no.pet.desc")}`,
+					`## ${await t(interaction, 'pet.play.no.pet.title')}\n${await t(interaction, 'pet.play.no.pet.desc')}`,
 				)
 				.setColor(kythia.bot.color)
 				.setFooter(await embedFooter(interaction));
@@ -36,7 +36,7 @@ module.exports = {
 		if (userPet.isDead) {
 			const embed = new EmbedBuilder()
 				.setDescription(
-					`## ${await t(interaction, "pet.play.dead.title")}\n${await t(interaction, "pet.play.dead.desc")}`,
+					`## ${await t(interaction, 'pet.play.dead.title')}\n${await t(interaction, 'pet.play.dead.desc')}`,
 				)
 				.setColor(kythia.bot.color)
 				.setFooter(await embedFooter(interaction));
@@ -44,14 +44,14 @@ module.exports = {
 		}
 		// Update happiness level
 		userPet.happiness = Math.min(userPet.happiness + 20, 100);
-		userPet.changed("happiness", true);
-		await userPet.saveAndUpdateCache("userId");
+		userPet.changed('happiness', true);
+		await userPet.saveAndUpdateCache('userId');
 
 		const embed = new EmbedBuilder()
 			.setDescription(
-				`## ${await t(interaction, "pet.play.success.title")}\n${await t(
+				`## ${await t(interaction, 'pet.play.success.title')}\n${await t(
 					interaction,
-					"pet.play.success.desc",
+					'pet.play.success.desc',
 					{
 						icon: userPet.pet.icon,
 						name: userPet.pet.name,

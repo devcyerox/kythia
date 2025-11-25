@@ -3,19 +3,19 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("warnings")
-			.setDescription("🔖 Show user warnings.")
+			.setName('warnings')
+			.setDescription('🔖 Show user warnings.')
 			.addUserOption((option) =>
 				option
-					.setName("user")
-					.setDescription("User to check")
+					.setName('user')
+					.setDescription('User to check')
 					.setRequired(false),
 			),
 
@@ -27,7 +27,7 @@ module.exports = {
 		const { User } = models;
 		await interaction.deferReply({ ephemeral: true });
 
-		const user = interaction.options.getUser("user") || interaction.user;
+		const user = interaction.options.getUser('user') || interaction.user;
 		const userRecord = await User.getCache({
 			userId: user.id,
 			guildId: interaction.guild.id,
@@ -39,7 +39,7 @@ module.exports = {
 			userRecord.warnings.length === 0
 		) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.warnings.none", {
+				content: await t(interaction, 'core.moderation.warnings.none', {
 					user: user.tag,
 				}),
 			});
@@ -48,23 +48,23 @@ module.exports = {
 		const warningsList = (
 			await Promise.all(
 				userRecord.warnings.map(async (warning, idx) => {
-					return await t(interaction, "core.moderation.warnings.item", {
+					return await t(interaction, 'core.moderation.warnings.item', {
 						number: idx + 1,
 						reason:
 							warning.reason ||
-							(await t(interaction, "core.moderation.warnings.unknown.reason")),
+							(await t(interaction, 'core.moderation.warnings.unknown.reason')),
 						date: warning.date
 							? new Date(warning.date).toLocaleString()
-							: await t(interaction, "core.moderation.warnings.unknown.date"),
+							: await t(interaction, 'core.moderation.warnings.unknown.date'),
 					});
 				}),
 			)
-		).join("\n");
+		).join('\n');
 
 		const embed = new EmbedBuilder()
-			.setColor("Red")
+			.setColor('Red')
 			.setDescription(
-				await t(interaction, "core.moderation.warnings.embed.description", {
+				await t(interaction, 'core.moderation.warnings.embed.description', {
 					user: `<@${user.id}>`,
 					warnings: warningsList,
 				}),

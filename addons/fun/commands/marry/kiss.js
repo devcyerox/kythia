@@ -3,17 +3,17 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { EmbedBuilder } = require("discord.js");
-const { Op } = require("sequelize");
+const { EmbedBuilder } = require('discord.js');
+const { Op } = require('sequelize');
 
 const KISS_COOLDOWN = 3600;
 
 module.exports = {
 	data: (subcommand) =>
-		subcommand.setName("kiss").setDescription("😘 Kiss your partner"),
+		subcommand.setName('kiss').setDescription('😘 Kiss your partner'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { Marriage } = models;
@@ -24,8 +24,8 @@ module.exports = {
 		const marriages = await Marriage.getAllCache({
 			where: {
 				[Op.or]: [
-					{ user1Id: userId, status: "married" },
-					{ user2Id: userId, status: "married" },
+					{ user1Id: userId, status: 'married' },
+					{ user2Id: userId, status: 'married' },
 				],
 			},
 			limit: 1,
@@ -35,8 +35,8 @@ module.exports = {
 
 		if (!marriage) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "fun.marry.not.married"))
+				.setColor('Red')
+				.setDescription(await t(interaction, 'fun.marry.not.married'))
 				.setFooter(await embedFooter(interaction));
 			return interaction.reply({
 				embeds: [embed],
@@ -48,7 +48,7 @@ module.exports = {
 				(KISS_COOLDOWN - (now - marriage.lastKiss)) / 60000,
 			);
 			return interaction.reply({
-				content: await t(interaction, "fun.marry.kiss.cooldown", {
+				content: await t(interaction, 'fun.marry.kiss.cooldown', {
 					minutes: remaining,
 				}),
 				ephemeral: true,
@@ -67,17 +67,17 @@ module.exports = {
 			.catch(() => null);
 
 		const kissMessages = [
-			await t(interaction, "fun.marry.kiss.1", {
+			await t(interaction, 'fun.marry.kiss.1', {
 				user: interaction.user.toString(),
-				partner: partner?.toString() || "Unknown",
+				partner: partner?.toString() || 'Unknown',
 			}),
-			await t(interaction, "fun.marry.kiss.2", {
+			await t(interaction, 'fun.marry.kiss.2', {
 				user: interaction.user.toString(),
-				partner: partner?.toString() || "Unknown",
+				partner: partner?.toString() || 'Unknown',
 			}),
-			await t(interaction, "fun.marry.kiss.3", {
+			await t(interaction, 'fun.marry.kiss.3', {
 				user: interaction.user.toString(),
-				partner: partner?.toString() || "Unknown",
+				partner: partner?.toString() || 'Unknown',
 			}),
 		];
 

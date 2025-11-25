@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -12,15 +12,15 @@ const {
 	SeparatorBuilder,
 	SeparatorSpacingSize,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("help")
+			.setName('help')
 			.setDescription(
-				"📖 Information and examples about each DNS record type.",
+				'📖 Information and examples about each DNS record type.',
 			),
 
 	async execute(interaction, container) {
@@ -30,15 +30,15 @@ module.exports = {
 		await interaction.deferReply();
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 		const mainContainer = new ContainerBuilder().setAccentColor(accentColor);
 
-		const title = await t(interaction, "pro.dns.help.title");
-		const description = await t(interaction, "pro.dns.help.description");
-		const labels = await t(interaction, "pro.dns.help.labels");
-		const recordTypes = await t(interaction, "pro.dns.help.types");
+		const title = await t(interaction, 'pro.dns.help.title');
+		const description = await t(interaction, 'pro.dns.help.description');
+		const labels = await t(interaction, 'pro.dns.help.labels');
+		const recordTypes = await t(interaction, 'pro.dns.help.types');
 
 		mainContainer.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(`${title}\n${description}`),
@@ -54,7 +54,7 @@ module.exports = {
 			const content = [
 				`**${labels.description}**`,
 				recordType.desc,
-				"",
+				'',
 				`**${labels.required_value}**`,
 				`- **${labels.value}** ${recordType.value}`,
 				`- **${labels.name}** ${recordType.name_host}`,
@@ -64,12 +64,12 @@ module.exports = {
 				content.push(`- **${labels.priority}** ${recordType.priority}`);
 			}
 
-			content.push("", `**${labels.example}**`);
+			content.push('', `**${labels.example}**`);
 			content.push(...recordType.example_lines);
 
 			mainContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					`${recordType.name}\n${content.join("\n")}`,
+					`${recordType.name}\n${content.join('\n')}`,
 				),
 			);
 		}
@@ -82,7 +82,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "common.container.footer", {
+					await t(interaction, 'common.container.footer', {
 						username: interaction.client.user.username,
 					}),
 				),

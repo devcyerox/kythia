@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
 
 module.exports = async (bot, messages, channel) => {
 	if (!channel.guild) return;
@@ -40,38 +40,38 @@ module.exports = async (bot, messages, channel) => {
 		if (!entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Red", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`🗑️ **Bulk Message Delete** by <@${entry.executor?.id || "Unknown"}>`,
+				`🗑️ **Bulk Message Delete** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
-				{ name: "Channel", value: `<#${channel.id}>`, inline: true },
+				{ name: 'Channel', value: `<#${channel.id}>`, inline: true },
 				{
-					name: "Messages Deleted",
+					name: 'Messages Deleted',
 					value: messages.size.toString(),
 					inline: true,
 				},
 				{
-					name: "Message IDs",
+					name: 'Message IDs',
 					value:
-						Array.from(messages.keys()).slice(0, 10).join(", ") +
-						(messages.size > 10 ? "..." : ""),
+						Array.from(messages.keys()).slice(0, 10).join(', ') +
+						(messages.size > 10 ? '...' : ''),
 					inline: false,
 				},
 			)
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in messageBulkDelete audit log:", err);
+		console.error('Error in messageBulkDelete audit log:', err);
 	}
 };

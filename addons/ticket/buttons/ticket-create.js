@@ -3,16 +3,16 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { createTicketChannel } = require("../helpers");
+const { createTicketChannel } = require('../helpers');
 const {
 	MessageFlags,
 	ModalBuilder,
 	LabelBuilder,
 	TextInputBuilder,
 	TextInputStyle,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -20,20 +20,20 @@ module.exports = {
 		const { TicketConfig } = models;
 		const { simpleContainer } = helpers.discord;
 
-		const configId = interaction.customId.split(":")[1];
+		const configId = interaction.customId.split(':')[1];
 		if (!configId) {
-			const desc = await t(interaction, "ticket.errors.missing_config_id");
+			const desc = await t(interaction, 'ticket.errors.missing_config_id');
 			return interaction.reply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
 		const ticketConfig = await TicketConfig.getCache({ id: configId });
 		if (!ticketConfig) {
-			const desc = await t(interaction, "ticket.errors.invalid_config");
+			const desc = await t(interaction, 'ticket.errors.invalid_config');
 			return interaction.reply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -41,17 +41,17 @@ module.exports = {
 		if (ticketConfig.askReason && ticketConfig.askReason.length > 0) {
 			const modal = new ModalBuilder()
 				.setCustomId(`tkt-open-reason:${configId}`)
-				.setTitle(await t(interaction, "ticket.reason_modal.title"))
+				.setTitle(await t(interaction, 'ticket.reason_modal.title'))
 				.addLabelComponents(
 					new LabelBuilder()
 						.setLabel(ticketConfig.askReason)
-						.setDescription(await t(interaction, "ticket.reason_modal.desc"))
+						.setDescription(await t(interaction, 'ticket.reason_modal.desc'))
 						.setTextInputComponent(
 							new TextInputBuilder()
-								.setCustomId("reason")
+								.setCustomId('reason')
 								.setStyle(TextInputStyle.Paragraph)
 								.setPlaceholder(
-									await t(interaction, "ticket.reason_modal.placeholder"),
+									await t(interaction, 'ticket.reason_modal.placeholder'),
 								)
 								.setRequired(true)
 								.setMinLength(10)

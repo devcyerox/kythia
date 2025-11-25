@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../../helpers/banks');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("create")
-			.setDescription("👤 Create an account and choose a bank type.")
+			.setName('create')
+			.setDescription('👤 Create an account and choose a bank type.')
 			.addStringOption((option) =>
 				option
-					.setName("bank")
+					.setName('bank')
 					.setDescription(
-						"Each bank offers unique benefits for your playstyle!",
+						'Each bank offers unique benefits for your playstyle!',
 					)
 					.setRequired(true)
 					.addChoices(
@@ -34,7 +34,7 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply();
-		const bankType = interaction.options.getString("bank");
+		const bankType = interaction.options.getString('bank');
 		const userId = interaction.user.id;
 		const userBank = banks.getBank(bankType);
 		const bankDisplay = `${userBank.emoji} ${userBank.name}`;
@@ -45,7 +45,7 @@ module.exports = {
 				.setDescription(
 					await t(
 						interaction,
-						"economy.account.create.account.create.already.desc",
+						'economy.account.create.account.create.already.desc',
 					),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
@@ -61,7 +61,7 @@ module.exports = {
 			.setDescription(
 				await t(
 					interaction,
-					"economy.account.create.account.create.success.desc",
+					'economy.account.create.account.create.success.desc',
 					{ bankType: bankDisplay },
 				),
 			)

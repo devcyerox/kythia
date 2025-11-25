@@ -3,58 +3,58 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { createMockEventArgs } = require("@coreHelpers/events");
-const { SlashCommandBuilder } = require("discord.js");
+const { createMockEventArgs } = require('@coreHelpers/events');
+const { SlashCommandBuilder } = require('discord.js');
 
 const ALL_EVENTS = [
-	"messageCreate",
-	"guildMemberAdd",
-	"guildMemberRemove",
-	"guildCreate",
-	"guildDelete",
-	"interactionCreate",
-	"clientReady",
-	"channelCreate",
-	"channelDelete",
-	"roleCreate",
-	"roleDelete",
-	"guildBanAdd",
-	"guildBanRemove",
-	"guildUpdate",
-	"guildMemberUpdate",
-	"messageUpdate",
-	"messageDelete",
-	"voiceStateUpdate",
-	"presenceUpdate",
-	"userUpdate",
-	"inviteCreate",
-	"inviteDelete",
+	'messageCreate',
+	'guildMemberAdd',
+	'guildMemberRemove',
+	'guildCreate',
+	'guildDelete',
+	'interactionCreate',
+	'clientReady',
+	'channelCreate',
+	'channelDelete',
+	'roleCreate',
+	'roleDelete',
+	'guildBanAdd',
+	'guildBanRemove',
+	'guildUpdate',
+	'guildMemberUpdate',
+	'messageUpdate',
+	'messageDelete',
+	'voiceStateUpdate',
+	'presenceUpdate',
+	'userUpdate',
+	'inviteCreate',
+	'inviteDelete',
 ];
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("testevent")
-		.setDescription("🧪 Trigger a Discord event for testing purposes")
+		.setName('testevent')
+		.setDescription('🧪 Trigger a Discord event for testing purposes')
 		.addStringOption((option) =>
 			option
-				.setName("event")
-				.setDescription("The event to trigger")
+				.setName('event')
+				.setDescription('The event to trigger')
 				.setRequired(true)
 				.addChoices(...ALL_EVENTS.map((ev) => ({ name: ev, value: ev }))),
 		)
 		.addStringOption((option) =>
 			option
-				.setName("type")
+				.setName('type')
 				.setDescription(
-					"The specific scenario to test for the event (e.g., boost)",
+					'The specific scenario to test for the event (e.g., boost)',
 				)
 				.setRequired(false)
 				.addChoices(
-					{ name: "boost", value: "boost" },
-					{ name: "unboost", value: "unboost" },
-					{ name: "nickname", value: "nickname" },
+					{ name: 'boost', value: 'boost' },
+					{ name: 'unboost', value: 'unboost' },
+					{ name: 'nickname', value: 'nickname' },
 				),
 		),
 	ownerOnly: true,
@@ -63,8 +63,8 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const eventName = interaction.options.getString("event");
-		const type = interaction.options.getString("type") || "default";
+		const eventName = interaction.options.getString('event');
+		const type = interaction.options.getString('type') || 'default';
 		const { client, user } = interaction;
 
 		logger.info(

@@ -3,13 +3,13 @@
  * @type: Command Group Definition
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
 	data: new SlashCommandBuilder()
-		.setName("eco")
-		.setDescription("💰 Get your money and become rich"),
+		.setName('eco')
+		.setDescription('💰 Get your money and become rich'),
 };

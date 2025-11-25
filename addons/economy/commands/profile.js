@@ -3,23 +3,23 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("profile")
+			.setName('profile')
 			.setDescription(
 				"🗃️ View a user's full profile, including level, bank, cash, and more.",
 			)
 			.addUserOption((option) =>
 				option
-					.setName("user")
-					.setDescription("The user whose profile you want to view")
+					.setName('user')
+					.setDescription('The user whose profile you want to view')
 					.setRequired(false),
 			),
 	async execute(interaction, container) {
@@ -30,7 +30,7 @@ module.exports = {
 		await interaction.deferReply();
 
 		// Get target user or self
-		const targetUser = interaction.options.getUser("user") || interaction.user;
+		const targetUser = interaction.options.getUser('user') || interaction.user;
 		const userId = targetUser.id;
 
 		// Fetch user data
@@ -39,7 +39,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -49,7 +49,7 @@ module.exports = {
 		// Bank & coin
 		const bank = userData.kythiaBank || 0;
 		const coin = userData.kythiaCoin || 0;
-		const bankType = userData.bankType ? userData.bankType.toUpperCase() : "-";
+		const bankType = userData.bankType ? userData.bankType.toUpperCase() : '-';
 		const userBank = banks.getBank(bankType);
 		const bankDisplay = `(${userBank.emoji} ${userBank.name})`;
 		// Build embed using t for all text
@@ -58,20 +58,20 @@ module.exports = {
 			.setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
 			.setDescription(
 				[
-					`## ${await t(interaction, "economy.profile.profile.title")}`,
-					await t(interaction, "economy.profile.profile.user.line", {
+					`## ${await t(interaction, 'economy.profile.profile.title')}`,
+					await t(interaction, 'economy.profile.profile.user.line', {
 						username: targetUser.username,
 						userId: targetUser.id,
 					}),
-					`### ${await t(interaction, "economy.profile.profile.finance.title")}`,
-					await t(interaction, "economy.profile.profile.bank.line", {
+					`### ${await t(interaction, 'economy.profile.profile.finance.title')}`,
+					await t(interaction, 'economy.profile.profile.bank.line', {
 						bank: bank.toLocaleString(),
-						bankType: bankDisplay || "",
+						bankType: bankDisplay || '',
 					}),
-					await t(interaction, "economy.profile.profile.cash.line", {
+					await t(interaction, 'economy.profile.profile.cash.line', {
 						cash: coin.toLocaleString(),
 					}),
-				].join("\n"),
+				].join('\n'),
 			)
 			.setFooter(await embedFooter(interaction));
 

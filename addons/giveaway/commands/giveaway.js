@@ -3,84 +3,84 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
 	SlashCommandBuilder,
 	PermissionFlagsBits,
 	InteractionContextType,
-} = require("discord.js");
-const { Op } = require("sequelize");
+} = require('discord.js');
+const { Op } = require('sequelize');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("giveaway")
-		.setDescription("🎉 Create a giveaway event")
+		.setName('giveaway')
+		.setDescription('🎉 Create a giveaway event')
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("start")
-				.setDescription("Start a giveaway")
+				.setName('start')
+				.setDescription('Start a giveaway')
 				.addStringOption((option) =>
 					option
-						.setName("duration")
-						.setDescription("Duration (1d 2h)")
+						.setName('duration')
+						.setDescription('Duration (1d 2h)')
 						.setRequired(true),
 				)
 				.addIntegerOption((option) =>
-					option.setName("winners").setDescription("Count").setRequired(true),
+					option.setName('winners').setDescription('Count').setRequired(true),
 				)
 				.addStringOption((option) =>
-					option.setName("prize").setDescription("Prize").setRequired(true),
+					option.setName('prize').setDescription('Prize').setRequired(true),
 				)
 				.addStringOption((option) =>
 					option
-						.setName("description")
-						.setDescription("Description for the giveaway")
+						.setName('description')
+						.setDescription('Description for the giveaway')
 						.setRequired(false),
 				)
 				.addStringOption((option) =>
 					option
-						.setName("color")
-						.setDescription("Hex Color")
+						.setName('color')
+						.setDescription('Hex Color')
 						.setRequired(false),
 				)
 				.addRoleOption((option) =>
-					option.setName("role").setDescription("Req Role").setRequired(false),
+					option.setName('role').setDescription('Req Role').setRequired(false),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("end")
-				.setDescription("End a giveaway manually")
+				.setName('end')
+				.setDescription('End a giveaway manually')
 				.addStringOption((option) =>
 					option
-						.setName("giveaway")
-						.setDescription("Search active giveaway")
+						.setName('giveaway')
+						.setDescription('Search active giveaway')
 						.setAutocomplete(true)
 						.setRequired(true),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("cancel")
-				.setDescription("Cancel a running giveaway")
+				.setName('cancel')
+				.setDescription('Cancel a running giveaway')
 				.addStringOption((option) =>
 					option
-						.setName("giveaway")
-						.setDescription("Search active giveaway")
+						.setName('giveaway')
+						.setDescription('Search active giveaway')
 						.setAutocomplete(true)
 						.setRequired(true),
 				),
 		)
 		.addSubcommand((subcommand) =>
 			subcommand
-				.setName("reroll")
-				.setDescription("Reroll winners for a finished giveaway")
+				.setName('reroll')
+				.setDescription('Reroll winners for a finished giveaway')
 				.addStringOption((option) =>
 					option
-						.setName("giveaway")
-						.setDescription("Search ended giveaway")
+						.setName('giveaway')
+						.setDescription('Search ended giveaway')
 						.setAutocomplete(true)
 						.setRequired(true),
 				),
@@ -98,9 +98,9 @@ module.exports = {
 			prize: { [Op.like]: `%${focusedValue}%` },
 		};
 
-		if (["end", "cancel"].includes(subcommand)) {
+		if (['end', 'cancel'].includes(subcommand)) {
 			whereClause.ended = false;
-		} else if (subcommand === "reroll") {
+		} else if (subcommand === 'reroll') {
 			whereClause.ended = true;
 
 			const sevenDaysAgo = new Date();
@@ -115,13 +115,13 @@ module.exports = {
 			const choices = await Giveaway.findAll({
 				where: whereClause,
 				limit: 20,
-				order: [["endTime", "DESC"]],
+				order: [['endTime', 'DESC']],
 			});
 
 			const result = choices.map((g) => {
-				const dateStr = new Date(g.endTime).toLocaleDateString("id-ID", {
-					day: "numeric",
-					month: "short",
+				const dateStr = new Date(g.endTime).toLocaleDateString('id-ID', {
+					day: 'numeric',
+					month: 'short',
 				});
 
 				const prizeName =
@@ -135,7 +135,7 @@ module.exports = {
 
 			await interaction.respond(result);
 		} catch (error) {
-			console.error("[Giveaway Autocomplete] Error:", error);
+			console.error('[Giveaway Autocomplete] Error:', error);
 			await interaction.respond([]);
 		}
 	},
@@ -144,18 +144,18 @@ module.exports = {
 		const { giveawayManager } = container;
 		const subcommand = interaction.options.getSubcommand();
 
-		const messageId = interaction.options.getString("giveaway");
+		const messageId = interaction.options.getString('giveaway');
 
-		if (subcommand === "start") {
+		if (subcommand === 'start') {
 			return giveawayManager.createGiveaway(interaction);
 		}
-		if (subcommand === "end") {
+		if (subcommand === 'end') {
 			return giveawayManager.endGiveaway(messageId, interaction);
 		}
-		if (subcommand === "cancel") {
+		if (subcommand === 'cancel') {
 			return giveawayManager.cancelGiveaway(messageId, interaction);
 		}
-		if (subcommand === "reroll") {
+		if (subcommand === 'reroll') {
 			return giveawayManager.rerollGiveaway(messageId, interaction);
 		}
 	},

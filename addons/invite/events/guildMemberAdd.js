@@ -3,14 +3,14 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const InviteModel = require("../database/models/Invite");
-const { getGuildInviteCache, refreshGuildInvites } = require("../helpers");
-const ServerSetting = require("@coreModels/ServerSetting");
-const { EmbedBuilder, PermissionsBitField } = require("discord.js");
-const { t } = require("@coreHelpers/translator");
+const InviteModel = require('../database/models/Invite');
+const { getGuildInviteCache, refreshGuildInvites } = require('../helpers');
+const ServerSetting = require('@coreModels/ServerSetting');
+const { EmbedBuilder, PermissionsBitField } = require('discord.js');
+const { t } = require('@coreHelpers/translator');
 
 const FAKE_ACCOUNT_AGE_DAYS = 7;
 
@@ -38,7 +38,7 @@ module.exports = async (_bot, member) => {
 
 	let inviterId = null;
 	let inviterUser = null;
-	let inviteType = "unknown";
+	let inviteType = 'unknown';
 	let inviteCode = null;
 
 	try {
@@ -52,7 +52,7 @@ module.exports = async (_bot, member) => {
 			if (invite.uses > beforeUses) {
 				inviterId = invite.inviter?.id || before?.inviterId || null;
 				inviterUser = invite.inviter || null;
-				inviteType = "invite";
+				inviteType = 'invite';
 				inviteCode = invite.code;
 				break;
 			}
@@ -63,8 +63,8 @@ module.exports = async (_bot, member) => {
 			if (guild.vanityURLCode) {
 				try {
 					const vanity = await guild.fetchVanityData();
-					if (vanity && vanity.uses > (cacheBefore.get("VANITY")?.uses ?? 0)) {
-						inviteType = "vanity";
+					if (vanity && vanity.uses > (cacheBefore.get('VANITY')?.uses ?? 0)) {
+						inviteType = 'vanity';
 						inviteCode = guild.vanityURLCode;
 					}
 				} catch (_e) {}
@@ -72,8 +72,8 @@ module.exports = async (_bot, member) => {
 		}
 
 		// 3. If still not found, check if it's a bot join (oauth) or unknown
-		if (!inviterId && inviteType === "unknown") {
-			inviteType = member.user.bot ? "oauth" : "unknown";
+		if (!inviterId && inviteType === 'unknown') {
+			inviteType = member.user.bot ? 'oauth' : 'unknown';
 		}
 
 		// 4. Update invite stats in DB
@@ -87,12 +87,12 @@ module.exports = async (_bot, member) => {
 			});
 
 			if (isFake) {
-				await inviteData.increment("fake");
+				await inviteData.increment('fake');
 				console.log(
 					`[INVITE TRACKER] ${member.user.tag} joined (FAKE), invited by user ${inviterId}`,
 				);
 			} else {
-				await inviteData.increment("invites");
+				await inviteData.increment('invites');
 				console.log(
 					`[INVITE TRACKER] ${member.user.tag} joined (real), invited by user ${inviterId}`,
 				);
@@ -103,14 +103,14 @@ module.exports = async (_bot, member) => {
 		if (inviteChannelId) {
 			const channel = guild.channels.cache.get(inviteChannelId);
 			if (channel?.isTextBased && channel.viewable) {
-				let embedDesc = "";
+				let embedDesc = '';
 				const title = await t(
 					guild,
-					"invite.events.guildMemberAdd.tracker.title",
+					'invite.events.guildMemberAdd.tracker.title',
 				);
 				const accountAgeStr = await t(
 					guild,
-					"invite.events.guildMemberAdd.tracker.account.age",
+					'invite.events.guildMemberAdd.tracker.account.age',
 					{
 						days: Math.floor(accountAgeDays),
 					},
@@ -119,62 +119,62 @@ module.exports = async (_bot, member) => {
 				if (inviterId) {
 					// Normal invite
 					const inviteTypeStr = isFake
-						? await t(guild, "invite.events.guildMemberAdd.tracker.type.fake")
-						: await t(guild, "invite.events.guildMemberAdd.tracker.type.real");
+						? await t(guild, 'invite.events.guildMemberAdd.tracker.type.fake')
+						: await t(guild, 'invite.events.guildMemberAdd.tracker.type.real');
 					embedDesc =
 						`## ${title}\n` +
-						(await t(guild, "invite.events.guildMemberAdd.tracker.joined.by", {
+						(await t(guild, 'invite.events.guildMemberAdd.tracker.joined.by', {
 							user: `<@${member.id}>`,
 							username: member.user.username,
 							inviter: `<@${inviterId}>`,
 							inviterTag: inviterUser?.tag || inviterId,
 							inviteType: inviteTypeStr,
 						})) +
-						"\n" +
-						(await t(guild, "invite.events.guildMemberAdd.tracker.code", {
+						'\n' +
+						(await t(guild, 'invite.events.guildMemberAdd.tracker.code', {
 							code: inviteCode,
 						})) +
-						"\n" +
+						'\n' +
 						accountAgeStr;
-				} else if (inviteType === "vanity") {
+				} else if (inviteType === 'vanity') {
 					embedDesc =
 						`## ${title}\n` +
 						(await t(
 							guild,
-							"invite.events.guildMemberAdd.tracker.joined.vanity",
+							'invite.events.guildMemberAdd.tracker.joined.vanity',
 							{
 								user: `<@${member.id}>`,
 								username: member.user.username,
 								code: inviteCode,
 							},
 						)) +
-						"\n" +
+						'\n' +
 						accountAgeStr;
-				} else if (inviteType === "oauth") {
+				} else if (inviteType === 'oauth') {
 					embedDesc =
 						`## ${title}\n` +
 						(await t(
 							guild,
-							"invite.events.guildMemberAdd.tracker.joined.oauth",
+							'invite.events.guildMemberAdd.tracker.joined.oauth',
 							{
 								user: `<@${member.id}>`,
 								username: member.user.username,
 							},
 						)) +
-						"\n" +
+						'\n' +
 						accountAgeStr;
 				} else {
 					embedDesc =
 						`## ${title}\n` +
 						(await t(
 							guild,
-							"invite.events.guildMemberAdd.tracker.joined.unknown",
+							'invite.events.guildMemberAdd.tracker.joined.unknown',
 							{
 								user: `<@${member.id}>`,
 								username: member.user.username,
 							},
 						)) +
-						"\n" +
+						'\n' +
 						accountAgeStr;
 				}
 
@@ -199,10 +199,10 @@ module.exports = async (_bot, member) => {
 					const embed = new EmbedBuilder()
 						.setColor(0xed4245)
 						.setDescription(
-							`## ${await t(guild, "invite.events.guildMemberAdd.tracker.error.title")}\n` +
+							`## ${await t(guild, 'invite.events.guildMemberAdd.tracker.error.title')}\n` +
 								(await t(
 									guild,
-									"invite.events.guildMemberAdd.tracker.error.desc",
+									'invite.events.guildMemberAdd.tracker.error.desc',
 								)),
 						)
 						.setTimestamp();

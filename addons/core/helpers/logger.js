@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 /**
@@ -20,19 +20,19 @@
  *
  * © 2025 kenndeclouv — v0.9.8-beta
  */
-const winston = require("winston");
-require("winston-daily-rotate-file");
-const path = require("node:path");
-const fs = require("node:fs");
-const clc = require("cli-color");
-const logDir = "logs";
-const kythia = require("../../../kythia.config");
+const winston = require('winston');
+require('winston-daily-rotate-file');
+const path = require('node:path');
+const fs = require('node:fs');
+const clc = require('cli-color');
+const logDir = 'logs';
+const kythia = require('../../../kythia.config');
 
 if (!fs.existsSync(logDir)) {
 	fs.mkdirSync(logDir);
 }
 
-const isProduction = kythia.env === "production";
+const isProduction = kythia.env === 'production';
 
 const levelColors = {
 	error: clc.bgRed.whiteBright.bold,
@@ -56,7 +56,7 @@ const messageColors = {
 
 const consoleLevelFilter = winston.format((info, opts) => {
 	// Show if 'all' or if the level is included in the configured list
-	if (opts.mode === "all" || opts.levels.includes(info.level)) {
+	if (opts.mode === 'all' || opts.levels.includes(info.level)) {
 		return info;
 	}
 	return false;
@@ -66,10 +66,10 @@ const consoleLevelFilter = winston.format((info, opts) => {
 const consoleFormatters = [];
 
 // Optionally include timestamp unless the config disables it with 'none'
-if (kythia.settings.logFormat !== "none") {
+if (kythia.settings.logFormat !== 'none') {
 	consoleFormatters.push(
 		winston.format.timestamp({
-			format: kythia.settings.logFormat || "HH:mm:ss",
+			format: kythia.settings.logFormat || 'HH:mm:ss',
 		}),
 	);
 }
@@ -78,17 +78,17 @@ if (kythia.settings.logFormat !== "none") {
 consoleFormatters.push(
 	winston.format.splat(),
 	winston.format.printf(({ level, message, timestamp, label }) => {
-		const levelKey = level in levelColors ? level : "default";
-		const msgKey = level in messageColors ? level : "default";
+		const levelKey = level in levelColors ? level : 'default';
+		const msgKey = level in messageColors ? level : 'default';
 
 		const levelLabel = levelColors[levelKey](` ${level.toUpperCase()} `);
 
 		// Timestamp is optional depending on config
-		const timeLabel = timestamp ? clc.blackBright(timestamp) : "";
-		const categoryLabel = label ? clc.bgYellow.black.bold(` ${label} `) : "";
+		const timeLabel = timestamp ? clc.blackBright(timestamp) : '';
+		const categoryLabel = label ? clc.bgYellow.black.bold(` ${label} `) : '';
 
 		let msg;
-		if (typeof message === "object" && message !== null) {
+		if (typeof message === 'object' && message !== null) {
 			msg = messageColors[msgKey](JSON.stringify(message, null, 2));
 		} else {
 			msg = messageColors[msgKey](message);
@@ -103,7 +103,7 @@ consoleFormatters.push(
 const colorConsoleFormat = winston.format.combine(...consoleFormatters);
 
 const logger = winston.createLogger({
-	level: isProduction ? "info" : "debug",
+	level: isProduction ? 'info' : 'debug',
 	transports: [
 		new winston.transports.Console({
 			// Run our filter BEFORE the color formatter
@@ -111,10 +111,10 @@ const logger = winston.createLogger({
 				// Pass through only configured levels (or 'all')
 				consoleLevelFilter({
 					// Convert "info,warn" into ["info", "warn"]; default to 'all'
-					levels: (kythia.settings.logConsoleFilter || "all")
-						.split(",")
+					levels: (kythia.settings.logConsoleFilter || 'all')
+						.split(',')
 						.map((l) => l.trim()),
-					mode: kythia.settings.logConsoleFilter || "all",
+					mode: kythia.settings.logConsoleFilter || 'all',
 				}),
 				// After filtering, apply color formatting
 				colorConsoleFormat,
@@ -122,24 +122,24 @@ const logger = winston.createLogger({
 		}),
 
 		new winston.transports.DailyRotateFile({
-			level: "info",
-			filename: path.join(logDir, "%DATE%-combined.log"),
-			datePattern: "YYYY-MM-DD",
+			level: 'info',
+			filename: path.join(logDir, '%DATE%-combined.log'),
+			datePattern: 'YYYY-MM-DD',
 			zippedArchive: true,
-			maxSize: "20m",
-			maxFiles: "14d",
+			maxSize: '20m',
+			maxFiles: '14d',
 			format: winston.format.combine(
 				winston.format.timestamp(),
 				winston.format.json(),
 			),
 		}),
 		new winston.transports.DailyRotateFile({
-			level: "error",
-			filename: path.join(logDir, "%DATE%-error.log"),
-			datePattern: "YYYY-MM-DD",
+			level: 'error',
+			filename: path.join(logDir, '%DATE%-error.log'),
+			datePattern: 'YYYY-MM-DD',
 			zippedArchive: true,
-			maxSize: "20m",
-			maxFiles: "30d",
+			maxSize: '20m',
+			maxFiles: '30d',
 			format: winston.format.combine(
 				winston.format.timestamp(),
 				winston.format.json(),
@@ -148,7 +148,7 @@ const logger = winston.createLogger({
 	],
 	exceptionHandlers: [
 		new winston.transports.File({
-			filename: path.join(logDir, "exceptions.log"),
+			filename: path.join(logDir, 'exceptions.log'),
 			format: winston.format.combine(
 				winston.format.timestamp(),
 				winston.format.json(),
@@ -157,7 +157,7 @@ const logger = winston.createLogger({
 	],
 	rejectionHandlers: [
 		new winston.transports.File({
-			filename: path.join(logDir, "rejections.log"),
+			filename: path.join(logDir, 'rejections.log'),
 			format: winston.format.combine(
 				winston.format.timestamp(),
 				winston.format.json(),
@@ -175,7 +175,7 @@ function exitAfterFlush(code = 0) {
 	logger.info(clc.yellowBright(`Process will exit with code: ${code}`));
 
 	const transportPromises = logger.transports.map((transport) => {
-		return new Promise((resolve) => transport.on("finish", resolve));
+		return new Promise((resolve) => transport.on('finish', resolve));
 	});
 
 	logger.end();
@@ -188,10 +188,10 @@ function exitAfterFlush(code = 0) {
 /**
  * Captures all uncaught exceptions (synchronous errors).
  */
-process.on("uncaughtException", (error, origin) => {
+process.on('uncaughtException', (error, origin) => {
 	logger.error({
 		message: `UNCAUGHT EXCEPTION: ${error.message}`,
-		label: "PROCESS",
+		label: 'PROCESS',
 		error: error.stack,
 		origin: origin,
 	});
@@ -202,15 +202,15 @@ process.on("uncaughtException", (error, origin) => {
 /**
  * Captures all unhandled promise rejections (asynchronous errors).
  */
-process.on("unhandledRejection", (reason, _promise) => {
+process.on('unhandledRejection', (reason, _promise) => {
 	// `reason` can be an Error object or another data type
 	const message =
 		reason instanceof Error ? reason.message : JSON.stringify(reason);
-	const stack = reason instanceof Error ? reason.stack : "No stack available.";
+	const stack = reason instanceof Error ? reason.stack : 'No stack available.';
 
 	logger.error({
 		message: `UNHANDLED REJECTION: ${message}`,
-		label: "PROCESS",
+		label: 'PROCESS',
 		error: stack,
 	});
 });

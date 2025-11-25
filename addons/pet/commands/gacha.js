@@ -3,21 +3,21 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const UserPet = require("../database/models/UserPet");
-const Pet = require("../database/models/Pet");
-const { checkCooldown } = require("@coreHelpers/time");
-const { t } = require("@coreHelpers/translator");
-const User = require("@coreModels/User");
-const { Op } = require("sequelize");
-const { embedFooter } = require("@coreHelpers/discord");
+const { EmbedBuilder } = require('discord.js');
+const UserPet = require('../database/models/UserPet');
+const Pet = require('../database/models/Pet');
+const { checkCooldown } = require('@coreHelpers/time');
+const { t } = require('@coreHelpers/translator');
+const User = require('@coreModels/User');
+const { Op } = require('sequelize');
+const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
-		subcommand.setName("gacha").setDescription("Gacha your pet!"),
+		subcommand.setName('gacha').setDescription('Gacha your pet!'),
 	async execute(interaction) {
 		await interaction.deferReply();
 
@@ -25,13 +25,13 @@ module.exports = {
 		const _guildId = interaction.guild.id;
 		const userPet = await UserPet.getCache({
 			userId: userId,
-			include: [{ model: Pet, as: "pet" }],
+			include: [{ model: Pet, as: 'pet' }],
 		});
 
 		if (!userPet) {
 			const embed = new EmbedBuilder()
 				.setDescription(
-					`## ${await t(interaction, "pet.gacha.no.pet.title")}\n${await t(interaction, "pet.gacha.no.pet.desc")}`,
+					`## ${await t(interaction, 'pet.gacha.no.pet.title')}\n${await t(interaction, 'pet.gacha.no.pet.desc')}`,
 				)
 				.setColor(kythia.bot.color);
 			return interaction.editReply({ embeds: [embed] });
@@ -45,7 +45,7 @@ module.exports = {
 		if (cooldown.remaining) {
 			const embed = new EmbedBuilder()
 				.setDescription(
-					`## ${await t(interaction, "pet.gacha.cooldown.title")}\n${await t(interaction, "pet.gacha.cooldown.desc", { time: cooldown.time })}`,
+					`## ${await t(interaction, 'pet.gacha.cooldown.title')}\n${await t(interaction, 'pet.gacha.cooldown.desc', { time: cooldown.time })}`,
 				)
 				.setColor(kythia.bot.color)
 				.setFooter(await embedFooter(interaction));
@@ -96,9 +96,9 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setDescription(
-				`## ${await t(interaction, "pet.gacha.success.title")}\n${await t(
+				`## ${await t(interaction, 'pet.gacha.success.title')}\n${await t(
 					interaction,
-					"pet.gacha.success.desc",
+					'pet.gacha.success.desc',
 					{
 						icon: selectedPet.icon,
 						name: selectedPet.name,
@@ -116,12 +116,12 @@ module.exports = {
 		// Helper function to get a higher rarity
 		function getHigherRarity(currentRarity) {
 			switch (currentRarity) {
-				case "common":
-					return "rare";
-				case "rare":
-					return "epic";
-				case "epic":
-					return "legendary";
+				case 'common':
+					return 'rare';
+				case 'rare':
+					return 'epic';
+				case 'epic':
+					return 'legendary';
 				default:
 					return currentRarity;
 			}

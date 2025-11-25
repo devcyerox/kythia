@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const Checklist = require("../database/models/Checklist");
-const convertColor = require("kythia-core").utils.color;
+const Checklist = require('../database/models/Checklist');
+const convertColor = require('kythia-core').utils.color;
 /**
  * Helper: Get checklist (with cache) and parse items array safely.
  */
@@ -20,7 +20,7 @@ async function getChecklistAndItems({
 	if (createIfNotExist) {
 		[checklist] = await Checklist.findOrCreateWithCache({
 			where: { guildId, userId },
-			defaults: { items: "[]" },
+			defaults: { items: '[]' },
 		});
 	} else {
 		checklist = await Checklist.getCache({ guildId, userId });
@@ -30,10 +30,10 @@ async function getChecklistAndItems({
 		try {
 			if (Array.isArray(checklist.items)) {
 				items = checklist.items;
-			} else if (typeof checklist.items === "string") {
+			} else if (typeof checklist.items === 'string') {
 				items = JSON.parse(checklist.items);
 			} else if (
-				typeof checklist.items === "object" &&
+				typeof checklist.items === 'object' &&
 				checklist.items !== null
 			) {
 				items = checklist.items;
@@ -53,17 +53,17 @@ function getScopeMeta(userId, group, items = null) {
 	const isPersonal = !!userId;
 	return {
 		scopeKey: isPersonal
-			? "checklist.scope.personal"
-			: "checklist.scope.server",
+			? 'checklist.scope.personal'
+			: 'checklist.scope.server',
 		color: isPersonal
 			? items && items.checked !== undefined
 				? items.checked
-					? convertColor("Green", { from: "discord", to: "decimal" })
-					: convertColor("Yellow", { from: "discord", to: "decimal" })
-				: convertColor("Blue", { from: "discord", to: "decimal" })
-			: convertColor("Green", { from: "discord", to: "decimal" }),
-		colorName: isPersonal ? "Blue" : "Green",
-		ephemeral: group === "personal",
+					? convertColor('Green', { from: 'discord', to: 'decimal' })
+					: convertColor('Yellow', { from: 'discord', to: 'decimal' })
+				: convertColor('Blue', { from: 'discord', to: 'decimal' })
+			: convertColor('Green', { from: 'discord', to: 'decimal' }),
+		colorName: isPersonal ? 'Blue' : 'Green',
+		ephemeral: group === 'personal',
 	};
 }
 

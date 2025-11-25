@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("market_portfolios", {
+		await queryInterface.createTable('market_portfolios', {
 			portfolioId: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -20,15 +20,15 @@ module.exports = {
 			avgBuyPrice: { type: DataTypes.DOUBLE, allowNull: false },
 		});
 
-		await queryInterface.addIndex("market_portfolios", ["userId"]);
+		await queryInterface.addIndex('market_portfolios', ['userId']);
 		// Unique index userId + assetId
-		await queryInterface.addIndex("market_portfolios", ["userId", "assetId"], {
+		await queryInterface.addIndex('market_portfolios', ['userId', 'assetId'], {
 			unique: true,
-			name: "unique_user_asset",
+			name: 'unique_user_asset',
 		});
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("market_portfolios");
+		await queryInterface.dropTable('market_portfolios');
 	},
 };

@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 class CloudflareApi {
@@ -23,15 +23,15 @@ class CloudflareApi {
 
 		if (!this.apiToken || !this.zoneId || !this.domainName) {
 			this.logger.error(
-				"CloudflareApi: Missing API Token, Zone ID, or Domain Name in kythiaConfig!",
+				'CloudflareApi: Missing API Token, Zone ID, or Domain Name in kythiaConfig!',
 			);
 			throw new Error(
-				"CloudflareService failed to initialize: Missing kythiaConfig.",
+				'CloudflareService failed to initialize: Missing kythiaConfig.',
 			);
 		}
 
 		this.baseUrl = `https://api.cloudflare.com/client/v4/zones/${this.zoneId}`;
-		this.logger.info("Cloudflare Service: Initialized and ready.");
+		this.logger.info('Cloudflare Service: Initialized and ready.');
 	}
 
 	/**
@@ -41,13 +41,13 @@ class CloudflareApi {
 	 * @param {object} body Request body
 	 * @returns {Promise<object>} JSON result from Cloudflare
 	 */
-	async _request(endpoint, method = "GET", body = null) {
+	async _request(endpoint, method = 'GET', body = null) {
 		const url = `${this.baseUrl}${endpoint}`;
 		const options = {
 			method,
 			headers: {
 				Authorization: `Bearer ${this.apiToken}`,
-				"Content-Type": "application/json",
+				'Content-Type': 'application/json',
 			},
 		};
 
@@ -97,7 +97,7 @@ class CloudflareApi {
 		const { DnsRecord } = this.models;
 
 		const cloudflareName =
-			name === "@"
+			name === '@'
 				? `${subdomainName}.${this.domainName}`
 				: `${name}.${subdomainName}.${this.domainName}`;
 
@@ -108,12 +108,12 @@ class CloudflareApi {
 			ttl: 1,
 			proxied: false,
 		};
-		if (type === "MX") apiBody.priority = priority;
+		if (type === 'MX') apiBody.priority = priority;
 
 		this.logger.info(
 			`[CF] Attempting CREATE: ${type} ${cloudflareName} -> ${value}`,
 		);
-		const apiResponse = await this._request("/dns_records", "POST", apiBody);
+		const apiResponse = await this._request('/dns_records', 'POST', apiBody);
 
 		if (!apiResponse.success) {
 			return { success: false, error: apiResponse.errors[0]?.message };
@@ -140,7 +140,7 @@ class CloudflareApi {
 			await this.deleteRecordByCloudflareId(apiResponse.result.id);
 			return {
 				success: false,
-				error: "Failed to save record to local database.",
+				error: 'Failed to save record to local database.',
 			};
 		}
 	}
@@ -155,13 +155,13 @@ class CloudflareApi {
 
 		const record = await DnsRecord.findByPk(localRecordId);
 		if (!record) {
-			return { success: false, error: "Record not found in local database." };
+			return { success: false, error: 'Record not found in local database.' };
 		}
 
 		this.logger.info(`[CF] Attempting DELETE: ID ${record.cloudflareId}`);
 		const apiResponse = await this._request(
 			`/dns_records/${record.cloudflareId}`,
-			"DELETE",
+			'DELETE',
 		);
 
 		if (!apiResponse.success) {
@@ -183,7 +183,7 @@ class CloudflareApi {
 	 */
 	async deleteRecordByCloudflareId(cloudflareId) {
 		this.logger.info(`[CF] Internal Rollback: Deleting ${cloudflareId}`);
-		await this._request(`/dns_records/${cloudflareId}`, "DELETE");
+		await this._request(`/dns_records/${cloudflareId}`, 'DELETE');
 	}
 
 	/**
@@ -198,17 +198,17 @@ class CloudflareApi {
 		const { Subdomain } = this.models;
 
 		const subdomain = await Subdomain.findByPk(existingRecord.subdomainId, {
-			attributes: ["name"],
+			attributes: ['name'],
 		});
 		if (!subdomain) {
 			return {
 				success: false,
-				error: "Subdomain associated with this record is missing.",
+				error: 'Subdomain associated with this record is missing.',
 			};
 		}
 
 		const cloudflareName =
-			existingRecord.name === "@"
+			existingRecord.name === '@'
 				? `${subdomain.name}.${this.domainName}`
 				: `${existingRecord.name}.${subdomain.name}.${this.domainName}`;
 
@@ -220,7 +220,7 @@ class CloudflareApi {
 			proxied: false,
 		};
 
-		if (existingRecord.type === "MX") {
+		if (existingRecord.type === 'MX') {
 			apiBody.priority = priority;
 		}
 
@@ -229,7 +229,7 @@ class CloudflareApi {
 		);
 		const apiResponse = await this._request(
 			`/dns_records/${existingRecord.cloudflareId}`,
-			"PATCH",
+			'PATCH',
 			apiBody,
 		);
 
@@ -249,7 +249,7 @@ class CloudflareApi {
 			);
 			return {
 				success: false,
-				error: "Cloudflare updated, but local DB failed to save.",
+				error: 'Cloudflare updated, but local DB failed to save.',
 			};
 		}
 	}

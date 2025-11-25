@@ -5,7 +5,7 @@
  * @file index.js
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  *
  * @description
  * This file serves as the main entry point for the Kythia Discord Bot application.
@@ -57,14 +57,14 @@
  */
 
 // ===== 1. Load Environment Variables (.env) and Aliases =====
-require("@dotenvx/dotenvx/config"); // Loads ENV vars to process.env
-const kythiaConfig = require("./kythia.config.js"); // Unified configuration object
-require("module-alias/register"); // Enables @src, @utils, etc. path aliases
-const { Kythia, KythiaModel, createSequelizeInstance } = require("kythia-core");
+require('@dotenvx/dotenvx/config'); // Loads ENV vars to process.env
+const kythiaConfig = require('./kythia.config.js'); // Unified configuration object
+require('module-alias/register'); // Enables @src, @utils, etc. path aliases
+const { Kythia, KythiaModel, createSequelizeInstance } = require('kythia-core');
 
 // ===== 2. Load Core Helpers & Utilities with Meaningful Descriptions =====
-const logger = require("@coreHelpers/logger"); // Logging system (console and ext. sinks)
-const translator = require("@coreHelpers/translator"); // I18n (Internationalization) manager
+const logger = require('@coreHelpers/logger'); // Logging system (console and ext. sinks)
+const translator = require('@coreHelpers/translator'); // I18n (Internationalization) manager
 const {
 	isOwner,
 	isTeam,
@@ -73,19 +73,19 @@ const {
 	setVoiceChannelStatus,
 	isVoterActive,
 	simpleContainer,
-} = require("@coreHelpers/discord"); // Discord helper funcs for permissions/identity
+} = require('@coreHelpers/discord'); // Discord helper funcs for permissions/identity
 const {
 	checkCooldown,
 	formatDuration,
 	parseDuration,
-} = require("@coreHelpers/time");
+} = require('@coreHelpers/time');
 
 // ===== 3. Load Database Models: Sequelize Models =====
 // const ServerSetting = require('@coreModels/ServerSetting'); // Guild/server config model
 // const KythiaVoter = require('@coreModels/KythiaVoter'); // User voter model (e.g. from Top.gg votes)
 
 // ===== 4. Setup Redis Client for caching, queueing, etc =====
-const convertColor = require("kythia-core").utils.color;
+const convertColor = require('kythia-core').utils.color;
 // We create a Redis client instance, using the URL in config, in lazy mode (connect on use).
 
 // ===== 5. Setup Sequelize ORM Instance for Relational Database Access =====
@@ -150,6 +150,6 @@ try {
 } catch (error) {
 	// If logger isn't available, fallback to console.
 	const log = logger || console;
-	log.error("🔥 FATAL ERROR during initialization:", error);
+	log.error('🔥 FATAL ERROR during initialization:', error);
 	process.exit(1);
 }

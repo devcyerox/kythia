@@ -3,13 +3,13 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	PermissionsBitField,
 	ChannelType,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -26,9 +26,9 @@ module.exports = {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.waiting.no_active_channel"),
+					await t(interaction, 'tempvoice.waiting.no_active_channel'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
@@ -42,9 +42,9 @@ module.exports = {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.channel_not_found"),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
@@ -60,10 +60,10 @@ module.exports = {
 					// Kick semua user di waiting room
 					for (const [_, member] of waitingRoom.members) {
 						await member.voice.disconnect(
-							await t(interaction, "tempvoice.waiting.wr_closed_reason"),
+							await t(interaction, 'tempvoice.waiting.wr_closed_reason'),
 						);
 					}
-					await waitingRoom.delete("Waiting room disabled by owner.");
+					await waitingRoom.delete('Waiting room disabled by owner.');
 				}
 
 				// Buka lagi channel utamanya
@@ -80,8 +80,8 @@ module.exports = {
 				await interaction.reply({
 					components: await simpleContainer(
 						interaction,
-						await t(interaction, "tempvoice.waiting.disabled"),
-						{ color: "Green" },
+						await t(interaction, 'tempvoice.waiting.disabled'),
+						{ color: 'Green' },
 					),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -89,7 +89,7 @@ module.exports = {
 				// --- LOGIKA ENABLE WAITING ROOM ---
 				const wrName = await t(
 					interaction,
-					"tempvoice.waiting.wr_channel_name",
+					'tempvoice.waiting.wr_channel_name',
 					{ name: mainChannel.name },
 				);
 				const waitingRoom = await interaction.guild.channels.create({
@@ -130,10 +130,10 @@ module.exports = {
 				await interaction.reply({
 					components: await simpleContainer(
 						interaction,
-						await t(interaction, "tempvoice.waiting.enabled", {
+						await t(interaction, 'tempvoice.waiting.enabled', {
 							channel: waitingRoom.id,
 						}),
-						{ color: "Green" },
+						{ color: 'Green' },
 					),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
@@ -143,8 +143,8 @@ module.exports = {
 			await interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.fail'),
+					{ color: 'Red' },
 				),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});

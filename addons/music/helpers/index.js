@@ -3,11 +3,11 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { generateContent } = require("@addons/ai/helpers/gemini");
-const { YoutubeTranscript } = require("youtube-transcript");
-const { PermissionFlagsBits } = require("discord.js");
+const { generateContent } = require('@addons/ai/helpers/gemini');
+const { YoutubeTranscript } = require('youtube-transcript');
+const { PermissionFlagsBits } = require('discord.js');
 
 /**
  * ⏱️ Formats a duration in milliseconds to a human-readable string (hh:mm:ss or mm:ss).
@@ -15,15 +15,15 @@ const { PermissionFlagsBits } = require("discord.js");
  * @returns {string} Formatted duration string.
  */
 function formatTrackDuration(ms) {
-	if (typeof ms !== "number" || Number.isNaN(ms) || ms < 0) return "0:00";
+	if (typeof ms !== 'number' || Number.isNaN(ms) || ms < 0) return '0:00';
 	const totalSeconds = Math.floor(ms / 1000);
 	const hours = Math.floor(totalSeconds / 3600);
 	const minutes = Math.floor((totalSeconds % 3600) / 60);
 	const seconds = totalSeconds % 60;
 	if (hours > 0) {
-		return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+		return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 	} else {
-		return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+		return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 	}
 }
 
@@ -33,10 +33,10 @@ function formatTrackDuration(ms) {
  * @returns {string} Progress bar string with current and total duration.
  */
 function createProgressBar(player) {
-	if (!player.currentTrack || !player.currentTrack.info.length) return "";
+	if (!player.currentTrack || !player.currentTrack.info.length) return '';
 
 	if (player.currentTrack.info.isStream)
-		return "`00:00|▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🔴 LIVE`";
+		return '`00:00|▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬🔴 LIVE`';
 
 	const current = player.position;
 
@@ -51,7 +51,7 @@ function createProgressBar(player) {
 	const empty = size - percent;
 	const safeEmpty = empty < 0 ? 0 : empty;
 
-	const progress = `${"▬".repeat(percent)}🔵${"▬".repeat(safeEmpty)}`;
+	const progress = `${'▬'.repeat(percent)}🔵${'▬'.repeat(safeEmpty)}`;
 	return `\`${formatTrackDuration(current)}|${progress}|${formatTrackDuration(total)}\``;
 }
 
@@ -74,7 +74,7 @@ async function generateLyricsWithTranscript(
 	try {
 		transcript = await YoutubeTranscript.fetchTranscript(trackUri);
 		if (transcript && transcript.length > 0) {
-			transcriptText = transcript.map((line) => line.text).join(" ");
+			transcriptText = transcript.map((line) => line.text).join(' ');
 		}
 	} catch (e) {
 		logger.warn(`Can't get transcript for ${trackUri}: ${e.message}`);

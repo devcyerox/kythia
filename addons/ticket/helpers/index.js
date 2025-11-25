@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -22,10 +22,10 @@ const {
 	AttachmentBuilder,
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
-function getSafeEmoji(emoji, fallback = "🎫") {
-	if (!emoji || typeof emoji !== "string") return fallback;
+function getSafeEmoji(emoji, fallback = '🎫') {
+	if (!emoji || typeof emoji !== 'string') return fallback;
 
 	const cleanEmoji = emoji.trim();
 	if (cleanEmoji.length === 0) return fallback;
@@ -69,17 +69,17 @@ async function refreshTicketPanel(panelMessageId, container) {
 
 		const allTypes = await TicketConfig.getAllCache({ panelMessageId });
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const placeholder = await t(
 			fakeInteraction,
-			"ticket.panel.select_placeholder",
+			'ticket.panel.select_placeholder',
 		);
 		const description =
 			panel.description ||
-			(await t(fakeInteraction, "ticket.panel.default_desc"));
+			(await t(fakeInteraction, 'ticket.panel.default_desc'));
 
 		const panelContainer = new ContainerBuilder()
 			.setAccentColor(accentColor)
@@ -102,7 +102,7 @@ async function refreshTicketPanel(panelMessageId, container) {
 
 		if (
 			panel.image &&
-			(panel.image.startsWith("http://") || panel.image.startsWith("https://"))
+			(panel.image.startsWith('http://') || panel.image.startsWith('https://'))
 		) {
 			panelContainer.addMediaGalleryComponents(
 				new MediaGalleryBuilder().addItems([
@@ -119,7 +119,7 @@ async function refreshTicketPanel(panelMessageId, container) {
 		if (!allTypes || allTypes.length === 0) {
 			panelContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(fakeInteraction, "ticket.panel.no_types"),
+					await t(fakeInteraction, 'ticket.panel.no_types'),
 				),
 			);
 		} else {
@@ -144,7 +144,7 @@ async function refreshTicketPanel(panelMessageId, container) {
 
 				actionRow = new ActionRowBuilder().addComponents(
 					new StringSelectMenuBuilder()
-						.setCustomId("ticket-select")
+						.setCustomId('ticket-select')
 						.setPlaceholder(placeholder)
 						.setOptions(options),
 				);
@@ -159,7 +159,7 @@ async function refreshTicketPanel(panelMessageId, container) {
 		);
 		panelContainer.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await t(fakeInteraction, "common.container.footer", {
+				await t(fakeInteraction, 'common.container.footer', {
 					username: kythiaConfig.bot.name,
 				}),
 			),
@@ -205,24 +205,24 @@ async function createTicketChannel(
 			userId: interaction.user.id,
 			guildId: interaction.guild.id,
 			ticketConfigId: ticketConfig.id,
-			status: "open",
+			status: 'open',
 		});
 
 		if (existingTicket) {
-			const desc = await t(interaction, "ticket.errors.already_open", {
+			const desc = await t(interaction, 'ticket.errors.already_open', {
 				channelId: existingTicket.channelId,
 			});
 			return interaction.reply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
 		const username = interaction.user.username
 			.toLowerCase()
-			.replace(/[^a-z0-9]/g, "")
+			.replace(/[^a-z0-9]/g, '')
 			.slice(0, 8);
-		const channelName = `${ticketConfig.typeName.toLowerCase().replace(/\s+/g, "-")}-${username}`;
+		const channelName = `${ticketConfig.typeName.toLowerCase().replace(/\s+/g, '-')}-${username}`;
 
 		const ticketChannel = await interaction.guild.channels.create({
 			name: channelName,
@@ -246,7 +246,7 @@ async function createTicketChannel(
 
 		const defaultMessage = await t(
 			interaction,
-			"ticket.v2.open_message_default",
+			'ticket.v2.open_message_default',
 			{
 				user: interaction.user.toString(),
 				staffRoleId: ticketConfig.staffRoleId,
@@ -255,12 +255,12 @@ async function createTicketChannel(
 
 		const openMessageRaw = ticketConfig.ticketOpenMessage || defaultMessage;
 		const openMessage = openMessageRaw
-			.replace("{user}", interaction.user.toString())
-			.replace("{staffRole}", `<@&${ticketConfig.staffRoleId}>`);
+			.replace('{user}', interaction.user.toString())
+			.replace('{staffRole}', `<@&${ticketConfig.staffRoleId}>`);
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const mainContainer = new ContainerBuilder()
@@ -289,17 +289,17 @@ async function createTicketChannel(
 
 		const closeButton = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId("ticket-close")
-				.setLabel(await t(interaction, "ticket.v2.close_button"))
+				.setCustomId('ticket-close')
+				.setLabel(await t(interaction, 'ticket.v2.close_button'))
 				.setStyle(ButtonStyle.Secondary)
-				.setEmoji("🔒"),
+				.setEmoji('🔒'),
 			new ButtonBuilder()
-				.setCustomId("ticket-claim")
-				.setLabel(await t(interaction, "ticket.v2.claim_button"))
+				.setCustomId('ticket-claim')
+				.setLabel(await t(interaction, 'ticket.v2.claim_button'))
 				.setStyle(ButtonStyle.Secondary)
-				.setEmoji("🛄"),
+				.setEmoji('🛄'),
 		);
-		const footerText = await t(interaction, "common.container.footer", {
+		const footerText = await t(interaction, 'common.container.footer', {
 			username: interaction.client.user.username,
 		});
 
@@ -309,7 +309,7 @@ async function createTicketChannel(
 		if (reason != null) {
 			mainContainer.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "ticket.v2.reason_field", { reason: reason }),
+					await t(interaction, 'ticket.v2.reason_field', { reason: reason }),
 				),
 			);
 			mainContainer.addSeparatorComponents(
@@ -338,35 +338,35 @@ async function createTicketChannel(
 			userId: interaction.user.id,
 			channelId: ticketChannel.id,
 			ticketConfigId: ticketConfig.id,
-			status: "open",
+			status: 'open',
 			openedAt: Date.now(),
 		});
 
-		const descSuccess = await t(interaction, "ticket.create.success", {
+		const descSuccess = await t(interaction, 'ticket.create.success', {
 			ticketChannel: ticketChannel.toString(),
 		});
 
 		await interaction.reply({
 			components: await simpleContainer(interaction, descSuccess, {
-				color: "Green",
+				color: 'Green',
 			}),
 			flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 		});
 	} catch (error) {
-		console.error("Error in createTicketChannel helper:", error);
+		console.error('Error in createTicketChannel helper:', error);
 
-		const descError = await t(interaction, "ticket.errors.create_failed");
+		const descError = await t(interaction, 'ticket.errors.create_failed');
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({
 				components: await simpleContainer(interaction, descError, {
-					color: "Red",
+					color: 'Red',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		} else {
 			await interaction.reply({
 				components: await simpleContainer(interaction, descError, {
-					color: "Red",
+					color: 'Red',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
@@ -383,8 +383,8 @@ async function createTicketChannel(
  */
 async function createTicketTranscript(channel, container) {
 	const { kythiaConfig } = container;
-	const locale = kythiaConfig.bot.locale || "en-US";
-	const timezone = kythiaConfig.bot.timezone || "UTC";
+	const locale = kythiaConfig.bot.locale || 'en-US';
+	const timezone = kythiaConfig.bot.timezone || 'UTC';
 
 	const collection = [];
 	let lastId = null;
@@ -416,7 +416,7 @@ async function createTicketTranscript(channel, container) {
 		(a, b) => a.createdTimestamp - b.createdTimestamp,
 	);
 
-	let transcriptText = "";
+	let transcriptText = '';
 
 	transcriptText += `TRANSCRIPT FOR: ${channel.name}\n`;
 	transcriptText += `SERVER: ${channel.guild.name}\n`;
@@ -433,15 +433,15 @@ async function createTicketTranscript(channel, container) {
 		if (msg.attachments.size > 0) {
 			const attachmentUrls = msg.attachments
 				.map((a) => `[Attachment: ${a.url}]`)
-				.join(" ");
+				.join(' ');
 			content = content ? `${content} ${attachmentUrls}` : attachmentUrls;
 		}
 
 		if (!content && msg.embeds.length > 0) {
-			content = "[Message contains Embeds]";
+			content = '[Message contains Embeds]';
 		}
 
-		if (!content) content = "[System Message/Sticker]";
+		if (!content) content = '[System Message/Sticker]';
 
 		transcriptText += `[${time}] ${author}: ${content}\n`;
 	});
@@ -464,21 +464,21 @@ async function closeTicket(interaction, container, reason = null) {
 	try {
 		const ticket = await Ticket.getCache({
 			channelId: interaction.channel.id,
-			status: "open",
+			status: 'open',
 		});
 		if (!ticket) {
-			const desc = await t(interaction, "ticket.errors.not_a_ticket");
+			const desc = await t(interaction, 'ticket.errors.not_a_ticket');
 
 			if (interaction.replied || interaction.deferred) {
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 			return interaction.reply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -487,18 +487,18 @@ async function closeTicket(interaction, container, reason = null) {
 			id: ticket.ticketConfigId,
 		});
 		if (!ticketConfig) {
-			const desc = await t(interaction, "ticket.errors.config_missing");
+			const desc = await t(interaction, 'ticket.errors.config_missing');
 
 			if (interaction.replied || interaction.deferred) {
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 			return interaction.reply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
@@ -513,27 +513,27 @@ async function closeTicket(interaction, container, reason = null) {
 		if (!transcriptChannel) {
 			const desc = await t(
 				interaction,
-				"ticket.errors.transcript_channel_missing",
+				'ticket.errors.transcript_channel_missing',
 				{ channelId: ticketConfig.transcriptChannelId },
 			);
 
 			if (interaction.replied || interaction.deferred) {
 				return interaction.followUp({
 					components: await simpleContainer(interaction, desc, {
-						color: "Red",
+						color: 'Red',
 					}),
 					flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 				});
 			}
 			return interaction.reply({
-				components: await simpleContainer(interaction, desc, { color: "Red" }),
+				components: await simpleContainer(interaction, desc, { color: 'Red' }),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		}
 
 		if (!interaction.replied && !interaction.deferred) {
 			await interaction.reply({
-				content: await t(interaction, "ticket.close.thinking"),
+				content: await t(interaction, 'ticket.close.thinking'),
 				ephemeral: true,
 			});
 		}
@@ -543,20 +543,20 @@ async function closeTicket(interaction, container, reason = null) {
 			container,
 		);
 		const filename = `transcript-${ticket.id}.txt`;
-		const transcriptBuffer = Buffer.from(transcriptText, "utf-8");
+		const transcriptBuffer = Buffer.from(transcriptText, 'utf-8');
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
-		const title = await t(interaction, "ticket.transcript.title", {
+		const title = await t(interaction, 'ticket.transcript.title', {
 			ticketId: ticket.id,
 			typeName: ticketConfig.typeName,
 		});
-		const userLine = await t(interaction, "ticket.transcript.user", {
+		const userLine = await t(interaction, 'ticket.transcript.user', {
 			userId: ticket.userId,
 		});
-		const footerText = await t(interaction, "common.container.footer", {
+		const footerText = await t(interaction, 'common.container.footer', {
 			username: interaction.client.user.username,
 		});
 		const attachment = new AttachmentBuilder(transcriptBuffer)
@@ -589,13 +589,13 @@ async function closeTicket(interaction, container, reason = null) {
 		});
 
 		if (logsChannel) {
-			const logDesc = await t(interaction, "ticket.v2.log_message", {
+			const logDesc = await t(interaction, 'ticket.v2.log_message', {
 				ticketId: ticket.id,
 				typeName: ticketConfig.typeName,
 				userId: ticket.userId,
 				openedAt: `<t:${Math.floor(ticket.openedAt / 1000)}:R>`,
 				closerId: interaction.user.id,
-				reason: reason ? reason : "No Reason Specified",
+				reason: reason ? reason : 'No Reason Specified',
 			});
 
 			await logsChannel.send({
@@ -604,7 +604,7 @@ async function closeTicket(interaction, container, reason = null) {
 			});
 		}
 
-		ticket.status = "closed";
+		ticket.status = 'closed';
 		ticket.closedAt = Date.now();
 		ticket.closedReason = reason;
 		ticket.closedByUserId = interaction.user.id;
@@ -613,20 +613,20 @@ async function closeTicket(interaction, container, reason = null) {
 
 		await interaction.channel.delete();
 	} catch (error) {
-		console.error("Failed to close ticket:", error);
+		console.error('Failed to close ticket:', error);
 
-		const descError = await t(interaction, "ticket.errors.close_failed");
+		const descError = await t(interaction, 'ticket.errors.close_failed');
 		if (!interaction.replied && !interaction.deferred) {
 			await interaction.reply({
 				components: await simpleContainer(interaction, descError, {
-					color: "Red",
+					color: 'Red',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});
 		} else {
 			await interaction.followUp({
 				components: await simpleContainer(interaction, descError, {
-					color: "Red",
+					color: 'Red',
 				}),
 				flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			});

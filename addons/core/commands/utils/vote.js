@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	SlashCommandBuilder,
@@ -17,19 +17,19 @@ const {
 	MessageFlags,
 	MediaGalleryItemBuilder,
 	MediaGalleryBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
-	aliases: ["v"],
+	aliases: ['v'],
 	data: new SlashCommandBuilder()
-		.setName("vote")
+		.setName('vote')
 		.setDescription(`❤️ Vote for kythia on top.gg!`),
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers } = container;
 		const { convertColor } = helpers.color;
 
 		const mainContainer = new ContainerBuilder().setAccentColor(
-			convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 		);
 
 		if (kythiaConfig.settings?.voteBannerImage) {
@@ -50,7 +50,7 @@ module.exports = {
 		mainContainer
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "core.utils.vote.container.title", {
+					await t(interaction, 'core.utils.vote.container.title', {
 						username: interaction.client.user.username,
 					}),
 				),
@@ -62,7 +62,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "core.utils.vote.container.desc", {
+					await t(interaction, 'core.utils.vote.container.desc', {
 						username: interaction.client.user.username,
 					}),
 				),
@@ -76,7 +76,7 @@ module.exports = {
 				new ActionRowBuilder().addComponents(
 					new ButtonBuilder()
 						.setLabel(
-							await t(interaction, "core.utils.vote.button.topgg", {
+							await t(interaction, 'core.utils.vote.button.topgg', {
 								username: interaction.client.user.username,
 							}),
 						)
@@ -91,7 +91,7 @@ module.exports = {
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "common.container.footer", {
+					await t(interaction, 'common.container.footer', {
 						username: interaction.client.user.username,
 					}),
 				),

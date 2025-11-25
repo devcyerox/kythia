@@ -3,15 +3,15 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 // const { DataTypes } = require("sequelize");
 // koneksi sequelize
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class ServerSetting extends KythiaModel {
-	static cacheKeys = [["guildId"]];
+	static cacheKeys = [['guildId']];
 
 	static guarded = [];
 }

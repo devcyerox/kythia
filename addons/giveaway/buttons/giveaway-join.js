@@ -3,10 +3,10 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { MessageFlags } = require("discord.js");
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -26,9 +26,9 @@ module.exports = {
 			if (!giveaway || giveaway.ended) {
 				const msg = await t(
 					interaction,
-					"giveaway.buttons.giveawayjoin.error.ended",
+					'giveaway.buttons.giveawayjoin.error.ended',
 				);
-				const err = await simpleContainer(interaction, msg, { color: "Red" });
+				const err = await simpleContainer(interaction, msg, { color: 'Red' });
 				return interaction.editReply({
 					components: err,
 					flags: MessageFlags.IsComponentsV2,
@@ -42,10 +42,10 @@ module.exports = {
 			) {
 				const msg = await t(
 					interaction,
-					"giveaway.buttons.giveawayjoin.error.role.required",
+					'giveaway.buttons.giveawayjoin.error.role.required',
 					{ role: giveaway.roleId },
 				);
-				const err = await simpleContainer(interaction, msg, { color: "Red" });
+				const err = await simpleContainer(interaction, msg, { color: 'Red' });
 				return interaction.editReply({
 					components: err,
 					flags: MessageFlags.IsComponentsV2,
@@ -56,7 +56,7 @@ module.exports = {
 			let participants = [];
 			try {
 				participants =
-					typeof giveaway.participants === "string"
+					typeof giveaway.participants === 'string'
 						? JSON.parse(giveaway.participants)
 						: giveaway.participants;
 			} catch (_e) {
@@ -64,30 +64,30 @@ module.exports = {
 			}
 
 			const userId = interaction.user.id;
-			let message = "";
-			let color = "Green";
+			let message = '';
+			let color = 'Green';
 
 			if (participants.includes(userId)) {
 				// LEAVE
 				participants = participants.filter((id) => id !== userId);
 				message = await t(
 					interaction,
-					"giveaway.buttons.giveawayjoin.response.unjoin",
+					'giveaway.buttons.giveawayjoin.response.unjoin',
 				);
-				color = "Red"; // Merah = Leave
+				color = 'Red'; // Merah = Leave
 			} else {
 				// JOIN
 				participants.push(userId);
 				message = await t(
 					interaction,
-					"giveaway.buttons.giveawayjoin.response.join",
+					'giveaway.buttons.giveawayjoin.response.join',
 				);
-				color = "Green"; // Hijau = Join
+				color = 'Green'; // Hijau = Join
 			}
 
 			// 4. Save ke Database
 			giveaway.participants = participants;
-			giveaway.changed("participants", true);
+			giveaway.changed('participants', true);
 			await giveaway.save();
 
 			// 5. Update Tampilan Embed (Panggil method Manager)
@@ -122,11 +122,11 @@ module.exports = {
 				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (error) {
-			logger.error("[GiveawayJoin] Fatal Error:", error);
-			const msg = await t(interaction, "giveaway.error.fatal.join");
+			logger.error('[GiveawayJoin] Fatal Error:', error);
+			const msg = await t(interaction, 'giveaway.error.fatal.join');
 			const err = await simpleContainer(interaction, msg, {
-				color: "Red",
-				title: "System Error",
+				color: 'Red',
+				title: 'System Error',
 			});
 			await interaction.editReply({
 				components: err,

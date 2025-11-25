@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("inventory_adventures", {
+		await queryInterface.createTable('inventory_adventures', {
 			id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
@@ -35,16 +35,16 @@ module.exports = {
 		// 🔥 Optional Best Practice:
 		// User gak boleh punya item yang sama di row berbeda (harus di-stack quantity-nya)
 		await queryInterface.addIndex(
-			"inventory_adventures",
-			["userId", "itemName"],
+			'inventory_adventures',
+			['userId', 'itemName'],
 			{
 				unique: true,
-				name: "unique_inventory_stack",
+				name: 'unique_inventory_stack',
 			},
 		);
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("inventory_adventures");
+		await queryInterface.dropTable('inventory_adventures');
 	},
 };

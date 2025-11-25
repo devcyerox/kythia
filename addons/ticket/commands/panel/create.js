@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -17,28 +17,28 @@ const {
 	MessageFlags,
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("create")
-			.setDescription("Creates a new ticket panel (interactive setup)"),
+			.setName('create')
+			.setDescription('Creates a new ticket panel (interactive setup)'),
 
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers } = container;
 		const { convertColor } = helpers.color;
 
 		const accentColor = convertColor(kythiaConfig.bot.color, {
-			from: "hex",
-			to: "decimal",
+			from: 'hex',
+			to: 'decimal',
 		});
 
 		const startButton = new ButtonBuilder()
-			.setCustomId("tkt-panel-modal-show")
-			.setLabel(await t(interaction, "ticket.panel.start_button"))
+			.setCustomId('tkt-panel-modal-show')
+			.setLabel(await t(interaction, 'ticket.panel.start_button'))
 			.setStyle(ButtonStyle.Primary)
-			.setEmoji("🎟️");
+			.setEmoji('🎟️');
 
 		const components = [
 			new ContainerBuilder()
@@ -57,7 +57,7 @@ module.exports = {
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "ticket.panel.start_title"),
+						await t(interaction, 'ticket.panel.start_title'),
 					),
 				)
 				.addSeparatorComponents(
@@ -67,7 +67,7 @@ module.exports = {
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "ticket.panel.start_desc"),
+						await t(interaction, 'ticket.panel.start_desc'),
 					),
 				)
 				.addSeparatorComponents(
@@ -85,7 +85,7 @@ module.exports = {
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						await t(interaction, "common.container.footer", {
+						await t(interaction, 'common.container.footer', {
 							username: interaction.client.user.username,
 						}),
 					),

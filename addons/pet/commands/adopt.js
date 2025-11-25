@@ -3,23 +3,23 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const { t } = require("@coreHelpers/translator");
-const { embedFooter } = require("@coreHelpers/discord");
-const KythiaUser = require("@coreModels/KythiaUser");
-const UserPet = require("../database/models/UserPet");
-const Pet = require("../database/models/Pet");
+const { EmbedBuilder } = require('discord.js');
+const { t } = require('@coreHelpers/translator');
+const { embedFooter } = require('@coreHelpers/discord');
+const KythiaUser = require('@coreModels/KythiaUser');
+const UserPet = require('../database/models/UserPet');
+const Pet = require('../database/models/Pet');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("adopt")
-			.setDescription("Adopt a random pet")
+			.setName('adopt')
+			.setDescription('Adopt a random pet')
 			.addStringOption((option) =>
-				option.setName("name").setDescription("Pet name").setRequired(true),
+				option.setName('name').setDescription('Pet name').setRequired(true),
 			),
 	async execute(interaction) {
 		await interaction.deferReply();
@@ -29,7 +29,7 @@ module.exports = {
 			const embed = new EmbedBuilder()
 				.setColor(kythia.bot.color)
 				.setDescription(
-					await t(interaction, "economy.withdraw.no.account.desc"),
+					await t(interaction, 'economy.withdraw.no.account.desc'),
 				)
 				.setThumbnail(interaction.user.displayAvatarURL())
 				.setFooter(await embedFooter(interaction));
@@ -40,8 +40,8 @@ module.exports = {
 			where: { userId: interaction.user.id, isDead: false },
 		});
 		if (existingPet) {
-			const title = await t(interaction, "pet.adopt.already.title");
-			const desc = await t(interaction, "pet.adopt.already.desc");
+			const title = await t(interaction, 'pet.adopt.already.title');
+			const desc = await t(interaction, 'pet.adopt.already.desc');
 			const embed = new EmbedBuilder()
 				.setDescription(`## ${title}\n${desc}`)
 				.setColor(kythia.bot.color)
@@ -58,7 +58,7 @@ module.exports = {
 			await deadPet.destroy();
 		}
 
-		const pets = await Pet.getAllCache({ cacheTags: ["Pet:all"] });
+		const pets = await Pet.getAllCache({ cacheTags: ['Pet:all'] });
 		const rarities = {
 			common: 50,
 			rare: 25,
@@ -71,7 +71,7 @@ module.exports = {
 		const selectedPet =
 			weightedPets[Math.floor(Math.random() * weightedPets.length)];
 
-		const name = interaction.options.getString("name");
+		const name = interaction.options.getString('name');
 
 		await UserPet.create({
 			userId: interaction.user.id,
@@ -79,14 +79,14 @@ module.exports = {
 			petName: name,
 		});
 
-		const title = await t(interaction, "pet.adopt.success.title", {
+		const title = await t(interaction, 'pet.adopt.success.title', {
 			name: selectedPet.name,
-			icon: selectedPet.icon ?? "",
+			icon: selectedPet.icon ?? '',
 			rarity: selectedPet.rarity,
 		});
-		const desc = await t(interaction, "pet.adopt.success.simple", {
+		const desc = await t(interaction, 'pet.adopt.success.simple', {
 			name: selectedPet.name,
-			icon: selectedPet.icon ?? "",
+			icon: selectedPet.icon ?? '',
 			rarity: selectedPet.rarity,
 		});
 

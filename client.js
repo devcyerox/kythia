@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits, Partials, Options } = require("discord.js");
+const { Client, GatewayIntentBits, Partials, Options } = require('discord.js');
 
 module.exports = function kythiaClient() {
 	const client = new Client({

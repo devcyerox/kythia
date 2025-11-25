@@ -3,16 +3,16 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { createCanvas, loadImage } = require("canvas");
-const ServerSetting = require("@coreModels/ServerSetting");
-const User = require("@coreModels/User");
-const axios = require("axios");
-const { EmbedBuilder } = require("discord.js");
-const { t } = require("@coreHelpers/translator");
-const { embedFooter } = require("@coreHelpers/discord");
+const { createCanvas, loadImage } = require('canvas');
+const ServerSetting = require('@coreModels/ServerSetting');
+const User = require('@coreModels/User');
+const axios = require('axios');
+const { EmbedBuilder } = require('discord.js');
+const { t } = require('@coreHelpers/translator');
+const { embedFooter } = require('@coreHelpers/discord');
 
 function _drawRoundedRect(ctx, x, y, width, height, radius, fillStyle) {
 	ctx.save();
@@ -58,8 +58,8 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 		leveledUp = true;
 	}
 
-	user.changed("xp", true);
-	user.changed("level", true);
+	user.changed('xp', true);
+	user.changed('level', true);
 
 	await user.update({ xp: user.xp, level: user.level });
 	await user.saveAndUpdateCache();
@@ -96,21 +96,21 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 		buffer = await generateLevelImage({
 			username: message.author.username,
 			avatarURL: message.author.displayAvatarURL({
-				extension: "png",
+				extension: 'png',
 				size: 256,
 			}),
 			level: user.level,
 			xp: user.xp,
 			nextLevelXp: levelUpXp(user.level),
-			backgroundURL: "https://files.catbox.moe/3pujs4.png",
+			backgroundURL: 'https://files.catbox.moe/3pujs4.png',
 		});
 	} catch (_err) {
 		buffer = null;
 	}
 
 	let description =
-		`${await t(message, "leveling.helpers.index.leveling.profile.up.title")}\n` +
-		(await t(message, "leveling.helpers.index.leveling.profile.up.desc", {
+		`${await t(message, 'leveling.helpers.index.leveling.profile.up.title')}\n` +
+		(await t(message, 'leveling.helpers.index.leveling.profile.up.desc', {
 			username: message.author.username,
 			mention: message.author.toString(),
 			level: user.level || 0,
@@ -120,8 +120,8 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 
 	if (rewardRoleName && rewardLevel) {
 		description +=
-			`\n\n${await t(message, "leveling.helpers.index.leveling.role.reward.title")}\n` +
-			(await t(message, "leveling.helpers.index.leveling.role.reward.desc", {
+			`\n\n${await t(message, 'leveling.helpers.index.leveling.role.reward.title')}\n` +
+			(await t(message, 'leveling.helpers.index.leveling.role.reward.desc', {
 				mention: message.author.toString(),
 				role: rewardRoleName,
 				level: rewardLevel,
@@ -135,14 +135,14 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 		.setFooter(await embedFooter(message));
 
 	if (channel) {
-		if (buffer && (Buffer.isBuffer(buffer) || typeof buffer === "string")) {
+		if (buffer && (Buffer.isBuffer(buffer) || typeof buffer === 'string')) {
 			try {
-				levelEmbed.setImage("attachment://level-profile.png");
+				levelEmbed.setImage('attachment://level-profile.png');
 			} catch (_e) {}
 			await channel
 				.send({
 					embeds: [levelEmbed],
-					files: [{ attachment: buffer, name: "level-profile.png" }],
+					files: [{ attachment: buffer, name: 'level-profile.png' }],
 				})
 				.catch(() => {});
 		} else {
@@ -196,7 +196,7 @@ async function generateLevelImage({
 	const borderRadius = 25;
 
 	const canvas = createCanvas(width, height);
-	const ctx = canvas.getContext("2d");
+	const ctx = canvas.getContext('2d');
 
 	ctx.fillStyle = kythia.bot.color;
 	ctx.beginPath();
@@ -217,11 +217,11 @@ async function generateLevelImage({
 	try {
 		if (backgroundURL) {
 			let bgImage;
-			if (backgroundURL.startsWith("http")) {
+			if (backgroundURL.startsWith('http')) {
 				const response = await axios.get(backgroundURL, {
-					responseType: "arraybuffer",
+					responseType: 'arraybuffer',
 				});
-				const buffer = Buffer.from(response.data, "binary");
+				const buffer = Buffer.from(response.data, 'binary');
 				bgImage = await loadImage(buffer);
 			} else {
 				bgImage = await loadImage(path.resolve(backgroundURL));
@@ -230,23 +230,23 @@ async function generateLevelImage({
 			ctx.drawImage(bgImage, 0, 0, width, height);
 		} else {
 			const gradient = ctx.createLinearGradient(0, 0, 0, height);
-			gradient.addColorStop(0, "#23272a");
-			gradient.addColorStop(1, "#2c2f33");
+			gradient.addColorStop(0, '#23272a');
+			gradient.addColorStop(1, '#2c2f33');
 			ctx.fillStyle = gradient;
 			ctx.fillRect(0, 0, width, height);
 		}
 	} catch (bgError) {
-		console.error("Error loading background:", bgError);
-		ctx.fillStyle = "#23272a";
+		console.error('Error loading background:', bgError);
+		ctx.fillStyle = '#23272a';
 		ctx.fillRect(0, 0, width, height);
 	}
 
 	let avatar;
 	try {
-		const processedAvatarURL = avatarURL.replace(/\.webp\b/i, ".png");
+		const processedAvatarURL = avatarURL.replace(/\.webp\b/i, '.png');
 		avatar = await loadImage(processedAvatarURL);
 	} catch (avatarError) {
-		console.error("Error loading avatar:", avatarError);
+		console.error('Error loading avatar:', avatarError);
 	}
 
 	if (avatar) {
@@ -292,7 +292,7 @@ async function generateLevelImage({
 	const contentX = 250;
 
 	ctx.font = 'bold 40px "Poppins-Medium", sans-serif';
-	ctx.fillStyle = "#ffffff";
+	ctx.fillStyle = '#ffffff';
 	ctx.fillText(username, contentX, 90);
 
 	ctx.font = '28px "Poppins-Bold", sans-serif';
@@ -309,7 +309,7 @@ async function generateLevelImage({
 
 	const barRadius = progressHeight / 2;
 
-	ctx.fillStyle = "#444";
+	ctx.fillStyle = '#444';
 	ctx.beginPath();
 	ctx.roundRect(progressX, progressY, progressWidth, progressHeight, barRadius);
 	ctx.fill();
@@ -334,7 +334,7 @@ async function generateLevelImage({
 		ctx.restore();
 	}
 
-	ctx.fillStyle = "#FFFFFF";
+	ctx.fillStyle = '#FFFFFF';
 	ctx.font = 'bold 18px "Poppins-Medium", sans-serif';
 	const xpText = `${xp.toLocaleString()} / ${nextLevelXp.toLocaleString()} XP`;
 	const textWidth = ctx.measureText(xpText).width;

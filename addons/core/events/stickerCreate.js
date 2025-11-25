@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
 
 module.exports = async (bot, sticker) => {
 	if (!sticker.guild) return;
@@ -39,47 +39,47 @@ module.exports = async (bot, sticker) => {
 		if (!entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Green", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Green', { from: 'discord', to: 'decimal' }))
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`🏷️ **Sticker Created** by <@${entry.executor?.id || "Unknown"}>`,
+				`🏷️ **Sticker Created** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
 				{
-					name: "Sticker",
+					name: 'Sticker',
 					value: `<:${sticker.name}:${sticker.id}>`,
 					inline: true,
 				},
-				{ name: "Name", value: sticker.name, inline: true },
+				{ name: 'Name', value: sticker.name, inline: true },
 				{
-					name: "Description",
-					value: sticker.description || "No description",
+					name: 'Description',
+					value: sticker.description || 'No description',
 					inline: false,
 				},
 				{
-					name: "Available",
-					value: sticker.available ? "Yes" : "No",
+					name: 'Available',
+					value: sticker.available ? 'Yes' : 'No',
 					inline: true,
 				},
 				{
-					name: "Managed",
-					value: sticker.managed ? "Yes" : "No",
+					name: 'Managed',
+					value: sticker.managed ? 'Yes' : 'No',
 					inline: true,
 				},
 			)
 			.setThumbnail(sticker.url)
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in guildStickerCreate audit log:", err);
+		console.error('Error in guildStickerCreate audit log:', err);
 	}
 };

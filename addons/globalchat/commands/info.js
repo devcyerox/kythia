@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -14,16 +14,16 @@ const {
 	SeparatorSpacingSize,
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
-} = require("discord.js");
-const fetch = require("node-fetch");
+} = require('discord.js');
+const fetch = require('node-fetch');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("info")
+			.setName('info')
 			.setDescription(
-				"Show stats and information for the Kythia Global Chat network!",
+				'Show stats and information for the Kythia Global Chat network!',
 			),
 	async execute(interaction, container) {
 		const { kythiaConfig, helpers, logger } = container;
@@ -39,23 +39,23 @@ module.exports = {
 					Authorization: `Bearer ${kythiaConfig.addons.globalchat.apiKey}`,
 				},
 			});
-			if (!res.ok) throw new Error("API returned not ok");
+			if (!res.ok) throw new Error('API returned not ok');
 			const resJson = await res.json();
 			apiStats = resJson?.data;
 		} catch (err) {
-			logger.error("Failed to fetch globalchat stats from API:", err);
+			logger.error('Failed to fetch globalchat stats from API:', err);
 
 			const errorContainer = [
 				new ContainerBuilder()
 					.setAccentColor(
 						convertColor(kythiaConfig.bot.color, {
-							from: "hex",
-							to: "decimal",
+							from: 'hex',
+							to: 'decimal',
 						}),
 					)
 					.addTextDisplayComponents(
 						new TextDisplayBuilder().setContent(
-							"❌ Gagal mengambil data statistik Global Chat dari API.",
+							'❌ Gagal mengambil data statistik Global Chat dari API.',
 						),
 					),
 			];
@@ -71,7 +71,7 @@ module.exports = {
 		const components = [
 			new ContainerBuilder()
 				.setAccentColor(
-					convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				)
 				.addMediaGalleryComponents(
 					new MediaGalleryBuilder().addItems([
@@ -105,17 +105,17 @@ module.exports = {
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						`**Total Guilds:**\n\`\`\`ansi\n[1;36m${count ?? "N/A"}[0m[1;34m joined[0m\n\`\`\``,
+						`**Total Guilds:**\n\`\`\`ansi\n[1;36m${count ?? 'N/A'}[0m[1;34m joined[0m\n\`\`\``,
 					),
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						`**Webhooks:**\n${guildsWithWebhook ?? "N/A"} guilds with webhook\n${guildsWithoutWebhook ?? "N/A"} guilds w/o webhook`,
+						`**Webhooks:**\n${guildsWithWebhook ?? 'N/A'} guilds with webhook\n${guildsWithoutWebhook ?? 'N/A'} guilds w/o webhook`,
 					),
 				)
 				.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
-						`**Last Update:**\n${timestamp ? `<t:${Math.floor(new Date(timestamp).getTime() / 1000)}:R>` : "N/A"}`,
+						`**Last Update:**\n${timestamp ? `<t:${Math.floor(new Date(timestamp).getTime() / 1000)}:R>` : 'N/A'}`,
 					),
 				)
 				.addSeparatorComponents(

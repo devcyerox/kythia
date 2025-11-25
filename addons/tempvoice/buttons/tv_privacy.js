@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ActionRowBuilder,
@@ -11,7 +11,7 @@ const {
 	ContainerBuilder,
 	TextDisplayBuilder,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
@@ -25,7 +25,7 @@ module.exports = {
 		});
 		if (!activeChannel) {
 			return interaction.reply({
-				content: await t(interaction, "tempvoice.privacy.no_active_channel"),
+				content: await t(interaction, 'tempvoice.privacy.no_active_channel'),
 				ephemeral: true,
 			});
 		}
@@ -35,7 +35,7 @@ module.exports = {
 			.catch(() => null);
 		if (!channel) {
 			return interaction.reply({
-				content: await t(interaction, "tempvoice.privacy.channel_not_found"),
+				content: await t(interaction, 'tempvoice.privacy.channel_not_found'),
 				ephemeral: true,
 			});
 		}
@@ -43,41 +43,41 @@ module.exports = {
 		const menu = new StringSelectMenuBuilder()
 			.setCustomId(`tv_privacy_menu:${channelId}`)
 			.setPlaceholder(
-				await t(interaction, "tempvoice.privacy.menu.placeholder"),
+				await t(interaction, 'tempvoice.privacy.menu.placeholder'),
 			)
 			.addOptions([
 				{
-					label: await t(interaction, "tempvoice.privacy.menu.lock.label"),
-					description: await t(interaction, "tempvoice.privacy.menu.lock.desc"),
-					value: "lock_channel",
-					emoji: "🔒",
+					label: await t(interaction, 'tempvoice.privacy.menu.lock.label'),
+					description: await t(interaction, 'tempvoice.privacy.menu.lock.desc'),
+					value: 'lock_channel',
+					emoji: '🔒',
 				},
 				{
-					label: await t(interaction, "tempvoice.privacy.menu.unlock.label"),
+					label: await t(interaction, 'tempvoice.privacy.menu.unlock.label'),
 					description: await t(
 						interaction,
-						"tempvoice.privacy.menu.unlock.desc",
+						'tempvoice.privacy.menu.unlock.desc',
 					),
-					value: "unlock_channel",
-					emoji: "🔓",
+					value: 'unlock_channel',
+					emoji: '🔓',
 				},
 				{
-					label: await t(interaction, "tempvoice.privacy.menu.invisible.label"),
+					label: await t(interaction, 'tempvoice.privacy.menu.invisible.label'),
 					description: await t(
 						interaction,
-						"tempvoice.privacy.menu.invisible.desc",
+						'tempvoice.privacy.menu.invisible.desc',
 					),
-					value: "invisible_channel",
-					emoji: "❌",
+					value: 'invisible_channel',
+					emoji: '❌',
 				},
 				{
-					label: await t(interaction, "tempvoice.privacy.menu.visible.label"),
+					label: await t(interaction, 'tempvoice.privacy.menu.visible.label'),
 					description: await t(
 						interaction,
-						"tempvoice.privacy.menu.visible.desc",
+						'tempvoice.privacy.menu.visible.desc',
 					),
-					value: "visible_channel",
-					emoji: "👁️",
+					value: 'visible_channel',
+					emoji: '👁️',
 				},
 			]);
 
@@ -85,13 +85,13 @@ module.exports = {
 
 		const containerComponent = new ContainerBuilder()
 			.setAccentColor(
-				typeof convertColor === "function"
-					? convertColor("#ffb86c", { from: "hex", to: "decimal" })
+				typeof convertColor === 'function'
+					? convertColor('#ffb86c', { from: 'hex', to: 'decimal' })
 					: 0xffb86c,
 			)
 			.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "tempvoice.privacy.menu.content"),
+					await t(interaction, 'tempvoice.privacy.menu.content'),
 				),
 			)
 			.addActionRowComponents(row);

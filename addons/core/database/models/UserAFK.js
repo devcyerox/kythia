@@ -3,15 +3,15 @@
  * @type: Database Model
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { KythiaModel } = require("kythia-core");
+const { KythiaModel } = require('kythia-core');
 
 class UserAFK extends KythiaModel {
-	static cacheKeys = [["userId", "guildId"]];
+	static cacheKeys = [['userId', 'guildId']];
 
-	static table = "user_afks";
+	static table = 'user_afks';
 
 	static guarded = [];
 }

@@ -3,18 +3,18 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { loadVisitorCounts, trackVisitor } = require("../helpers/visitor");
-const { parseChangelog, getCommandsData } = require("../helpers");
-const router = require("express").Router();
-const logger = require("@coreHelpers/logger");
-const path = require("node:path");
-const fs = require("node:fs");
+const { loadVisitorCounts, trackVisitor } = require('../helpers/visitor');
+const { parseChangelog, getCommandsData } = require('../helpers');
+const router = require('express').Router();
+const logger = require('@coreHelpers/logger');
+const path = require('node:path');
+const fs = require('node:fs');
 
-router.get("/", trackVisitor, loadVisitorCounts, async (req, res) => {
-	const client = req.app.get("botClient");
+router.get('/', trackVisitor, loadVisitorCounts, async (req, res) => {
+	const client = req.app.get('botClient');
 	let totalServers = 0;
 	let totalMembers = 0;
 
@@ -40,15 +40,15 @@ router.get("/", trackVisitor, loadVisitorCounts, async (req, res) => {
 		}
 	}
 
-	res.render("layouts/main", {
-		viewName: "home",
-		title: "Home",
+	res.render('layouts/main', {
+		viewName: 'home',
+		title: 'Home',
 		botClientId: kythia.bot.clientId,
-		botPermissions: "8",
+		botPermissions: '8',
 		user: req.user,
-		currentPage: "/",
+		currentPage: '/',
 
-		page: "/",
+		page: '/',
 		todayVisitors: res.locals.todayVisitors,
 		totalVisitors: res.locals.totalVisitors,
 		totalServers,
@@ -56,139 +56,139 @@ router.get("/", trackVisitor, loadVisitorCounts, async (req, res) => {
 	});
 });
 
-router.get("/partner", trackVisitor, loadVisitorCounts, (req, res) => {
-	res.render("layouts/main", {
-		viewName: "partner",
-		title: "Partner",
+router.get('/partner', trackVisitor, loadVisitorCounts, (req, res) => {
+	res.render('layouts/main', {
+		viewName: 'partner',
+		title: 'Partner',
 		botClientId: kythia.bot.clientId,
-		botPermissions: "8",
+		botPermissions: '8',
 		user: req.user,
-		currentPage: "/partner",
+		currentPage: '/partner',
 
-		page: "/partner",
+		page: '/partner',
 	});
 });
 
-router.get("/owner", trackVisitor, loadVisitorCounts, (req, res) => {
-	res.render("layouts/main", {
-		viewName: "owner",
-		title: "Owner",
+router.get('/owner', trackVisitor, loadVisitorCounts, (req, res) => {
+	res.render('layouts/main', {
+		viewName: 'owner',
+		title: 'Owner',
 		botClientId: kythia.bot.clientId,
-		botPermissions: "8",
+		botPermissions: '8',
 		user: req.user,
-		currentPage: "/owner",
+		currentPage: '/owner',
 
-		page: "/owner",
+		page: '/owner',
 	});
 });
 
-router.get("/commands", trackVisitor, loadVisitorCounts, async (req, res) => {
+router.get('/commands', trackVisitor, loadVisitorCounts, async (req, res) => {
 	try {
-		const client = req.app.get("botClient");
+		const client = req.app.get('botClient');
 		if (!client || !client.isReady()) {
-			return res.status(503).render("layouts/main", {
-				viewName: "error",
-				title: "Bot Not Ready",
+			return res.status(503).render('layouts/main', {
+				viewName: 'error',
+				title: 'Bot Not Ready',
 				message:
-					"The bot is not ready or is restarting. Please try again in a moment.",
+					'The bot is not ready or is restarting. Please try again in a moment.',
 				user: req.user || null,
-				page: "error",
-				currentPage: "/commands",
+				page: 'error',
+				currentPage: '/commands',
 
 				guild: null,
 			});
 		}
 		const { commands, categories, totalCommands } =
 			await getCommandsData(client);
-		res.render("layouts/main", {
-			viewName: "commands",
+		res.render('layouts/main', {
+			viewName: 'commands',
 			commands: commands,
 			categories: categories,
 			totalCommands: totalCommands,
-			title: "Bot Commands",
-			currentPage: "/commands",
+			title: 'Bot Commands',
+			currentPage: '/commands',
 
-			page: "/",
+			page: '/',
 			user: req.user || null,
 			guild: null,
 		});
 	} catch (error) {
-		logger.error("Failed to fetch command data:", error);
-		res.status(500).render("layouts/main", {
-			viewName: "error",
-			title: "Failed to load Command page",
-			message: "An error occurred while trying to save your settings.",
+		logger.error('Failed to fetch command data:', error);
+		res.status(500).render('layouts/main', {
+			viewName: 'error',
+			title: 'Failed to load Command page',
+			message: 'An error occurred while trying to save your settings.',
 			user: req.user || null,
-			page: "settings",
-			currentPage: "",
+			page: 'settings',
+			currentPage: '',
 
 			guild: req.guild || null,
 		});
 	}
 });
 
-router.get("/changelog", trackVisitor, loadVisitorCounts, (req, res) => {
+router.get('/changelog', trackVisitor, loadVisitorCounts, (req, res) => {
 	try {
-		const changelogPath = path.resolve(__dirname, "../../../../changelog.md");
-		const changelogMd = fs.readFileSync(changelogPath, "utf-8");
+		const changelogPath = path.resolve(__dirname, '../../../../changelog.md');
+		const changelogMd = fs.readFileSync(changelogPath, 'utf-8');
 		const parsedChangelogs = parseChangelog(changelogMd);
 
-		res.render("layouts/main", {
-			viewName: "changelog",
-			title: "Changelog",
+		res.render('layouts/main', {
+			viewName: 'changelog',
+			title: 'Changelog',
 			user: req.user,
-			currentPage: "/changelog",
-			page: "/",
+			currentPage: '/changelog',
+			page: '/',
 
 			changelogs: parsedChangelogs,
 		});
 	} catch (error) {
-		logger.error("Error reading or parsing changelog:", error);
-		res.render("error", { message: "Could not load the changelog." });
+		logger.error('Error reading or parsing changelog:', error);
+		res.render('error', { message: 'Could not load the changelog.' });
 	}
 });
 
-router.get("/tos", trackVisitor, loadVisitorCounts, (req, res) => {
-	res.render("layouts/main", {
-		viewName: "tos",
-		title: "Terms of Service",
+router.get('/tos', trackVisitor, loadVisitorCounts, (req, res) => {
+	res.render('layouts/main', {
+		viewName: 'tos',
+		title: 'Terms of Service',
 		user: req.user,
-		currentPage: "/tos",
+		currentPage: '/tos',
 
-		page: "/",
+		page: '/',
 	});
 });
 
-router.get("/privacy", trackVisitor, loadVisitorCounts, (req, res) => {
-	res.render("layouts/main", {
-		viewName: "privacy",
-		title: "Privacy Policy",
+router.get('/privacy', trackVisitor, loadVisitorCounts, (req, res) => {
+	res.render('layouts/main', {
+		viewName: 'privacy',
+		title: 'Privacy Policy',
 		user: req.user,
-		currentPage: "/privacy",
+		currentPage: '/privacy',
 
-		page: "/",
+		page: '/',
 	});
 });
 
-router.get("/premium", trackVisitor, loadVisitorCounts, (req, res) => {
-	res.render("layouts/main", {
-		viewName: "premium",
-		title: "Premium - Kythia",
-		currentPage: "/premium",
+router.get('/premium', trackVisitor, loadVisitorCounts, (req, res) => {
+	res.render('layouts/main', {
+		viewName: 'premium',
+		title: 'Premium - Kythia',
+		currentPage: '/premium',
 
-		page: "/",
+		page: '/',
 		user: req.user || null,
 		guild: null,
 	});
 });
 
-router.get("/gallery", trackVisitor, loadVisitorCounts, (req, res) => {
-	res.render("layouts/main", {
-		viewName: "gallery",
-		title: "Gallery",
+router.get('/gallery', trackVisitor, loadVisitorCounts, (req, res) => {
+	res.render('layouts/main', {
+		viewName: 'gallery',
+		title: 'Gallery',
 		user: req.user,
-		currentPage: "/gallery",
-		page: "/",
+		currentPage: '/gallery',
+		page: '/',
 	});
 });
 

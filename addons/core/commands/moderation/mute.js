@@ -3,17 +3,17 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { PermissionFlagsBits, EmbedBuilder } = require("discord.js");
+const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("mute")
-			.setDescription("🔇 Mute a user in a voice channel.")
+			.setName('mute')
+			.setDescription('🔇 Mute a user in a voice channel.')
 			.addUserOption((option) =>
-				option.setName("user").setDescription("User to mute").setRequired(true),
+				option.setName('user').setDescription('User to mute').setRequired(true),
 			),
 	permissions: PermissionFlagsBits.MuteMembers,
 	botPermissions: PermissionFlagsBits.MuteMembers,
@@ -23,7 +23,7 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const user = interaction.options.getUser("user");
+		const user = interaction.options.getUser('user');
 		let member;
 		try {
 			member = await interaction.guild.members.fetch(user.id);
@@ -33,31 +33,31 @@ module.exports = {
 
 		if (!member) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.mute.user.not.found"),
+				content: await t(interaction, 'core.moderation.mute.user.not.found'),
 			});
 		}
 
 		if (!member.voice.channel) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.mute.user.not.in.voice"),
+				content: await t(interaction, 'core.moderation.mute.user.not.in.voice'),
 			});
 		}
 
 		try {
 			await member.voice.setMute(
 				true,
-				await t(interaction, "core.moderation.mute.reason"),
+				await t(interaction, 'core.moderation.mute.reason'),
 			);
 		} catch (_e) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.mute.failed"),
+				content: await t(interaction, 'core.moderation.mute.failed'),
 			});
 		}
 
 		const embed = new EmbedBuilder()
-			.setColor("Red")
+			.setColor('Red')
 			.setDescription(
-				await t(interaction, "core.moderation.mute.embed.desc", {
+				await t(interaction, 'core.moderation.mute.embed.desc', {
 					tag: user.tag,
 					moderator: interaction.user.tag,
 				}),

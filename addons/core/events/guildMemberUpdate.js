@@ -3,25 +3,25 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
-const { rolePrefix } = require("../helpers");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
+const { rolePrefix } = require('../helpers');
 
 function formatChanges(changes) {
-	if (!changes || changes.length === 0) return "No changes detected.";
+	if (!changes || changes.length === 0) return 'No changes detected.';
 	return changes
 		.map((change) => {
 			const key = change.key
-				.replace(/_/g, " ")
+				.replace(/_/g, ' ')
 				.replace(/\b\w/g, (l) => l.toUpperCase());
-			const oldValue = change.old ?? "Nothing";
-			const newValue = change.new ?? "Nothing";
+			const oldValue = change.old ?? 'Nothing';
+			const newValue = change.new ?? 'Nothing';
 
 			return `**${key}**: \`${oldValue}\` ➔ \`${newValue}\``;
 		})
-		.join("\n");
+		.join('\n');
 }
 
 module.exports = async (bot, oldMember, newMember) => {
@@ -59,28 +59,28 @@ module.exports = async (bot, oldMember, newMember) => {
 		if (!entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Blurple", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Blurple', { from: 'discord', to: 'decimal' }))
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`📝 **Member Updated** by <@${entry.executor?.id || "Unknown"}>`,
+				`📝 **Member Updated** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
-				{ name: "Member", value: `<@${newMember.id}>`, inline: true },
-				{ name: "Changes", value: formatChanges(entry.changes) },
+				{ name: 'Member', value: `<@${newMember.id}>`, inline: true },
+				{ name: 'Changes', value: formatChanges(entry.changes) },
 			)
 			.setThumbnail(newMember.user.displayAvatarURL())
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Reason", value: entry.reason });
+			embed.addFields({ name: 'Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in guildMemberUpdate audit log:", err);
+		console.error('Error in guildMemberUpdate audit log:', err);
 	}
 };

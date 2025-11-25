@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("playlist_tracks", {
+		await queryInterface.createTable('playlist_tracks', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -17,8 +17,8 @@ module.exports = {
 			playlistId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
-				references: { model: "playlists", key: "id" },
-				onDelete: "CASCADE",
+				references: { model: 'playlists', key: 'id' },
+				onDelete: 'CASCADE',
 			},
 			title: { type: DataTypes.STRING, allowNull: false },
 			identifier: { type: DataTypes.STRING, allowNull: false },
@@ -28,6 +28,6 @@ module.exports = {
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("playlist_tracks");
+		await queryInterface.dropTable('playlist_tracks');
 	},
 };

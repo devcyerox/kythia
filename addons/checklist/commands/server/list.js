@@ -3,27 +3,27 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
 	getChecklistAndItems,
 	getScopeMeta,
 	safeReply,
-} = require("../../helpers");
-const { EmbedBuilder } = require("discord.js");
-const { embedFooter } = require("@coreHelpers/discord");
-const { t } = require("@coreHelpers/translator");
+} = require('../../helpers');
+const { EmbedBuilder } = require('discord.js');
+const { embedFooter } = require('@coreHelpers/discord');
+const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
-		subcommand.setName("list").setDescription("View all server checklist"),
+		subcommand.setName('list').setDescription('View all server checklist'),
 
 	async execute(interaction) {
 		const guildId = interaction.guild?.id;
 		const userId = null; // Server scope
-		const group = "server";
+		const group = 'server';
 
 		const { checklist, items } = await getChecklistAndItems({
 			guildId,
@@ -34,14 +34,14 @@ module.exports = {
 		if (!checklist || !Array.isArray(items) || items.length === 0) {
 			const embed = new EmbedBuilder()
 				.setTitle(
-					await t(interaction, "checklist.server.toggle.empty.title", {
+					await t(interaction, 'checklist.server.toggle.empty.title', {
 						scope: await t(interaction, scopeKey),
 					}),
 				)
 				.setDescription(
-					await t(interaction, "checklist.server.list.list.empty.desc"),
+					await t(interaction, 'checklist.server.list.list.empty.desc'),
 				)
-				.setColor("Red")
+				.setColor('Red')
 				.setTimestamp();
 			return safeReply(interaction, { embeds: [embed], ephemeral });
 		}
@@ -49,13 +49,13 @@ module.exports = {
 		// Split into fields if too long
 		const maxFieldLength = 1024;
 		const descArr = [];
-		let current = "";
+		let current = '';
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
-			const line = `${item.checked ? "✅" : "⬜"} \`${i + 1}\` ${item.text}\n`;
+			const line = `${item.checked ? '✅' : '⬜'} \`${i + 1}\` ${item.text}\n`;
 			if ((current + line).length > maxFieldLength) {
 				descArr.push(current);
-				current = "";
+				current = '';
 			}
 			current += line;
 		}
@@ -63,7 +63,7 @@ module.exports = {
 
 		const embed = new EmbedBuilder()
 			.setTitle(
-				await t(interaction, "checklist.server.list.list.title", {
+				await t(interaction, 'checklist.server.list.list.title', {
 					scope: await t(interaction, scopeKey),
 				}),
 			)
@@ -77,12 +77,12 @@ module.exports = {
 					descArr.length > 1
 						? await t(
 								interaction,
-								"checklist.server.list.list.field.title.multi",
+								'checklist.server.list.list.field.title.multi',
 								{ index: idx + 1 },
 							)
 						: await t(
 								interaction,
-								"checklist.server.list.list.field.title.single",
+								'checklist.server.list.list.field.title.single',
 							),
 				value: descArr[idx],
 			});

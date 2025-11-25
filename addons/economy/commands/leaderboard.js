@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 const {
 	ButtonBuilder,
@@ -14,7 +14,7 @@ const {
 	TextDisplayBuilder,
 	SeparatorBuilder,
 	MessageFlags,
-} = require("discord.js");
+} = require('discord.js');
 
 const USERS_PER_PAGE = 10;
 const MAX_USERS = 100;
@@ -29,23 +29,23 @@ async function buildNavButtons(
 	const { t } = interaction.client.container;
 	return [
 		new ButtonBuilder()
-			.setCustomId("leaderboard_first")
-			.setLabel(await t(interaction, "economy.leaderboard.nav.first"))
+			.setCustomId('leaderboard_first')
+			.setLabel(await t(interaction, 'economy.leaderboard.nav.first'))
 			.setStyle(ButtonStyle.Secondary)
 			.setDisabled(allDisabled || page <= 1),
 		new ButtonBuilder()
-			.setCustomId("leaderboard_prev")
-			.setLabel(await t(interaction, "economy.leaderboard.nav.prev"))
+			.setCustomId('leaderboard_prev')
+			.setLabel(await t(interaction, 'economy.leaderboard.nav.prev'))
 			.setStyle(ButtonStyle.Primary)
 			.setDisabled(allDisabled || page <= 1),
 		new ButtonBuilder()
-			.setCustomId("leaderboard_next")
-			.setLabel(await t(interaction, "economy.leaderboard.nav.next"))
+			.setCustomId('leaderboard_next')
+			.setLabel(await t(interaction, 'economy.leaderboard.nav.next'))
 			.setStyle(ButtonStyle.Primary)
 			.setDisabled(allDisabled || page >= totalPages),
 		new ButtonBuilder()
-			.setCustomId("leaderboard_last")
-			.setLabel(await t(interaction, "economy.leaderboard.nav.last"))
+			.setCustomId('leaderboard_last')
+			.setLabel(await t(interaction, 'economy.leaderboard.nav.last'))
 			.setStyle(ButtonStyle.Secondary)
 			.setDisabled(allDisabled || page >= totalPages),
 	];
@@ -68,9 +68,9 @@ async function generateLeaderboardContainer(
 	const pageUsers = topUsers.slice(startIndex, startIndex + USERS_PER_PAGE);
 
 	// Build leaderboard text
-	let leaderboardText = "";
+	let leaderboardText = '';
 	if (pageUsers.length === 0) {
-		leaderboardText = await t(interaction, "economy.leaderboard.empty");
+		leaderboardText = await t(interaction, 'economy.leaderboard.empty');
 	} else {
 		const entries = await Promise.all(
 			pageUsers.map(async (user, index) => {
@@ -80,11 +80,11 @@ async function generateLeaderboardContainer(
 				).toString();
 				const medal =
 					rank === 1
-						? "🥇"
+						? '🥇'
 						: rank === 2
-							? "🥈"
+							? '🥈'
 							: rank === 3
-								? "🥉"
+								? '🥉'
 								: `**${rank}.**`;
 
 				// Fetch username from Discord
@@ -96,7 +96,7 @@ async function generateLeaderboardContainer(
 					username = `Unknown User (${user.userId})`;
 				}
 
-				return await t(interaction, "economy.leaderboard.entry", {
+				return await t(interaction, 'economy.leaderboard.entry', {
 					medal,
 					username,
 					wealth: BigInt(totalWealth).toLocaleString(),
@@ -105,7 +105,7 @@ async function generateLeaderboardContainer(
 				});
 			}),
 		);
-		leaderboardText = entries.join("\n");
+		leaderboardText = entries.join('\n');
 	}
 
 	// Build container, insert navigation buttons inside
@@ -118,11 +118,11 @@ async function generateLeaderboardContainer(
 
 	const leaderboardContainer = new ContainerBuilder()
 		.setAccentColor(
-			convertColor(kythiaConfig.bot.color, { from: "hex", to: "decimal" }),
+			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 		)
 		.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await t(interaction, "economy.leaderboard.title", {
+				await t(interaction, 'economy.leaderboard.title', {
 					page,
 					totalPages,
 				}),
@@ -143,7 +143,7 @@ async function generateLeaderboardContainer(
 		)
 		.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await t(interaction, "economy.leaderboard.footer", {
+				await t(interaction, 'economy.leaderboard.footer', {
 					totalUsers,
 				}),
 			),
@@ -160,8 +160,8 @@ module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("leaderboard")
-			.setDescription("🏆 View the global economy leaderboard."),
+			.setName('leaderboard')
+			.setDescription('🏆 View the global economy leaderboard.'),
 
 	async execute(interaction, container) {
 		const { t, models } = container;
@@ -171,12 +171,12 @@ module.exports = {
 
 		// Fetch all users ordered by total wealth (coin + bank)
 		const allUsers = await KythiaUser.getAllCache({
-			attributes: ["userId", "kythiaCoin", "kythiaBank"],
+			attributes: ['userId', 'kythiaCoin', 'kythiaBank'],
 			order: [
-				[KythiaUser.sequelize.literal("(kythiaCoin + kythiaBank)"), "DESC"],
+				[KythiaUser.sequelize.literal('(kythiaCoin + kythiaBank)'), 'DESC'],
 			],
 			limit: MAX_USERS,
-			cacheTags: ["KythiaUser:leaderboard"],
+			cacheTags: ['KythiaUser:leaderboard'],
 		});
 
 		const totalUsers = allUsers.length;
@@ -215,22 +215,22 @@ module.exports = {
 
 		const collector = message.createMessageComponentCollector({ time: 300000 });
 
-		collector.on("collect", async (i) => {
+		collector.on('collect', async (i) => {
 			if (i.user.id !== interaction.user.id) {
 				return i.reply({
-					content: await t(i, "economy.leaderboard.not.your.interaction"),
+					content: await t(i, 'economy.leaderboard.not.your.interaction'),
 					ephemeral: true,
 				});
 			}
 
 			// Handle navigation
-			if (i.customId === "leaderboard_first") {
+			if (i.customId === 'leaderboard_first') {
 				currentPage = 1;
-			} else if (i.customId === "leaderboard_prev") {
+			} else if (i.customId === 'leaderboard_prev') {
 				currentPage = Math.max(1, currentPage - 1);
-			} else if (i.customId === "leaderboard_next") {
+			} else if (i.customId === 'leaderboard_next') {
 				currentPage = Math.min(totalPages, currentPage + 1);
-			} else if (i.customId === "leaderboard_last") {
+			} else if (i.customId === 'leaderboard_last') {
 				currentPage = totalPages;
 			}
 
@@ -248,7 +248,7 @@ module.exports = {
 			});
 		});
 
-		collector.on("end", async () => {
+		collector.on('end', async () => {
 			try {
 				const { leaderboardContainer: finalContainer } =
 					await generateLeaderboardContainer(

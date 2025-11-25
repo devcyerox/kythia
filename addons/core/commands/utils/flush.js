@@ -3,15 +3,15 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { SlashCommandBuilder, InteractionContextType } = require("discord.js");
+const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("flush")
-		.setDescription("💥 Flush Redis Cache (Global)")
+		.setName('flush')
+		.setDescription('💥 Flush Redis Cache (Global)')
 		.setContexts(InteractionContextType.BotDM),
 	ownerOnly: true,
 
@@ -20,21 +20,21 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		if (!redis || redis.status !== "ready") {
+		if (!redis || redis.status !== 'ready') {
 			return interaction.editReply(
-				"❌ Redis is not connected or is currently down. Unable to flush.",
+				'❌ Redis is not connected or is currently down. Unable to flush.',
 			);
 		}
 
 		try {
 			logger.debug(
-				"[REDIS FLUSH] Using existing shared container connection...",
+				'[REDIS FLUSH] Using existing shared container connection...',
 			);
 
 			const pong = await redis.ping();
 			logger.debug(`[REDIS FLUSH] Redis ping response: ${pong}`);
 
-			logger.debug("[REDIS FLUSH] Attempting to FLUSHALL...");
+			logger.debug('[REDIS FLUSH] Attempting to FLUSHALL...');
 
 			const sizeBefore = await redis.dbsize();
 
@@ -44,7 +44,7 @@ module.exports = {
 			const dbsize = await redis.dbsize();
 			logger.debug(`[REDIS FLUSH] dbsize after FLUSHALL: ${dbsize}`);
 
-			if (result === "OK" && dbsize === 0) {
+			if (result === 'OK' && dbsize === 0) {
 				await interaction.editReply(
 					`✅ **Redis flush successful!**\n🧹 Cleared ${sizeBefore} keys.`,
 				);
@@ -54,7 +54,7 @@ module.exports = {
 				);
 			}
 		} catch (e) {
-			logger.error("[REDIS FLUSH] Flush failed:", e);
+			logger.error('[REDIS FLUSH] Flush failed:', e);
 			await interaction.editReply(`❌ Failed to flush cache: \`${e.message}\``);
 		}
 	},

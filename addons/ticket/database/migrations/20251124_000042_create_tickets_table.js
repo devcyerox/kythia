@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("tickets", {
+		await queryInterface.createTable('tickets', {
 			id: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -20,8 +20,8 @@ module.exports = {
 			ticketConfigId: { type: DataTypes.STRING, allowNull: false },
 			conversation: { type: DataTypes.JSON, defaultValue: [] }, // Default value array kosong
 			status: {
-				type: DataTypes.ENUM("open", "closed"),
-				defaultValue: "open",
+				type: DataTypes.ENUM('open', 'closed'),
+				defaultValue: 'open',
 			},
 			openedAt: { type: DataTypes.DATE, allowNull: true },
 			closedAt: { type: DataTypes.DATE, allowNull: true },
@@ -31,10 +31,10 @@ module.exports = {
 			updatedAt: { type: DataTypes.DATE, allowNull: false },
 		});
 
-		await queryInterface.addIndex("tickets", ["channelId"]);
-		await queryInterface.addIndex("tickets", ["userId"]);
+		await queryInterface.addIndex('tickets', ['channelId']);
+		await queryInterface.addIndex('tickets', ['userId']);
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("tickets");
+		await queryInterface.dropTable('tickets');
 	},
 };

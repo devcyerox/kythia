@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { AuditLogEvent, EmbedBuilder } = require("discord.js");
+const { AuditLogEvent, EmbedBuilder } = require('discord.js');
 
 module.exports = async (bot, ban) => {
 	if (!ban.guild) return;
@@ -37,41 +37,41 @@ module.exports = async (bot, ban) => {
 		if (!entry) return;
 
 		const embed = new EmbedBuilder()
-			.setColor(convertColor("Red", { from: "discord", to: "decimal" }))
+			.setColor(convertColor('Red', { from: 'discord', to: 'decimal' }))
 			.setAuthor({
-				name: entry.executor?.tag || "Unknown",
+				name: entry.executor?.tag || 'Unknown',
 				iconURL: entry.executor?.displayAvatarURL?.(),
 			})
 			.setDescription(
-				`🔨 **Member Banned** by <@${entry.executor?.id || "Unknown"}>`,
+				`🔨 **Member Banned** by <@${entry.executor?.id || 'Unknown'}>`,
 			)
 			.addFields(
 				{
-					name: "User",
+					name: 'User',
 					value: `${ban.user.tag} (${ban.user.id})`,
 					inline: true,
 				},
 				{
-					name: "Account Created",
+					name: 'Account Created',
 					value: `<t:${Math.floor(ban.user.createdTimestamp / 1000)}:F>`,
 					inline: true,
 				},
 				{
-					name: "Reason",
-					value: ban.reason || "No reason provided",
+					name: 'Reason',
+					value: ban.reason || 'No reason provided',
 					inline: false,
 				},
 			)
 			.setThumbnail(ban.user.displayAvatarURL())
-			.setFooter({ text: `User ID: ${entry.executor?.id || "Unknown"}` })
+			.setFooter({ text: `User ID: ${entry.executor?.id || 'Unknown'}` })
 			.setTimestamp();
 
 		if (entry.reason) {
-			embed.addFields({ name: "Audit Reason", value: entry.reason });
+			embed.addFields({ name: 'Audit Reason', value: entry.reason });
 		}
 
 		await logChannel.send({ embeds: [embed] });
 	} catch (err) {
-		console.error("Error in guildBanAdd audit log:", err);
+		console.error('Error in guildBanAdd audit log:', err);
 	}
 };

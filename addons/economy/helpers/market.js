@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const axios = require("axios");
+const axios = require('axios');
 
 let marketCache = {
 	data: null,
@@ -15,7 +15,7 @@ let marketCache = {
 
 const CACHE_DURATION_MS = 10 * 60 * 1000; // 10 minutes
 
-const ASSET_IDS = ["bitcoin", "ethereum", "solana", "dogecoin"];
+const ASSET_IDS = ['bitcoin', 'ethereum', 'solana', 'dogecoin'];
 
 async function getMarketData() {
 	const now = Date.now();
@@ -24,12 +24,12 @@ async function getMarketData() {
 	}
 	// Fetch data baru dari API
 	const response = await axios.get(
-		"https://api.coingecko.com/api/v3/simple/price",
+		'https://api.coingecko.com/api/v3/simple/price',
 		{
 			params: {
-				ids: ASSET_IDS.join(","),
-				vs_currencies: "usd",
-				include_24hr_change: "true",
+				ids: ASSET_IDS.join(','),
+				vs_currencies: 'usd',
+				include_24hr_change: 'true',
 			},
 		},
 	);
@@ -44,31 +44,31 @@ async function getChartBuffer(assetId) {
 		const historyResponse = await axios.get(
 			`https://api.coingecko.com/api/v3/coins/${assetId}/market_chart`,
 			{
-				params: { vs_currency: "usd", days: "7" },
+				params: { vs_currency: 'usd', days: '7' },
 			},
 		);
 		const prices = historyResponse.data.prices;
 		const dailyPrices = prices.filter((_, index) => index % 24 === 0);
 
 		const labels = dailyPrices.map((p) =>
-			new Date(p[0]).toLocaleDateString("en-US", {
-				month: "short",
-				day: "numeric",
+			new Date(p[0]).toLocaleDateString('en-US', {
+				month: 'short',
+				day: 'numeric',
 			}),
 		);
 		const dataPoints = dailyPrices.map((p) => p[1]);
 
 		// Use color from kythia.bot.color (assume global, as in other files)
-		const hexColor = kythia?.bot?.color || "#4bc0c0"; // fallback to old cyan if undefined
+		const hexColor = kythia?.bot?.color || '#4bc0c0'; // fallback to old cyan if undefined
 
 		// Helper to convert HEX to rgba
 		function hexToRgba(hex, alpha = 1) {
-			let c = hex.replace("#", "");
+			let c = hex.replace('#', '');
 			if (c.length === 3)
 				c = c
-					.split("")
+					.split('')
 					.map((x) => x + x)
-					.join("");
+					.join('');
 			const num = parseInt(c, 16);
 			const r = (num >> 16) & 255;
 			const g = (num >> 8) & 255;
@@ -77,7 +77,7 @@ async function getChartBuffer(assetId) {
 		}
 
 		const chartConfig = {
-			type: "line",
+			type: 'line',
 			data: {
 				labels: labels,
 				datasets: [
@@ -98,10 +98,10 @@ async function getChartBuffer(assetId) {
 				},
 				scales: {
 					y: {
-						ticks: { color: "white" },
+						ticks: { color: 'white' },
 					},
 					x: {
-						ticks: { color: "white" },
+						ticks: { color: 'white' },
 					},
 				},
 			},
@@ -109,15 +109,15 @@ async function getChartBuffer(assetId) {
 		// --- SELESAI PERUBAHAN ---
 
 		const response = await axios.post(
-			"https://quickchart.io/chart",
+			'https://quickchart.io/chart',
 			{
 				chart: chartConfig,
-				backgroundColor: "rgb(47,49,54)",
+				backgroundColor: 'rgb(47,49,54)',
 				width: 550, // Sedikit lebih kecil biar pas di embed
 				height: 350,
 			},
 			{
-				responseType: "arraybuffer",
+				responseType: 'arraybuffer',
 			},
 		);
 

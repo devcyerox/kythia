@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -20,28 +20,28 @@ const {
 	MessageFlags,
 	MediaGalleryBuilder,
 	MediaGalleryItemBuilder,
-} = require("discord.js");
-const fs = require("node:fs");
-const path = require("node:path");
+} = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const EXCLUDED_ADDONS = [];
 const EXCLUDED_CORE_CATEGORIES = [];
 const CATEGORIES_PER_PAGE = 25;
 
 module.exports = {
-	aliases: ["h", "ℹ️"],
+	aliases: ['h', 'ℹ️'],
 	data: new SlashCommandBuilder()
-		.setName("help")
+		.setName('help')
 		.setDescription(
-			"💡 Displays a list of bot commands with complete details.",
+			'💡 Displays a list of bot commands with complete details.',
 		),
 
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers } = container;
 		const { convertColor } = helpers.color;
 
-		const rootDir = path.join(__dirname, "..", "..", "..", "..");
-		const addonsDir = path.join(rootDir, "addons");
+		const rootDir = path.join(__dirname, '..', '..', '..', '..');
+		const addonsDir = path.join(rootDir, 'addons');
 		const allCategories = [];
 		const pages = {};
 
@@ -55,7 +55,7 @@ module.exports = {
 		function isCoreCategoryActive(categoryName) {
 			if (
 				configAddons.core?.categories &&
-				typeof configAddons.core.categories === "object"
+				typeof configAddons.core.categories === 'object'
 			) {
 				if (configAddons.core.categories[categoryName]?.active === false)
 					return false;
@@ -74,7 +74,7 @@ module.exports = {
 				let commandJSON;
 				if (slashData) {
 					commandJSON =
-						typeof slashData.toJSON === "function"
+						typeof slashData.toJSON === 'function'
 							? slashData.toJSON()
 							: slashData;
 				} else {
@@ -111,7 +111,7 @@ module.exports = {
 
 				if (command.contextMenuCommand) {
 					const cmJSON =
-						typeof command.contextMenuCommand.toJSON === "function"
+						typeof command.contextMenuCommand.toJSON === 'function'
 							? command.contextMenuCommand.toJSON()
 							: command.contextMenuCommand;
 					const contextKey = `context-${cmJSON.name}`;
@@ -127,13 +127,13 @@ module.exports = {
 
 		function smartSplit(content, maxLength = 3500) {
 			const chunks = [];
-			let currentChunk = "";
-			const lines = content.split("\n");
+			let currentChunk = '';
+			const lines = content.split('\n');
 			for (const line of lines) {
 				if (line.length + 1 > maxLength) {
 					if (currentChunk.length > 0) {
 						chunks.push(currentChunk);
-						currentChunk = "";
+						currentChunk = '';
 					}
 					let start = 0;
 					while (start < line.length) {
@@ -145,7 +145,7 @@ module.exports = {
 				}
 				if (currentChunk.length + line.length + 1 > maxLength) {
 					chunks.push(currentChunk);
-					currentChunk = "";
+					currentChunk = '';
 				}
 				currentChunk += `${line}\n`;
 			}
@@ -154,9 +154,9 @@ module.exports = {
 		}
 
 		function getMarkdownContent(category) {
-			const filePath = path.join(rootDir, "docs", "commands", `${category}.md`);
+			const filePath = path.join(rootDir, 'docs', 'commands', `${category}.md`);
 			if (!fs.existsSync(filePath)) return [null];
-			const content = fs.readFileSync(filePath, "utf-8");
+			const content = fs.readFileSync(filePath, 'utf-8');
 			return smartSplit(content);
 		}
 
@@ -166,8 +166,8 @@ module.exports = {
 				continue;
 			const addonName = addon.name;
 			if (!isAddonActive(addonName)) continue;
-			if (addonName === "core") {
-				const coreCommandsPath = path.join(addonsDir, "core", "commands");
+			if (addonName === 'core') {
+				const coreCommandsPath = path.join(addonsDir, 'core', 'commands');
 				if (fs.existsSync(coreCommandsPath)) {
 					const coreCategories = fs.readdirSync(coreCommandsPath, {
 						withFileTypes: true,
@@ -186,7 +186,7 @@ module.exports = {
 							value: categoryName,
 							description: await t(
 								interaction,
-								"core.utils.help.category.desc",
+								'core.utils.help.category.desc',
 								{ category: categoryName },
 							),
 						});
@@ -194,7 +194,7 @@ module.exports = {
 					}
 				}
 			} else {
-				const manifestPath = path.join(addonsDir, addonName, "addon.json");
+				const manifestPath = path.join(addonsDir, addonName, 'addon.json');
 				if (fs.existsSync(manifestPath)) {
 					const manifest = require(manifestPath);
 					allCategories.push({
@@ -222,11 +222,11 @@ module.exports = {
 			const { categoryPage, selectedCategory, docPage } = currentState;
 
 			const container = new ContainerBuilder().setAccentColor(
-				convertColor(kythia.bot.color, { from: "hex", to: "decimal" }),
+				convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }),
 			);
 
 			if (!selectedCategory) {
-				const desc = await t(interaction, "core.utils.help.main.embed.desc", {
+				const desc = await t(interaction, 'core.utils.help.main.embed.desc', {
 					username: interaction.client.user.username,
 					category_count: currentState.allCategories.length,
 					command_count: currentState.totalCommands,
@@ -259,16 +259,16 @@ module.exports = {
 				let docContent = docPages?.[docPage];
 
 				if (docContent === null)
-					docContent = await t(interaction, "core.utils.help.docs.unavailable");
+					docContent = await t(interaction, 'core.utils.help.docs.unavailable');
 				if (!docContent)
 					docContent = await t(
 						interaction,
-						"core.utils.help.content.not.found",
+						'core.utils.help.content.not.found',
 					);
 				let finalContent = docContent.trim();
 
 				if (finalContent.length === 0) {
-					finalContent = "\u200B";
+					finalContent = '\u200B';
 				}
 
 				if (finalContent.length > 4000) {
@@ -291,10 +291,10 @@ module.exports = {
 			const categoriesOnPage = currentState.allCategories.slice(start, end);
 
 			const selectMenu = new StringSelectMenuBuilder()
-				.setCustomId("help-select-category")
+				.setCustomId('help-select-category')
 				.setPlaceholder(
 					(
-						await t(interaction, "core.utils.help.select.menu.placeholder", {
+						await t(interaction, 'core.utils.help.select.menu.placeholder', {
 							username: interaction.client.user.username,
 						})
 					).replace(/^./, (c) => c.toUpperCase()),
@@ -311,10 +311,10 @@ module.exports = {
 
 			if (selectedCategory) {
 				const homeButtonLabel =
-					(await t(interaction, "core.utils.help.button.go.home")) || "🏠 Home";
+					(await t(interaction, 'core.utils.help.button.go.home')) || '🏠 Home';
 				rowButtons.addComponents(
 					new ButtonBuilder()
-						.setCustomId("help-go-home")
+						.setCustomId('help-go-home')
 						.setLabel(homeButtonLabel)
 						.setStyle(ButtonStyle.Success)
 						.setDisabled(false),
@@ -323,36 +323,36 @@ module.exports = {
 				const totalDocPages = currentState.pages[selectedCategory]?.length || 1;
 				rowButtons.addComponents(
 					new ButtonBuilder()
-						.setCustomId("help-doc-prev")
-						.setLabel(await t(interaction, "core.utils.help.button.doc.prev"))
+						.setCustomId('help-doc-prev')
+						.setLabel(await t(interaction, 'core.utils.help.button.doc.prev'))
 						.setStyle(ButtonStyle.Primary)
 						.setDisabled(docPage === 0),
 					new ButtonBuilder()
-						.setCustomId("help-doc-next")
-						.setLabel(await t(interaction, "core.utils.help.button.doc.next"))
+						.setCustomId('help-doc-next')
+						.setLabel(await t(interaction, 'core.utils.help.button.doc.next'))
 						.setStyle(ButtonStyle.Primary)
 						.setDisabled(docPage >= totalDocPages - 1),
 					new ButtonBuilder()
-						.setCustomId("help-cat-prev")
-						.setLabel(await t(interaction, "core.utils.help.button.cat.prev"))
+						.setCustomId('help-cat-prev')
+						.setLabel(await t(interaction, 'core.utils.help.button.cat.prev'))
 						.setStyle(ButtonStyle.Secondary)
 						.setDisabled(categoryPage === 0),
 					new ButtonBuilder()
-						.setCustomId("help-cat-next")
-						.setLabel(await t(interaction, "core.utils.help.button.cat.next"))
+						.setCustomId('help-cat-next')
+						.setLabel(await t(interaction, 'core.utils.help.button.cat.next'))
 						.setStyle(ButtonStyle.Secondary)
 						.setDisabled(categoryPage >= totalCategoryPages - 1),
 				);
 			} else if (totalCategoryPages > 1) {
 				rowButtons.addComponents(
 					new ButtonBuilder()
-						.setCustomId("help-cat-prev")
-						.setLabel(await t(interaction, "core.utils.help.button.cat.prev"))
+						.setCustomId('help-cat-prev')
+						.setLabel(await t(interaction, 'core.utils.help.button.cat.prev'))
 						.setStyle(ButtonStyle.Secondary)
 						.setDisabled(categoryPage === 0),
 					new ButtonBuilder()
-						.setCustomId("help-cat-next")
-						.setLabel(await t(interaction, "core.utils.help.button.cat.next"))
+						.setCustomId('help-cat-next')
+						.setLabel(await t(interaction, 'core.utils.help.button.cat.next'))
 						.setStyle(ButtonStyle.Secondary)
 						.setDisabled(categoryPage >= totalCategoryPages - 1),
 				);
@@ -369,7 +369,7 @@ module.exports = {
 			);
 			container.addTextDisplayComponents(
 				new TextDisplayBuilder().setContent(
-					await t(interaction, "common.container.footer", {
+					await t(interaction, 'common.container.footer', {
 						username: interaction.client.user.username,
 					}),
 				),
@@ -386,21 +386,21 @@ module.exports = {
 
 		const collector = message.createMessageComponentCollector({ time: 300000 });
 
-		collector.on("collect", async (i) => {
+		collector.on('collect', async (i) => {
 			if (i.user.id !== state.userId) {
 				await i.reply({
-					content: await t(i, "common.error.not.your.interaction"),
+					content: await t(i, 'common.error.not.your.interaction'),
 					ephemeral: true,
 				});
 				return;
 			}
 			await i.deferUpdate();
 
-			if (i.customId === "help-cat-prev") state.categoryPage--;
-			if (i.customId === "help-cat-next") state.categoryPage++;
-			if (i.customId === "help-doc-prev") state.docPage--;
-			if (i.customId === "help-doc-next") state.docPage++;
-			if (i.customId === "help-go-home") {
+			if (i.customId === 'help-cat-prev') state.categoryPage--;
+			if (i.customId === 'help-cat-next') state.categoryPage++;
+			if (i.customId === 'help-doc-prev') state.docPage--;
+			if (i.customId === 'help-doc-next') state.docPage++;
+			if (i.customId === 'help-go-home') {
 				state.selectedCategory = null;
 				state.docPage = 0;
 			}
@@ -426,8 +426,8 @@ module.exports = {
 			await i.editReply(updatedReply);
 		});
 
-		collector.on("end", async (_collected, reason) => {
-			if (reason === "bot_shutdown") return;
+		collector.on('end', async (_collected, reason) => {
+			if (reason === 'bot_shutdown') return;
 
 			try {
 				const finalReply = await buildHelpReply(state);

@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder } = require("discord.js");
-const banks = require("../../helpers/banks");
+const { EmbedBuilder } = require('discord.js');
+const banks = require('../../helpers/banks');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("edit")
-			.setDescription("👤 Edit your account and choose a bank type.")
+			.setName('edit')
+			.setDescription('👤 Edit your account and choose a bank type.')
 			.addStringOption((option) =>
 				option
-					.setName("bank")
+					.setName('bank')
 					.setDescription(
-						"Each bank offers unique benefits for your playstyle!",
+						'Each bank offers unique benefits for your playstyle!',
 					)
 					.setRequired(true)
 					.addChoices(
@@ -35,7 +35,7 @@ module.exports = {
 
 		await interaction.deferReply();
 		try {
-			const bankType = interaction.options.getString("bank");
+			const bankType = interaction.options.getString('bank');
 			const userId = interaction.user.id;
 			const userBank = banks.getBank(bankType);
 			const bankDisplay = `${userBank.emoji} ${userBank.name}`;
@@ -46,7 +46,7 @@ module.exports = {
 				const embed = new EmbedBuilder()
 					.setColor(kythiaConfig.bot.color)
 					.setDescription(
-						await t(interaction, "economy.withdraw.no.account.desc"),
+						await t(interaction, 'economy.withdraw.no.account.desc'),
 					)
 					.setThumbnail(interaction.user.displayAvatarURL())
 					.setFooter(await embedFooter(interaction));
@@ -55,15 +55,15 @@ module.exports = {
 
 			// Update user's bank type
 			existingUser.bankType = bankType;
-			existingUser.changed("bankType", true);
-			await existingUser.saveAndUpdateCache("userId");
+			existingUser.changed('bankType', true);
+			await existingUser.saveAndUpdateCache('userId');
 
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
 					await t(
 						interaction,
-						"economy.account.edit.account.edit.success.desc",
+						'economy.account.edit.account.edit.success.desc',
 						{ bankType: bankDisplay },
 					),
 				)
@@ -71,11 +71,11 @@ module.exports = {
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
 		} catch (error) {
-			console.error("Error during account edit command execution:", error);
+			console.error('Error during account edit command execution:', error);
 			const embed = new EmbedBuilder()
 				.setColor(kythiaConfig.bot.color)
 				.setDescription(
-					await t(interaction, "economy.account.edit.account.edit.error.desc"),
+					await t(interaction, 'economy.account.edit.account.edit.error.desc'),
 				)
 				.setTimestamp()
 				.setFooter(await embedFooter(interaction));

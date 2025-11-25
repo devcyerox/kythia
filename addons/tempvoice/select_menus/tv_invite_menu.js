@@ -3,23 +3,23 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { MessageFlags } = require("discord.js");
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	execute: async (interaction, container) => {
 		const { models, client, t, helpers, logger } = container;
 		const { simpleContainer } = helpers.discord;
 		const { TempVoiceChannel } = models;
-		const channelId = interaction.customId.split(":")[1];
+		const channelId = interaction.customId.split(':')[1];
 
 		if (!channelId)
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.no_channel_id"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.no_channel_id'),
+					{ color: 'Red' },
 				),
 			});
 		const activeChannel = await TempVoiceChannel.getCache({
@@ -30,8 +30,8 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.not_owner"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.common.not_owner'),
+					{ color: 'Red' },
 				),
 			});
 
@@ -42,9 +42,9 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.common.channel_not_found"),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{
-						color: "Red",
+						color: 'Red',
 					},
 				),
 			});
@@ -52,12 +52,12 @@ module.exports = {
 		const userIdsToInvite = interaction.values;
 		const successNames = [];
 		const failNames = [];
-		let inviteUrl = "";
+		let inviteUrl = '';
 
 		try {
 			const inviteReason = await t(
 				interaction,
-				"tempvoice.invite.invite_reason",
+				'tempvoice.invite.invite_reason',
 			);
 			const invite = await channel.createInvite({
 				maxAge: 3600,
@@ -70,13 +70,13 @@ module.exports = {
 			return interaction.update({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, "tempvoice.invite.fail"),
-					{ color: "Red" },
+					await t(interaction, 'tempvoice.invite.fail'),
+					{ color: 'Red' },
 				),
 			});
 		}
 
-		const dmContent = await t(interaction, "tempvoice.invite.dm_message", {
+		const dmContent = await t(interaction, 'tempvoice.invite.dm_message', {
 			user: interaction.user.globalName || interaction.user.username,
 			guild: interaction.guild.name,
 			channel: channel.name,
@@ -101,21 +101,21 @@ module.exports = {
 			}
 		}
 
-		let summaryContent = "";
+		let summaryContent = '';
 		if (successNames.length > 0) {
-			summaryContent += `${await t(interaction, "tempvoice.invite.success_dm", {
-				users: successNames.join(", "),
+			summaryContent += `${await t(interaction, 'tempvoice.invite.success_dm', {
+				users: successNames.join(', '),
 			})}\n`;
 		}
 		if (failNames.length > 0) {
-			summaryContent += await t(interaction, "tempvoice.invite.fail_dm", {
-				users: failNames.join(", "),
+			summaryContent += await t(interaction, 'tempvoice.invite.fail_dm', {
+				users: failNames.join(', '),
 			});
 		}
 
 		await interaction.update({
 			components: await simpleContainer(interaction, summaryContent, {
-				color: "Green",
+				color: 'Green',
 			}),
 		});
 	},

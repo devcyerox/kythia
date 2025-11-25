@@ -3,27 +3,27 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("pets", {
+		await queryInterface.createTable('pets', {
 			id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true }, // Biasanya butuh ID meski gak di-define eksplisit
 			name: { type: DataTypes.STRING, allowNull: false },
 			icon: { type: DataTypes.STRING, allowNull: false },
 			rarity: {
-				type: DataTypes.ENUM("common", "rare", "epic", "legendary"),
-				defaultValue: "common",
+				type: DataTypes.ENUM('common', 'rare', 'epic', 'legendary'),
+				defaultValue: 'common',
 			},
 			bonusType: {
-				type: DataTypes.ENUM("coin", "ruby"),
-				defaultValue: "coin",
+				type: DataTypes.ENUM('coin', 'ruby'),
+				defaultValue: 'coin',
 			},
 			bonusValue: { type: DataTypes.INTEGER, defaultValue: 0 },
 		});
 	},
 	async down(queryInterface) {
-		await queryInterface.dropTable("pets");
+		await queryInterface.dropTable('pets');
 	},
 };

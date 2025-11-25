@@ -3,22 +3,22 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
 		subcommand
-			.setName("warn")
-			.setDescription("⚠️ Warn a user.")
+			.setName('warn')
+			.setDescription('⚠️ Warn a user.')
 			.addUserOption((option) =>
-				option.setName("user").setDescription("User to warn").setRequired(true),
+				option.setName('user').setDescription('User to warn').setRequired(true),
 			)
 			.addStringOption((option) =>
 				option
-					.setName("reason")
-					.setDescription("Reason for the warning")
+					.setName('reason')
+					.setDescription('Reason for the warning')
 					.setRequired(true),
 			),
 
@@ -33,8 +33,8 @@ module.exports = {
 		const setting = await ServerSetting.getCache({
 			guildId: interaction.guild.id,
 		});
-		const targetUser = interaction.options.getUser("user");
-		const reason = interaction.options.getString("reason");
+		const targetUser = interaction.options.getUser('user');
+		const reason = interaction.options.getString('reason');
 
 		let member;
 		try {
@@ -44,7 +44,7 @@ module.exports = {
 		}
 		if (!member) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.warn.user.not.in.guild"),
+				content: await t(interaction, 'core.moderation.warn.user.not.in.guild'),
 			});
 		}
 
@@ -54,7 +54,7 @@ module.exports = {
 		});
 		if (!userRecord) {
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.warn.user.not.in.db"),
+				content: await t(interaction, 'core.moderation.warn.user.not.in.db'),
 			});
 		}
 
@@ -64,34 +64,34 @@ module.exports = {
 		userRecord.warnings.push({ reason, date: new Date() });
 
 		try {
-			userRecord.changed("warnings", true);
-			await userRecord.saveAndUpdateCache("userId");
+			userRecord.changed('warnings', true);
+			await userRecord.saveAndUpdateCache('userId');
 		} catch (err) {
-			logger.error("Error while saving user record:", err);
+			logger.error('Error while saving user record:', err);
 			return interaction.editReply({
-				content: await t(interaction, "core.moderation.warn.db.save.failed"),
+				content: await t(interaction, 'core.moderation.warn.db.save.failed'),
 			});
 		}
 
 		// If user has 3 or more warnings, timeout for 1 day
 		let timeoutApplied = false;
 		if (userRecord.warnings.length >= 3) {
-			if (member.moderatable && member.permissions.has("SEND_MESSAGES")) {
+			if (member.moderatable && member.permissions.has('SEND_MESSAGES')) {
 				try {
 					await member.timeout(
 						86400000,
-						await t(interaction, "core.moderation.warn.timeout.reason"),
+						await t(interaction, 'core.moderation.warn.timeout.reason'),
 					);
 					timeoutApplied = true;
 				} catch (err) {
 					logger.warn(
-						"Failed to timeout member after 3 warnings:",
+						'Failed to timeout member after 3 warnings:',
 						err.message,
 					);
 				}
 			} else {
 				logger.warn(
-					"Bot does not have MODERATE_MEMBERS permission to timeout member.",
+					'Bot does not have MODERATE_MEMBERS permission to timeout member.',
 				);
 			}
 		}
@@ -105,7 +105,7 @@ module.exports = {
 				return interaction.editReply({
 					content: await t(
 						interaction,
-						"core.moderation.warn.modlog.not.found",
+						'core.moderation.warn.modlog.not.found',
 					),
 				});
 			}
@@ -113,21 +113,21 @@ module.exports = {
 			if (
 				!modLogChannel
 					.permissionsFor(interaction.client.user)
-					.has("SEND_MESSAGES")
+					.has('SEND_MESSAGES')
 			) {
 				return interaction.editReply({
 					content: await t(
 						interaction,
-						"core.moderation.warn.modlog.no.permission",
+						'core.moderation.warn.modlog.no.permission',
 					),
 				});
 			}
 
 			try {
 				const channelEmbed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						await t(interaction, "core.moderation.warn.modlog.embed", {
+						await t(interaction, 'core.moderation.warn.modlog.embed', {
 							user: `<@${targetUser.id}>`,
 							moderator: `<@${interaction.user.id}>`,
 							reason,
@@ -144,7 +144,7 @@ module.exports = {
 						.setDescription(
 							await t(
 								interaction,
-								"core.moderation.warn.modlog.timeout.embed",
+								'core.moderation.warn.modlog.timeout.embed',
 								{
 									user: `<@${targetUser.id}>`,
 								},
@@ -155,19 +155,19 @@ module.exports = {
 					await modLogChannel.send({ embeds: [timeoutEmbed] });
 				}
 			} catch (err) {
-				logger.warn("Failed to send log to modLogChannel:", err.message);
+				logger.warn('Failed to send log to modLogChannel:', err.message);
 			}
 		}
 
 		const embed = new EmbedBuilder()
 			.setColor(kythia.bot.color)
 			.setDescription(
-				await t(interaction, "core.moderation.warn.success.embed", {
+				await t(interaction, 'core.moderation.warn.success.embed', {
 					user: `<@${targetUser.id}>`,
 					reason,
 					timeout: timeoutApplied
-						? `\n\n${await t(interaction, "core.moderation.warn.timeout.notice")}`
-						: "",
+						? `\n\n${await t(interaction, 'core.moderation.warn.timeout.notice')}`
+						: '',
 				}),
 			)
 			.setThumbnail(interaction.client.user.displayAvatarURL())
@@ -175,15 +175,15 @@ module.exports = {
 			.setFooter(await embedFooter(interaction));
 
 		const warnEmbed = new EmbedBuilder()
-			.setColor("Red")
+			.setColor('Red')
 			.setDescription(
-				await t(interaction, "core.moderation.warn.dm.embed", {
+				await t(interaction, 'core.moderation.warn.dm.embed', {
 					user: `<@${targetUser.id}>`,
 					moderator: `<@${interaction.user.id}>`,
 					reason,
 					timeout: timeoutApplied
-						? `\n\n${await t(interaction, "core.moderation.warn.dm.timeout.notice")}`
-						: "",
+						? `\n\n${await t(interaction, 'core.moderation.warn.dm.timeout.notice')}`
+						: '',
 				}),
 			)
 			.setTimestamp()

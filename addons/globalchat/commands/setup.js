@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 const {
@@ -11,21 +11,21 @@ const {
 	ChannelType,
 	EmbedBuilder,
 	MessageFlags,
-} = require("discord.js");
-const fetch = require("node-fetch");
+} = require('discord.js');
+const fetch = require('node-fetch');
 
 module.exports = {
 	subcommand: true,
 	data: (subcommand) =>
 		subcommand
-			.setName("setup")
+			.setName('setup')
 			.setDescription(
-				"Setup a global chat channel for cross-server interaction",
+				'Setup a global chat channel for cross-server interaction',
 			)
 			.addChannelOption((opt) =>
 				opt
-					.setName("channel")
-					.setDescription("Select a channel for global chat (optional)")
+					.setName('channel')
+					.setDescription('Select a channel for global chat (optional)')
 					.addChannelTypes(ChannelType.GuildText)
 					.setRequired(false),
 			),
@@ -35,7 +35,7 @@ module.exports = {
 		const { embedFooter } = helpers.discord;
 
 		const apiUrl = kythiaConfig?.addons?.globalchat?.apiUrl;
-		const webhookName = "Kythia Global Chat";
+		const webhookName = 'Kythia Global Chat';
 
 		await interaction.deferReply();
 
@@ -55,10 +55,10 @@ module.exports = {
 				existingChannelId = found.globalChannelId;
 			}
 		} catch (error) {
-			logger.error("Failed to check existing guild from API:", error);
+			logger.error('Failed to check existing guild from API:', error);
 			const embed = new EmbedBuilder()
-				.setColor("Red")
-				.setDescription(await t(interaction, "globalchat.setup.check.failed"));
+				.setColor('Red')
+				.setDescription(await t(interaction, 'globalchat.setup.check.failed'));
 			return interaction.editReply({
 				embeds: [embed],
 				flags: MessageFlags.Ephemeral,
@@ -69,8 +69,8 @@ module.exports = {
 			guildId: interaction.guild.id,
 		});
 		if (alreadySetup || localDbChat) {
-			const embed = new EmbedBuilder().setColor("Red").setDescription(
-				await t(interaction, "globalchat.setup.already.set", {
+			const embed = new EmbedBuilder().setColor('Red').setDescription(
+				await t(interaction, 'globalchat.setup.already.set', {
 					channel: `<#${existingChannelId || localDbChat?.globalChannelId}>`,
 				}),
 			);
@@ -80,7 +80,7 @@ module.exports = {
 			});
 		}
 
-		let channel = interaction.options.getChannel("channel");
+		let channel = interaction.options.getChannel('channel');
 		let usedChannelId;
 		let webhook;
 
@@ -93,8 +93,8 @@ module.exports = {
 				});
 
 				const setupEmbed = new EmbedBuilder()
-					.setTitle(await t(interaction, "globalchat.setup.title"))
-					.setDescription(await t(interaction, "globalchat.setup.intro.desc"))
+					.setTitle(await t(interaction, 'globalchat.setup.title'))
+					.setDescription(await t(interaction, 'globalchat.setup.intro.desc'))
 					.setColor(kythia.bot.color)
 					.setFooter(await embedFooter(interaction))
 					.setTimestamp(new Date());
@@ -104,9 +104,9 @@ module.exports = {
 				});
 			} catch (_err) {
 				const embed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						await t(interaction, "globalchat.setup.webhook.failed"),
+						await t(interaction, 'globalchat.setup.webhook.failed'),
 					);
 				return interaction.editReply({
 					embeds: [embed],
@@ -117,7 +117,7 @@ module.exports = {
 			let createdChannel;
 			try {
 				createdChannel = await interaction.guild.channels.create({
-					name: "🌏┃global・chat",
+					name: '🌏┃global・chat',
 					type: ChannelType.GuildText,
 					topic: `${webhookName} | Make friends, share memes, and bring your best vibes with kythia! `,
 					permissionOverwrites: [
@@ -148,7 +148,7 @@ module.exports = {
 					channel = await interaction.guild.channels.fetch(createdChannel.id);
 				} catch (fetchError) {
 					logger.error(
-						"❌ Failed to re-fetch the newly created channel:",
+						'❌ Failed to re-fetch the newly created channel:',
 						fetchError,
 					);
 				}
@@ -161,8 +161,8 @@ module.exports = {
 				});
 
 				const setupEmbed = new EmbedBuilder()
-					.setTitle(await t(interaction, "globalchat.setup.title"))
-					.setDescription(await t(interaction, "globalchat.setup.intro.desc"))
+					.setTitle(await t(interaction, 'globalchat.setup.title'))
+					.setDescription(await t(interaction, 'globalchat.setup.intro.desc'))
 					.setColor(kythia.bot.color)
 					.setFooter(await embedFooter(interaction))
 					.setTimestamp(new Date());
@@ -173,9 +173,9 @@ module.exports = {
 			} catch (err) {
 				logger.info(err);
 				const embed = new EmbedBuilder()
-					.setColor("Red")
+					.setColor('Red')
 					.setDescription(
-						await t(interaction, "globalchat.setup.create.channel.failed"),
+						await t(interaction, 'globalchat.setup.create.channel.failed'),
 					);
 				return interaction.editReply({
 					embeds: [embed],
@@ -192,14 +192,14 @@ module.exports = {
 				webhookToken: webhook.token,
 			});
 		} catch (err) {
-			logger.error("Failed to save GlobalChat to DB:", err);
+			logger.error('Failed to save GlobalChat to DB:', err);
 		}
 
 		try {
 			await fetch(`${apiUrl}/add`, {
-				method: "POST",
+				method: 'POST',
 				headers: {
-					"Content-Type": "application/json",
+					'Content-Type': 'application/json',
 					Authorization: `Bearer ${kythiaConfig.addons.globalchat.apiKey}`,
 				},
 				body: JSON.stringify({
@@ -211,9 +211,9 @@ module.exports = {
 			});
 		} catch (_err) {
 			const embed = new EmbedBuilder()
-				.setColor("Red")
+				.setColor('Red')
 				.setDescription(
-					await t(interaction, "globalchat.setup.register.api.failed"),
+					await t(interaction, 'globalchat.setup.register.api.failed'),
 				);
 			return interaction.editReply({
 				embeds: [embed],
@@ -221,8 +221,8 @@ module.exports = {
 			});
 		}
 
-		const embed = new EmbedBuilder().setColor("Green").setDescription(
-			await t(interaction, "globalchat.setup.success", {
+		const embed = new EmbedBuilder().setColor('Green').setDescription(
+			await t(interaction, 'globalchat.setup.success', {
 				channel: `<#${usedChannelId}>`,
 			}),
 		);

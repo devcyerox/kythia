@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const session = require("express-session");
+const session = require('express-session');
 
 /**
  * Session store with in-memory caching to reduce calls to the backing store.

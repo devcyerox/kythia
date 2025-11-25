@@ -3,12 +3,12 @@
  * @type: Database Migration
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
 module.exports = {
 	async up(queryInterface, DataTypes) {
-		await queryInterface.createTable("market_transactions", {
+		await queryInterface.createTable('market_transactions', {
 			transactionId: {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
@@ -26,11 +26,11 @@ module.exports = {
 		});
 
 		// Indexes
-		await queryInterface.addIndex("market_transactions", ["userId"]);
-		await queryInterface.addIndex("market_transactions", ["userId", "assetId"]);
+		await queryInterface.addIndex('market_transactions', ['userId']);
+		await queryInterface.addIndex('market_transactions', ['userId', 'assetId']);
 	},
 
 	async down(queryInterface) {
-		await queryInterface.dropTable("market_transactions");
+		await queryInterface.dropTable('market_transactions');
 	},
 };

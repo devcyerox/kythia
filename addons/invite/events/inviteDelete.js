@@ -3,10 +3,10 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.9.12-beta
+ * @version 0.10.0-beta
  */
 
-const { getGuildInviteCache } = require("../helpers");
+const { getGuildInviteCache } = require('../helpers');
 
 module.exports = async (_bot, invite) => {
 	try {
