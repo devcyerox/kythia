@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/quest/commands/_command.js
+ * @namespace: addons/invite/commands/_command.js
  * @type: Command Group Definition
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
@@ -7,14 +7,12 @@
  */
 const {
 	SlashCommandBuilder,
-	PermissionFlagsBits,
 	InteractionContextType,
 } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('quest')
-		.setDescription('🎁 Manage the Discord Quest Notifier system.')
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+		.setName('invites')
+		.setDescription('🔗 Manage invites and rewards')
 		.setContexts(InteractionContextType.Guild),
 };

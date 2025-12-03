@@ -1,0 +1,65 @@
+/**
+ * @namespace: addons/invite/commands/add.js
+ * @type: Command
+ * @copyright © 2025 kenndeclouv
+ * @assistant chaa & graa
+ * @version 0.10.0-beta
+ */
+
+const { MessageFlags, PermissionFlagsBits } = require('discord.js');
+
+module.exports = {
+	subcommand: true,
+	data: (subcommand) =>
+		subcommand
+			.setName('add')
+			.setDescription('Add invites to a user (Admin only)')
+			.addUserOption((opt) =>
+				opt.setName('user').setDescription('User').setRequired(true),
+			)
+			.addIntegerOption((opt) =>
+				opt.setName('number').setDescription('Amount').setRequired(true),
+			),
+	permissions: [
+		PermissionFlagsBits.ManageGuild,
+		PermissionFlagsBits.Administrator,
+	],
+	async execute(interaction, container) {
+		const { models, helpers, t } = container;
+		const { simpleContainer } = helpers.discord;
+		const { Invite } = models;
+		const guildId = interaction.guild.id;
+
+		await interaction.deferReply();
+
+		const target = interaction.options.getUser('user');
+		const number = interaction.options.getInteger('number');
+		const amountToAdd = Math.abs(number);
+
+		const [row] = await Invite.findOrCreateWithCache({
+			where: { guildId, userId: target.id },
+			defaults: { invites: 0, guildId, userId: target.id },
+		});
+
+		row.invites = (row.invites || 0) + amountToAdd;
+
+		await row.saveAndUpdateCache();
+
+		const title = await t(interaction, 'invite.invite.command.title');
+		const successMsg = await t(interaction, 'invite.command.add.success', {
+			amount: amountToAdd,
+			user: `<@${target.id}>`,
+			total: row.invites,
+		});
+
+		const msg = `## ${title}\n${successMsg}`;
+		const components = await simpleContainer(interaction, msg, {
+			color: 'Green',
+		});
+
+		return interaction.editReply({
+			components,
+			flags: MessageFlags.IsComponentsV2,
+		});
+	},
+};

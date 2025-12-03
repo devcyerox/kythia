@@ -1,8 +1,9 @@
 /**
- * @namespace: addons/core/commands/developer/debug-cache.js
+ * @namespace: addons/core/commands/utils/debug.js
  * @type: Command
  * @copyright © 2025 kenndeclouv
- * @description: Ultimate stress test for KythiaModel (Playlist + Tracks scenario)
+ * @assistant chaa & graa
+ * @version 0.10.0-beta
  */
 
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
