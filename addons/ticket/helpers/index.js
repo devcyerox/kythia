@@ -503,10 +503,12 @@ async function closeTicket(interaction, container, reason = null) {
 			});
 		}
 
-		const logsChannel = interaction.guild.channels.cache.get(
+		const logsChannel = await getChannelSafe(
+			interaction.guild,
 			ticketConfig.logsChannelId,
 		);
-		const transcriptChannel = interaction.guild.channels.cache.get(
+		const transcriptChannel = await getChannelSafe(
+			interaction.guild,
 			ticketConfig.transcriptChannelId,
 		);
 

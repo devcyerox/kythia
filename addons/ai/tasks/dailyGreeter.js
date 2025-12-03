@@ -10,10 +10,11 @@ const { getAndUseNextAvailableToken } = require('../helpers/gemini');
 const { GoogleGenAI } = require('@google/genai');
 const cron = require('node-cron');
 
-function findMainChannel(guild, client) {
+async function findMainChannel(guild, client) {
+	const { getTextChannelSafe } = client.container.helpers.discord;
 	let mainChannel = null;
 	if (guild.systemChannelId) {
-		mainChannel = guild.channels.cache.get(guild.systemChannelId);
+		mainChannel = await getTextChannelSafe(guild, guild.systemChannelId);
 	}
 	if (!mainChannel) {
 		mainChannel = guild.channels.cache
@@ -50,7 +51,7 @@ function initializeAiTasks(bot) {
 
 				for (const [guildId, guild] of guilds) {
 					try {
-						const mainChannel = findMainChannel(guild, client);
+						const mainChannel = await findMainChannel(guild, client);
 						if (!mainChannel) continue;
 
 						const personaPrompt = kythiaConfig.addons.ai.personaPrompt;

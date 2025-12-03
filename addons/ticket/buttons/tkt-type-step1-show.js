@@ -18,7 +18,7 @@ const {
 module.exports = {
 	execute: async (interaction, container) => {
 		const { t, helpers, models } = container;
-		const { simpleContainer } = helpers.discord;
+		const { simpleContainer, getTextChannelSafe } = helpers.discord;
 		const { TicketPanel } = models;
 
 		try {
@@ -37,9 +37,9 @@ module.exports = {
 				});
 			}
 
-			const panelOptions = panels.map((panel) => ({
+			const panelOptions = panels.map(async (panel) => ({
 				label: panel.title.slice(0, 100),
-				description: `Panel in #${interaction.guild.channels.cache.get(panel.channelId)?.name || panel.channelId}`,
+				description: `Panel in #${(await getTextChannelSafe(interaction.guild, panel.channelId)?.name) || panel.channelId}`,
 				value: panel.messageId,
 			}));
 

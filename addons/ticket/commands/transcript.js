@@ -29,7 +29,7 @@ module.exports = {
 		const { models, t, kythiaConfig, helpers } = container;
 		const { Ticket, TicketConfig } = models;
 		const { convertColor } = helpers.color;
-		const { simpleContainer } = helpers.discord;
+		const { simpleContainer, getChannelSafe } = helpers.discord;
 
 		const ticket = await Ticket.getCache({
 			channelId: interaction.channel.id,
@@ -55,9 +55,7 @@ module.exports = {
 			});
 		}
 
-		const transcriptChannel = interaction.guild.channels.cache.get(
-			ticketConfig.transcriptChannelId,
-		);
+		const transcriptChannel = await getChannelSafe(interaction.guild, ticketConfig.transcriptChannelId);
 
 		if (!transcriptChannel) {
 			const desc = await t(

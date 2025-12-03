@@ -17,6 +17,7 @@ async function sendLogsWarning(
 	setting,
 	userId = message.author.id,
 ) {
+	const { getTextChannelSafe } = message.client.container.helpers.discord;
 	// Send warning message in channel
 	const warningMessage = await t(
 		message,
@@ -79,7 +80,10 @@ async function sendLogsWarning(
 	}
 
 	// Send a log embed to the moderation log channel, if configured
-	const logChannel = message.guild.channels.cache.get(setting.modLogChannelId);
+	const logChannel = await getTextChannelSafe(
+		message.guild,
+		setting.modLogChannelId,
+	);
 	if (logChannel) {
 		const embed = {
 			color: convertColor('Red', { from: 'discord', to: 'decimal' }),

@@ -5,10 +5,7 @@
  * @assistant chaa & graa
  * @version 0.10.0-beta
  */
-const {
-	SlashCommandBuilder,
-	InteractionContextType,
-} = require('discord.js');
+const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()

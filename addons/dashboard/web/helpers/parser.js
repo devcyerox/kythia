@@ -16,6 +16,7 @@ function hexToRgb(hex) {
 }
 
 function parseDiscordMarkdown(text, guild) {
+	const { getChannelSafe } = guild.client.container.helpers.discord;
 	if (!text) return '';
 
 	const placeholders = {};
@@ -60,8 +61,8 @@ function parseDiscordMarkdown(text, guild) {
 			const member = guild.members.cache.get(userId);
 			return `<span class="mention" title="${member ? member.user.tag : userId}">@${member ? member.displayName : 'unknown-user'}</span>`;
 		});
-		text = text.replace(/&lt;#(\d+)&gt;/g, (_match, channelId) => {
-			const channel = guild.channels.cache.get(channelId);
+		text = text.replace(/&lt;#(\d+)&gt;/g, async (_match, channelId) => {
+			const channel = await getChannelSafe(guild, channelId);
 			return `<span class="mention">#${channel ? channel.name : 'deleted-channel'}</span>`;
 		});
 		text = text.replace(/&lt;@&(\d+)&gt;/g, (_match, roleId) => {

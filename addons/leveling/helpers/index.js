@@ -35,11 +35,13 @@ function _drawRoundedRect(ctx, x, y, width, height, radius, fillStyle) {
 const levelUpXp = (level) => level * level * 50;
 
 const addXp = async (guildId, userId, xpToAdd, message, channel) => {
+	const { getTextChannelSafe } = message.client.container.helpers.discord;
 	if (!channel) {
 		const setting = await ServerSetting.getCache({ guildId: message.guild.id });
 		if (setting?.levelingChannelId) {
 			channel =
-				message.guild.channels.cache.get(setting.levelingChannelId) || null;
+				(await getTextChannelSafe(message.guild, setting.levelingChannelId)) ||
+				null;
 		}
 	}
 	let user = await User.getCache({ userId: userId, guildId: guildId });

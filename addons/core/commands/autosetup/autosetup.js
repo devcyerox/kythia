@@ -87,8 +87,9 @@ module.exports = {
 	permissions: PermissionFlagsBits.ManageGuild,
 	botPermissions: PermissionFlagsBits.ManageGuild,
 	async execute(interaction, container) {
-		const { t, models } = container;
+		const { t, models, helpers } = container;
 		const { ServerSetting } = models;
+		const { getTextChannelSafe } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
 		const subcommand = interaction.options.getSubcommand();
@@ -110,7 +111,7 @@ module.exports = {
 						type: ChannelType.GuildCategory,
 					});
 				} else {
-					category = guild.channels.cache.get(existingCategoryId);
+					category = await getTextChannelSafe(guild, existingCategoryId);
 					if (!category || category.type !== ChannelType.GuildCategory) {
 						return interaction.editReply({
 							content: await t(
@@ -210,7 +211,7 @@ module.exports = {
 						type: ChannelType.GuildCategory,
 					});
 				} else {
-					category = guild.channels.cache.get(existingCategoryId);
+					category = await getTextChannelSafe(guild, existingCategoryId);
 					if (!category || category.type !== ChannelType.GuildCategory) {
 						return interaction.editReply({
 							content: await t(
@@ -310,7 +311,7 @@ module.exports = {
 						type: ChannelType.GuildCategory,
 					});
 				} else {
-					category = guild.channels.cache.get(existingCategoryId);
+					category = await getTextChannelSafe(guild, existingCategoryId);
 					if (!category || category.type !== ChannelType.GuildCategory) {
 						return interaction.editReply({
 							content: await t(
@@ -435,7 +436,7 @@ module.exports = {
 						type: ChannelType.GuildCategory,
 					});
 				} else {
-					category = guild.channels.cache.get(existingCategoryId);
+					category = await getTextChannelSafe(guild, existingCategoryId);
 					if (!category || category.type !== ChannelType.GuildCategory) {
 						return interaction.editReply({
 							content: await t(

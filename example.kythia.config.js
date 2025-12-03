@@ -15,6 +15,7 @@
  *
  * ===================================================================
  * DM me if you need any help https://discord.com/users/1158654757183959091
+ * Join my server https://dsc.gg/kythia
  */
 
 function loadKythiaConfig() {
@@ -128,11 +129,12 @@ function loadKythiaConfig() {
 		/** -------------------------------------------------------------------
 		 * IV. TURN ADDONS ON/OFF (the default is all addons are on)
 		 * for example: addons: { nsfw: false, music: true }
-		 * you can turn it all off by addons: { all: false }
+		 * you can turn it all off by addons: { all: active: false }
 		 * you can leave it empty if you dont have any addon
 		 * ------------------------------------------------------------------- */
 		addons: {
 			all: {
+				// turn it on or off
 				active: true,
 			},
 			adventure: {
@@ -398,7 +400,8 @@ function loadKythiaConfig() {
 			statsBannerImage: 'https://placehold.co/800x300.png?text=Stats+Banner',
 			helpBannerImage: 'https://placehold.co/800x300.png?text=Help+Banner',
 			aboutBannerImage: 'https://placehold.co/800x300.png?text=About+Banner',
-			tempvoiceBannerImage: 'https://placehold.co/800x300.png?text=Temp+Voice+Banner',
+			tempvoiceBannerImage:
+				'https://placehold.co/800x300.png?text=Temp+Voice+Banner',
 			// link to error status page
 			statusPage: 'https://status.kythia.my.id',
 			// webhook notification when error on or off

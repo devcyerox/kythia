@@ -6,30 +6,37 @@
  * @version 0.10.0-beta
  */
 
-const InviteModel = require('../database/models/Invite');
 const { getGuildInviteCache, refreshGuildInvites } = require('../helpers');
-const ServerSetting = require('@coreModels/ServerSetting');
-const { EmbedBuilder, PermissionsBitField } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
+const { PermissionsBitField, MessageFlags } = require('discord.js');
 
 const FAKE_ACCOUNT_AGE_DAYS = 7;
 
-module.exports = async (_bot, member) => {
+module.exports = async (bot, member) => {
 	if (!member || !member.guild) return;
 	const guild = member.guild;
+
+	const container = bot.client.container;
+	const { models, helpers, t, logger, kythiaConfig } = container;
+	const { ServerSetting, Invite, InviteHistory } = models;
+	const { simpleContainer } = helpers.discord;
+	const { convertColor } = helpers.color;
 
 	let inviteChannelId = null;
 	let setting;
 	try {
 		setting = await ServerSetting.getCache({ guildId: guild.id });
 		inviteChannelId = setting?.inviteChannelId;
-	} catch (_e) {}
+	} catch (e) {
+		logger.error(
+			`[INVITE TRACKER] Error fetching server setting: ${e.message}`,
+		);
+	}
 
-	if (!setting.inviteChannelId || !setting.invitesOn) return;
+	if (!setting?.inviteChannelId || !setting?.invitesOn) return;
 
 	const me = guild.members.me || (await guild.members.fetchMe());
 	if (!me.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
-		console.warn(
+		logger.warn(
 			`[INVITE TRACKER] Missing 'Manage Guild' permission in ${guild.name}`,
 		);
 	}
@@ -44,7 +51,6 @@ module.exports = async (_bot, member) => {
 	try {
 		const invitesNow = await guild.invites.fetch();
 
-		// 1. Try to detect which invite was used
 		for (const invite of invitesNow.values()) {
 			const before = cacheBefore.get(invite.code);
 			const beforeUses = before?.uses ?? 0;
@@ -58,56 +64,70 @@ module.exports = async (_bot, member) => {
 			}
 		}
 
-		// 2. If not found, check for vanity
-		if (!inviterId) {
-			if (guild.vanityURLCode) {
-				try {
-					const vanity = await guild.fetchVanityData();
-					if (vanity && vanity.uses > (cacheBefore.get('VANITY')?.uses ?? 0)) {
-						inviteType = 'vanity';
-						inviteCode = guild.vanityURLCode;
-					}
-				} catch (_e) {}
-			}
+		if (!inviterId && guild.vanityURLCode) {
+			try {
+				const vanity = await guild.fetchVanityData();
+				if (vanity && vanity.uses > (cacheBefore.get('VANITY')?.uses ?? 0)) {
+					inviteType = 'vanity';
+					inviteCode = guild.vanityURLCode;
+				}
+			} catch (_e) {}
 		}
 
-		// 3. If still not found, check if it's a bot join (oauth) or unknown
 		if (!inviterId && inviteType === 'unknown') {
 			inviteType = member.user.bot ? 'oauth' : 'unknown';
 		}
 
-		// 4. Update invite stats in DB
-		let isFake = false;
 		const accountAgeDays =
 			(Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24);
+		let isFake = false;
+
 		if (inviterId) {
 			isFake = accountAgeDays < FAKE_ACCOUNT_AGE_DAYS;
-			const [inviteData] = await InviteModel.findOrCreate({
+
+			const [inviteData] = await Invite.findOrCreateWithCache({
 				where: { guildId: guild.id, userId: inviterId },
+				defaults: {
+					guildId: guild.id,
+					userId: inviterId,
+					invites: 0,
+					fake: 0,
+					leaves: 0,
+				},
 			});
 
 			if (isFake) {
-				await inviteData.increment('fake');
-				console.log(
-					`[INVITE TRACKER] ${member.user.tag} joined (FAKE), invited by user ${inviterId}`,
-				);
+				inviteData.fake = (inviteData.fake || 0) + 1;
 			} else {
-				await inviteData.increment('invites');
-				console.log(
-					`[INVITE TRACKER] ${member.user.tag} joined (real), invited by user ${inviterId}`,
-				);
+				inviteData.invites = (inviteData.invites || 0) + 1;
 			}
+
+			await inviteData.saveAndUpdateCache();
+
+			await InviteHistory.create({
+				guildId: guild.id,
+				inviterId: inviterId,
+				memberId: member.id,
+				status: 'active',
+				isFake: isFake,
+			});
+
+			logger.info(
+				`[INVITE] ${member.user.tag} joined (${isFake ? 'FAKE' : 'REAL'}), invited by ${inviterId}`,
+			);
 		}
 
-		// 5. Send professional embed to invite channel if set
 		if (inviteChannelId) {
-			const channel = guild.channels.cache.get(inviteChannelId);
+			const channel = await guild.channels
+				.fetch(inviteChannelId)
+				.catch(() => null);
 			if (channel?.isTextBased && channel.viewable) {
 				let embedDesc = '';
 				const title = await t(
 					guild,
 					'invite.events.guildMemberAdd.tracker.title',
 				);
+
 				const accountAgeStr = await t(
 					guild,
 					'invite.events.guildMemberAdd.tracker.account.age',
@@ -117,103 +137,82 @@ module.exports = async (_bot, member) => {
 				);
 
 				if (inviterId) {
-					// Normal invite
 					const inviteTypeStr = isFake
 						? await t(guild, 'invite.events.guildMemberAdd.tracker.type.fake')
 						: await t(guild, 'invite.events.guildMemberAdd.tracker.type.real');
-					embedDesc =
-						`## ${title}\n` +
-						(await t(guild, 'invite.events.guildMemberAdd.tracker.joined.by', {
+
+					const joinedBy = await t(
+						guild,
+						'invite.events.guildMemberAdd.tracker.joined.by',
+						{
 							user: `<@${member.id}>`,
 							username: member.user.username,
 							inviter: `<@${inviterId}>`,
 							inviterTag: inviterUser?.tag || inviterId,
 							inviteType: inviteTypeStr,
-						})) +
-						'\n' +
-						(await t(guild, 'invite.events.guildMemberAdd.tracker.code', {
+						},
+					);
+
+					const codeUsed = await t(
+						guild,
+						'invite.events.guildMemberAdd.tracker.code',
+						{
 							code: inviteCode,
-						})) +
-						'\n' +
-						accountAgeStr;
+						},
+					);
+
+					embedDesc = `${joinedBy}\n${codeUsed}\n${accountAgeStr}`;
 				} else if (inviteType === 'vanity') {
-					embedDesc =
-						`## ${title}\n` +
-						(await t(
-							guild,
-							'invite.events.guildMemberAdd.tracker.joined.vanity',
-							{
-								user: `<@${member.id}>`,
-								username: member.user.username,
-								code: inviteCode,
-							},
-						)) +
-						'\n' +
-						accountAgeStr;
+					const joinedVanity = await t(
+						guild,
+						'invite.events.guildMemberAdd.tracker.joined.vanity',
+						{
+							user: `<@${member.id}>`,
+							username: member.user.username,
+							code: inviteCode,
+						},
+					);
+					embedDesc = `${joinedVanity}\n${accountAgeStr}`;
 				} else if (inviteType === 'oauth') {
-					embedDesc =
-						`## ${title}\n` +
-						(await t(
-							guild,
-							'invite.events.guildMemberAdd.tracker.joined.oauth',
-							{
-								user: `<@${member.id}>`,
-								username: member.user.username,
-							},
-						)) +
-						'\n' +
-						accountAgeStr;
+					const joinedOauth = await t(
+						guild,
+						'invite.events.guildMemberAdd.tracker.joined.oauth',
+						{
+							user: `<@${member.id}>`,
+							username: member.user.username,
+						},
+					);
+					embedDesc = `${joinedOauth}\n${accountAgeStr}`;
 				} else {
-					embedDesc =
-						`## ${title}\n` +
-						(await t(
-							guild,
-							'invite.events.guildMemberAdd.tracker.joined.unknown',
-							{
-								user: `<@${member.id}>`,
-								username: member.user.username,
-							},
-						)) +
-						'\n' +
-						accountAgeStr;
+					const joinedUnknown = await t(
+						guild,
+						'invite.events.guildMemberAdd.tracker.joined.unknown',
+						{
+							user: `<@${member.id}>`,
+							username: member.user.username,
+						},
+					);
+					embedDesc = `${joinedUnknown}\n${accountAgeStr}`;
 				}
 
-				const embed = new EmbedBuilder()
-					.setColor(kythia?.bot?.color || 0x2b2d31)
-					.setAuthor({
-						name: member.user.tag,
-						iconURL: member.user.displayAvatarURL(),
-					})
-					.setDescription(embedDesc)
-					.setTimestamp();
+				const finalContent = `## ${title}\n${embedDesc}`;
 
-				channel.send({ embeds: [embed] }).catch(() => {});
+				const components = await simpleContainer(member, finalContent, {
+					color: convertColor(kythiaConfig.bot.color, {
+						from: 'hex',
+						to: 'decimal',
+					}),
+				});
+
+				channel.send({ components: components, flags: MessageFlags.IsComponentsV2 });
+			} else {
+				logger.warn(
+					`[INVITE] Invite channel ${inviteChannelId} not found in ${guild.name}`,
+				);
 			}
 		}
 	} catch (err) {
-		// Professional error embed to invite channel if possible
-		if (inviteChannelId) {
-			try {
-				const channel = guild.channels.cache.get(inviteChannelId);
-				if (channel?.isTextBased && channel.viewable) {
-					const embed = new EmbedBuilder()
-						.setColor(0xed4245)
-						.setDescription(
-							`## ${await t(guild, 'invite.events.guildMemberAdd.tracker.error.title')}\n` +
-								(await t(
-									guild,
-									'invite.events.guildMemberAdd.tracker.error.desc',
-								)),
-						)
-						.setTimestamp();
-					channel.send({ embeds: [embed] }).catch(() => {});
-				}
-			} catch {}
-		}
-		console.error(
-			`[INVITE TRACKER] Error on guildMemberAdd for ${guild.name}:`,
-			err,
-		);
+		logger.error(`[INVITE] Error guildMemberAdd:`, err);
 	} finally {
 		await refreshGuildInvites(guild);
 	}

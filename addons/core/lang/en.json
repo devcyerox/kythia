@@ -4240,6 +4240,13 @@
 						"desc": "An error occurred while processing the invite tracker. Please contact the server admin if this persists."
 					}
 				}
+			},
+			"guildMemberRemove": {
+				"tracker": {
+					"title": "Member Left",
+					"left": "{user} ({username}) left. Invited by {inviter}",
+					"unknown": "{user} ({username}) left. (Inviter unknown or history missing)"
+				}
 			}
 		},
 		"invite": {

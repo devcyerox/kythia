@@ -5,7 +5,11 @@
  * @assistant chaa & graa
  * @version 0.10.0-beta
  */
-const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const {
+	EmbedBuilder,
+	PermissionFlagsBits,
+	MessageFlags,
+} = require('discord.js');
 
 module.exports = {
 	data: (subcommand) =>
@@ -26,9 +30,9 @@ module.exports = {
 	botPermissions: PermissionFlagsBits.ModerateMembers,
 	async execute(interaction, container) {
 		const { t, helpers, models, logger } = container;
-		const { embedFooter } = helpers.discord;
+		const { embedFooter, getTextChannelSafe } = helpers.discord;
 		const { User, ServerSetting } = models;
-		await interaction.deferReply({ ephemeral: true });
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
 		const setting = await ServerSetting.getCache({
 			guildId: interaction.guild.id,
@@ -97,7 +101,8 @@ module.exports = {
 		}
 
 		if (setting?.modLogChannelId) {
-			const modLogChannel = interaction.guild.channels.cache.get(
+			const modLogChannel = await getTextChannelSafe(
+				interaction.guild,
 				setting.modLogChannelId,
 			);
 

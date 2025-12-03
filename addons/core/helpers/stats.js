@@ -211,6 +211,7 @@ async function resolvePlaceholders(str, data, locale) {
  * (Fungsi ini udah 100% bener dari kodemu tadi, gak aku ubah)
  */
 async function updateStats(client, activeSettings) {
+	const { getChannelSafe } = client.container.helpers.discord;
 	logger.info(`Processing stats for ${activeSettings.length} guild(s)...`);
 
 	for (const setting of activeSettings) {
@@ -283,7 +284,7 @@ async function updateStats(client, activeSettings) {
 			for (const stat of setting.serverStats) {
 				if (!stat.enabled || !stat.channelId || !stat.format) continue;
 
-				const channel = guild.channels.cache.get(stat.channelId);
+				const channel = await getChannelSafe(guild, stat.channelId);
 				if (
 					!channel ||
 					![ChannelType.GuildVoice, ChannelType.GuildStageVoice].includes(

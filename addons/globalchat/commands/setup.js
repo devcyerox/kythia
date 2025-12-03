@@ -32,7 +32,7 @@ module.exports = {
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers, logger, client } = container;
 		const { GlobalChat } = models;
-		const { embedFooter } = helpers.discord;
+		const { embedFooter, getChannelSafe } = helpers.discord;
 
 		const apiUrl = kythiaConfig?.addons?.globalchat?.apiUrl;
 		const webhookName = 'Kythia Global Chat';
@@ -145,7 +145,7 @@ module.exports = {
 				});
 
 				try {
-					channel = await interaction.guild.channels.fetch(createdChannel.id);
+					channel = await getChannelSafe(interaction.guild, createdChannel.id);
 				} catch (fetchError) {
 					logger.error(
 						'❌ Failed to re-fetch the newly created channel:',

@@ -834,9 +834,9 @@ module.exports = {
 	botPermissions: PermissionFlagsBits.ManageGuild,
 	async autocomplete(interaction) {
 		const container = interaction.client.container;
-		const { t, models } = container;
+		const { t, models, helpers } = container;
 		const { ServerSetting } = models;
-
+		const { getChannelSafe } = helpers.discord;
 		const focused = interaction.options.getFocused();
 		const settings = await ServerSetting.getCache({
 			guildId: interaction.guild.id,
@@ -844,12 +844,12 @@ module.exports = {
 		const stats = settings?.serverStats ?? [];
 
 		const filtered = stats
-			.filter((stat) => {
-				const channel = interaction.guild.channels.cache.get(stat.channelId);
+			.filter(async (stat) => {
+				const channel = await getChannelSafe(interaction.guild, stat.channelId);
 				return channel?.name.toLowerCase().includes(focused.toLowerCase());
 			})
 			.map(async (stat) => {
-				const channel = interaction.guild.channels.cache.get(stat.channelId);
+				const channel = await getChannelSafe(interaction.guild, stat.channelId);
 				return {
 					name: `${channel.name} (${stat.enabled ? await t(interaction, 'core.setting.setting.stats.enabled.text') : await t(interaction, 'core.setting.setting.stats.disabled.text')})`,
 					value: channel.id,
@@ -860,7 +860,7 @@ module.exports = {
 	},
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers, models, logger } = container;
-		const { embedFooter } = helpers.discord;
+		const { embedFooter, getChannelSafe } = helpers.discord;
 		const { ServerSetting } = models;
 
 		await interaction.deferReply({ ephemeral: true });
@@ -1558,7 +1558,7 @@ module.exports = {
 						}
 						const list = ignoredChannels
 							.map(async (id) => {
-								const ch = interaction.guild.channels.cache.get(id);
+								const ch = await getChannelSafe(interaction.guild, id);
 								return ch
 									? `<#${id}>`
 									: await t(interaction, 'core.setting.setting.invalid.id', {
@@ -1845,7 +1845,7 @@ module.exports = {
 					}
 					case 'remove': {
 						const statsId = interaction.options.getString('stats');
-						const channel = interaction.guild.channels.cache.get(statsId);
+						const channel = await getChannelSafe(interaction.guild, statsId);
 						const before = serverSetting.serverStats?.length || 0;
 						serverSetting.serverStats = serverSetting.serverStats?.filter(
 							(s) => s.channelId !== statsId,

@@ -165,6 +165,28 @@ async function simpleContainer(interaction, content, options = {}) {
 	return [replyContainer];
 }
 
+async function getChannelSafe(guild, channelId) {
+	if (!channelId) return null;
+	let channel = guild.channels.cache.get(channelId);
+
+	if (!channel) {
+		try {
+			channel = await guild.channels.fetch(channelId).catch(() => null);
+		} catch (_e) {
+			return null;
+		}
+	}
+	return channel;
+}
+
+async function getTextChannelSafe(guild, channelId) {
+	const channel = await getChannelSafe(guild, channelId);
+	if (channel?.isTextBased() && channel.viewable) {
+		return channel;
+	}
+	return null;
+}
+
 module.exports = {
 	isOwner,
 	isTeam,
@@ -173,4 +195,6 @@ module.exports = {
 	setVoiceChannelStatus,
 	isVoterActive,
 	simpleContainer,
+	getChannelSafe,
+	getTextChannelSafe,
 };

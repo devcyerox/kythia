@@ -73,6 +73,8 @@ const {
 	setVoiceChannelStatus,
 	isVoterActive,
 	simpleContainer,
+	getChannelSafe,
+	getTextChannelSafe,
 } = require('@coreHelpers/discord'); // Discord helper funcs for permissions/identity
 const {
 	checkCooldown,
@@ -126,6 +128,8 @@ const dependencies = {
 			setVoiceChannelStatus,
 			isVoterActive,
 			simpleContainer,
+			getChannelSafe,
+			getTextChannelSafe,
 		},
 		color: { convertColor },
 		time: { checkCooldown, formatDuration, parseDuration },

@@ -11,13 +11,10 @@ module.exports = {
 		await queryInterface.createTable('invite_histories', {
 			id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
 			guildId: { type: DataTypes.STRING, allowNull: false },
+			inviterId: { type: DataTypes.STRING, allowNull: false },
 			memberId: { type: DataTypes.STRING, allowNull: false },
-			inviterId: { type: DataTypes.STRING, allowNull: true },
-			inviteCode: { type: DataTypes.STRING, allowNull: true },
-			status: {
-				type: DataTypes.ENUM('active', 'left'),
-				defaultValue: 'active',
-			},
+			status: { type: DataTypes.STRING, defaultValue: 'active' },
+			isFake: { type: DataTypes.BOOLEAN, defaultValue: false },
 			createdAt: { type: DataTypes.DATE, allowNull: false },
 			updatedAt: { type: DataTypes.DATE, allowNull: false },
 		});

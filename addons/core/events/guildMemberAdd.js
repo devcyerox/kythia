@@ -17,7 +17,7 @@ module.exports = async (bot, member) => {
 	const container = bot.client.container;
 	const { models, helpers, kythiaConfig } = container;
 	const { ServerSetting, User } = models;
-	const { embedFooter } = helpers.discord;
+	const { embedFooter, getTextChannelSafe } = helpers.discord;
 
 	let user = await User.getCache({
 		userId: member.user.id,
@@ -35,7 +35,7 @@ module.exports = async (bot, member) => {
 	const setting = await ServerSetting.getCache({ guildId: guildId });
 	if (!setting || !setting.welcomeInOn) return;
 
-	const channel = guild.channels.cache.get(setting.welcomeInChannelId);
+	const channel = await getTextChannelSafe(guild, setting.welcomeInChannelId);
 	if (!channel) return console.log('Welcome channel not found');
 
 	if (setting.welcomeRoleId) {

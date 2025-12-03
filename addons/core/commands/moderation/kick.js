@@ -25,7 +25,7 @@ module.exports = {
 	botPermissions: PermissionFlagsBits.KickMembers,
 	async execute(interaction, container) {
 		const { t, helpers, models } = container;
-		const { embedFooter } = helpers.discord;
+		const { embedFooter, getTextChannelSafe } = helpers.discord;
 		const { ServerSetting } = models;
 
 		await interaction.deferReply();
@@ -53,7 +53,8 @@ module.exports = {
 		if (member) {
 			await member.kick(reason);
 			if (setting.modLogChannelId) {
-				const modLogChannel = interaction.guild.channels.cache.get(
+				const modLogChannel = await getTextChannelSafe(
+					interaction.guild,
 					setting.modLogChannelId,
 				);
 				if (modLogChannel) {
