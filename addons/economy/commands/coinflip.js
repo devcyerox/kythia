@@ -6,6 +6,7 @@
  * @version 0.10.0-beta
  */
 const { EmbedBuilder } = require('discord.js');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -60,7 +61,7 @@ module.exports = {
 		const flip = Math.random() < 0.5 ? 'heads' : 'tails';
 
 		if (side === flip) {
-			user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(bet);
+			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(bet);
 
 			user.changed('kythiaCoin', true);
 
@@ -77,7 +78,7 @@ module.exports = {
 				.setFooter(await embedFooter(interaction));
 			return interaction.editReply({ embeds: [embed] });
 		} else {
-			user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(bet);
+			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(bet);
 
 			user.changed('kythiaCoin', true);
 

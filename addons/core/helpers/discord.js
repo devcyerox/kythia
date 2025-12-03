@@ -187,6 +187,19 @@ async function getTextChannelSafe(guild, channelId) {
 	return null;
 }
 
+async function getMemberSafe(guild, userId) {
+	if (!guild || !userId) return null;
+
+	let member = guild.members.cache.get(userId);
+	if (member) return member;
+
+	try {
+		member = await guild.members.fetch(userId).catch(() => null);
+	} catch (_e) {}
+
+	return member || null;
+}
+
 module.exports = {
 	isOwner,
 	isTeam,
@@ -197,4 +210,5 @@ module.exports = {
 	simpleContainer,
 	getChannelSafe,
 	getTextChannelSafe,
+	getMemberSafe,
 };

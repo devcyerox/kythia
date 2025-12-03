@@ -14,6 +14,7 @@ const { checkCooldown } = require('@coreHelpers/time');
 const { t } = require('@coreHelpers/translator');
 const KythiaUser = require('@coreModels/KythiaUser');
 const { updatePetStatus } = require('../helpers/status');
+const { toBigIntSafe } = require('@addons/economy/helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -88,13 +89,13 @@ module.exports = {
 
 		if (updatedPet.pet.bonusType === 'coin') {
 			kythiaUser.kythiaCoin =
-				(BigInt(kythiaUser.kythiaCoin) || 0n) + BigInt(bonusValue);
+				(toBigIntSafe(kythiaUser.kythiaCoin) || 0n) + toBigIntSafe(bonusValue);
 			bonusTypeDisplay = 'KythiaCoin';
 
 			kythiaUser.changed('kythiaCoin', true);
 		} else if (updatedPet.pet.bonusType === 'ruby') {
 			kythiaUser.kythiaRuby =
-				(BigInt(kythiaUser.kythiaRuby) || 0n) + BigInt(bonusValue);
+				(toBigIntSafe(kythiaUser.kythiaRuby) || 0n) + toBigIntSafe(bonusValue);
 			bonusTypeDisplay = 'KythiaRuby';
 
 			kythiaUser.changed('kythiaRuby', true);

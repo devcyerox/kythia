@@ -6,7 +6,7 @@
  * @version 0.10.0-beta
  */
 
-const { closeTicket } = require('../helpers');
+const { closeTicket, MessageFlags } = require('../helpers');
 
 module.exports = {
 	subcommand: true,

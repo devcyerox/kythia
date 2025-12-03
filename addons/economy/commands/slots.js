@@ -7,6 +7,7 @@
  */
 
 const { EmbedBuilder } = require('discord.js');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 const symbols = {
 	'🍒': { weight: 25, payout: { two: 1.5, three: 5 } },
@@ -94,7 +95,7 @@ module.exports = {
 
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 
-		user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(bet);
+		user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(bet);
 
 		const reels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 		const [r1, r2, r3] = reels;
@@ -130,7 +131,7 @@ module.exports = {
 		}
 
 		if (winnings > 0) {
-			user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(winnings);
+			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(winnings);
 		}
 
 		user.changed('kythiaCoin', true);

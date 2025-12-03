@@ -7,6 +7,7 @@
  */
 const { EmbedBuilder } = require('discord.js');
 const { getMarketData, ASSET_IDS } = require('../../helpers/market');
+const { toBigIntSafe } = require('../../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -118,7 +119,7 @@ module.exports = {
 				price: currentPrice,
 			});
 
-			user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(amountToSpend);
+			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(amountToSpend);
 
 			user.changed('kythiaCoin', true);
 

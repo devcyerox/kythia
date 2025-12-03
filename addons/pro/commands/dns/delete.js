@@ -118,10 +118,10 @@ module.exports = {
 			});
 		}
 
-		const recordToDelete = await DnsRecord.findAll({
-			where: {
+		const recordToDelete = await DnsRecord.getCache({
+			
 				id: databaseRecordId,
-			},
+		
 			include: {
 				model: Subdomain,
 				as: 'subdomain',
@@ -129,7 +129,12 @@ module.exports = {
 			},
 		});
 
-		if (!recordToDelete) {
+		if (
+			!recordToDelete ||
+			!recordToDelete.subdomain ||
+			typeof recordToDelete.subdomain.userId === "undefined" ||
+			recordToDelete.subdomain.userId === null
+		) {
 			const desc = await t(interaction, 'pro.dns.delete.error_notFound');
 			return interaction.editReply({
 				components: await simpleContainer(interaction, desc, { color: 'Red' }),

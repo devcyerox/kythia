@@ -8,6 +8,7 @@
 const { EmbedBuilder } = require('discord.js');
 const banks = require('../helpers/banks');
 const jobs = require('../helpers/jobs');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -114,7 +115,7 @@ module.exports = {
 		const finalEarning =
 			Math.floor(baseEarning * scenario.modifier) + careerBonus + bankBonus;
 
-		user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(finalEarning);
+		user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(finalEarning);
 		user.lastWork = new Date();
 
 		let levelUpText = '';

@@ -75,6 +75,7 @@ const {
 	simpleContainer,
 	getChannelSafe,
 	getTextChannelSafe,
+	getMemberSafe,
 } = require('@coreHelpers/discord'); // Discord helper funcs for permissions/identity
 const {
 	checkCooldown,
@@ -130,6 +131,7 @@ const dependencies = {
 			simpleContainer,
 			getChannelSafe,
 			getTextChannelSafe,
+			getMemberSafe,
 		},
 		color: { convertColor },
 		time: { checkCooldown, formatDuration, parseDuration },

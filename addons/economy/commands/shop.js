@@ -17,6 +17,7 @@ const {
 	MessageFlags,
 } = require('discord.js');
 const shopData = require('../helpers/items');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 const allItems = Object.values(shopData).flat();
 
@@ -385,7 +386,7 @@ module.exports = {
 					});
 				}
 
-				user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(selectedItem.price);
+				user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(selectedItem.price);
 
 				user.changed('kythiaCoin', true);
 

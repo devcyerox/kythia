@@ -8,6 +8,7 @@
 
 const { EmbedBuilder } = require('discord.js');
 const banks = require('../helpers/banks');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -127,8 +128,10 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(robAmount);
-			target.kythiaCoin = BigInt(target.kythiaCoin) - BigInt(robAmount);
+			user.kythiaCoin =
+				toBigIntSafe(user.kythiaCoin) + toBigIntSafe(robAmount);
+			target.kythiaCoin =
+				toBigIntSafe(target.kythiaCoin) - toBigIntSafe(robAmount);
 			user.lastRob = new Date();
 
 			user.changed('kythiaCoin', true);
@@ -178,12 +181,16 @@ module.exports = {
 			if (poison) {
 				penalty = user.kythiaCoin;
 
-				user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(penalty);
-				target.kythiaCoin = BigInt(target.kythiaCoin) + BigInt(penalty);
+				user.kythiaCoin =
+					toBigIntSafe(user.kythiaCoin) - toBigIntSafe(penalty);
+				target.kythiaCoin =
+					toBigIntSafe(target.kythiaCoin) + toBigIntSafe(penalty);
 				await poison.destroy();
 			} else {
-				user.kythiaCoin = BigInt(user.kythiaCoin) - BigInt(basePenalty);
-				target.kythiaCoin = BigInt(target.kythiaCoin) + BigInt(basePenalty);
+				user.kythiaCoin =
+					toBigIntSafe(user.kythiaCoin) - toBigIntSafe(basePenalty);
+				target.kythiaCoin =
+					toBigIntSafe(target.kythiaCoin) + toBigIntSafe(basePenalty);
 			}
 
 			user.lastRob = new Date();

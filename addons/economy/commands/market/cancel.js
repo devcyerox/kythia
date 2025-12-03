@@ -6,6 +6,7 @@
  * @version 0.10.0-beta
  */
 const { EmbedBuilder } = require('discord.js');
+const { toBigIntSafe } = require('../../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -47,7 +48,7 @@ module.exports = {
 				const user = await KythiaUser.getCache({ userId: interaction.user.id });
 				const totalCost = order.quantity * order.price;
 
-				user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalCost);
+				user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(totalCost);
 
 				user.changed('kythiaCoin', true);
 

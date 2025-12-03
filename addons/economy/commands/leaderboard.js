@@ -15,6 +15,7 @@ const {
 	SeparatorBuilder,
 	MessageFlags,
 } = require('discord.js');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 const USERS_PER_PAGE = 10;
 const MAX_USERS = 100;
@@ -76,8 +77,8 @@ async function generateLeaderboardContainer(
 			pageUsers.map(async (user, index) => {
 				const rank = startIndex + index + 1;
 				const totalWealth = (
-					BigInt(user.kythiaCoin) + BigInt(user.kythiaBank)
-				).toString();
+					toBigIntSafe(user.kythiaCoin) + toBigIntSafe(user.kythiaBank)
+				);
 				const medal =
 					rank === 1
 						? '🥇'
@@ -99,9 +100,9 @@ async function generateLeaderboardContainer(
 				return await t(interaction, 'economy.leaderboard.entry', {
 					medal,
 					username,
-					wealth: BigInt(totalWealth).toLocaleString(),
-					coin: BigInt(user.kythiaCoin).toLocaleString(),
-					bank: BigInt(user.kythiaBank).toLocaleString(),
+					wealth: toBigIntSafe(totalWealth).toLocaleString(),
+					coin: toBigIntSafe(user.kythiaCoin).toLocaleString(),
+					bank: toBigIntSafe(user.kythiaBank).toLocaleString(),
 				});
 			}),
 		);

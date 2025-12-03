@@ -7,6 +7,7 @@
  */
 const { EmbedBuilder } = require('discord.js');
 const banks = require('../helpers/banks');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -154,8 +155,8 @@ module.exports = {
 
 			collector.on('collect', async (i) => {
 				if (i.customId === 'confirm') {
-					giver.kythiaBank = BigInt(giver.kythiaBank) - BigInt(amount + fee);
-					receiver.kythiaBank = BigInt(receiver.kythiaBank) + BigInt(amount);
+					giver.kythiaBank = toBigIntSafe(giver.kythiaBank) - toBigIntSafe(amount + fee);
+					receiver.kythiaBank = toBigIntSafe(receiver.kythiaBank) + toBigIntSafe(amount);
 
 					giver.changed('kythiaBank', true);
 					receiver.changed('kythiaBank', true);

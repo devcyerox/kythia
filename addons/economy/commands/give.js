@@ -11,6 +11,7 @@ const {
 	ButtonBuilder,
 	ButtonStyle,
 } = require('discord.js');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -129,8 +130,8 @@ module.exports = {
 
 		collector.on('collect', async (i) => {
 			if (i.customId === 'confirm') {
-				giver.kythiaCoin = BigInt(giver.kythiaCoin) - BigInt(amount);
-				receiver.kythiaCoin = BigInt(receiver.kythiaCoin) + BigInt(amount);
+				giver.kythiaCoin = toBigIntSafe(giver.kythiaCoin) - toBigIntSafe(amount);
+				receiver.kythiaCoin = toBigIntSafe(receiver.kythiaCoin) + toBigIntSafe(amount);
 
 				giver.changed('kythiaCoin', true);
 				receiver.changed('kythiaCoin', true);

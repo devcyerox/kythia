@@ -458,7 +458,7 @@ async function createTicketTranscript(channel, container) {
 async function closeTicket(interaction, container, reason = null) {
 	const { models, t, helpers, kythiaConfig } = container;
 	const { Ticket, TicketConfig } = models;
-	const { simpleContainer } = helpers.discord;
+	const { simpleContainer, getChannelSafe } = helpers.discord;
 	const { convertColor } = helpers.color;
 
 	try {

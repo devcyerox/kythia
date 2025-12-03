@@ -37,11 +37,23 @@ module.exports = {
 				});
 			}
 
-			const panelOptions = panels.map(async (panel) => ({
-				label: panel.title.slice(0, 100),
-				description: `Panel in #${(await getTextChannelSafe(interaction.guild, panel.channelId)?.name) || panel.channelId}`,
-				value: panel.messageId,
-			}));
+			const panelOptions = await Promise.all(
+				panels.map(async (panel) => {
+					let channelName = panel.channelId;
+					try {
+						const channel = await getTextChannelSafe(
+							interaction.guild,
+							panel.channelId,
+						);
+						if (channel?.name) channelName = channel.name;
+					} catch (_) {}
+					return {
+						label: panel.title ? panel.title.slice(0, 100) : 'Untitled Panel',
+						description: `Panel in #${channelName}`,
+						value: panel.messageId,
+					};
+				}),
+			);
 
 			const modal = new ModalBuilder()
 				.setCustomId(`tkt-type-step1-submit:${messageId}`)
@@ -53,7 +65,7 @@ module.exports = {
 							new StringSelectMenuBuilder()
 								.setCustomId('panelId')
 								.setPlaceholder('Select panel...')
-								.setOptions(panelOptions)
+								.addOptions(panelOptions)
 								.setMinValues(1)
 								.setMaxValues(1),
 						),

@@ -7,6 +7,7 @@
  */
 const { EmbedBuilder } = require('discord.js');
 const banks = require('../helpers/banks');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -112,7 +113,7 @@ module.exports = {
 				bank: user.kythiaBank.toLocaleString(),
 				bankType: `${bank.emoji} ${bank.name}`,
 				total: (
-					BigInt(user.kythiaCoin) + BigInt(user.kythiaBank)
+					toBigIntSafe(user.kythiaCoin) + toBigIntSafe(user.kythiaBank)
 				).toLocaleString(),
 			}),
 			`### ${await t(interaction, 'economy.bank.bank.stats.title')}`,

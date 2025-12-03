@@ -6,6 +6,7 @@
  * @version 0.10.0-beta
  */
 
+const { toBigIntSafe } = require('./bigint');
 const { getMarketData } = require('./market');
 const cron = require('node-cron');
 
@@ -86,7 +87,7 @@ async function processOrders(bot) {
 				} else {
 					const totalReceived = order.quantity * currentPrice;
 
-					user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(totalReceived);
+					user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(totalReceived);
 
 					user.changed('kythiaCoin', true);
 

@@ -8,6 +8,7 @@
 const { EmbedBuilder } = require('discord.js');
 
 const banks = require('../helpers/banks');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -66,7 +67,7 @@ module.exports = {
 		const bankBonus = Math.floor(baseReward * (incomeBonusPercent / 100));
 		const randomReward = baseReward + bankBonus;
 
-		user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(randomReward);
+		user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(randomReward);
 		user.lastLootbox = Date.now();
 
 		user.changed('kythiaCoin', true);

@@ -7,6 +7,7 @@
  */
 const { EmbedBuilder } = require('discord.js');
 const banks = require('../helpers/banks');
+const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
@@ -59,8 +60,8 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			user.kythiaBank = BigInt(user.kythiaBank) - BigInt(totalRequired);
-			user.kythiaCoin = BigInt(user.kythiaCoin) + BigInt(amount);
+			user.kythiaBank = toBigIntSafe(user.kythiaBank) - toBigIntSafe(totalRequired);
+			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(amount);
 
 			user.changed('kythiaBank', true);
 			user.changed('kythiaCoin', true);
