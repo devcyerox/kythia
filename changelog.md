@@ -2,6 +2,49 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1-beta](https://github.com/kythia/kythia/compare/v0.9.12-beta...v0.10.1-beta) (2025-12-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* Database schema is now managed strictly via migrations.
+
+### 🔨 Fixed
+
+* update pre-commit script to use npx and adjust lint-staged configuration for TypeScript ([df1be69](https://github.com/kythia/kythia/commit/df1be693ebd1719fc42eee8e0fb549b5f0686b51))
+
+
+### ✨ Added
+
+* Add debug command, remove role prefix feature, update core dependency, and delete unused banner assets. ([7c181a1](https://github.com/kythia/kythia/commit/7c181a12292a4180947ad5a340964e7e9cec167d))
+* Add EJS templating engine dependency. ([6880740](https://github.com/kythia/kythia/commit/68807408d8952f22c348d37f78b23fc6c854d1cb))
+* Add safe channel fetching helpers and enhance invite tracking on member leave. ([b6fa1fe](https://github.com/kythia/kythia/commit/b6fa1fed7e67512fd94570db1eed548c7c3e79d2))
+* **giveaway:** enhance giveaway functionality with new options and UI improvements ([7014020](https://github.com/kythia/kythia/commit/7014020f7a840422f08ec8eba6a796a441f954d7))
+* **globalchat:** implement cleanup of old webhooks before creating new ones in handleFailedGlobalChat function ([143a291](https://github.com/kythia/kythia/commit/143a2913294f73789d0e51ae1896cac9a9353b48))
+* **guildCreate:** enhance guild creation event with new v2 components ([0219111](https://github.com/kythia/kythia/commit/021911147143788a1a7b9662ad1debef63ab706d))
+* implement comprehensive invite management system with new add, remove, reset, user, and leaderboard commands, replacing the previous invite command. ([6e2ea14](https://github.com/kythia/kythia/commit/6e2ea14070535ed1871ffc68fc3c924feeac6ffc))
+* **leaveguild:** Add owner-only `leaveguild` command ([86c75ec](https://github.com/kythia/kythia/commit/86c75ec4716ca86887fc7820065d8a7c077675bf))
+* **music:** add radio command to search and play live radio stations; enhance user interaction with autocomplete and selection options ([eb87146](https://github.com/kythia/kythia/commit/eb87146b8bb98f96d29ec5f7ae327148841f9dee))
+* **redis:** enhance flush command to use shared Redis connection; improve error handling and user feedback ([cf8cb16](https://github.com/kythia/kythia/commit/cf8cb1648524876d29378ecf966a36de580fbc50))
+* **ticket:** add getSafeEmoji function to ensure valid emoji usage in ticket actions; improve user experience with fallback options ([f3c42c9](https://github.com/kythia/kythia/commit/f3c42c9f9fa764db8a0cef6a6bae9ec0162487f5))
+* **ticket:** add reason prompts for ticket creation and closure; enhance user interaction with modals and error messages ([974ebe2](https://github.com/kythia/kythia/commit/974ebe2793922e6d4640e614d503bd7a2538cfad))
+* **ticket:** add type and panel delete, and panel reload command ([0d9caaf](https://github.com/kythia/kythia/commit/0d9caaff8e69cfbf81e11a17b140bdce78369c73))
+* **ticket:** implement ticket closure confirmation and reason prompts; enhance user interaction with new buttons and modals ([0da83a3](https://github.com/kythia/kythia/commit/0da83a3c96dfc4347260a9e5707089f2d815b7d2))
+* **ticket:** initial adding ticket addon ([7af3938](https://github.com/kythia/kythia/commit/7af3938235ba9a366760f49a829ec08d9b47f9de))
+* upgrade architecture to v0.10.0-beta (Migration-First System) ([b999b8f](https://github.com/kythia/kythia/commit/b999b8f9c76941552bf0de6cc39b8040d7d827b0))
+
+
+### 🔧 Changed
+
+* destructure Discord helpers from bot instance. ([ad4e9d1](https://github.com/kythia/kythia/commit/ad4e9d1d2a090b8289ded18230921453f1663e78))
+* **giveaway:** on progress ([2778201](https://github.com/kythia/kythia/commit/2778201c01fe57faed59d2b5c83588a667047ff5))
+* **giveaway:** streamline giveaway command structure and remove deprecated manager ([9d488c9](https://github.com/kythia/kythia/commit/9d488c9f40ec308d4b6c614b38cc4af12d591c4f))
+* **music:** migrate to DI classes, fix history state, and add hybrid radio ([15e6a13](https://github.com/kythia/kythia/commit/15e6a137e7a5a2b0cd64572ecc9802a01f81602b))
+* **music:** replace musicManager helper with MusicManager class; update command handlers to utilize new structure and improve maintainability ([90125df](https://github.com/kythia/kythia/commit/90125df392d32293274e424febe0c5067475753e))
+* Replace custom `getCache` and `getAllCache` methods with standard `findOne` and `findAll` for data retrieval. ([c0beae1](https://github.com/kythia/kythia/commit/c0beae1f2e15ad6cafd87201d32bb45b3b517295))
+* temporary fix visitor ([dca6f95](https://github.com/kythia/kythia/commit/dca6f95283f3f348093f0cad05c226f3f45709d1))
+* **ticket:** update ticket system components and structure; enhance error handling and user feedback ([d51a281](https://github.com/kythia/kythia/commit/d51a28156194a1717afccbff3f0d11b8b0f16b3f))
+
 ### [0.9.12-beta](https://github.com/kythia/kythia/compare/v0.9.11-beta...v0.9.12-beta) (2025-11-13)
 
 
