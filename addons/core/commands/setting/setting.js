@@ -93,7 +93,6 @@ const featureMap = {
 	'minecraft-stats': ['minecraftStatsOn', 'Minecraft Stats'],
 	streak: ['streakOn', 'Streak'],
 	invites: ['invitesOn', 'Invites'],
-	'role-prefix': ['rolePrefixOn', 'Role Prefix'],
 	'boost-log': ['boostLogOn', 'Boost Log'],
 };
 

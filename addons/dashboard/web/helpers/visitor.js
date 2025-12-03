@@ -70,12 +70,10 @@ const trackVisitor = async (req, _res, next) => {
 		if (created) {
 			// await Visitor.clearCache(`Visitor:Count:Date:${todayStr}`);
 			// await Visitor.clearCache(`Visitor:Count:Total`);
-
 			// await Visitor.clearCache({
 			//     queryType: 'count',
 			//     where: { visitDate: todayStr },
 			// });
-
 			// console.log(
 			// 	`✅ New unique visitor detected today (${todayStr}). Caches cleared.`,
 			// );

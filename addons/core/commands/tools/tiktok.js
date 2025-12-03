@@ -26,11 +26,11 @@ module.exports = {
 
 		const invalidUrlTitle = await t(
 			interaction,
-			'core.tools.tiktok.error.invalid_url_title',
+			'core.tools.tiktok.error.invalid.url.title',
 		);
 		const invalidUrlDesc = await t(
 			interaction,
-			'core.tools.tiktok.error.invalid_url_desc',
+			'core.tools.tiktok.error.invalid.url.desc',
 		);
 
 		if (

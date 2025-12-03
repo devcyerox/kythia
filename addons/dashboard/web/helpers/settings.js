@@ -86,7 +86,6 @@ function getFeatureToggles(settings) {
 		streakOn: settings.streakOn || false,
 		minecraftStatsOn: settings.minecraftStatsOn || false,
 		invitesOn: settings.invitesOn || false,
-		rolePrefixOn: settings.rolePrefixOn || false,
 	};
 }
 

@@ -18,15 +18,129 @@ const {
 	InteractionContextType,
 } = require('discord.js');
 
+let restartTimer = null;
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('restart')
-		.setDescription('🔁 Restarts the bot.')
-		.setContexts(InteractionContextType.BotDM),
+		.setDescription('🔁 Restarts the bot with optional scheduler.')
+		.setContexts(InteractionContextType.BotDM)
+		.addIntegerOption((option) =>
+			option
+				.setName('minutes')
+				.setDescription('⏱️ Restart in X minutes (e.g. 30)')
+				.setMinValue(1),
+		)
+		.addStringOption((option) =>
+			option
+				.setName('time')
+				.setDescription(
+					'⏰ Restart at specific time (Format HH:mm, e.g. 23:59)',
+				),
+		),
 	ownerOnly: true,
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers } = container;
 		const { convertColor } = helpers.color;
+
+		const minutes = interaction.options.getInteger('minutes');
+		const timeStr = interaction.options.getString('time');
+
+		if (minutes || timeStr) {
+			let delayMs = 0;
+			let targetTime = new Date();
+			let mode = '';
+
+			if (timeStr) {
+				const [hours, mins] = timeStr.split(':').map(Number);
+				if (
+					Number.isNaN(hours) ||
+					Number.isNaN(mins) ||
+					hours > 23 ||
+					mins > 59
+				) {
+					return interaction.reply({
+						content: '❌ Invalid time format! Use HH:mm (e.g. 23:59)',
+						flags: MessageFlags.Ephemeral,
+					});
+				}
+
+				targetTime.setHours(hours, mins, 0, 0);
+
+				if (targetTime < new Date()) {
+					targetTime.setDate(targetTime.getDate() + 1);
+				}
+
+				delayMs = targetTime.getTime() - Date.now();
+				mode = `at **${timeStr}**`;
+			} else {
+				delayMs = minutes * 60 * 1000;
+				targetTime = new Date(Date.now() + delayMs);
+				mode = `in **${minutes} minutes**`;
+			}
+
+			if (restartTimer) clearTimeout(restartTimer);
+
+			restartTimer = setTimeout(() => {
+				console.log('[Scheduler] Restarting system now...');
+				process.exit(0);
+			}, delayMs);
+
+			interaction.client.kythiaRestartTimestamp = targetTime.getTime();
+
+			const scheduleContainer = new ContainerBuilder().setAccentColor(
+				convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
+			);
+
+			scheduleContainer.addTextDisplayComponents(
+				new TextDisplayBuilder().setContent(
+					`⏱️ **Restart Scheduled**\n\nSystem will restart ${mode}.\nTarget: <t:${Math.floor(targetTime.getTime() / 1000)}:R>`,
+				),
+			);
+
+			scheduleContainer.addSeparatorComponents(
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
+			);
+
+			scheduleContainer.addActionRowComponents(
+				new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId('cancel_schedule')
+						.setLabel('Cancel Schedule')
+						.setStyle(ButtonStyle.Secondary),
+				),
+			);
+
+			const msg = await interaction.reply({
+				components: [scheduleContainer],
+				flags: MessageFlags.IsComponentsV2,
+			});
+
+			const collector = msg.createMessageComponentCollector({
+				filter: (i) =>
+					i.user.id === interaction.user.id && i.customId === 'cancel_schedule',
+				time: delayMs < 2147483647 ? delayMs : 2147483647,
+			});
+
+			collector.on('collect', async (i) => {
+				if (restartTimer) {
+					clearTimeout(restartTimer);
+					restartTimer = null;
+				}
+
+				interaction.client.kythiaRestartTimestamp = null;
+
+				await i.update({
+					content: '✅ **Scheduled restart cancelled.**',
+					components: [],
+				});
+				collector.stop();
+			});
+
+			return;
+		}
 
 		const restartContainer = new ContainerBuilder().setAccentColor(
 			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
@@ -65,95 +179,54 @@ module.exports = {
 		});
 
 		collector.on('collect', async (i) => {
-			// Prevent double-acknowledgement by stopping the collector after a button is pressed
 			collector.stop('handled');
 
 			if (i.customId === 'cancel_restart') {
-				const restartContainer = new ContainerBuilder().setAccentColor(
+				const cancelContainer = new ContainerBuilder().setAccentColor(
 					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				);
-				restartContainer.addTextDisplayComponents(
+				cancelContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
 						await t(interaction, 'core.utils.restart.embed.cancelled.desc'),
 					),
 				);
-				restartContainer.addSeparatorComponents(
-					new SeparatorBuilder()
-						.setSpacing(SeparatorSpacingSize.Small)
-						.setDivider(true),
-				);
-				restartContainer.addTextDisplayComponents(
-					new TextDisplayBuilder().setContent(
-						await t(interaction, 'common.container.footer', {
-							username: interaction.client.user.username,
-						}),
-					),
-				);
 				try {
 					await i.update({
-						components: [restartContainer],
+						components: [cancelContainer],
 						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
 					});
-				} catch (_err) {
-					// Ignore if already acknowledged
-				}
+				} catch {}
 			} else if (i.customId === 'confirm_restart') {
-				const restartContainer = new ContainerBuilder().setAccentColor(
+				const loadingContainer = new ContainerBuilder().setAccentColor(
 					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				);
-				restartContainer.addTextDisplayComponents(
+				loadingContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
 						await t(interaction, 'core.utils.restart.embed.restarting.desc'),
 					),
 				);
-				restartContainer.addSeparatorComponents(
-					new SeparatorBuilder()
-						.setSpacing(SeparatorSpacingSize.Small)
-						.setDivider(true),
-				);
-				restartContainer.addTextDisplayComponents(
-					new TextDisplayBuilder().setContent(
-						await t(interaction, 'common.container.footer', {
-							username: interaction.client.user.username,
-						}),
-					),
-				);
 				try {
 					await i.update({
-						components: [restartContainer],
+						components: [loadingContainer],
 						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
 					});
-				} catch (_err) {
-					// Ignore if already acknowledged
-				}
+				} catch {}
 				setTimeout(() => process.exit(0), 1000);
 			}
 		});
 
 		collector.on('end', async (_collected, reason) => {
 			if (reason === 'time') {
-				const restartContainer = new ContainerBuilder().setAccentColor(
+				const timeoutContainer = new ContainerBuilder().setAccentColor(
 					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 				);
-				restartContainer.addTextDisplayComponents(
+				timeoutContainer.addTextDisplayComponents(
 					new TextDisplayBuilder().setContent(
 						await t(interaction, 'core.utils.restart.embed.timeout.desc'),
 					),
 				);
-				restartContainer.addSeparatorComponents(
-					new SeparatorBuilder()
-						.setSpacing(SeparatorSpacingSize.Small)
-						.setDivider(true),
-				);
-				restartContainer.addTextDisplayComponents(
-					new TextDisplayBuilder().setContent(
-						await t(interaction, 'common.container.footer', {
-							username: interaction.client.user.username,
-						}),
-					),
-				);
 				await interaction.editReply({
-					components: [restartContainer],
+					components: [timeoutContainer],
 					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
 				});
 			}

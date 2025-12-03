@@ -7,7 +7,6 @@
  */
 
 const { AuditLogEvent, EmbedBuilder } = require('discord.js');
-const { rolePrefix } = require('../helpers');
 
 function formatChanges(changes) {
 	if (!changes || changes.length === 0) return 'No changes detected.';
@@ -36,10 +35,6 @@ module.exports = async (bot, oldMember, newMember) => {
 			guildId: newMember.guild.id,
 		});
 		if (!setting || !setting.auditLogChannelId) return;
-
-		if (setting.rolePrefixOn) {
-			await rolePrefix(oldMember.guild);
-		}
 
 		const logChannel = await newMember.guild.channels
 			.fetch(setting.auditLogChannelId)

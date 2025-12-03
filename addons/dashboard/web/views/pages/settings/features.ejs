@@ -221,15 +221,6 @@
                                 <br><small class="text-muted">Track server invites and referrers</small>
                             </label>
                         </div>
-
-                        <div class="form-check form-switch mb-3">
-                            <input class="form-check-input" type="checkbox" id="rolePrefixOn" name="rolePrefixOn" 
-                                   <%= settings.rolePrefixOn ? 'checked' : '' %>>
-                            <label class="form-check-label" for="rolePrefixOn">
-                                <strong>Role Prefix</strong>
-                                <br><small class="text-muted">Display role prefixes in usernames</small>
-                            </label>
-                        </div>
                         
                         <div class="form-check form-switch mb-3">
                             <input class="form-check-input" type="checkbox" id="boostLogOn" name="boostLogOn" 
@@ -301,7 +292,6 @@ const features = [
     { id: 'streakOn', name: 'Streak System', category: 'Game' },
     { id: 'minecraftStatsOn', name: 'Minecraft Stats', category: 'Game' },
     { id: 'invitesOn', name: 'Invite Tracking', category: 'Utility' },
-    { id: 'rolePrefixOn', name: 'Role Prefix', category: 'Utility' },
     { id: 'boostLogOn', name: 'Server Boost Logs', category: 'Utility' }
 ];
 

@@ -1550,11 +1550,10 @@ class MusicHandlers {
 		const playlistName = interaction.options.getString('name');
 		const userId = interaction.user.id;
 
-		const playlist = await this.Playlist.findOne({
-			where: {
-				userId: userId,
-				name: playlistName,
-			},
+		const playlist = await this.Playlist.getCache({
+			userId: userId,
+			name: playlistName,
+
 			include: [{ model: this.PlaylistTrack, as: 'tracks' }],
 		});
 
@@ -1842,11 +1841,9 @@ class MusicHandlers {
 			return interaction.editReply({ embeds: [embed] });
 		}
 
-		const playlist = await this.Playlist.findOne({
-			where: {
-				userId: user.id,
-				name: playlistName,
-			},
+		const playlist = await this.Playlist.getCache({
+			userId: user.id,
+			name: playlistName,
 			include: { model: this.PlaylistTrack, as: 'tracks' },
 		});
 
@@ -1913,11 +1910,9 @@ class MusicHandlers {
 		const position = interaction.options.getInteger('position');
 		const userId = interaction.user.id;
 
-		const playlist = await this.Playlist.findOne({
-			where: {
-				userId: userId,
-				name: playlistName,
-			},
+		const playlist = await this.Playlist.getCache({
+			userId: userId,
+			name: playlistName,
 			include: [
 				{ model: this.PlaylistTrack, as: 'tracks', order: [['id', 'ASC']] },
 			],
@@ -2120,11 +2115,10 @@ class MusicHandlers {
 		const playlistName = interaction.options.getString('name');
 		const userId = interaction.user.id;
 
-		const playlistRaw = await this.Playlist.findOne({
-			where: {
-				userId: userId,
-				name: playlistName,
-			},
+		const playlistRaw = await this.Playlist.getCache({
+			userId: userId,
+			name: playlistName,
+
 			include: [{ model: this.PlaylistTrack, as: 'tracks' }],
 		});
 		const playlist = Array.isArray(playlistRaw) ? playlistRaw[0] : playlistRaw;
@@ -2344,10 +2338,9 @@ class MusicHandlers {
 		}
 
 		try {
-			const originalPlaylist = await this.Playlist.findOne({
-				where: {
-					shareCode: codeOrUrl,
-				},
+			const originalPlaylist = await this.Playlist.getCache({
+				shareCode: codeOrUrl,
+
 				include: [{ model: this.PlaylistTrack, as: 'tracks' }],
 			});
 
@@ -2818,7 +2811,7 @@ class MusicHandlers {
 		await interaction.deferReply();
 		const userId = interaction.user.id;
 
-		const favorites = await this.Favorite.findAll({
+		const favorites = await this.Favorite.getAllCache({
 			where: { userId },
 			order: [['createdAt', 'ASC']],
 			cacheTags: [`Favorite:byUser:${userId}`],

@@ -7,7 +7,6 @@
  */
 
 const { AuditLogEvent, EmbedBuilder } = require('discord.js');
-const { rolePrefix } = require('../helpers');
 
 module.exports = async (bot, oldRole, newRole) => {
 	if (!newRole.guild) return;
@@ -19,10 +18,6 @@ module.exports = async (bot, oldRole, newRole) => {
 	try {
 		const setting = await ServerSetting.getCache({ guildId: newRole.guild.id });
 		if (!setting || !setting.auditLogChannelId) return;
-
-		if (setting.rolePrefixOn) {
-			await rolePrefix(member.guild);
-		}
 
 		const logChannel = await newRole.guild.channels
 			.fetch(setting.auditLogChannelId)

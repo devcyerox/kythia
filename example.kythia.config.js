@@ -388,17 +388,17 @@ function loadKythiaConfig() {
 			// Owner's website
 			ownerWeb: 'https://kenndeclouv.me',
 			// Kythia website
-			kythiaWeb: 'https://kythia.my.id',
+			kythiaWeb: 'https://kythia.me',
 			// Banner image URL for embeds or dashboard
 			// you can host it on your own server
 			// or you can use a CDN like Cloudflare Images/ imagekit/ etc
-			bannerImage: 'https://placehold.co/800x300',
-			voteBannerImage: 'https://placehold.co/800x300',
-			gcBannerImage: 'https://placehold.co/800x300',
-			statsBannerImage: 'https://placehold.co/800x300',
-			helpBannerImage: 'https://placehold.co/800x300',
-			aboutBannerImage: 'https://placehold.co/800x300',
-			tempvoiceBannerImage: 'https://placehold.co/800x300',
+			bannerImage: 'https://placehold.co/800x300.png?text=Banner',
+			voteBannerImage: 'https://placehold.co/800x300.png?text=Vote+Banner',
+			gcBannerImage: 'https://placehold.co/800x300.png?text=Global+Chat+Banner',
+			statsBannerImage: 'https://placehold.co/800x300.png?text=Stats+Banner',
+			helpBannerImage: 'https://placehold.co/800x300.png?text=Help+Banner',
+			aboutBannerImage: 'https://placehold.co/800x300.png?text=About+Banner',
+			tempvoiceBannerImage: 'https://placehold.co/800x300.png?text=Temp+Voice+Banner',
 			// link to error status page
 			statusPage: 'https://status.kythia.my.id',
 			// webhook notification when error on or off

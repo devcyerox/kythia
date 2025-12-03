@@ -132,27 +132,6 @@
   - **Type:** Attachment
 
 
-### 💾 `/roleprefix`
-
-**Description:** 📛 Adds or removes a prefix from member nicknames.
-
-### 💻 Usage
-
-`/roleprefix add`
-`/roleprefix remove`
-
-### 🔧 Subcommands
-
-**`/roleprefix add`**
-> 📛 Adds the highest role prefix to member nicknames.
-
-
-**`/roleprefix remove`**
-> 📛 Removes the prefix from member nicknames.
-
-
-
-
 ### 💾 `/sticky`
 
 **Description:** 📌 Manage sticky messages in a channel.

@@ -12,7 +12,6 @@ const {
 } = require('../helpers/stats');
 const { generateBanner } = require('../helpers/canvas');
 const { EmbedBuilder } = require('discord.js');
-const { rolePrefix } = require('../helpers');
 
 module.exports = async (bot, member) => {
 	const container = bot.client.container;
@@ -49,9 +48,6 @@ module.exports = async (bot, member) => {
 		} catch (err) {
 			console.error(`Failed to add welcome role: ${err}`);
 		}
-	}
-	if (setting.rolePrefixOn) {
-		await rolePrefix(member.guild);
 	}
 
 	const statsData = {

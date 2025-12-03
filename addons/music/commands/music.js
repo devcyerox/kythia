@@ -612,56 +612,95 @@ module.exports = {
 	 */
 	async execute(interaction, container) {
 		const { client, member, guild, options } = interaction;
-		const { t, music, musicHandlers } = container;
-		const subcommand = options.getSubcommand();
-		const subcommandGroup = options.getSubcommandGroup(false) || false;
+		const { t, music, musicHandlers, helpers } = container;
+		const { isOwner } = helpers.discord;
 
+		// 🛡️ GUARD 1: User Voice Check
 		if (!(member instanceof GuildMember) || !member.voice.channel) {
-			return await interaction.reply({
+			return interaction.reply({
 				content: await t(interaction, 'music.music.voice.channel.not.found'),
 				ephemeral: true,
 			});
 		}
 
 		const player = client.poru.players.get(guild.id);
+		const subcommand = options.getSubcommand();
+		const group = options.getSubcommandGroup(false);
 
-		if (subcommandGroup && subcommandGroup === 'playlist') {
-			return musicHandlers.handlePlaylist(interaction, player);
+		// -------------------------------------------------------------
+		// 1️⃣ CREATION HANDLERS (Player Optional / Auto-Create)
+		// -------------------------------------------------------------
+		const creationHandlers = {
+			playlist: musicHandlers.handlePlaylist,
+			favorite: musicHandlers.handleFavorite,
+			play: musicHandlers.handlePlay,
+			radio: musicHandlers.handleRadio,
+		};
+
+		const creationKey = group || subcommand;
+		if (creationHandlers[creationKey]) {
+			return creationHandlers[creationKey](interaction, player);
 		}
 
-		if (subcommandGroup && subcommandGroup === 'favorite') {
-			return musicHandlers.handleFavorite(interaction, player);
-		}
-
-		if (!subcommandGroup && subcommand === 'play') {
-			return musicHandlers.handlePlay(interaction);
-		}
-		if (!subcommandGroup && subcommand === 'radio') {
-			return musicHandlers.handleRadio(interaction, player);
-		}
-
+		// -------------------------------------------------------------
+		// 🚧 BARRIER: Player & Voice Check
+		// -------------------------------------------------------------
 		if (!player) {
 			return interaction.reply({
 				content: await t(interaction, 'music.music.player.not.found'),
 				ephemeral: true,
 			});
 		}
+
 		if (member.voice.channel.id !== player.voiceChannel) {
 			return interaction.reply({
 				content: await t(interaction, 'music.music.required'),
 				ephemeral: true,
 			});
 		}
-		const everyoneCommandHandlers = {
+
+		// -------------------------------------------------------------
+		// 2️⃣ PUBLIC HANDLERS
+		// -------------------------------------------------------------
+		const publicHandlers = {
 			nowplaying: musicHandlers.handleNowPlaying,
 			lyrics: musicHandlers.handleLyrics,
 			queue: musicHandlers.handleQueue,
 		};
 
-		if (everyoneCommandHandlers[subcommand]) {
-			return everyoneCommandHandlers[subcommand](interaction, player);
+		if (publicHandlers[subcommand]) {
+			return publicHandlers[subcommand](interaction, player);
 		}
 
+		// -------------------------------------------------------------
+		// ⚙️ SYSTEM HANDLERS (Admin Only - BYPASS TRACK CHECK)
+		// -------------------------------------------------------------
+		const systemHandlers = {
+			247: musicHandlers.handle247,
+		};
+
+		if (systemHandlers[subcommand]) {
+			const isAdmin =
+				member.permissions.has(PermissionFlagsBits.ManageGuild) ||
+				member.permissions.has(PermissionFlagsBits.Administrator) ||
+				container.helpers.discord.isOwner(interaction.user.id);
+
+			const owner = isOwner(interaction.user.id);
+			if (!isAdmin && !owner) {
+				return interaction.reply({
+					content: await t(
+						interaction,
+						'music.helpers.musicManager.music.permission.denied',
+					),
+					ephemeral: true,
+				});
+			}
+			return systemHandlers[subcommand](interaction, player);
+		}
+
+		// -------------------------------------------------------------
+		// 🔒 BARRIER: Permission Check
+		// -------------------------------------------------------------
 		if (!hasControlPermission(interaction, player)) {
 			return interaction.reply({
 				content: await t(
@@ -672,7 +711,10 @@ module.exports = {
 			});
 		}
 
-		const originalRequesterCommandHandlers = {
+		// -------------------------------------------------------------
+		// 3️⃣ CONTROL HANDLERS
+		// -------------------------------------------------------------
+		const controlHandlers = {
 			pause: musicHandlers.handlePause,
 			resume: musicHandlers.handleResume,
 			skip: musicHandlers.handleSkip,
@@ -686,18 +728,17 @@ module.exports = {
 			move: musicHandlers.handleMove,
 			clear: musicHandlers.handleClear,
 			seek: musicHandlers.handleSeek,
-			247: musicHandlers.handle247,
+			back: (i, p) => musicHandlers.handleBack(i, p, music.guildStates),
 		};
 
-		if (originalRequesterCommandHandlers[subcommand]) {
-			return originalRequesterCommandHandlers[subcommand](interaction, player);
-		} else if (subcommand === 'back') {
-			return musicHandlers.handleBack(interaction, player, music.guildStates);
-		} else {
-			return interaction.reply({
-				content: await t(interaction, 'music.music.subcommand.not.found'),
-				ephemeral: true,
-			});
+		if (controlHandlers[subcommand]) {
+			return controlHandlers[subcommand](interaction, player);
 		}
+
+		// ❓ Fallback
+		return interaction.reply({
+			content: await t(interaction, 'music.music.subcommand.not.found'),
+			ephemeral: true,
+		});
 	},
 };

@@ -677,17 +677,23 @@
 					"desc": "**{title}**"
 				},
 				"error": {
-					"invalid_url": {
-						"title": "Invalid TikTok Link",
-						"desc": "❌ Please provide a valid TikTok link. Example: https://www.tiktok.com/@user/video/1234567890 or https://vt.tiktok.com/ZSyfhrXxX/"
+					"invalid": {
+						"url": {
+							"title": "Invalid TikTok Link",
+							"desc": "❌ Please provide a valid TikTok link. Example: https://www.tiktok.com/@user/video/1234567890 or https://vt.tiktok.com/ZSyfhrXxX/"
+						}
 					},
-					"too_large": {
-						"title": "Video Too Large",
-						"desc": "The video is too large to be sent via Discord! 😭\n\n[Click here to watch the video]({url})"
+					"too": {
+						"large": {
+							"title": "Video Too Large",
+							"desc": "The video is too large to be sent via Discord! 😭\n\n[Click here to watch the video]({url})"
+						}
 					},
-					"no_video": {
-						"title": "Failed to Get Video",
-						"desc": "❌ Failed to fetch the video. The video may be private, deleted, or the API is down."
+					"no": {
+						"video": {
+							"title": "Failed to Get Video",
+							"desc": "❌ Failed to fetch the video. The video may be private, deleted, or the API is down."
+						}
 					},
 					"unknown": {
 						"title": "Error Processing TikTok Link",

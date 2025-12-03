@@ -1026,7 +1026,6 @@ router.post(
 				'minecraftStatsOn',
 				'streakOn',
 				'invitesOn',
-				'rolePrefixOn',
 				'boostLogOn',
 			];
 

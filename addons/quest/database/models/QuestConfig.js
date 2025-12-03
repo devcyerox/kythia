@@ -9,7 +9,7 @@
 const { KythiaModel } = require('kythia-core');
 
 class QuestConfig extends KythiaModel {
-	static guarded = ['guildId'];
+	static guarded = [];
 
 	static get structure() {
 		return {

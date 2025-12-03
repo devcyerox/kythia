@@ -109,7 +109,6 @@ async function generateLyricsWithTranscript(
  */
 function hasControlPermission(interaction, player) {
 	const { isOwner } = interaction.client.container.helpers.discord;
-	if (!player.currentTrack) return false;
 
 	if (isOwner(interaction.user.id)) return true;
 
@@ -118,6 +117,8 @@ function hasControlPermission(interaction, player) {
 		interaction.member.permissions.has(PermissionFlagsBits.Administrator)
 	)
 		return true;
+
+	if (!player.currentTrack) return false;
 
 	const requesterId = player.currentTrack.info.requester?.id;
 	if (interaction.user.id === requesterId) return true;
