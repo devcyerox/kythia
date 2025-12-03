@@ -15,10 +15,12 @@ const cooldown = new Map();
  * @param {import('../../src/Bot')} bot - Instance of main Bot class.
  * @param {import('discord.js').Message} message - The message object.
  */
-module.exports = async (_bot, message) => {
+module.exports = async (bot, message) => {
 	if (message.author.bot || !message.guild) return;
 	const guildId = message.guild.id;
 	const userId = message.author.id;
+	const { helpers } = bot.client.container;
+	const { getChannelSafe } = helpers.discord;
 
 	const setting = await ServerSetting.getCache({ guildId });
 	if (!setting || !setting.levelingOn) return;
