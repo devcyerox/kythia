@@ -20,7 +20,7 @@
         "express-session": "^1.18.2",
         "figlet": "^1.9.3",
         "javascript-obfuscator": "^4.1.1",
-        "kythia-core": "^0.11.0-beta",
+        "kythia-core": "^0.11.1-beta",
         "luxon": "^3.7.2",
         "marked": "^4.3.0",
         "module-alias": "^2.2.3",
@@ -712,7 +712,7 @@
 
     "kuler": ["kuler@2.0.0", "", {}, "sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A=="],
 
-    "kythia-core": ["kythia-core@0.11.0-beta", "", { "dependencies": { "@babel/parser": "^7.28.5", "@babel/traverse": "^7.28.5", "@dotenvx/dotenvx": "^1.51.1", "@google/genai": "^1.30.0", "@sentry/node": "^10.10.0", "async-exit-hook": "^2.0.1", "async-mutex": "^0.5.0", "cli-color": "^2.0.4", "commander": "^14.0.2", "dotenv": "^16.6.1", "figlet": "^1.9.3", "glob": "^13.0.0", "ioredis": "^5.7.0", "json-stable-stringify": "^1.3.0", "lru-cache": "^11.2.2", "picocolors": "^1.1.1", "sequelize": "^6.37.7", "umzug": "^3.8.2" }, "peerDependencies": { "discord.js": "^14.22.1" }, "bin": { "kythia": "src/cli/index.js" } }, "sha512-4N+6ImI4oAveUgijL0s27OWHhKUHd3uH8Yk7jtebTFr9bRFGuqxq5JB6kLEaFKUOcG+e70VhK734UlEGq+8cLQ=="],
+    "kythia-core": ["kythia-core@0.11.1-beta", "", { "dependencies": { "@babel/parser": "^7.28.5", "@babel/traverse": "^7.28.5", "@dotenvx/dotenvx": "^1.51.1", "@google/genai": "^1.30.0", "@sentry/node": "^10.10.0", "async-exit-hook": "^2.0.1", "async-mutex": "^0.5.0", "cli-color": "^2.0.4", "commander": "^14.0.2", "dotenv": "^16.6.1", "figlet": "^1.9.3", "glob": "^13.0.0", "ioredis": "^5.7.0", "json-stable-stringify": "^1.3.0", "lru-cache": "^11.2.2", "picocolors": "^1.1.1", "sequelize": "^6.37.7", "umzug": "^3.8.2" }, "peerDependencies": { "discord.js": "^14.22.1" }, "bin": { "kythia": "src/cli/index.js" } }, "sha512-ZJy1GHsACqfnbmBsiO2Tucip2D/ymbe8sCHP9TFHxTgVtCWgpVIx/UEijAiWtdmR8UvrVGWFzdXq6Gn228oNJg=="],
 
     "levn": ["levn@0.3.0", "", { "dependencies": { "prelude-ls": "~1.1.2", "type-check": "~0.3.2" } }, "sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA=="],
 
