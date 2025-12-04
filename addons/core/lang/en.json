@@ -514,29 +514,6 @@
 				"button": {
 					"topgg": "🩷 Vote {username}"
 				}
-			},
-			"": {
-				"donate": {
-					"utils": {
-						"donate": {
-							"no": {
-								"permission": "❌ You do not have permission to use this command."
-							},
-							"invalid": {
-								"image": "❌ Invalid image. Please provide a valid image."
-							},
-							"set": {
-								"success": "✅ Donate set successfully."
-							},
-							"not": {
-								"set": "❌ Donate not set."
-							},
-							"embed": {
-								"title": "💸 Donate"
-							}
-						}
-					}
-				}
 			}
 		},
 		"tools": {
@@ -1748,8 +1725,10 @@
 					"blocked": "Sorry, I can't do that.",
 					"everyone": {
 						"here": "Sorry i cant do that"
-					}
-				}
+					},
+					"mention": "Hey, what do you want to say? >,<"
+				},
+				"mention": "Hey, what do you want to say? >,<"
 			}
 		},
 		"translate": {

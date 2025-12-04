@@ -696,6 +696,11 @@ module.exports = async (bot, message) => {
 							.slice(0, 1500)
 					: '';
 			if (!cleanContent && mediaParts.length === 0) {
+				if (isMentioned) {
+					await message.reply(
+						await t(message, 'ai.events.messageCreate.mention'),
+					);
+				}
 				if (typingInterval) clearInterval(typingInterval);
 				return;
 			}
