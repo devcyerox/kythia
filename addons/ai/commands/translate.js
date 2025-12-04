@@ -38,7 +38,6 @@ module.exports = {
 
 	contextMenuDescription:
 		'🌐 Translate message to another language using Gemini AI.',
-	isInMainGuild: true,
 	async execute(interaction, container) {
 		// Dependency
 		const { t, kythiaConfig, helpers, logger } = container;

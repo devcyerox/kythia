@@ -47,7 +47,7 @@ module.exports = {
 						.setRequired(true),
 				),
 		)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageEmojisAndStickers),
+		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuildExpressions),
 
 	contextMenuCommand: new ContextMenuCommandBuilder()
 		.setName('Grab Sticker/Emoji')
@@ -55,8 +55,8 @@ module.exports = {
 
 	contextMenuDescription: '🛍️ Grab sticker or emoji from this message.',
 
-	permissions: PermissionFlagsBits.ManageEmojisAndStickers,
-	botPermissions: PermissionFlagsBits.ManageEmojisAndStickers,
+	permissions: PermissionFlagsBits.ManageGuildExpressions,
+	botPermissions: PermissionFlagsBits.ManageGuildExpressions,
 	voteLocked: true,
 	async execute(interaction, container) {
 		const { t } = container;
@@ -152,10 +152,7 @@ module.exports = {
 			}
 		}
 
-		if (
-			interaction.isMessageContextMenuCommand?.() &&
-			interaction.commandName === 'grab Sticker/Emoji'
-		) {
+		if (interaction.isMessageContextMenuCommand?.()) {
 			await interaction.deferReply({ ephemeral: true });
 			const message = interaction.targetMessage;
 

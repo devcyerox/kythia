@@ -38,8 +38,12 @@ module.exports = {
 		await interaction.deferReply();
 
 		const channelId = interaction.channel.id;
-		const setting = await ServerSetting.getCache({
-			guildId: interaction.guild.id,
+		const [setting] = await ServerSetting.findOrCreateWithCache({
+			where: { guildId: interaction.guild.id },
+			defaults: {
+				guildId: interaction.guild.id,
+				guildName: interaction.guild.name,
+			},
 		});
 
 		const aiChannelIds = Array.isArray(setting?.aiChannelIds)
