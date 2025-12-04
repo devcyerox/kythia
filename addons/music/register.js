@@ -44,8 +44,14 @@ module.exports = {
 			for (const session of sessions) {
 				try {
 					const guild = await client.guilds.fetch(session.guildId);
-					const voiceChannel = await getChannelSafe(guild, session.voiceChannelId);
-					const textChannel = await getChannelSafe(guild, session.textChannelId);
+					const voiceChannel = await getChannelSafe(
+						guild,
+						session.voiceChannelId,
+					);
+					const textChannel = await getChannelSafe(
+						guild,
+						session.textChannelId,
+					);
 
 					if (!guild || !voiceChannel || !textChannel) {
 						throw new Error('Guild/Channel not found');

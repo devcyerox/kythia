@@ -60,7 +60,8 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			user.kythiaBank = toBigIntSafe(user.kythiaBank) - toBigIntSafe(totalRequired);
+			user.kythiaBank =
+				toBigIntSafe(user.kythiaBank) - toBigIntSafe(totalRequired);
 			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(amount);
 
 			user.changed('kythiaBank', true);

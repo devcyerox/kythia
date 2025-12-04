@@ -48,7 +48,8 @@ module.exports = {
 				const user = await KythiaUser.getCache({ userId: interaction.user.id });
 				const totalCost = order.quantity * order.price;
 
-				user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(totalCost);
+				user.kythiaCoin =
+					toBigIntSafe(user.kythiaCoin) + toBigIntSafe(totalCost);
 
 				user.changed('kythiaCoin', true);
 

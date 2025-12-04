@@ -119,7 +119,8 @@ module.exports = {
 				price: currentPrice,
 			});
 
-			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(amountToSpend);
+			user.kythiaCoin =
+				toBigIntSafe(user.kythiaCoin) - toBigIntSafe(amountToSpend);
 
 			user.changed('kythiaCoin', true);
 

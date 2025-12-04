@@ -36,7 +36,7 @@ module.exports = async (bot, message) => {
 
 	if (now - (cooldown.get(key) || 0) >= cooldownTime) {
 		const channel =
-			await getChannelSafe(message.guild, setting.levelingChannelId) ||
+			(await getChannelSafe(message.guild, setting.levelingChannelId)) ||
 			message.channel;
 		await addXp(guildId, userId, xpPerMessage, message, channel);
 		cooldown.set(key, now);

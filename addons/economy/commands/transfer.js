@@ -155,8 +155,10 @@ module.exports = {
 
 			collector.on('collect', async (i) => {
 				if (i.customId === 'confirm') {
-					giver.kythiaBank = toBigIntSafe(giver.kythiaBank) - toBigIntSafe(amount + fee);
-					receiver.kythiaBank = toBigIntSafe(receiver.kythiaBank) + toBigIntSafe(amount);
+					giver.kythiaBank =
+						toBigIntSafe(giver.kythiaBank) - toBigIntSafe(amount + fee);
+					receiver.kythiaBank =
+						toBigIntSafe(receiver.kythiaBank) + toBigIntSafe(amount);
 
 					giver.changed('kythiaBank', true);
 					receiver.changed('kythiaBank', true);

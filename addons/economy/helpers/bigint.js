@@ -27,5 +27,3 @@ function toBigIntSafe(value) {
 module.exports = {
 	toBigIntSafe,
 };
-
-

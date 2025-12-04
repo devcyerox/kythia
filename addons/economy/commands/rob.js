@@ -128,8 +128,7 @@ module.exports = {
 				return interaction.editReply({ embeds: [embed] });
 			}
 
-			user.kythiaCoin =
-				toBigIntSafe(user.kythiaCoin) + toBigIntSafe(robAmount);
+			user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(robAmount);
 			target.kythiaCoin =
 				toBigIntSafe(target.kythiaCoin) - toBigIntSafe(robAmount);
 			user.lastRob = new Date();
@@ -181,8 +180,7 @@ module.exports = {
 			if (poison) {
 				penalty = user.kythiaCoin;
 
-				user.kythiaCoin =
-					toBigIntSafe(user.kythiaCoin) - toBigIntSafe(penalty);
+				user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(penalty);
 				target.kythiaCoin =
 					toBigIntSafe(target.kythiaCoin) + toBigIntSafe(penalty);
 				await poison.destroy();

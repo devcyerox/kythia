@@ -55,7 +55,10 @@ module.exports = {
 			});
 		}
 
-		const transcriptChannel = await getChannelSafe(interaction.guild, ticketConfig.transcriptChannelId);
+		const transcriptChannel = await getChannelSafe(
+			interaction.guild,
+			ticketConfig.transcriptChannelId,
+		);
 
 		if (!transcriptChannel) {
 			const desc = await t(

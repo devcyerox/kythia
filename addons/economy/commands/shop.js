@@ -386,7 +386,8 @@ module.exports = {
 					});
 				}
 
-				user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(selectedItem.price);
+				user.kythiaCoin =
+					toBigIntSafe(user.kythiaCoin) - toBigIntSafe(selectedItem.price);
 
 				user.changed('kythiaCoin', true);
 

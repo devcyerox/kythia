@@ -67,7 +67,8 @@ module.exports = {
 		const bankBonus = Math.floor(baseReward * (incomeBonusPercent / 100));
 		const randomReward = baseReward + bankBonus;
 
-		user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(randomReward);
+		user.kythiaCoin =
+			toBigIntSafe(user.kythiaCoin) + toBigIntSafe(randomReward);
 		user.lastLootbox = Date.now();
 
 		user.changed('kythiaCoin', true);

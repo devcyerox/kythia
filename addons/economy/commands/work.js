@@ -115,7 +115,8 @@ module.exports = {
 		const finalEarning =
 			Math.floor(baseEarning * scenario.modifier) + careerBonus + bankBonus;
 
-		user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(finalEarning);
+		user.kythiaCoin =
+			toBigIntSafe(user.kythiaCoin) + toBigIntSafe(finalEarning);
 		user.lastWork = new Date();
 
 		let levelUpText = '';

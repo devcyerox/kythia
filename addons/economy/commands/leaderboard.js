@@ -76,9 +76,8 @@ async function generateLeaderboardContainer(
 		const entries = await Promise.all(
 			pageUsers.map(async (user, index) => {
 				const rank = startIndex + index + 1;
-				const totalWealth = (
-					toBigIntSafe(user.kythiaCoin) + toBigIntSafe(user.kythiaBank)
-				);
+				const totalWealth =
+					toBigIntSafe(user.kythiaCoin) + toBigIntSafe(user.kythiaBank);
 				const medal =
 					rank === 1
 						? '🥇'

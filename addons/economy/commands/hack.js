@@ -141,7 +141,8 @@ module.exports = {
 				);
 				const totalHacked = target.kythiaBank + hackBonus;
 
-				user.kythiaBank = toBigIntSafe(user.kythiaBank) + toBigIntSafe(totalHacked);
+				user.kythiaBank =
+					toBigIntSafe(user.kythiaBank) + toBigIntSafe(totalHacked);
 				if (user.hackMastered < 100) {
 					user.hackMastered = (user.hackMastered || 10) + 1;
 				}
@@ -189,8 +190,10 @@ module.exports = {
 				const penalty = Math.floor(basePenalty * robPenaltyMultiplier);
 
 				if (user.kythiaBank >= penalty) {
-					user.kythiaBank = toBigIntSafe(user.kythiaBank) - toBigIntSafe(penalty);
-					target.kythiaBank = toBigIntSafe(target.kythiaBank) + toBigIntSafe(penalty);
+					user.kythiaBank =
+						toBigIntSafe(user.kythiaBank) - toBigIntSafe(penalty);
+					target.kythiaBank =
+						toBigIntSafe(target.kythiaBank) + toBigIntSafe(penalty);
 
 					user.changed('kythiaBank', true);
 					target.changed('kythiaBank', true);

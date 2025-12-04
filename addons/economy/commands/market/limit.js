@@ -98,7 +98,8 @@ module.exports = {
 					price,
 				});
 
-				user.kythiaCoin = toBigIntSafe(user.kythiaCoin) - toBigIntSafe(totalCost);
+				user.kythiaCoin =
+					toBigIntSafe(user.kythiaCoin) - toBigIntSafe(totalCost);
 
 				user.changed('kythiaCoin', true);
 

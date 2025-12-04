@@ -87,7 +87,8 @@ async function processOrders(bot) {
 				} else {
 					const totalReceived = order.quantity * currentPrice;
 
-					user.kythiaCoin = toBigIntSafe(user.kythiaCoin) + toBigIntSafe(totalReceived);
+					user.kythiaCoin =
+						toBigIntSafe(user.kythiaCoin) + toBigIntSafe(totalReceived);
 
 					user.changed('kythiaCoin', true);
 

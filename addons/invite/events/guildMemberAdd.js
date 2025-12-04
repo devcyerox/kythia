@@ -204,7 +204,10 @@ module.exports = async (bot, member) => {
 					}),
 				});
 
-				channel.send({ components: components, flags: MessageFlags.IsComponentsV2 });
+				channel.send({
+					components: components,
+					flags: MessageFlags.IsComponentsV2,
+				});
 			} else {
 				logger.warn(
 					`[INVITE] Invite channel ${inviteChannelId} not found in ${guild.name}`,
