@@ -9,7 +9,7 @@
 const { KythiaModel } = require('kythia-core');
 
 class Monitor extends KythiaModel {
-	static guarded = ['userId'];
+	static guarded = [];
 
 	static get structure() {
 		return {

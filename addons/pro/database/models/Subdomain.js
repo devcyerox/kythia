@@ -9,7 +9,7 @@
 const { KythiaModel } = require('kythia-core');
 
 class Subdomain extends KythiaModel {
-	static guarded = ['id'];
+	static guarded = [];
 
 	static get structure() {
 		return {

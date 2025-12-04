@@ -10,7 +10,7 @@ const { KythiaModel } = require('kythia-core');
 
 class Streak extends KythiaModel {
 	static customInvalidationTags = ['Streak:leaderboard'];
-	static guarded = ['id'];
+	static guarded = [];
 
 	static get structure() {
 		return {

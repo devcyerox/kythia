@@ -9,7 +9,7 @@
 const { KythiaModel } = require('kythia-core');
 
 class TicketConfig extends KythiaModel {
-	static guarded = ['id'];
+	static guarded = [];
 
 	static get structure() {
 		return {
