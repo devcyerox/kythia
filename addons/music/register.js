@@ -12,7 +12,8 @@ const MusicHandlers = require('./helpers/MusicHandlers');
 module.exports = {
 	async initialize(bot) {
 		const container = bot.client.container;
-		const { logger } = container;
+		const { logger, helpers } = container;
+		const { getChannelSafe } = helpers.discord;
 		const summary = [];
 
 		container.musicHandlers = new MusicHandlers(container);
