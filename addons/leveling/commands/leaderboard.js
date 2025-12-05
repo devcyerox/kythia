@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
 const User = require('@coreModels/User');
@@ -64,6 +64,11 @@ module.exports = {
 			.setTimestamp()
 			.setFooter(await embedFooter(interaction));
 
-		await interaction.editReply({ embeds: [embed] });
+		await interaction.editReply({
+			embeds: [embed],
+			allowedMentions: {
+				parse: [],
+			},
+		});
 	},
 };

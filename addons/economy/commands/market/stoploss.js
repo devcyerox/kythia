@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
 const { ASSET_IDS } = require('../../helpers/market');

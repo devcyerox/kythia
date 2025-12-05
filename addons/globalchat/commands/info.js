@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -61,7 +61,7 @@ module.exports = {
 			];
 			return interaction.editReply({
 				components: errorContainer,
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 
@@ -132,7 +132,7 @@ module.exports = {
 
 		return interaction.editReply({
 			components: components,
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 		});
 	},
 };

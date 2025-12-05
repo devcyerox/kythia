@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -381,7 +381,7 @@ module.exports = {
 		const initialReply = await buildHelpReply(state);
 		const message = await interaction.reply({
 			...initialReply,
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 		});
 
 		const collector = message.createMessageComponentCollector({ time: 300000 });

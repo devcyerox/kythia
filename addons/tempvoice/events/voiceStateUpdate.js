@@ -3,7 +3,7 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const {
 	ChannelType,
@@ -151,7 +151,7 @@ module.exports = async (bot, oldState, newState) => {
 
 					const reqMsg = await ownerChannel.send({
 						components: [containerComponent],
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 
 					const requests = mainChannel.pendingJoinRequests || {};

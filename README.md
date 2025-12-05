@@ -13,13 +13,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/kenndeclouv/kythia/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-CC%20BYNC%204.0-blue?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/kythia/kythia/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-CC%20BYNC%204.0-blue?style=for-the-badge" alt="License"></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/kenndeclouv/kythia/issues">Report a Bug</a>
+  <a href="https://github.com/kythia/kythia/issues">Report a Bug</a>
   ·
-  <a href="https://github.com/kenndeclouv/kythia/issues">Request a Feature</a>
+  <a href="https://github.com/kythia/kythia/issues">Request a Feature</a>
 </p>
 
 <div align="center">
@@ -216,215 +216,91 @@ For a full list of commands and their detailed usage, please see the [Command Do
 
 ---
 
-## 🛠️ Kythia CLI
+## ⌘ CLI Tools & Commands
 
-Kythia comes with a powerful command-line interface (CLI) tool inspired by Laravel's Artisan. The CLI centralizes all project management scripts and makes it easy to perform common development tasks.
+Kythia Core comes with a powerful CLI to streamline development, database management, and localization tasks.
 
-### 📋 Available Commands
+Run `npx kythia --help` to see all available commands.
 
-#### **Bot Management**
+### Database Management
 
-##### `start [--deploy|-d]`
-Starts the Kythia bot.
+#### `migrate`
+Run pending database migrations.
 ```bash
-npx kythia start
-npx kythia start --deploy  # Start with slash command deployment
+npx kythia migrate
+```
+**Options:**
+*   `-f, --fresh`: **[DANGER]** Wipe the entire database (drop all tables) and re-run all migrations from scratch.
+*   `-r, --rollback`: Rollback the last *batch* of migrations.
+
+#### `make:migration`
+Create a new timestamped migration file in an addon.
+```bash
+npx kythia make:migration --name create_users_table --addon core
+```
+**Options:**
+*   `--name <string>`: Name of the migration (snake_case recommended).
+*   `--addon <string>`: Target addon name (must exist in `addons/`).
+
+#### `make:model`
+Scaffold a new Sequelize model file in an addon.
+```bash
+npx kythia make:model --name User --addon core
+```
+**Options:**
+*   `--name <string>`: Name of the model (PascalCase recommended).
+*   `--addon <string>`: Target addon name.
+
+#### `cache:clear`
+Flush Redis cache. Supports multi-instance selection if `REDIS_URLS` is configured.
+```bash
+npx kythia cache:clear
 ```
 
-##### `deploy`
-Deploys slash commands to Discord.
+### Localization (i18n)
+
+#### `lang:check`
+Lint translation key usage in your code against your language files.
 ```bash
-npx kythia deploy
+npx kythia lang:check
 ```
+*   **Static Analysis:** Uses AST parsing to find `t('key')` calls.
+*   **Validation:** Reports missing keys in JSON files.
+*   **Unused Keys:** Reports keys defined in `en.json` but never used in code.
 
----
-
-#### **PM2 Process Management**
-
-##### `pm2 startup`
-Starts the bot with PM2 and saves the process list for automatic startup.
+#### `lang:translate`
+Auto-translate your `en.json` to a target language using Google Gemini AI.
 ```bash
-npx kythia pm2 startup
+npx kythia lang:translate --target ja
 ```
+**Options:**
+*   `--target <lang>`: Target language code (default: `ja`).
+*   **Requires:** `GEMINI_API_KEYS` in `.env`.
 
-##### `pm2 start`
-Starts the bot with PM2.
+### Development Utilities
+
+#### `dev:namespace`
+Automatically add or update JSDoc `@namespace` headers in all project files.
 ```bash
-npx kythia pm2 start
+npx kythia dev:namespace
 ```
+Useful for maintaining consistent file documentation and ownership headers.
 
-##### `pm2 restart`
-Restarts the bot process in PM2.
+#### `gen:structure`
+Generate a markdown tree representation of your project structure.
 ```bash
-npx kythia pm2 restart
+npx kythia gen:structure
 ```
+Outputs to `temp/structure.md`. Great for documentation or sharing context with AI.
 
-##### `pm2 stop`
-Stops the bot process in PM2.
+#### `version:up`
+Synchronize JSDoc `@version` tags across the project with `package.json`.
 ```bash
-npx kythia pm2 stop
+npx kythia version:up
 ```
+Run this after bumping your package version to keep file headers in sync.
 
-##### `pm2 delete`
-Removes the bot process from PM2.
-```bash
-npx kythia pm2 delete
-```
-
-##### `pm2 logs`
-Shows PM2 logs for the bot.
-```bash
-npx kythia pm2 logs
-```
-
----
-
-#### **Database Management**
-
-##### `db flush`
-Flushes the Redis database. **⚠️ USE WITH CAUTION!** This will delete all data.
-```bash
-npx kythia db flush
-```
-
-##### `db seed`
-Seeds the database with initial data.
-```bash
-npx kythia db seed
-```
-
----
-
-#### **Documentation**
-
-##### `docs generate`
-Generates documentation for all commands.
-```bash
-npx kythia docs generate
-```
-
----
-
-#### **Build & Deployment**
-
-##### `build build`
-Runs the full build process: upversion, documentation generation, and code obfuscation.
-```bash
-npx kythia build build
-```
-
-##### `build obfuscate`
-Obfuscates the code for production deployment.
-```bash
-npx kythia build obfuscate
-```
-
-##### `build upversion`
-Updates the version number across the project.
-```bash
-npx kythia build upversion
-```
-
----
-
-#### **Testing**
-
-##### `test test`
-Runs the test suite using Jest.
-```bash
-npx kythia test test
-```
-
----
-
-#### **Code Quality**
-
-##### `format format`
-Formats all JavaScript and JSON files using Prettier.
-```bash
-npx kythia format format
-```
-
-##### `husky prepare`
-Prepares Husky git hooks.
-```bash
-npx kythia husky prepare
-```
-
----
-
-#### **Development Scripts**
-
-##### `check e`
-Runs the check_e.js script.
-```bash
-npx kythia check e
-```
-
-##### `check t`
-Runs the check_t.js script.
-```bash
-npx kythia check t
-```
-
-##### `refactor t`
-Runs the refactor_t.js script.
-```bash
-npx kythia refactor t
-```
-
-##### `add namespace`
-Adds namespace to files.
-```bash
-npx kythia add namespace
-```
-
-##### `gen structure`
-Generates project structure documentation.
-```bash
-npx kythia gen structure
-```
-
-##### `audit permissions`
-Audits command permissions across the project.
-```bash
-npx kythia audit permissions
-```
-
----
-
-#### **Code Generation**
-
-##### `make:command <addon> <name>`
-Creates a new command file in the specified addon.
-
-**Arguments:**
-- `<addon>`: The name of the addon (e.g., `core`, `economy`, `music`)
-- `<name>`: The name of the new command (e.g., `my-command`)
-
-**Example:**
-```bash
-npx kythia make:command core test-command
-npx kythia make:command economy daily-reward
-```
-
-This will create a new command file with a template that includes:
-- Proper namespace annotation
-- SlashCommandBuilder setup
-- Basic execute function
-- Copyright and version information
-
----
-
-### 💡 CLI Tips
-
-- **Help Command:** Use `--help` or `-h` with any command to see detailed usage information:
-  ```bash
-  npx kythia --help
-  npx kythia start --help
-  ```
-  
----
+-----
 
 ## 🙌 Contributing
 

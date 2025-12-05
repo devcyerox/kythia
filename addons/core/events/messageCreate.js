@@ -3,7 +3,7 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const { kythiaInteraction } = require('../helpers/events');
@@ -161,7 +161,7 @@ module.exports = async (bot, message) => {
 					);
 					return message.reply({
 						components: [container],
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				}
 			}
@@ -212,7 +212,7 @@ module.exports = async (bot, message) => {
 					return message.reply({
 						components: [container],
 						ephemeral: true,
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				}
 			}
@@ -526,14 +526,14 @@ module.exports = async (bot, message) => {
 				await message
 					.reply({
 						components,
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					})
 					.catch(() => {});
 			} else if (message.author && typeof message.author.send === 'function') {
 				await message.author
 					.send({
 						components,
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					})
 					.catch(() => {});
 			}

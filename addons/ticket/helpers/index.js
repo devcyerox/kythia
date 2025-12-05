@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -176,7 +176,7 @@ async function refreshTicketPanel(panelMessageId, container) {
 
 		await message.edit({
 			components: [panelContainer],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 		});
 	} catch (error) {
 		console.error(`🔴 REFRESH PANEL FAILED (${panelMessageId}):`, error);
@@ -330,7 +330,10 @@ async function createTicketChannel(
 
 		await ticketChannel.send({
 			components: [mainContainer],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			allowedMentions: {
+				parse: [],
+			},
+			flags: MessageFlags.IsComponentsV2,
 		});
 
 		await Ticket.create({
@@ -418,6 +421,7 @@ async function createTicketTranscript(channel, container) {
 
 	let transcriptText = '';
 
+	transcriptText += `=============== KYTHIA'S TICKET FEATURE ===============\n\n`;
 	transcriptText += `TRANSCRIPT FOR: ${channel.name}\n`;
 	transcriptText += `SERVER: ${channel.guild.name}\n`;
 	transcriptText += `GENERATED AT: ${new Date().toLocaleString(locale, { timeZone: timezone })}\n`;
@@ -587,7 +591,10 @@ async function closeTicket(interaction, container, reason = null) {
 		await transcriptChannel.send({
 			components: v2Components,
 			files: [attachment],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
+			allowedMentions: {
+				parse: [],
+			},
 		});
 
 		if (logsChannel) {
@@ -602,6 +609,9 @@ async function closeTicket(interaction, container, reason = null) {
 
 			await logsChannel.send({
 				components: await simpleContainer(interaction, logDesc),
+				allowedMentions: {
+					parse: [],
+				},
 				flags: MessageFlags.IsComponentsV2,
 			});
 		}

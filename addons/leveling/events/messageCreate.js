@@ -3,10 +3,9 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
-const ServerSetting = require('@addons/core/database/models/ServerSetting');
 const { addXp } = require('../helpers');
 const cooldown = new Map();
 
@@ -16,6 +15,7 @@ const cooldown = new Map();
  * @param {import('discord.js').Message} message - The message object.
  */
 module.exports = async (bot, message) => {
+	const { ServerSetting } = bot.client.container.models;
 	if (message.author.bot || !message.guild) return;
 	const guildId = message.guild.id;
 	const userId = message.author.id;

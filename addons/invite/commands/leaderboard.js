@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -18,9 +18,8 @@ const {
 } = require('discord.js');
 
 const USERS_PER_PAGE = 10;
-const MAX_USERS = 100; // Limit biar gak berat fetch user Discord-nya
+const MAX_USERS = 100;
 
-// Helper: Bikin tombol navigasi (Next/Prev)
 async function buildNavButtons(
 	interaction,
 	page,
@@ -52,7 +51,6 @@ async function buildNavButtons(
 	];
 }
 
-// Helper: Bikin tampilan container per halaman
 async function generateLeaderboardContainer(
 	interaction,
 	page,
@@ -69,7 +67,6 @@ async function generateLeaderboardContainer(
 	const startIndex = (page - 1) * USERS_PER_PAGE;
 	const pageUsers = topUsers.slice(startIndex, startIndex + USERS_PER_PAGE);
 
-	// Build text leaderboard
 	let leaderboardText = '';
 	if (pageUsers.length === 0) {
 		leaderboardText = await t(
@@ -90,7 +87,6 @@ async function generateLeaderboardContainer(
 		leaderboardText = lines.join('\n');
 	}
 
-	// Build buttons
 	const navButtons = await buildNavButtons(
 		interaction,
 		page,
@@ -147,11 +143,8 @@ module.exports = {
 		const { Invite } = models;
 		const guildId = interaction.guild.id;
 
-		await interaction.deferReply({
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
-		});
+		await interaction.deferReply();
 
-		// 1. Ambil SEMUA data (limit MAX_USERS) dari cache/DB
 		const allInviters = await Invite.getAllCache({
 			where: { guildId },
 			order: [['invites', 'DESC']],
@@ -162,22 +155,23 @@ module.exports = {
 		const totalUsers = allInviters.length;
 		let currentPage = 1;
 
-		// 2. Handle jika kosong
 		if (totalUsers === 0) {
 			const { leaderboardContainer } = await generateLeaderboardContainer(
 				interaction,
 				1,
 				[],
 				0,
-				true, // disable nav
+				true,
 			);
 			return interaction.editReply({
 				components: [leaderboardContainer],
+				allowedMentions: {
+					parse: [],
+				},
 				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 
-		// 3. Render Halaman Pertama
 		const { leaderboardContainer, totalPages } =
 			await generateLeaderboardContainer(
 				interaction,
@@ -188,21 +182,21 @@ module.exports = {
 
 		const message = await interaction.editReply({
 			components: [leaderboardContainer],
+			allowedMentions: {
+				parse: [],
+			},
 			fetchReply: true,
 			flags: MessageFlags.IsComponentsV2,
 		});
 
-		// 4. Kalau cuma 1 halaman, gak perlu collector
 		if (totalPages <= 1) return;
 
-		// 5. Setup Collector buat Pagination
 		const collector = message.createMessageComponentCollector({
-			filter: (i) => i.user.id === interaction.user.id, // Cuma pemanggil command yg bisa klik
-			time: 300000, // 5 menit
+			filter: (i) => i.user.id === interaction.user.id,
+			time: 300000,
 		});
 
 		collector.on('collect', async (i) => {
-			// Handle navigasi
 			if (i.customId === 'leaderboard_first') {
 				currentPage = 1;
 			} else if (i.customId === 'leaderboard_prev') {
@@ -213,7 +207,6 @@ module.exports = {
 				currentPage = totalPages;
 			}
 
-			// Re-render container
 			const { leaderboardContainer: newContainer } =
 				await generateLeaderboardContainer(
 					i,
@@ -224,10 +217,12 @@ module.exports = {
 
 			await i.update({
 				components: [newContainer],
+				allowedMentions: {
+					parse: [],
+				},
 			});
 		});
 
-		// 6. Matikan tombol saat timeout
 		collector.on('end', async () => {
 			try {
 				const { leaderboardContainer: finalContainer } =
@@ -236,15 +231,16 @@ module.exports = {
 						currentPage,
 						allInviters,
 						totalUsers,
-						true, // Disable buttons
+						true,
 					);
 
 				await message.edit({
 					components: [finalContainer],
+					allowedMentions: {
+						parse: [],
+					},
 				});
-			} catch (_error) {
-				// Ignore error if message deleted
-			}
+			} catch (_error) {}
 		});
 	},
 };

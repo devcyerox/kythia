@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const {
 	ButtonBuilder,
@@ -192,7 +192,7 @@ module.exports = {
 			);
 			return interaction.editReply({
 				components: [leaderboardContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 
@@ -206,7 +206,7 @@ module.exports = {
 
 		const message = await interaction.editReply({
 			components: [leaderboardContainer],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		});
 
@@ -244,7 +244,7 @@ module.exports = {
 
 			await i.update({
 				components: [newLeaderboardContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		});
 
@@ -261,7 +261,7 @@ module.exports = {
 
 				await message.edit({
 					components: [finalContainer],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			} catch (_error) {}
 		});

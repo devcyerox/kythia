@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -893,7 +893,7 @@ class MusicManager {
 				// Initial send and new button collector
 				const message = await channel.send({
 					components: [updatedContainer],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 				player.nowPlayingMessage = message;
 
@@ -994,7 +994,7 @@ class MusicManager {
 				// Edit for Ticker
 				await player.nowPlayingMessage.edit({
 					components: [updatedContainer],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 		} catch (_e) {}
@@ -1127,7 +1127,7 @@ class MusicManager {
 
 			await player.nowPlayingMessage.edit({
 				components: [container],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		} catch (_e) {}
 	}

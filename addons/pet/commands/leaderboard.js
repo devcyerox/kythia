@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const UserPet = require('../database/models/UserPet');
 const Pet = require('../database/models/Pet');
@@ -63,6 +63,11 @@ module.exports = {
 			.setFooter(await embedFooter(interaction))
 			.setTimestamp();
 
-		return interaction.editReply({ embeds: [embed] });
+		return interaction.editReply({
+			embeds: [embed],
+			allowedMentions: {
+				parse: [],
+			},
+		});
 	},
 };

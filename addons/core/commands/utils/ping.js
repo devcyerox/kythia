@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const {
 	SlashCommandBuilder,
@@ -409,7 +409,7 @@ module.exports = {
 		const sent = await interaction.reply({
 			content: ' ',
 			components: [loadingEmbed],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		});
 

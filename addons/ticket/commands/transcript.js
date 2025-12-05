@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -146,7 +146,7 @@ module.exports = {
 			await transcriptChannel.send({
 				components: v2Components,
 				files: [attachment],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 
 			const desc = await t(interaction, 'ticket.util.transcript_success', {

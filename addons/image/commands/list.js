@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -118,12 +118,12 @@ module.exports = {
 			if (i === 0) {
 				await interaction.editReply({
 					components: [container],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			} else {
 				await interaction.followUp({
 					components: [container],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 		}

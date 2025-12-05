@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const { generateLyricsWithTranscript, formatTrackDuration } = require('.');
@@ -460,7 +460,7 @@ class MusicHandlers {
 
 		return {
 			components: [container],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		};
 	}
@@ -870,13 +870,13 @@ class MusicHandlers {
 			filterMsg = await interaction.editReply({
 				components: [container],
 				fetchReply: true,
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		} else {
 			filterMsg = await interaction.reply({
 				components: [container],
 				fetchReply: true,
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 
@@ -1698,7 +1698,7 @@ class MusicHandlers {
 
 		return {
 			components: [container],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		};
 	}
@@ -2105,7 +2105,7 @@ class MusicHandlers {
 
 		return {
 			components: [container],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		};
 	}
@@ -2802,7 +2802,7 @@ class MusicHandlers {
 
 		return {
 			components: [container],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		};
 	}
@@ -3124,13 +3124,13 @@ class MusicHandlers {
 				if (interactionToUpdate.replied || interactionToUpdate.deferred) {
 					return interactionToUpdate.editReply({
 						components: [errContainer],
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				}
 				return interactionToUpdate.followUp({
 					components: [errContainer],
 					ephemeral: true,
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 
@@ -3198,7 +3198,7 @@ class MusicHandlers {
 
 			await interactionToUpdate.editReply({
 				components: [playingContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		};
 
@@ -3279,7 +3279,7 @@ class MusicHandlers {
 
 			const msg = await interaction.editReply({
 				components: [selectContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 
 			const collector = msg.createMessageComponentCollector({
@@ -3316,7 +3316,7 @@ class MusicHandlers {
 					await interaction
 						.editReply({
 							components: [timeoutContainer],
-							flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+							flags: MessageFlags.IsComponentsV2,
 						})
 						.catch(() => {});
 				}
@@ -3336,7 +3336,7 @@ class MusicHandlers {
 				);
 			return interaction.editReply({
 				components: [errContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 	}

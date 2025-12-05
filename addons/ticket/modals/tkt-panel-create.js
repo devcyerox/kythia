@@ -3,7 +3,7 @@
  * @type: Module
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const {
 	ContainerBuilder,
@@ -123,7 +123,7 @@ module.exports = {
 
 			const panelMessage = await channel.send({
 				components: [panelContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 
 			await TicketPanel.create({

@@ -227,7 +227,9 @@ function loadKythiaConfig() {
 				checkInterval: 20,
 			},
 			globalchat: {
-				enabled: true,
+				// this feature is kythia's internal only
+				// collaborate with TronixDev https://dsc.gg/trnx
+				enabled: false,
 				apiUrl: process.env.GLOBAL_CHAT_API_URL || 'http://localhost:2000',
 				healthCheckSchedule: '*/30 * * * *',
 				healthCheckDelay: 1000,
@@ -238,6 +240,7 @@ function loadKythiaConfig() {
 			},
 			leveling: {
 				active: true,
+				backgroundUrl: 'https://placehold.co/800x250.png',
 			},
 			minecraft: {
 				active: false,
@@ -325,7 +328,7 @@ function loadKythiaConfig() {
 					 * Primary domain name used for this feature
 					 * (e.g., 'kyth.me')
 					 */
-					domain: process.env.CLOUDFLARE_DOMAIN || 'kyth.me',
+					domain: process.env.CLOUDFLARE_DOMAIN,
 				},
 				maxSubdomains: 5,
 			},
@@ -351,6 +354,11 @@ function loadKythiaConfig() {
 				active: true,
 			},
 			quest: {
+				// host your own quest api
+				// see my repo https://github.com/kenndeclouv/kythia-quest-api
+				// ! IMPORTANT NOTE: the quest api need user token to work
+				// and using user token is violation of discord's terms of service
+				// so it's dangerously to use it
 				active: true,
 				apiUrls: 'http://.../quests,http://...', // seperate with comma
 			},

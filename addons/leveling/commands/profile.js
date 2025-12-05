@@ -3,13 +3,18 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
-const { EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
+const {
+	ContainerBuilder,
+	TextDisplayBuilder,
+	SeparatorBuilder,
+	SeparatorSpacingSize,
+	MediaGalleryBuilder,
+	MediaGalleryItemBuilder,
+	MessageFlags,
+} = require('discord.js');
 const { generateLevelImage, levelUpXp } = require('../helpers');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
@@ -23,55 +28,133 @@ module.exports = {
 					.setDescription('The user whose profile you want to see.'),
 			),
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, kythiaConfig, helpers } = container;
+		const { User } = models;
+		const { convertColor } = helpers.color;
+
 		await interaction.deferReply();
+
 		const targetUser = interaction.options.getUser('user') || interaction.user;
+
 		let user = await User.getCache({
 			userId: targetUser.id,
 			guildId: interaction.guild.id,
 		});
 
+		// Handle User Baru
 		if (!user) {
 			user = await User.create({
 				userId: targetUser.id,
 				guildId: interaction.guild.id,
+				xp: 0,
+				level: 1,
 			});
-			const embed = new EmbedBuilder()
-				.setColor('Yellow')
-				.setDescription(
-					`## ${await t(interaction, 'leveling.profile.leveling.profile.created.title')}\n${await t(interaction, 'leveling.profile.leveling.profile.created.desc')}`,
+
+			// Tampilkan pesan "Profile Created" pake Container sederhana
+			const title = `## ${await t(interaction, 'leveling.profile.leveling.profile.created.title')}`;
+			const desc = await t(
+				interaction,
+				'leveling.profile.leveling.profile.created.desc',
+			);
+			const footerText = await t(interaction, 'common.container.footer', {
+				username: interaction.client.user.username,
+			});
+
+			const accentColor = convertColor('Yellow', {
+				from: 'discord',
+				to: 'decimal',
+			});
+
+			const createdContainer = new ContainerBuilder()
+				.setAccentColor(accentColor)
+				.addTextDisplayComponents(new TextDisplayBuilder().setContent(title))
+				.addSeparatorComponents(
+					new SeparatorBuilder()
+						.setSpacing(SeparatorSpacingSize.Small)
+						.setDivider(true),
 				)
-				.setFooter(await embedFooter(interaction));
-			return interaction.editReply({ embeds: [embed] });
+				.addTextDisplayComponents(new TextDisplayBuilder().setContent(desc))
+				.addSeparatorComponents(
+					new SeparatorBuilder()
+						.setSpacing(SeparatorSpacingSize.Small)
+						.setDivider(true),
+				)
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(footerText),
+				);
+
+			return interaction.editReply({
+				components: [createdContainer],
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 
+		// Generate Image
+		const imageName = 'level-profile.png';
 		const buffer = await generateLevelImage({
 			username: targetUser.username,
 			avatarURL: targetUser.displayAvatarURL({ extension: 'png', size: 256 }),
 			level: user.level,
 			xp: user.xp,
 			nextLevelXp: levelUpXp(user.level),
-			backgroundURL: 'https://files.catbox.moe/3pujs4.png',
+			backgroundURL: kythiaConfig.addons.leveling.backgroundUrl,
 		});
 
-		const embed = new EmbedBuilder()
-			.setColor(kythia.bot.color)
-			.setDescription(
-				`## ${await t(interaction, 'leveling.profile.leveling.profile.title')}\n` +
-					(await t(interaction, 'leveling.profile.leveling.profile.desc', {
-						username: targetUser.username,
-						level: user.level || 0,
-						xp: user.xp || 0,
-						nextLevelXp: levelUpXp(user.level),
-					})),
-			)
-			.setThumbnail(targetUser.displayAvatarURL())
-			.setImage('attachment://level-profile.png')
-			.setFooter(await embedFooter(interaction));
+		// 🔥 BUILD PROFILE CONTAINER
+		const botColor = convertColor(kythiaConfig.bot.color, {
+			from: 'hex',
+			to: 'decimal',
+		});
 
+		const titleText = `## ${await t(interaction, 'leveling.profile.leveling.profile.title')}`;
+		const descText = await t(
+			interaction,
+			'leveling.profile.leveling.profile.desc',
+			{
+				username: targetUser.username,
+				level: user.level || 0,
+				xp: user.xp || 0,
+				nextLevelXp: levelUpXp(user.level),
+			},
+		);
+
+		const footerText = await t(interaction, 'common.container.footer', {
+			username: interaction.client.user.username,
+		});
+
+		const profileContainer = new ContainerBuilder()
+			.setAccentColor(botColor)
+			// Header
+			.addTextDisplayComponents(new TextDisplayBuilder().setContent(titleText))
+			.addSeparatorComponents(
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
+			)
+			// Stats
+			.addTextDisplayComponents(new TextDisplayBuilder().setContent(descText))
+			// Image
+			.addMediaGalleryComponents(
+				new MediaGalleryBuilder().addItems([
+					new MediaGalleryItemBuilder().setURL(`attachment://${imageName}`),
+				]),
+			)
+			// Footer
+			.addSeparatorComponents(
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
+			)
+			.addTextDisplayComponents(
+				new TextDisplayBuilder().setContent(footerText),
+			);
+
+		// Kirim Reply dengan Attachment
 		await interaction.editReply({
-			embeds: [embed],
-			files: [{ attachment: buffer, name: 'level-profile.png' }],
+			components: [profileContainer],
+			files: [{ attachment: buffer, name: imageName }],
+			flags: MessageFlags.IsComponentsV2,
 		});
 	},
 };

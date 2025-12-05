@@ -3,10 +3,10 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
-const dotenv = require('@dotenvx/dotenvx');
+const dotenv = require('@dotenvx/dotenvx').config({ quiet: true });
 const path = require('node:path');
 
 const { loadKythiaConfig } = require('../../../kythia.config.js');

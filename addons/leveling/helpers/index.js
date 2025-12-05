@@ -3,16 +3,20 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const { createCanvas, loadImage } = require('canvas');
-const ServerSetting = require('@coreModels/ServerSetting');
-const User = require('@coreModels/User');
 const axios = require('axios');
-const { EmbedBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const { embedFooter } = require('@coreHelpers/discord');
+
+const {
+	ContainerBuilder,
+	TextDisplayBuilder,
+	SeparatorBuilder,
+	SeparatorSpacingSize,
+	MediaGalleryBuilder,
+	MediaGalleryItemBuilder,
+} = require('discord.js');
 
 function _drawRoundedRect(ctx, x, y, width, height, radius, fillStyle) {
 	ctx.save();
@@ -35,7 +39,13 @@ function _drawRoundedRect(ctx, x, y, width, height, radius, fillStyle) {
 const levelUpXp = (level) => level * level * 50;
 
 const addXp = async (guildId, userId, xpToAdd, message, channel) => {
-	const { getTextChannelSafe } = message.client.container.helpers.discord;
+	const { container } = message.client;
+	const { helpers, kythia, t, models, kythiaConfig } = container;
+	const { ServerSetting, User } = models;
+	const { getTextChannelSafe } = helpers.discord;
+	const { convertColor } = helpers.color;
+
+	// 1. Resolve Channel
 	if (!channel) {
 		const setting = await ServerSetting.getCache({ guildId: message.guild.id });
 		if (setting?.levelingChannelId) {
@@ -44,12 +54,15 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 				null;
 		}
 	}
+
+	// 2. Fetch User Data
 	let user = await User.getCache({ userId: userId, guildId: guildId });
 
 	if (!user) {
 		user = await User.create({ guildId, userId, xp: 0, level: 1 });
 	}
 
+	// 3. Logic XP & Level Up
 	user.xp = Number(BigInt(user.xp) + BigInt(xpToAdd));
 	let leveledUp = false;
 	const levelBefore = user.level;
@@ -62,13 +75,12 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 
 	user.changed('xp', true);
 	user.changed('level', true);
-
-	await user.update({ xp: user.xp, level: user.level });
 	await user.saveAndUpdateCache();
 
 	if (!leveledUp) return;
 
-	const member = message.guild.members.cache.get(userId);
+	// 4. Handle Rewards
+	const member = await helpers.discord.getMemberSafe(message.guild, userId);
 	const serverSetting = await ServerSetting.getCache({
 		guildId: message.guild.id,
 	});
@@ -93,7 +105,9 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 		}
 	}
 
+	// 5. Generate Image
 	let buffer;
+	const imageName = 'level-profile.png';
 	try {
 		buffer = await generateLevelImage({
 			username: message.author.username,
@@ -104,56 +118,105 @@ const addXp = async (guildId, userId, xpToAdd, message, channel) => {
 			level: user.level,
 			xp: user.xp,
 			nextLevelXp: levelUpXp(user.level),
-			backgroundURL: 'https://files.catbox.moe/3pujs4.png',
+			backgroundURL: kythiaConfig.addons.leveling.backgroundUrl,
 		});
 	} catch (_err) {
 		buffer = null;
 	}
 
-	let description =
-		`${await t(message, 'leveling.helpers.index.leveling.profile.up.title')}\n` +
-		(await t(message, 'leveling.helpers.index.leveling.profile.up.desc', {
+	// 6. 🔥 BUILD CONTAINER MANUAL
+	const accentColor = convertColor(kythia.bot.color, {
+		from: 'hex',
+		to: 'decimal',
+	});
+
+	// String content
+	const titleText = `## ${await t(message, 'leveling.helpers.index.leveling.profile.up.title')}`;
+	const descText = await t(
+		message,
+		'leveling.helpers.index.leveling.profile.up.desc',
+		{
 			username: message.author.username,
 			mention: message.author.toString(),
 			level: user.level || 0,
 			xp: user.xp || 0,
 			nextLevelXp: levelUpXp(user.level),
-		}));
+		},
+	);
 
+	// Mulai racik Container
+	const containerBuilder = new ContainerBuilder()
+		.setAccentColor(accentColor)
+		.addTextDisplayComponents(new TextDisplayBuilder().setContent(titleText))
+		.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		)
+		.addTextDisplayComponents(new TextDisplayBuilder().setContent(descText));
+
+	// Kalau ada Reward Role, tambahin sekat dan infonya
 	if (rewardRoleName && rewardLevel) {
-		description +=
-			`\n\n${await t(message, 'leveling.helpers.index.leveling.role.reward.title')}\n` +
-			(await t(message, 'leveling.helpers.index.leveling.role.reward.desc', {
+		const rewardTitle = `### ${await t(message, 'leveling.helpers.index.leveling.role.reward.title')}`;
+		const rewardDesc = await t(
+			message,
+			'leveling.helpers.index.leveling.role.reward.desc',
+			{
 				mention: message.author.toString(),
 				role: rewardRoleName,
 				level: rewardLevel,
-			}));
+			},
+		);
+
+		containerBuilder
+			.addSeparatorComponents(
+				new SeparatorBuilder()
+					.setSpacing(SeparatorSpacingSize.Small)
+					.setDivider(true),
+			)
+			.addTextDisplayComponents(
+				new TextDisplayBuilder().setContent(rewardTitle),
+			)
+			.addTextDisplayComponents(
+				new TextDisplayBuilder().setContent(rewardDesc),
+			);
 	}
 
-	const levelEmbed = new EmbedBuilder()
-		.setColor(kythia.bot.color)
-		.setDescription(description)
-		.setThumbnail(message.author.displayAvatarURL())
-		.setFooter(await embedFooter(message));
+	// Kalau ada gambar, masukin sebagai FileComponent dalam container
+	if (buffer && (Buffer.isBuffer(buffer) || typeof buffer === 'string')) {
+		containerBuilder.addMediaGalleryComponents(
+			new MediaGalleryBuilder().addItems([
+				new MediaGalleryItemBuilder().setURL(`attachment://${imageName}`),
+			]),
+		);
+	}
 
+	// Footer cantik
+	const footerText = await t(message, 'common.container.footer', {
+		username: message.client.user.username,
+	});
+
+	containerBuilder
+		.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		)
+		.addTextDisplayComponents(new TextDisplayBuilder().setContent(footerText));
+
+	// 7. Kirim Pesan
 	if (channel) {
+		const payload = {
+			content: message.author.toString(),
+			components: [containerBuilder], // Masukin container builder disini
+		};
+
+		// Attach file fisiknya kalau ada buffer
 		if (buffer && (Buffer.isBuffer(buffer) || typeof buffer === 'string')) {
-			try {
-				levelEmbed.setImage('attachment://level-profile.png');
-			} catch (_e) {}
-			await channel
-				.send({
-					embeds: [levelEmbed],
-					files: [{ attachment: buffer, name: 'level-profile.png' }],
-				})
-				.catch(() => {});
-		} else {
-			await channel
-				.send({
-					embeds: [levelEmbed],
-				})
-				.catch(() => {});
+			payload.files = [{ attachment: buffer, name: imageName }];
 		}
+
+		await channel.send(payload).catch(() => {});
 	}
 };
 

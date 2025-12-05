@@ -3,7 +3,7 @@
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -135,7 +135,7 @@ class GiveawayManager {
 		try {
 			const message = await channel.send({
 				components: uiComponents,
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 
 			await message.edit({ components: uiComponents });
@@ -285,7 +285,7 @@ class GiveawayManager {
 
 			await channel.send({
 				components: [announceContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 
 			if (winners.length > 0) {
@@ -550,7 +550,7 @@ class GiveawayManager {
 
 			await channel.send({
 				components: announceContainer,
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 

@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const {
 	ActionRowBuilder,
@@ -232,7 +232,7 @@ module.exports = {
 			return interaction.reply({
 				components: [errShopContainer],
 				ephemeral: true,
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 
@@ -263,7 +263,7 @@ module.exports = {
 
 		const message = await interaction.editReply({
 			components: [shopContainer],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		});
 
@@ -286,7 +286,7 @@ module.exports = {
 				return i.reply({
 					components: [errShopContainer],
 					ephemeral: true,
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 			await i.deferUpdate();
@@ -331,7 +331,7 @@ module.exports = {
 					return i.followUp({
 						components: [errShopContainer],
 						ephemeral: true,
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				}
 
@@ -361,7 +361,7 @@ module.exports = {
 					return i.followUp({
 						components: [errShopContainer],
 						ephemeral: true,
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				}
 
@@ -382,7 +382,7 @@ module.exports = {
 					return i.followUp({
 						components: [errShopContainer],
 						ephemeral: true,
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				}
 
@@ -416,7 +416,7 @@ module.exports = {
 				await i.followUp({
 					components: [successShopContainer],
 					ephemeral: true,
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 
@@ -446,7 +446,7 @@ module.exports = {
 			);
 			await interaction.editReply({
 				components: [newShopContainer],
-				flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		});
 

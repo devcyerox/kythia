@@ -57,7 +57,7 @@
  */
 
 // ===== 1. Load Environment Variables (.env) and Aliases =====
-require('@dotenvx/dotenvx/config'); // Loads ENV vars to process.env
+require('@dotenvx/dotenvx').config({ quiet: true }); // Loads ENV vars to process.env
 const kythiaConfig = require('./kythia.config.js'); // Unified configuration object
 require('module-alias/register'); // Enables @src, @utils, etc. path aliases
 const { Kythia, KythiaModel, createSequelizeInstance } = require('kythia-core');
@@ -77,32 +77,28 @@ const {
 	getTextChannelSafe,
 	getMemberSafe,
 } = require('@coreHelpers/discord'); // Discord helper funcs for permissions/identity
+
 const {
 	checkCooldown,
 	formatDuration,
 	parseDuration,
 } = require('@coreHelpers/time');
 
-// ===== 3. Load Database Models: Sequelize Models =====
-// const ServerSetting = require('@coreModels/ServerSetting'); // Guild/server config model
-// const KythiaVoter = require('@coreModels/KythiaVoter'); // User voter model (e.g. from Top.gg votes)
+// ===== 3. Load Additional Utilities =====
+const convertColor = require('kythia-core').utils.color; // Color conversion utility
 
-// ===== 4. Setup Redis Client for caching, queueing, etc =====
-const convertColor = require('kythia-core').utils.color;
-// We create a Redis client instance, using the URL in config, in lazy mode (connect on use).
-
-// ===== 5. Setup Sequelize ORM Instance for Relational Database Access =====
+// ===== 4. Setup Sequelize ORM Instance for Relational Database Access =====
 // Create a Sequelize instance, provided with config and logger for flex diagnostics
 const sequelize = createSequelizeInstance(kythiaConfig, logger);
 
-// ===== 6. Set Up Models' Internal Dependencies =====
+// ===== 5. Set Up Models' Internal Dependencies =====
 KythiaModel.setDependencies({
 	logger,
 	config: kythiaConfig,
 	redisOptions: kythiaConfig.db.redis,
 }); // Inject utility deps
 
-// ===== 7. Collect All Service/Model Deps for Containerized Injection =====
+// ===== 6. Collect All Service/Model Deps for Containerized Injection =====
 /**
  * dependencies:
  *  - config:       Entire config object tree needed by bot internals
@@ -139,7 +135,7 @@ const dependencies = {
 	appRoot: __dirname,
 };
 
-// ===== 8. Actual Boot Process: Instantiate and Start the Bot =====
+// ===== 7. Actual Boot Process: Instantiate and Start the Bot =====
 try {
 	/**
 	 * kythiaInstance: The live bot instance, receives all dependencies for DI via constructor.

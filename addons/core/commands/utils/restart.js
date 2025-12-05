@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 const {
 	SlashCommandBuilder,
@@ -170,7 +170,7 @@ module.exports = {
 
 		await interaction.reply({
 			components: [restartContainer],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 		});
 
 		const collector = interaction.channel.createMessageComponentCollector({
@@ -193,7 +193,7 @@ module.exports = {
 				try {
 					await i.update({
 						components: [cancelContainer],
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				} catch {}
 			} else if (i.customId === 'confirm_restart') {
@@ -208,7 +208,7 @@ module.exports = {
 				try {
 					await i.update({
 						components: [loadingContainer],
-						flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+						flags: MessageFlags.IsComponentsV2,
 					});
 				} catch {}
 				setTimeout(() => process.exit(0), 1000);
@@ -227,7 +227,7 @@ module.exports = {
 				);
 				await interaction.editReply({
 					components: [timeoutContainer],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 		});

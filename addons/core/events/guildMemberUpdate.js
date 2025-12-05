@@ -3,7 +3,7 @@
  * @type: Event Handler
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const { AuditLogEvent, EmbedBuilder } = require('discord.js');
@@ -23,7 +23,7 @@ function formatChanges(changes) {
 		.join('\n');
 }
 
-module.exports = async (bot, oldMember, newMember) => {
+module.exports = async (bot, _oldMember, newMember) => {
 	if (!newMember.guild) return;
 	const container = bot.client.container;
 	const { models, helpers } = container;

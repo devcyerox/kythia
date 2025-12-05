@@ -75,7 +75,6 @@
 `/set features minecraft-stats <status>`
 `/set features streak <status>`
 `/set features invites <status>`
-`/set features role-prefix <status>`
 `/set features boost-log <status>`
 
 ### 🔧 Subcommands
@@ -596,14 +595,6 @@
   - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
 **`/set features invites <status>`**
 > Enable or disable the Invites feature
-
-**Options for this subcommand:**
-- **`status*`**
-  - **Description:** Select status
-  - **Type:** Text
-  - **Choices:** `Enable` (`enable`), `Disable` (`disable`)
-**`/set features role-prefix <status>`**
-> Enable or disable the Role Prefix feature
 
 **Options for this subcommand:**
 - **`status*`**

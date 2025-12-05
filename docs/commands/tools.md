@@ -113,6 +113,27 @@
   - **Type:** Text
 
 
+### 💾 `/nickprefix`
+
+**Description:** 📛 Adds or removes a prefix from member nicknames.
+
+### 💻 Usage
+
+`/nickprefix add`
+`/nickprefix remove`
+
+### 🔧 Subcommands
+
+**`/nickprefix add`**
+> 📛 Adds the highest role prefix to member nicknames.
+
+
+**`/nickprefix remove`**
+> 📛 Removes the prefix from member nicknames.
+
+
+
+
 ### 💾 `/obfuscate`
 
 **Description:** 🔒 Obfuscate a Lua or JavaScript file and return it as an attachment.

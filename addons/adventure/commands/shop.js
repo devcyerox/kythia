@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.0-beta
+ * @version 0.10.1-beta
  */
 
 const {
@@ -292,7 +292,7 @@ module.exports = {
 
 		const replyMessage = await interaction.editReply({
 			components: [shopContainer],
-			flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		});
 
@@ -391,7 +391,7 @@ module.exports = {
 
 				await i.editReply({
 					components: [newContainer],
-					flags: MessageFlags.IsPersistent | MessageFlags.IsComponentsV2,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			} catch (error) {
 				console.error('Error in shop interaction:', error);

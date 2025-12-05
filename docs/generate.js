@@ -6,7 +6,7 @@
  * @version 0.10.0-beta
  */
 
-require('@dotenvx/dotenvx/config');
+require('@dotenvx/dotenvx').config({ quiet: true });
 require('../kythia.config.js');
 require('module-alias/register');
 

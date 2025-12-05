@@ -177,6 +177,16 @@
   - **Type:** Number
 
 
+### 💾 `/debug-cache`
+
+**Description:** 🛠️ [DEV] Run diagnostic tests on KythiaModel (Music Edition).
+
+### 💻 Usage
+
+`/debug-cache`
+
+
+
 ### 💾 `/grab`
 
 **Description:** 🛍️ grab stickers or emojis from messages.
@@ -215,6 +225,24 @@
 
 `/help`
 
+
+
+### 💾 `/leaveguild`
+
+**Description:** Force Kythia to leave a specific guild (Owner Only).
+
+### 📋 Details
+
+- **Aliases:** `lg`
+### 💻 Usage
+
+`/leaveguild <guild_id>`
+
+### ⚙️ Options
+
+- **`guild_id*`**
+  - **Description:** The ID of the guild to leave
+  - **Type:** Text
 
 
 ### 💾 `/ping`
