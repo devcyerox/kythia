@@ -7,12 +7,11 @@
  */
 
 const { ChannelType } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const logger = require('@coreHelpers/logger');
 const Sentry = require('@sentry/node');
 
 const timeLocaleCache = {};
-async function getLocalizedTime(locale) {
+async function getLocalizedTime(container, locale) {
+	const { t } = container;
 	if (timeLocaleCache[locale]) return timeLocaleCache[locale];
 
 	const days = await Promise.all([
@@ -46,11 +45,12 @@ async function getLocalizedTime(locale) {
 /**
  * Resolve placeholders in a string using provided data and locale.
  */
-async function resolvePlaceholders(str, data, locale) {
+async function resolvePlaceholders(container, str, data, locale) {
+	const { t } = container;
 	if (typeof str !== 'string') return '';
 
 	const now = new Date();
-	const { days, months } = await getLocalizedTime(locale);
+	const { days, months } = await getLocalizedTime(container, locale);
 
 	let guildAge = 'Unknown';
 	if (data.createdAt) {
@@ -211,7 +211,9 @@ async function resolvePlaceholders(str, data, locale) {
  * (Fungsi ini udah 100% bener dari kodemu tadi, gak aku ubah)
  */
 async function updateStats(client, activeSettings) {
-	const { getChannelSafe } = client.container.helpers.discord;
+	const container = client.container;
+	const { logger, helpers } = container;
+	const { getChannelSafe } = helpers.discord;
 	logger.info(`Processing stats for ${activeSettings.length} guild(s)...`);
 
 	for (const setting of activeSettings) {

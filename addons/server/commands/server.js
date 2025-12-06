@@ -14,11 +14,9 @@ const {
 	EmbedBuilder,
 	InteractionContextType,
 } = require('discord.js');
-const _fs = require('node:fs');
+
 const path = require('node:path');
 const { loadTemplates, buildEmbeds } = require('../helpers/template');
-const { t } = require('@coreHelpers/translator');
-const { embedFooter } = require('@coreHelpers/discord');
 
 // Path ke folder template
 const TEMPLATE_DIR = path.join(__dirname, '../template');
@@ -99,6 +97,7 @@ async function ensureCategory(guild, name, stats) {
 	return cat;
 }
 async function ensureChannel(guild, category, spec, stats) {
+	const { logger } = guild.client.container;
 	const existing = guild.channels.cache.find(
 		(c) =>
 			c.parentId === category.id &&
@@ -149,7 +148,7 @@ async function ensureChannel(guild, category, spec, stats) {
 				try {
 					await m.pin();
 				} catch (e) {
-					console.warn(`Gagal mem-pin pesan di channel ${ch.name}:`, e.message);
+					logger.warn(`Gagal mem-pin pesan di channel ${ch.name}:`, e.message);
 				}
 			}
 			await sleep(200);
@@ -160,7 +159,9 @@ async function ensureChannel(guild, category, spec, stats) {
 
 // --- Progress Embed Helper ---
 async function updateProgress(interaction, progress) {
-	// progress: { step, totalSteps, current, total, label }
+	const container = interaction.client.container;
+	const { kythiaConfig, t, helpers } = container;
+	const { embedFooter } = helpers.discord;
 	const percent =
 		progress.total > 0
 			? Math.floor((progress.current / progress.total) * 100)
@@ -169,7 +170,7 @@ async function updateProgress(interaction, progress) {
 	const filledLength = Math.round((percent / 100) * barLength);
 	const bar = '█'.repeat(filledLength) + '░'.repeat(barLength - filledLength);
 	const embed = new EmbedBuilder()
-		.setColor(kythia.bot.color)
+		.setColor(kythiaConfig.bot.color)
 		.setDescription(
 			`## ${await t(interaction, 'server.server.progress.title')}\n` +
 				`**${progress.label}**\n` +
@@ -183,7 +184,9 @@ async function updateProgress(interaction, progress) {
 }
 
 async function runTemplate(interaction, tpl, opts) {
-	const guild = interaction.guild;
+	const { guild, client } = interaction;
+	const container = client.container;
+	const { t } = container;
 	const stats = {
 		role: { created: 0, skipped: 0 },
 		category: { created: 0, skipped: 0 },
@@ -441,7 +444,9 @@ module.exports = {
 		return interaction.respond([]);
 	},
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { kythiaConfig, t, logger, helpers } = container;
+		const { embedFooter } = helpers.discord;
 		const subcommand = interaction.options.getSubcommand();
 
 		await interaction.deferReply();
@@ -494,7 +499,7 @@ module.exports = {
 				await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
-							.setColor(kythia.bot.color)
+							.setColor(kythiaConfig.bot.color)
 							.setDescription(
 								`## ${await t(interaction, 'server.server.autobuild.progress.start')}`,
 							)
@@ -509,7 +514,7 @@ module.exports = {
 					locale,
 				});
 				const embed = new EmbedBuilder()
-					.setColor(kythia.bot.color)
+					.setColor(kythiaConfig.bot.color)
 					.setDescription(
 						`## ${await t(interaction, 'server.server.autobuild.success.title', { name: tpl.meta.display || key })}\n` +
 							(await t(interaction, 'server.server.autobuild.success.desc', {
@@ -557,7 +562,7 @@ module.exports = {
 					await interaction.editReply({
 						embeds: [
 							new EmbedBuilder()
-								.setColor(kythia.bot.color)
+								.setColor(kythiaConfig.bot.color)
 								.setDescription(
 									`## ${await t(interaction, 'server.server.backup.progress.start')}`,
 								)
@@ -586,7 +591,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.backup.progress.settings')}`,
 									)
@@ -610,7 +615,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.backup.progress.roles')}`,
 									)
@@ -642,7 +647,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.backup.progress.channels')}`,
 									)
@@ -667,7 +672,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.backup.progress.emojis')}`,
 									)
@@ -690,14 +695,14 @@ module.exports = {
 								}));
 							}
 						} catch (e) {
-							console.warn('Gagal fetch soundboard:', e.message);
+							logger.warn('Gagal fetch soundboard:', e.message);
 							soundboard = [];
 						}
 
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.backup.progress.soundboard')}`,
 									)
@@ -743,7 +748,7 @@ module.exports = {
 							);
 						await interaction.editReply({ embeds: [embed] });
 					} catch (err) {
-						console.error(err);
+						logger.error(err);
 						if (err.code === 50007) {
 							const embed = new EmbedBuilder()
 								.setColor('Red')
@@ -767,7 +772,7 @@ module.exports = {
 					await interaction.editReply({
 						embeds: [
 							new EmbedBuilder()
-								.setColor(kythia.bot.color)
+								.setColor(kythiaConfig.bot.color)
 								.setDescription(
 									`## ${await t(interaction, 'server.server.restore.progress.start')}`,
 								)
@@ -818,7 +823,7 @@ module.exports = {
 							await interaction.editReply({
 								embeds: [
 									new EmbedBuilder()
-										.setColor(kythia.bot.color)
+										.setColor(kythiaConfig.bot.color)
 										.setDescription(
 											`## ${await t(interaction, 'server.server.restore.clearing')}`,
 										)
@@ -847,7 +852,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.restore.settings')}`,
 									)
@@ -866,14 +871,14 @@ module.exports = {
 								banner: await fetchAssetBuffer(settings.bannerURL),
 							})
 							.catch((e) =>
-								console.warn('Failed to update server settings:', e.message),
+								logger.warn('Failed to update server settings:', e.message),
 							);
 
 						// Restore Roles
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.restore.roles.text')}`,
 									)
@@ -899,7 +904,7 @@ module.exports = {
 								await interaction.editReply({
 									embeds: [
 										new EmbedBuilder()
-											.setColor(kythia.bot.color)
+											.setColor(kythiaConfig.bot.color)
 											.setDescription(
 												`## ${await t(interaction, 'server.server.restore.roles.progress', { current: roleIdx, total: backup.roles.length })}`,
 											)
@@ -913,7 +918,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.restore.channels.text')}`,
 									)
@@ -937,7 +942,7 @@ module.exports = {
 								await interaction.editReply({
 									embeds: [
 										new EmbedBuilder()
-											.setColor(kythia.bot.color)
+											.setColor(kythiaConfig.bot.color)
 											.setDescription(
 												`## ${await t(interaction, 'server.server.restore.categories.progress', { current: catIdx, total: categories.length })}`,
 											)
@@ -979,7 +984,7 @@ module.exports = {
 								await interaction.editReply({
 									embeds: [
 										new EmbedBuilder()
-											.setColor(kythia.bot.color)
+											.setColor(kythiaConfig.bot.color)
 											.setDescription(
 												`## ${await t(interaction, 'server.server.restore.channels.progress', { current: chIdx, total: nonCatChannels.length })}`,
 											)
@@ -993,7 +998,7 @@ module.exports = {
 						await interaction.editReply({
 							embeds: [
 								new EmbedBuilder()
-									.setColor(kythia.bot.color)
+									.setColor(kythiaConfig.bot.color)
 									.setDescription(
 										`## ${await t(interaction, 'server.server.restore.assets')}`,
 									)
@@ -1012,7 +1017,7 @@ module.exports = {
 										}),
 									)
 									.catch((e) =>
-										console.warn('Failed to restore emoji:', e.message),
+										logger.warn('Failed to restore emoji:', e.message),
 									),
 							);
 						});
@@ -1027,7 +1032,7 @@ module.exports = {
 										}),
 									)
 									.catch((e) =>
-										console.warn('Failed to restore sticker:', e.message),
+										logger.warn('Failed to restore sticker:', e.message),
 									),
 							);
 						});
@@ -1042,7 +1047,7 @@ module.exports = {
 										}),
 									)
 									.catch((e) =>
-										console.warn('Failed to restore sound:', e.message),
+										logger.warn('Failed to restore sound:', e.message),
 									),
 							);
 						});
@@ -1056,7 +1061,7 @@ module.exports = {
 							);
 						return interaction.editReply({ embeds: [embed] });
 					} catch (err) {
-						console.error(err);
+						logger.error(err);
 						const embed = new EmbedBuilder()
 							.setColor('Red')
 							.setDescription(
@@ -1076,7 +1081,10 @@ module.exports = {
 };
 
 async function resetServer(interaction) {
-	const guild = interaction.guild;
+	const { guild, client } = interaction;
+	const container = client.container;
+	const { kythiaConfig, t, helpers } = container;
+	const { embedFooter } = helpers.discord;
 	if (!guild) {
 		const embed = new EmbedBuilder()
 			.setColor('Red')
@@ -1090,7 +1098,7 @@ async function resetServer(interaction) {
 	await interaction.editReply({
 		embeds: [
 			new EmbedBuilder()
-				.setColor(kythia.bot.color)
+				.setColor(kythiaConfig.bot.color)
 				.setDescription(
 					`## ${await t(interaction, 'server.server.reset.progress.start')}`,
 				)
@@ -1111,7 +1119,7 @@ async function resetServer(interaction) {
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
-						.setColor(kythia.bot.color)
+						.setColor(kythiaConfig.bot.color)
 						.setDescription(
 							`## ${await t(interaction, 'server.server.reset.progress.channels', { current: chIdx, total: channelsArr.length })}`,
 						)
@@ -1134,7 +1142,7 @@ async function resetServer(interaction) {
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
-						.setColor(kythia.bot.color)
+						.setColor(kythiaConfig.bot.color)
 						.setDescription(
 							`## ${await t(interaction, 'server.server.reset.progress.roles', { current: roleIdx, total: rolesArr.length })}`,
 						)
@@ -1154,7 +1162,7 @@ async function resetServer(interaction) {
 			await interaction.editReply({
 				embeds: [
 					new EmbedBuilder()
-						.setColor(kythia.bot.color)
+						.setColor(kythiaConfig.bot.color)
 						.setDescription(
 							`## ${await t(interaction, 'server.server.reset.progress.emojis', { current: emojiIdx, total: emojisArr.length })}`,
 						)
@@ -1174,7 +1182,7 @@ async function resetServer(interaction) {
 				await interaction.editReply({
 					embeds: [
 						new EmbedBuilder()
-							.setColor(kythia.bot.color)
+							.setColor(kythiaConfig.bot.color)
 							.setDescription(
 								`## ${await t(interaction, 'server.server.reset.progress.stickers', { current: stickerIdx, total: stickersArr.length })}`,
 							)

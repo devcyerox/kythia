@@ -112,6 +112,7 @@ module.exports = async (bot, member) => {
 		} else {
 			try {
 				welcomeText = await resolvePlaceholders(
+					container,
 					welcomeInTextValue,
 					statsData,
 					member.guild.preferredLocale,

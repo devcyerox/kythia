@@ -7,29 +7,29 @@
  */
 
 const { Collection, PermissionsBitField } = require('discord.js');
-const ServerSetting = require('@coreModels/ServerSetting');
 const { sendLogsWarning } = require('./system');
-const { t } = require('@coreHelpers/translator');
-const logger = require('@coreHelpers/logger');
 const leetMap = require('./leetMap');
+const kythiaConfig = require('../../../kythia.config');
 
 const userCache = new Collection();
-const SPAM_THRESHOLD = kythia.settings.spamThreshold || 5;
-const DUPLICATE_THRESHOLD = kythia.settings.duplicateThreshold || 3;
-const MENTION_THRESHOLD = kythia.settings.mentionThreshold || 3;
-const FAST_TIME_WINDOW = kythia.settings.fastTimeWindow || 40 * 1000;
+const SPAM_THRESHOLD = kythiaConfig.settings.spamThreshold || 5;
+const DUPLICATE_THRESHOLD = kythiaConfig.settings.duplicateThreshold || 3;
+const MENTION_THRESHOLD = kythiaConfig.settings.mentionThreshold || 3;
+const FAST_TIME_WINDOW = kythiaConfig.settings.fastTimeWindow || 40 * 1000;
 const DUPLICATE_TIME_WINDOW =
-	kythia.settings.duplicateTimeWindow || 15 * 60 * 1000;
+	kythiaConfig.settings.duplicateTimeWindow || 15 * 60 * 1000;
 const CACHE_EXPIRATION_TIME =
-	kythia.settings.cacheExpirationTime || 15 * 60 * 1000;
-const PUNISHMENT_COOLDOWN = kythia.settings.punishmentCooldown || 1 * 1000;
-const SHORT_MESSAGE_THRESHOLD = kythia.settings.shortMessageThreshold || 5;
+	kythiaConfig.settings.cacheExpirationTime || 15 * 60 * 1000;
+const PUNISHMENT_COOLDOWN =
+	kythiaConfig.settings.punishmentCooldown || 1 * 1000;
+const SHORT_MESSAGE_THRESHOLD =
+	kythiaConfig.settings.shortMessageThreshold || 5;
 
-const ALL_CAPS_MIN_LENGTH = kythia.settings.antiAllCapsMinLength || 15;
-const ALL_CAPS_RATIO = kythia.settings.antiAllCapsRatio || 0.7;
-const ANTI_EMOJI_MIN_TOTAL = kythia.settings.antiEmojiMinTotal || 11;
-const ANTI_EMOJI_RATIO = kythia.settings.antiEmojiRatio || 0.8;
-const ANTI_ZALGO_MIN = kythia.settings.antiZalgoMin || 8;
+const ALL_CAPS_MIN_LENGTH = kythiaConfig.settings.antiAllCapsMinLength || 15;
+const ALL_CAPS_RATIO = kythiaConfig.settings.antiAllCapsRatio || 0.7;
+const ANTI_EMOJI_MIN_TOTAL = kythiaConfig.settings.antiEmojiMinTotal || 11;
+const ANTI_EMOJI_RATIO = kythiaConfig.settings.antiEmojiRatio || 0.8;
+const ANTI_ZALGO_MIN = kythiaConfig.settings.antiZalgoMin || 8;
 
 const reverseLeetMap = new Map();
 for (const [baseChar, variations] of Object.entries(leetMap)) {
@@ -64,6 +64,8 @@ function canDeleteMessage(message) {
 }
 
 async function automodSystem(message) {
+	const { models } = message.client.container;
+	const { ServerSetting } = models;
 	if (message.author.bot || !message.guild) return;
 
 	const { guild, author: user, member } = message;
@@ -103,6 +105,7 @@ async function automodSystem(message) {
 }
 
 async function checkSpam(message, setting) {
+	const { logger, t } = message.client.container;
 	if (!setting.antiSpamOn) return false;
 
 	const now = Date.now();
@@ -229,6 +232,7 @@ async function checkSpam(message, setting) {
 }
 
 async function checkAllCaps(message, setting) {
+	const { logger, t } = message.client.container;
 	if (!setting.antiAllCapsOn) return false;
 
 	const raw = message.content || '';
@@ -272,6 +276,7 @@ function _countEmojis(str) {
 }
 
 async function checkEmojiSpam(message, setting) {
+	const { logger, t } = message.client.container;
 	if (!setting.antiEmojiSpamOn) return false;
 
 	const raw = message.content || '';
@@ -304,6 +309,7 @@ function _countZalgo(str) {
 }
 
 async function checkZalgo(message, setting) {
+	const { logger, t } = message.client.container;
 	if (!setting.antiZalgoOn) return false;
 
 	const raw = message.content || '';
@@ -330,6 +336,7 @@ async function checkZalgo(message, setting) {
 }
 
 async function checkBadwords(message, setting) {
+	const { t } = message.client.container;
 	if (!setting.antiBadwordOn) return false;
 
 	const rawBadwords = Array.isArray(setting.badwords)
@@ -391,6 +398,7 @@ async function checkBadwords(message, setting) {
 }
 
 async function checkMentions(message, setting) {
+	const { logger, t } = message.client.container;
 	if (!setting.antiMentionOn) return false;
 
 	const mentionRegex =
@@ -421,6 +429,7 @@ async function checkMentions(message, setting) {
 }
 
 async function checkUsername(message, setting) {
+	const { t } = message.client.container;
 	const { author, member, guild } = message;
 
 	const lastCheckKey = `namecheck-${guild.id}-${author.id}`;
@@ -475,6 +484,7 @@ async function checkUsername(message, setting) {
 }
 
 async function checkLinks(message, setting) {
+	const { logger, t } = message.client.container;
 	const sanitize = (text) =>
 		(text || '')
 			.replace(/[\s\\\u200B-\u200D\uFEFF[\](){}<>|`'".,;:!~_=-]/g, '')
@@ -668,9 +678,6 @@ function cleanupCaches() {
 			userCache.delete(key);
 		}
 	}
-	logger.info(
-		`🧹 [CACHE CLEANUP] User cache cleaned. Current size: ${userCache.size}`,
-	);
 }
 
 setInterval(cleanupCaches, 60 * 60 * 1000);
