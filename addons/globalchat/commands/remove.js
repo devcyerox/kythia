@@ -11,7 +11,7 @@ const fetch = require('node-fetch');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('remove')
 			.setDescription('Remove this server from the global chat network'),

@@ -14,7 +14,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('ai')
 		.setDescription('🌸 Manage AI mode in this channel')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)

@@ -30,7 +30,6 @@
  * ------------------------------------------------------
  * DEPENDENCY WIRES & SHORT EXPLANATION
  * ------------------------------------------------------
- * - logger:         Utility for logging bot activity/errors to console and external sinks.
  * - translator:     Handles i18n (multi-language) text lookup and dynamic translation.
  * - isTeam/isOwner: Helper fns for checking bot ownership/admin status in Discord operations.
  * - ServerSetting:  Sequelize model for per-guild/persistent server config.
@@ -46,7 +45,6 @@
  *     - config, logger, translator, redis, sequelize
  *     - models: ServerSetting, KythiaVoter, ...
  *     - helpers: Discord permission/status helpers
- * - dbDependencies: Used only for db-specific modules like KythiaModel during startup.
  * - Kythia.start(): Triggers bot initialization, addon loading, Discord login, etc.
  *
  * ------------------------------------------------------
@@ -63,15 +61,11 @@ require('module-alias/register'); // Enables @src, @utils, etc. path aliases
 const { Kythia, KythiaModel, createSequelizeInstance } = require('kythia-core');
 
 // ===== 2. Load Core Helpers & Utilities with Meaningful Descriptions =====
-const logger = require('@coreHelpers/logger'); // Logging system (console and ext. sinks)
-const translator = require('@coreHelpers/translator'); // I18n (Internationalization) manager
+// const translator = require('@coreHelpers/translator'); // I18n (Internationalization) manager
+
 const {
-	isOwner,
-	isTeam,
 	embedFooter,
-	isPremium,
 	setVoiceChannelStatus,
-	isVoterActive,
 	simpleContainer,
 	getChannelSafe,
 	getTextChannelSafe,
@@ -89,11 +83,10 @@ const convertColor = require('kythia-core').utils.color; // Color conversion uti
 
 // ===== 4. Setup Sequelize ORM Instance for Relational Database Access =====
 // Create a Sequelize instance, provided with config and logger for flex diagnostics
-const sequelize = createSequelizeInstance(kythiaConfig, logger);
+const sequelize = createSequelizeInstance(kythiaConfig);
 
 // ===== 5. Set Up Models' Internal Dependencies =====
 KythiaModel.setDependencies({
-	logger,
 	config: kythiaConfig,
 	redisOptions: kythiaConfig.db.redis,
 }); // Inject utility deps
@@ -101,29 +94,27 @@ KythiaModel.setDependencies({
 // ===== 6. Collect All Service/Model Deps for Containerized Injection =====
 /**
  * dependencies:
- *  - config:       Entire config object tree needed by bot internals
- *  - logger:       For logging during run and error situations
- *  - translator:   For i18n mechanisms
- *  - redis:        Redis client for fast key-value or queue storage
- *  - sequelize:    ORM instance, used for all SQL model work
- *  - models:       Business-related models, grouped for convenience
- *  - helpers:      Utility helpers, grouped by domain (e.g. discord)
+ *  - [!] config:       Entire config object tree needed by bot internals
+ *  - [o] logger:       For logging during run and error situations
+ *  - [!] translator:   For i18n mechanisms
+ *  - [!] redis:        Redis client for fast key-value or queue storage
+ *  - [!] sequelize:    ORM instance, used for all SQL model work
+ *  - [!] models:       Business-related models, grouped for convenience
+ *  - [!] helpers:      Utility helpers, grouped by domain (e.g. discord)
+ *
+ *  - [!] indicates required!
+ *  - [o] indicates optional
  */
 const dependencies = {
 	config: kythiaConfig,
-	logger: logger,
-	translator: translator,
+	// translator: translator,
 	redis: KythiaModel.redis,
 	sequelize: sequelize,
 	models: {},
 	helpers: {
 		discord: {
-			isOwner,
-			isTeam,
 			embedFooter,
-			isPremium,
 			setVoiceChannelStatus,
-			isVoterActive,
 			simpleContainer,
 			getChannelSafe,
 			getTextChannelSafe,
@@ -139,19 +130,12 @@ const dependencies = {
 try {
 	/**
 	 * kythiaInstance: The live bot instance, receives all dependencies for DI via constructor.
-	 *  - dbDependencies: Some db models require injected context/config after construction.
 	 *  - start():        Boots the bot; attaches to Discord, loads addons, connects events, etc.
 	 */
 	const kythiaInstance = new Kythia(dependencies);
-	kythiaInstance.dbDependencies = {
-		KythiaModel, // Model with pre-wired dependencies
-		logger, // Reference for DB/model logging
-		config: kythiaConfig,
-	};
+
 	kythiaInstance.start();
 } catch (error) {
-	// If logger isn't available, fallback to console.
-	const log = logger || console;
-	log.error('🔥 FATAL ERROR during initialization:', error);
+	console.error('🔥 FATAL ERROR during initialization:', error);
 	process.exit(1);
 }

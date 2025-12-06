@@ -24,7 +24,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('serverinfo')
 		.setDescription('📰 Displays detailed information about the server.')
 		.setContexts(InteractionContextType.Guild),

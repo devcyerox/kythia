@@ -10,7 +10,7 @@ const { buildInterface } = require('../helpers/interface');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('setup')
 			.setDescription(

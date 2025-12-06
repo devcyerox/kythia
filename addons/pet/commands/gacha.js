@@ -5,24 +5,22 @@
  * @assistant chaa & graa
  * @version 0.10.1-beta
  */
-const { EmbedBuilder } = require('discord.js');
-const UserPet = require('../database/models/UserPet');
-const Pet = require('../database/models/Pet');
 const { checkCooldown } = require('@coreHelpers/time');
-const { t } = require('@coreHelpers/translator');
-const User = require('@coreModels/User');
+const { EmbedBuilder } = require('discord.js');
 const { Op } = require('sequelize');
-const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('gacha').setDescription('Gacha your pet!'),
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { User, UserPet, Pet } = models;
+
 		await interaction.deferReply();
 
 		const userId = interaction.user.id;
-		const _guildId = interaction.guild.id;
 		const userPet = await UserPet.findOne({
 			where: {
 				userId: userId,

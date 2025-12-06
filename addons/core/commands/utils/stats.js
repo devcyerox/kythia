@@ -66,7 +66,7 @@ function getGitCommitId() {
 
 module.exports = {
 	aliases: ['s', '📊'],
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('stats')
 		.setDescription(`📊 Displays kythia statistics.`),
 	async execute(interaction, container) {

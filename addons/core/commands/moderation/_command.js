@@ -8,7 +8,7 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('mod')
 		.setDescription('Moderation action')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),

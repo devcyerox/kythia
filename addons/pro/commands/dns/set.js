@@ -9,7 +9,7 @@ const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('set')
 			.setDescription('🌐 Create or update a DNS record.')

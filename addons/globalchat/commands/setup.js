@@ -16,7 +16,7 @@ const fetch = require('node-fetch');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('setup')
 			.setDescription(

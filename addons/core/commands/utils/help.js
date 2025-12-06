@@ -30,7 +30,7 @@ const CATEGORIES_PER_PAGE = 25;
 
 module.exports = {
 	aliases: ['h', 'ℹ️'],
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('help')
 		.setDescription(
 			'💡 Displays a list of bot commands with complete details.',

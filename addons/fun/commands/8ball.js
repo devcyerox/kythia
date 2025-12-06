@@ -8,7 +8,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('8ball')
 		.setDescription('🔮 Ask the magic 8 ball anything')
 		.addStringOption((option) =>

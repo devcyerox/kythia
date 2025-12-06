@@ -17,7 +17,7 @@ const SUPPORTED_HASHES = [
 ];
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('crack-hash')
 		.setDescription(
 			'🔍 Try to lookup a hash from public databases (MD5, SHA1, SHA256, SHA512).',

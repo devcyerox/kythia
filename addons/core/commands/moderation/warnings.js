@@ -8,7 +8,7 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('warnings')
 			.setDescription('🔖 Show user warnings.')

@@ -11,7 +11,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('withdraw')
 			.setDescription('Withdraw your kythia coin from kythia bank.')

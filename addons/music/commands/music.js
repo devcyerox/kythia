@@ -14,7 +14,7 @@ const {
 const { formatTrackDuration, hasControlPermission } = require('../helpers');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('music')
 		.setDescription('🎵 Full music command suite using Lavalink')
 		.addSubcommand((subcommand) =>

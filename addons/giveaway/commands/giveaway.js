@@ -14,7 +14,7 @@ const {
 const { Op } = require('sequelize');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('giveaway')
 		.setDescription('🎉 Create a giveaway event')
 		.addSubcommand((subcommand) =>

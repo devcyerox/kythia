@@ -6,10 +6,6 @@
  * @version 0.10.1-beta
  */
 
-const ModLog = require('@coreModels/ModLog');
-const convertColor = require('kythia-core').utils.color;
-const { t } = require('@coreHelpers/translator');
-
 async function sendLogsWarning(
 	message,
 	reason,
@@ -17,7 +13,12 @@ async function sendLogsWarning(
 	setting,
 	userId = message.author.id,
 ) {
-	const { getTextChannelSafe } = message.client.container.helpers.discord;
+	const container = message.client.container;
+	const { t, helpers, models } = container;
+	const { getTextChannelSafe } = helpers.discord;
+	const { convertColor } = helpers.color;
+	const { ModLog } = models;
+
 	// Send warning message in channel
 	const warningMessage = await t(
 		message,

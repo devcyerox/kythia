@@ -13,7 +13,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 module.exports = {
 	subcommand: true,
 	aliases: ['work'],
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('work')
 			.setDescription('⚒️ Work to earn money with various scenarios!'),

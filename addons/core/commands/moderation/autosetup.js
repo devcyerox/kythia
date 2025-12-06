@@ -60,7 +60,7 @@ async function createRuleWithRetry(
 }
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('autosetup')
 			.setDescription('Installs/re-installs a set of 6 core AutoMod rules.'),

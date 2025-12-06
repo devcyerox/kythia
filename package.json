@@ -36,7 +36,7 @@
 		"express-session": "^1.18.2",
 		"figlet": "^1.9.3",
 		"javascript-obfuscator": "^4.1.1",
-		"kythia-core": "^0.11.1-beta",
+		"kythia-core": "file:.yalc/kythia-core",
 		"luxon": "^3.7.2",
 		"marked": "^4.3.0",
 		"module-alias": "^2.2.3",

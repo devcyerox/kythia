@@ -13,7 +13,7 @@ const divorceConfirmations = new Map();
 const DIVORCE_CONFIRM_EXPIRE = 1000 * 60 * 2;
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('divorce')
 			.setDescription('💔 End your current marriage'),

@@ -38,7 +38,7 @@ const VALID_ACTIONS = [
 ];
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('act')
 		.setDescription('🤗 Perform an anime action with a user')
 		.addStringOption((option) =>

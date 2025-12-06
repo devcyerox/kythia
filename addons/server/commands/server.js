@@ -298,7 +298,7 @@ async function runTemplate(interaction, tpl, opts) {
 }
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('server')
 		.setDescription('⚙️ Discord server management tools')
 		.addSubcommand((sub) =>

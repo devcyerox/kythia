@@ -16,7 +16,7 @@ const characters = require('../helpers/characters');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('battle')
 			.setNameLocalizations({ id: 'bertarung', fr: 'combat', ja: 'たたかう' })

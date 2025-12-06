@@ -7,7 +7,7 @@
  */
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('add')
 			.setDescription('Add a user to premium')

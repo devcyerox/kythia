@@ -34,7 +34,7 @@ const ALL_EVENTS = [
 ];
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('testevent')
 		.setDescription('🧪 Trigger a Discord event for testing purposes')
 		.addStringOption((option) =>

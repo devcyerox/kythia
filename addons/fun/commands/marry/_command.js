@@ -9,7 +9,7 @@ const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	guildOnly: true,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('marry')
 		.setDescription('💍 Marriage system commands')
 		.setContexts(InteractionContextType.Guild),

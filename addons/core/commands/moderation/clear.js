@@ -16,7 +16,7 @@ const {
 const logger = require('@coreHelpers/logger');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('clear')
 			.setDescription('🗑️ Delete messages from a channel.')

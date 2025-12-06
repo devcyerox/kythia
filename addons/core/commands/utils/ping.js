@@ -332,7 +332,7 @@ async function buildPingEmbed(interaction, container, initialLatencies = null) {
 }
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription(
 			"🔍 Checks the bot's, Discord API's, database and cache/redis connection speed.",

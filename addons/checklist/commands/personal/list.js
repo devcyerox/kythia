@@ -15,7 +15,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('list').setDescription('View all personal checklist'),
 
 	async execute(interaction, container) {

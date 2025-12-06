@@ -8,7 +8,7 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('timeout')
 			.setDescription('⏰ Puts a user in timeout for a specified duration.')

@@ -49,7 +49,7 @@ const getEmbedColor = (color) => {
 };
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('uno')
 		.setDescription('Mulai permainan UNO dengan teman atau bot!')
 		.addUserOption((option) =>

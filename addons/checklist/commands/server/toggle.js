@@ -12,13 +12,10 @@ const {
 	safeReply,
 } = require('../../helpers');
 const { EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const convertColor = require('kythia-core').utils.color;
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('toggle')
 			.setDescription('Toggle server checklist item complete/incomplete')
@@ -29,7 +26,11 @@ module.exports = {
 					.setRequired(true),
 			),
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { convertColor } = helpers.color;
+
 		const guildId = interaction.guild?.id;
 		const userId = null; // Server scope
 		const group = 'server';

@@ -6,18 +6,19 @@
  * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
-const User = require('@coreModels/User');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('leaderboard')
 			.setDescription("See the server's level leaderboard."),
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { User } = models;
+
 		await interaction.deferReply();
 		const guildId = interaction.guild.id;
 		const topUsers = await User.getAllCache({

@@ -21,7 +21,7 @@ const {
 
 module.exports = {
 	aliases: ['v'],
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('vote')
 		.setDescription(`❤️ Vote for kythia on top.gg!`),
 	async execute(interaction, container) {

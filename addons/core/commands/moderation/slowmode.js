@@ -8,7 +8,7 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('slowmode')
 			.setDescription('⏳ Sets the slowmode for the channel.')

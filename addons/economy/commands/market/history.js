@@ -9,7 +9,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('history')
 			.setDescription('View your transaction history.'),

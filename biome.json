@@ -24,7 +24,15 @@
 		"rules": {
 			"recommended": true,
 			"correctness": {
-				"noUnusedVariables": "warn"
+				"noUnusedVariables": "warn",
+				"noUndeclaredVariables": "error"
+			},
+			"suspicious": {
+				"noConsole": "warn",
+				"noDoubleEquals": "error"
+			},
+			"style": {
+				"useConst": "warn"
 			},
 			"complexity": {
 				"noThisInStatic": "off"

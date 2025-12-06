@@ -8,6 +8,6 @@
 
 module.exports = {
 	subcommand: true,
-	data: (group) =>
+	slashCommand: (group) =>
 		group.setName('account').setDescription('Manage your kythia bank account.'),
 };

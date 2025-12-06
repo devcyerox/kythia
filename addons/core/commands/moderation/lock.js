@@ -8,7 +8,7 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('lock')
 			.setDescription('🔒 Locks a channel to prevent messages.')
@@ -21,7 +21,7 @@ module.exports = {
 	permissions: PermissionFlagsBits.ManageChannels,
 	botPermissions: PermissionFlagsBits.ManageChannels,
 	async execute(interaction, container) {
-		const { t, helpers } = container;
+		const { t, kythiaConfig, helpers } = container;
 		const { embedFooter } = helpers.discord;
 
 		await interaction.deferReply({ ephemeral: true });
@@ -62,7 +62,7 @@ module.exports = {
 
 		// Embed reply to the user
 		const embed = new EmbedBuilder()
-			.setColor(kythia.bot.color)
+			.setColor(kythiaConfig.bot.color)
 			.setDescription(
 				await t(interaction, 'core.moderation.lock.embed.reply', {
 					channel: `<#${channel.id}>`,

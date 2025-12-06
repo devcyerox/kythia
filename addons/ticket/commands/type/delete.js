@@ -11,7 +11,7 @@ const { refreshTicketPanel } = require('../../helpers');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('delete')
 			.setDescription('Deletes a ticket type.')

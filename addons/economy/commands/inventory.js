@@ -9,7 +9,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('inventory')
 			.setDescription('🛄 View all items in your inventory.'),

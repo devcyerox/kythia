@@ -225,7 +225,7 @@ function getItemsInCategory(category, page = 1, itemsPerPage = 5) {
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('shop')
 			.setNameLocalizations({ id: 'toko', fr: 'boutique', ja: 'ショップ' })
@@ -251,7 +251,7 @@ module.exports = {
 
 	async execute(interaction, container) {
 		// Dependency
-		const { t, models, helpers } = container;
+		const { t, models, helpers, logger } = container;
 		const { UserAdventure, InventoryAdventure } = models;
 		const { embedFooter } = helpers.discord;
 
@@ -394,14 +394,14 @@ module.exports = {
 					flags: MessageFlags.IsComponentsV2,
 				});
 			} catch (error) {
-				console.error('Error in shop interaction:', error);
+				logger.error('Error in shop interaction:', error);
 				try {
 					await i.followUp({
 						content: await t(interaction, 'common.error.generic'),
 						ephemeral: true,
 					});
 				} catch (e) {
-					console.error('Failed to send error followUp:', e);
+					logger.error('Failed to send error followUp:', e);
 				}
 			}
 		});
@@ -422,7 +422,7 @@ module.exports = {
 
 			replyMessage
 				.edit({ components: disabledComponents })
-				.catch(console.error);
+				.catch((err) => logger.error(err));
 		});
 	},
 };

@@ -7,7 +7,7 @@
  */
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('delete')
 			.setDescription('Remove a user from premium')

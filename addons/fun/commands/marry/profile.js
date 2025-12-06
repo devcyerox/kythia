@@ -18,7 +18,7 @@ const {
 const { Op } = require('sequelize');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('profile')
 			.setDescription('👰 View your marriage profile'),

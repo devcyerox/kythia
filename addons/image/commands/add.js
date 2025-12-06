@@ -9,14 +9,11 @@
 const fs = require('node:fs').promises;
 const path = require('node:path');
 const { v4: uuidv4 } = require('uuid');
-// const logger = require('@coreHelpers/logger');
 const { EmbedBuilder, MessageFlags } = require('discord.js');
-// const { t } = require('@coreHelpers/translator');
-// const { embedFooter } = require('@coreHelpers/discord');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('add')
 			.setDescription('Add a new image')
@@ -26,12 +23,10 @@ module.exports = {
 					.setDescription('The image to add')
 					.setRequired(true),
 			),
-	async execute(interaction) {
-		const { models, helpers, translator, kythiaConfig } =
-			interaction.client.container;
+	async execute(interaction, container) {
+		const { models, helpers, t, kythiaConfig } = container;
 		const { Image } = models;
 		const { embedFooter } = helpers.discord;
-		const { t } = translator;
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 

@@ -20,7 +20,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('create')
 			.setDescription('Creates a new ticket panel (interactive setup)'),

@@ -8,7 +8,7 @@
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('role')
 			.setDescription('⭕ Add or remove a role from a user.')

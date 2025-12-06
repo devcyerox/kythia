@@ -6,14 +6,13 @@
  * @version 0.10.1-beta
  */
 
+const { EmbedBuilder, MessageFlags } = require('discord.js');
 const fs = require('node:fs').promises;
 const path = require('node:path');
-const { EmbedBuilder, MessageFlags } = require('discord.js');
-// const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('delete')
 			.setDescription('Delete an image by its code')
@@ -23,10 +22,9 @@ module.exports = {
 					.setDescription('The code of the image to delete')
 					.setRequired(true),
 			),
-	async execute(interaction) {
-		const { models, translator, kythiaConfig } = interaction.client.container;
+	async execute(interaction, container) {
+		const { models, t, kythiaConfig } = container;
 		const { Image } = models;
-		const { t } = translator;
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 

@@ -10,7 +10,7 @@ const banks = require('../helpers/banks');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('profile')
 			.setDescription(

@@ -9,7 +9,7 @@ const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	guildOnly: true,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('checklist')
 		.setDescription(
 			'📝 Create checklists for you or your server to make life easier',

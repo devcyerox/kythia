@@ -9,7 +9,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('afk')
 		.setDescription('💤 Set your Away From Keyboard (AFK) status.')
 		.addStringOption((option) =>

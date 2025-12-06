@@ -9,7 +9,7 @@ const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	guildOnly: true,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('globalchat')
 		.setDescription('🌏 Manage global chat settings for this server')
 		.setContexts(InteractionContextType.Guild),

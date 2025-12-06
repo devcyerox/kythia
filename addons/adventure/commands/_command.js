@@ -9,7 +9,7 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	guildOnly: false,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('adventure')
 		.setNameLocalizations({
 			id: 'petualangan',

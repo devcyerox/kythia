@@ -10,7 +10,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('coinflip')
 			.setDescription('🪙 Flip a coin and test your luck.')

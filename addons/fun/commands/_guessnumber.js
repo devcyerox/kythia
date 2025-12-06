@@ -6,11 +6,9 @@
  * @version 0.10.1-beta
  */
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('guessnumber')
 		.setDescription('Guess the number the bot is thinking of 😋')
 		.addStringOption((option) =>
@@ -25,7 +23,10 @@ module.exports = {
 				),
 		),
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, helpers } = container;
+		const { embedFooter } = helpers.discord;
+
 		const mode = interaction.options.getString('mode');
 		let maxNumber = 100;
 

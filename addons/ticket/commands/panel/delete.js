@@ -10,7 +10,7 @@ const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('delete')
 			.setDescription('Deletes a ticket panel and all its types.')

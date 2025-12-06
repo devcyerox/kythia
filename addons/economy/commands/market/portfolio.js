@@ -17,7 +17,7 @@ function getChangeEmoji(percent) {
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('portfolio')
 			.setDescription('💼 View your personal asset portfolio.'),

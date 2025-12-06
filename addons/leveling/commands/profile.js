@@ -18,7 +18,7 @@ const { generateLevelImage, levelUpXp } = require('../helpers');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('profile')
 			.setDescription("Check your or another user's level profile.")

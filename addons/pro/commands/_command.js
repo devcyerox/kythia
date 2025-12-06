@@ -8,7 +8,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('pro')
 		.setDescription('🌸 All commands related to the Kythia Pro users.')
 		.setContexts(InteractionContextType.Guild),

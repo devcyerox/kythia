@@ -20,7 +20,7 @@ const {
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('global-announcement')
 		.setDescription('Send an announcement to all servers the bot has joined.')
 		.addSubcommand((sub) =>

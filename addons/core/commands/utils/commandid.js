@@ -8,7 +8,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('command-id')
 		.setDescription("🔍 Find a command's ID and generate its mention.")
 		.addStringOption((opt) =>

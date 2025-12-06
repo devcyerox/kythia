@@ -8,7 +8,7 @@
 const { EmbedBuilder } = require('discord.js');
 const { Op } = require('sequelize');
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('list').setDescription('View list of premium users'),
 	async execute(interaction, container) {
 		const { t, kythiaConfig, helpers, models } = container;

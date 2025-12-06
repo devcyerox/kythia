@@ -8,7 +8,7 @@
 const { PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('announce')
 			.setDescription('📢 Send an announcement to a specified channel.')

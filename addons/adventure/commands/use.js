@@ -15,7 +15,7 @@ const { getItem } = require('../helpers/items');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('use').setDescription('Use an item from your inventory'),
 
 	async execute(interaction, container) {

@@ -14,19 +14,14 @@ const {
 	MessageFlags,
 } = require('discord.js');
 
-// const convertColor = require('kythia-core').utils.color;
-// const { t } = require('@coreHelpers/translator');
-
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('list').setDescription('List all your uploaded images'),
-	async execute(interaction) {
-		const { models, helpers, translator, kythiaConfig } =
-			interaction.client.container;
+	async execute(interaction, container) {
+		const { models, helpers, t, kythiaConfig } = container;
 		const { Image } = models;
 		const { convertColor } = helpers.color;
-		const { t } = translator;
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 

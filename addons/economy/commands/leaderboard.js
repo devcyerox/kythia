@@ -158,7 +158,7 @@ async function generateLeaderboardContainer(
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('leaderboard')
 			.setDescription('🏆 View the global economy leaderboard.'),

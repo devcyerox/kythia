@@ -9,7 +9,7 @@ const { MessageFlags, ChannelType } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('remove')
 			.setDescription('Disable the tempvoice system and remove the panel.'),

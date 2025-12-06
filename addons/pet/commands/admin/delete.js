@@ -6,12 +6,9 @@
  * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const Pet = require('../../database/models/Pet');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('delete')
 			.setDescription('Delete a pet from the system')
@@ -23,7 +20,11 @@ module.exports = {
 			),
 	subcommand: true,
 	teamOnly: true,
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { Pet } = models;
+
 		await interaction.deferReply();
 
 		const name = interaction.options.getString('name');

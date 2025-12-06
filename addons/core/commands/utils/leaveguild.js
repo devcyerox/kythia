@@ -18,7 +18,7 @@ const {
 
 module.exports = {
 	aliases: ['lg'],
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('leaveguild')
 		.setDescription('Force Kythia to leave a specific guild (Owner Only).')
 		.addStringOption((option) =>

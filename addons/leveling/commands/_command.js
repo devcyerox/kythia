@@ -9,7 +9,7 @@ const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	guildOnly: true,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('level')
 		.setDescription('🏅 All commands related to the leveling system.')
 		.setContexts(InteractionContextType.Guild),

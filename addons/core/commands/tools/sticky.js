@@ -13,7 +13,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('sticky')
 		.setDescription('📌 Manage sticky messages in a channel.')
 		.addSubcommand((sub) =>

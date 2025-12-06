@@ -304,7 +304,7 @@ const figletFonts = [
 ];
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('ascii')
 		.setDescription('🎨 Generate ASCII art from your text using figlet.')
 		.addStringOption((option) =>

@@ -8,7 +8,7 @@
 const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('mute')
 			.setDescription('🔇 Mute a user in a voice channel.')

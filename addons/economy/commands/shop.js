@@ -206,7 +206,7 @@ async function generateShopComponentRows(
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('shop')
 			.setDescription('🛒 Look and buy items from the shop.'),

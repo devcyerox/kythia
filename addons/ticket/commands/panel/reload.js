@@ -10,7 +10,7 @@ const { MessageFlags } = require('discord.js');
 const { refreshTicketPanel } = require('../../helpers');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('reload')
 			.setDescription('Refreshes a ticket panel (updates buttons & menus).')

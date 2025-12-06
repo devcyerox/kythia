@@ -15,7 +15,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('add')
 			.setDescription('Add item to server checklist')
@@ -27,9 +27,8 @@ module.exports = {
 			),
 
 	async execute(interaction, container) {
-		// Dependency
-		const t = container.t;
-		const { embedFooter } = container.helpers.discord;
+		const { t, helpers } = container;
+		const { embedFooter } = helpers.discord;
 
 		const guildId = interaction.guild?.id;
 		const userId = null; // Server scope

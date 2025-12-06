@@ -5,17 +5,17 @@
  * @assistant chaa & graa
  * @version 0.10.1-beta
  */
-const UserPet = require('../database/models/UserPet');
-const Pet = require('../database/models/Pet');
-const { embedFooter } = require('@coreHelpers/discord');
 const { EmbedBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('leaderboard').setDescription('View pet leaderboard!'),
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { UserPet, Pet } = models;
+
 		await interaction.deferReply();
 
 		const leaderboard = await UserPet.findAll({

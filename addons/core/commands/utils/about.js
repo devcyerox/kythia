@@ -20,7 +20,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('about')
 		.setDescription(`😋 A brief introduction about kythia`),
 	aliases: ['abt', '🌸'],

@@ -7,6 +7,6 @@
  */
 module.exports = {
 	subcommand: true,
-	data: (subcommandGroup) =>
+	slashCommand: (subcommandGroup) =>
 		subcommandGroup.setName('claim').setDescription('🌐 Klaim Your Rewards!'),
 };

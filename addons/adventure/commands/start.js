@@ -10,7 +10,7 @@ const characters = require('../helpers/characters');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) => {
+	slashCommand: (subcommand) => {
 		const chars = characters.getAllCharacters();
 		return subcommand
 			.setName('start')

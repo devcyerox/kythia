@@ -10,7 +10,7 @@ const { ASSET_IDS } = require('../../helpers/market');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('stoploss')
 			.setDescription(

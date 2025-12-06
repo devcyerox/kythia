@@ -10,7 +10,7 @@ const { PermissionFlagsBits, MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('reset')
 			.setDescription('Reset all invites for this server (Admin only)'),

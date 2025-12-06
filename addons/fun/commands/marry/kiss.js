@@ -12,7 +12,7 @@ const { Op } = require('sequelize');
 const KISS_COOLDOWN = 3600;
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('kiss').setDescription('😘 Kiss your partner'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;

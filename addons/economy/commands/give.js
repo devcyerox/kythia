@@ -15,7 +15,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('give')
 			.setDescription('💰 Give kythia coin to another user.')

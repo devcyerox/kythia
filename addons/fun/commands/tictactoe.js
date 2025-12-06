@@ -245,7 +245,7 @@ function checkWinBoard(board, playerSymbol) {
 // =================================================================
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('tictactoe')
 		.setDescription('⭕ Play Tic Tac Toe with a friend or bot.')
 		.addUserOption((option) =>

@@ -8,7 +8,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('tempvoice')
 		.setDescription('🎧 Manage and customize the Kythia TempVoice system')
 		.setContexts(InteractionContextType.Guild),

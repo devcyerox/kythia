@@ -6,15 +6,12 @@
  * @version 0.10.1-beta
  */
 const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
-const User = require('@coreModels/User');
 const { calculateLevelAndXp } = require('../helpers');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
 	permissions: [PermissionFlagsBits.ManageGuild],
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('xp-set')
 			.setDescription("Set a user's total XP to a specific value.")
@@ -31,7 +28,11 @@ module.exports = {
 					.setRequired(true),
 			),
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { User } = models;
+
 		await interaction.deferReply({ ephemeral: true });
 
 		const targetUser = interaction.options.getUser('user');

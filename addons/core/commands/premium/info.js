@@ -8,7 +8,7 @@
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('info')
 			.setDescription('View premium info for a user')

@@ -12,34 +12,7 @@ const {
 	SeparatorSpacingSize,
 } = require('discord.js');
 
-const KythiaUser = require('@coreModels/KythiaUser');
-const KythiaTeam = require('@coreModels/KythiaTeam');
-const { t } = require('@coreHelpers/translator');
-const logger = require('./logger');
 const axios = require('axios');
-
-const isOwner = (userId) => {
-	let ownerIds = kythia.owner.ids;
-	if (typeof ownerIds === 'string') {
-		ownerIds = ownerIds.split(',').map((id) => id.trim());
-	}
-	if (Array.isArray(ownerIds) && ownerIds.includes(String(userId))) {
-		return true;
-	}
-	return false;
-};
-
-/**
- * Checks whether a user is part of the bot owner team.
- * Owner is always considered a team member.
- * @param {{id:string}} user - Discord user object.
- * @returns {Promise<boolean>} True if user is owner or in a team.
- */
-async function isTeam(user) {
-	if (isOwner(user.id)) return true;
-	const teams = await KythiaTeam.getCache({ userId: user.id });
-	return !!teams?.length;
-}
 
 /**
  * Builds a consistent embed footer with bot username and avatar based on the context.
@@ -48,6 +21,7 @@ async function isTeam(user) {
  * @returns {Promise<{text:string, iconURL?:string}>}
  */
 const embedFooter = async (source) => {
+	const { logger, t } = source.client.container;
 	// Attempt to resolve client for Interaction, Message, and GuildMember
 	const client = source.client;
 
@@ -71,30 +45,14 @@ const embedFooter = async (source) => {
 };
 
 /**
- * Checks whether the user has an active premium subscription.
- * The owner is always premium.
- * @param {string} userId - Discord user ID.
- * @returns {Promise<boolean>} True if premium is active.
- */
-async function isPremium(userId) {
-	if (isOwner(userId)) return true;
-	const premium = await KythiaUser.getCache({ userId: userId });
-	if (!premium) return false;
-	if (premium.premiumExpiresAt && new Date() > premium.premiumExpiresAt)
-		return false;
-	return premium.isPremium;
-}
-
-/**
  * Sets a custom status message on a voice channel via Discord HTTP API.
  * @param {import('discord.js').VoiceChannel|import('discord.js').BaseVoiceChannel} channel - Voice-capable channel.
  * @param {string} status - Status text to display.
  */
-async function setVoiceChannelStatus(channel, status) {
-	// Validate channel
-	const botToken = kythia.bot.token;
+async function setVoiceChannelStatus(interaction, channel, status) {
+	const { kythiaConfig } = interaction.client.container;
+	const botToken = kythiaConfig.bot.token;
 	if (!channel || !channel.isVoiceBased()) {
-		logger.warn('❌ Invalid voice channel provided.');
 		return;
 	}
 
@@ -104,25 +62,7 @@ async function setVoiceChannelStatus(channel, status) {
 			{ status: status },
 			{ headers: { Authorization: `Bot ${botToken}` } },
 		);
-	} catch (e) {
-		logger.warn(
-			'❌ Failed to set voice channel status:',
-			e.response?.data || e.message,
-		);
-	}
-}
-
-/**
- * Checks whether the user has an active Top.gg vote (i.e., isVoted && not expired).
- * @param {string} userId - Discord user ID.
- * @returns {Promise<boolean>} True if the user has an active vote.
- */
-async function isVoterActive(userId) {
-	const user = await KythiaUser.getCache({ userId });
-	if (!user) return false;
-	if (!user.isVoted || !user.voteExpiresAt || new Date() > user.voteExpiresAt)
-		return false;
-	return true;
+	} catch (_e) {}
 }
 
 /**
@@ -201,12 +141,8 @@ async function getMemberSafe(guild, userId) {
 }
 
 module.exports = {
-	isOwner,
-	isTeam,
 	embedFooter,
-	isPremium,
 	setVoiceChannelStatus,
-	isVoterActive,
 	simpleContainer,
 	getChannelSafe,
 	getTextChannelSafe,

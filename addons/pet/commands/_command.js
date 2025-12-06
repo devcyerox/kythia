@@ -9,7 +9,7 @@ const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
 	guildOnly: true,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('pet')
 		.setDescription('🐾 All commands related to the pet system.')
 		.setContexts(InteractionContextType.Guild),

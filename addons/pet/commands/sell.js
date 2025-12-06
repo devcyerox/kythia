@@ -6,17 +6,16 @@
  * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
-const UserPet = require('../database/models/UserPet');
-const Pet = require('../database/models/Pet');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
-const User = require('@coreModels/User');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('sell').setDescription('Sell your pet!'),
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { User, UserPet, Pet } = models;
+
 		await interaction.deferReply();
 
 		const userId = interaction.user.id;

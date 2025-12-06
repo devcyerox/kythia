@@ -10,7 +10,7 @@ const characters = require('../helpers/characters');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('profile')
 			.setNameLocalizations({ id: 'profil', fr: 'profil', ja: 'プロフィール' })

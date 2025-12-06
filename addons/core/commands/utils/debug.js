@@ -9,7 +9,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('debug-cache')
 		.setDescription(
 			'🛠️ [DEV] Run diagnostic tests on KythiaModel (Music Edition).',

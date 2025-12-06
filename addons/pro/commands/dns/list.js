@@ -16,7 +16,7 @@ const {
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('list')
 			.setDescription('🌐 Show all DNS records for one of your subdomains.')

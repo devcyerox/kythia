@@ -10,7 +10,7 @@ const { MessageFlags, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('add')
 			.setDescription('Add invites to a user (Admin only)')

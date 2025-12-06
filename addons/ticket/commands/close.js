@@ -10,7 +10,7 @@ const { closeTicket, MessageFlags } = require('../helpers');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('close')
 			.setDescription('Close the ticket and delete the ticket channel.'),

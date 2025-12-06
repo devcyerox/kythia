@@ -11,7 +11,7 @@ const { MessageFlags } = require('discord.js');
 module.exports = {
 	subcommand: true,
 
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('delete')
 			.setDescription('🌐 Delete a DNS record from your subdomain.')

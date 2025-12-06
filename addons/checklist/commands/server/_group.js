@@ -8,6 +8,6 @@
 
 module.exports = {
 	subcommand: true,
-	data: (group) =>
+	slashCommand: (group) =>
 		group.setName('server').setDescription('Manage server checklist (public)'),
 };

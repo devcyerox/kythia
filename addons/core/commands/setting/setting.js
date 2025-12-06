@@ -829,7 +829,7 @@ const command = new SlashCommandBuilder()
 		return group;
 	});
 module.exports = {
-	data: command,
+	slashCommand: command,
 	permissions: PermissionFlagsBits.ManageGuild,
 	botPermissions: PermissionFlagsBits.ManageGuild,
 	async autocomplete(interaction) {

@@ -22,7 +22,7 @@ const SUPPORTED_ALGOS = [
 ];
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('hash')
 		.setDescription(
 			'🔒 Hash a text string using MD5, SHA, or other algorithms.',

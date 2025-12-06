@@ -11,7 +11,7 @@ const { toBigIntSafe } = require('../../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('buy')
 			.setDescription('💸 Buy an asset from the global market.')

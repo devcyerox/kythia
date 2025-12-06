@@ -12,7 +12,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('quest')
 		.setDescription('🎁 Manage the Discord Quest Notifier system.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)

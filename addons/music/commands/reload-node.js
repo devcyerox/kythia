@@ -10,7 +10,7 @@ const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 const { reloadLavalinkNodes } = require('../helpers/reload-node');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('reloadnode')
 		.setDescription('🔄️ Reload Lavalink nodes and configuration')
 		.setContexts(InteractionContextType.BotDM),

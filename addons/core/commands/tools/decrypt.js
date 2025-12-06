@@ -12,7 +12,7 @@ const crypto = require('node:crypto');
 const ALGORITHM = 'aes-256-gcm';
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('decrypt')
 		.setDescription('🔓 Decrypt data using the correct secret key.')
 		.addStringOption((option) =>

@@ -12,7 +12,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('warn')
 			.setDescription('⚠️ Warn a user.')

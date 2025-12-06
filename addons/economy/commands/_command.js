@@ -9,7 +9,7 @@ const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('eco')
 		.setDescription('💰 Get your money and become rich'),
 };

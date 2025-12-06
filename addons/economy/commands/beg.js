@@ -12,7 +12,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('beg').setDescription('💰 Ask for money from server.'),
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;

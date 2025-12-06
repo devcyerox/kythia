@@ -13,18 +13,17 @@ const {
 	getYesterdayDateString,
 	giveStreakRoleReward,
 } = require('../helpers');
+
 const {
 	SlashCommandBuilder,
 	EmbedBuilder,
 	InteractionContextType,
 } = require('discord.js');
-const ServerSetting = require('@coreModels/ServerSetting');
-const Streak = require('../database/models/Streak');
-const { t } = require('@coreHelpers/translator');
+
 const { Op } = require('sequelize');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('streak')
 		.setDescription('Check and claim your daily streak!')
 		.addSubcommand((sub) =>
@@ -65,7 +64,10 @@ module.exports = {
 		)
 		.setContexts(InteractionContextType.Guild),
 	guildOnly: true,
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models } = container;
+		const { ServerSetting, Streak } = models;
+
 		const sub = interaction.options.getSubcommand();
 		const userId = interaction.user.id;
 		const guildId = interaction.guild.id;

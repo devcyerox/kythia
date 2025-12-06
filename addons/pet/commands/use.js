@@ -6,21 +6,19 @@
  * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
-const _ServerSetting = require('@coreModels/ServerSetting');
-const UserPet = require('../database/models/UserPet');
-const Pet = require('../database/models/Pet');
-const { embedFooter } = require('@coreHelpers/discord');
 const { checkCooldown } = require('@coreHelpers/time');
-const { t } = require('@coreHelpers/translator');
-const KythiaUser = require('@coreModels/KythiaUser');
 const { updatePetStatus } = require('../helpers/status');
 const { toBigIntSafe } = require('@addons/economy/helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('use').setDescription('Use your pet and get a bonus!'),
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { KythiaUser, UserPet, Pet } = models;
+
 		await interaction.deferReply();
 
 		const userId = interaction.user.id;

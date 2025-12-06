@@ -12,15 +12,16 @@ const {
 	safeReply,
 } = require('../../helpers');
 const { EmbedBuilder } = require('discord.js');
-const { embedFooter } = require('@coreHelpers/discord');
-const { t } = require('@coreHelpers/translator');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand.setName('list').setDescription('View all server checklist'),
 
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, helpers } = container;
+		const { embedFooter } = helpers.discord;
+
 		const guildId = interaction.guild?.id;
 		const userId = null; // Server scope
 		const group = 'server';

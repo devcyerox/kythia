@@ -8,7 +8,7 @@
 
 module.exports = {
 	subcommand: true,
-	data: (group) =>
+	slashCommand: (group) =>
 		group
 			.setName('admin')
 			.setDescription('Administrative pet management commands.'),

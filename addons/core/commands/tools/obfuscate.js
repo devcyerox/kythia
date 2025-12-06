@@ -11,7 +11,7 @@ const JavaScriptObfuscator = require('javascript-obfuscator');
 const axios = require('axios');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('obfuscate')
 		.setDescription(
 			'🔒 Obfuscate a Lua or JavaScript file and return it as an attachment.',

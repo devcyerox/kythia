@@ -6,8 +6,6 @@
  * @version 0.10.1-beta
  */
 
-const { t } = require('./translator');
-
 /**
  * Parses a human-readable duration string into milliseconds.
  * Accepts English and Indonesian unit synonyms and short forms.
@@ -97,6 +95,7 @@ function checkCooldown(lastTime, cooldownInSeconds, _interaction) {
  * @returns {Promise<string>} Localized human-readable duration.
  */
 async function formatDuration(ms, interaction) {
+	const { t } = interaction.client.container;
 	if (ms < 1000) return `less than a second`;
 	const seconds = Math.floor((ms / 1000) % 60);
 	const minutes = Math.floor((ms / (1000 * 60)) % 60);

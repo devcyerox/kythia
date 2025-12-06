@@ -214,6 +214,7 @@ class MusicManager {
 					player.voiceChannel,
 				);
 				await this.setVoiceChannelStatus(
+					interaction,
 					voiceChannel,
 					`🎵 ${track.info?.title ? track.info.title.substring(0, 90) : 'Unknown'}`,
 				);
@@ -472,7 +473,7 @@ class MusicManager {
 					player.voiceChannel,
 				);
 				try {
-					this.setVoiceChannelStatus(voiceChannel, 'idle');
+					this.setVoiceChannelStatus(interaction, voiceChannel, 'idle');
 				} catch (_e) {}
 
 				const lastPlayable = player.currentTrack || lastTrack;
@@ -526,7 +527,7 @@ class MusicManager {
 			}
 			const voiceChannel = this.client.channels.cache.get(player.voiceChannel);
 			try {
-				this.setVoiceChannelStatus(voiceChannel, 'idle');
+				this.setVoiceChannelStatus(interaction, voiceChannel, 'idle');
 			} catch (e) {
 				this.logger.error('❌ Failed to set voice channel status', e);
 			}

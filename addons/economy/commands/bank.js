@@ -12,7 +12,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 module.exports = {
 	subcommand: true,
 	aliases: ['bank'],
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('bank')
 			.setDescription('💰 Check your kythia bank balance and full bank info.'),

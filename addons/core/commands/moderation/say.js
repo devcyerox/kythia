@@ -8,7 +8,7 @@
 const { PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('say')
 			.setDescription('💬 Make the bot send a message')

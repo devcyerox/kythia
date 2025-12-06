@@ -6,22 +6,20 @@
  * @version 0.10.1-beta
  */
 const { EmbedBuilder } = require('discord.js');
-const { t } = require('@coreHelpers/translator');
-const { embedFooter } = require('@coreHelpers/discord');
-const KythiaUser = require('@coreModels/KythiaUser');
-const UserPet = require('../database/models/UserPet');
-const Pet = require('../database/models/Pet');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('adopt')
 			.setDescription('Adopt a random pet')
 			.addStringOption((option) =>
 				option.setName('name').setDescription('Pet name').setRequired(true),
 			),
-	async execute(interaction) {
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { embedFooter } = helpers.discord;
+		const { KythiaUser, UserPet, Pet } = models;
 		await interaction.deferReply();
 
 		const user = await KythiaUser.getCache({ userId: interaction.user.id });

@@ -9,7 +9,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('flush')
 		.setDescription('💥 Flush Redis Cache (Global)')
 		.setContexts(InteractionContextType.BotDM),

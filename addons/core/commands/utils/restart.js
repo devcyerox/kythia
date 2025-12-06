@@ -21,7 +21,7 @@ const {
 let restartTimer = null;
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('restart')
 		.setDescription('🔁 Restarts the bot with optional scheduler.')
 		.setContexts(InteractionContextType.BotDM)

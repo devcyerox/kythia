@@ -12,7 +12,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 module.exports = {
 	subcommand: true,
 	aliases: ['daily'],
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('daily')
 			.setDescription('💰 Collect your daily kythia coin.'),

@@ -105,7 +105,7 @@ async function buildGameEmbed(interaction, game) {
 }
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('wordle')
 		.setDescription('🔡 Play Wordle! Guess the 5-letter word in 6 tries.'),
 

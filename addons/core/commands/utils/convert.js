@@ -243,7 +243,7 @@ const currencyChoices = [
 ];
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('convert')
 		.setDescription('🔄 Convert between units, currencies, timezones, etc.')
 

@@ -6,7 +6,6 @@
  * @version 0.10.1-beta
  */
 
-const { t } = require('@coreHelpers/translator');
 const { MessageFlags } = require('discord.js');
 
 module.exports = async (bot, member) => {
@@ -15,7 +14,7 @@ module.exports = async (bot, member) => {
 
 	// Setup container utils
 	const container = bot.client.container;
-	const { models, helpers, logger } = container;
+	const { t, models, helpers, logger } = container;
 	const { Invite, InviteHistory, ServerSetting } = models;
 	const { simpleContainer } = helpers.discord;
 

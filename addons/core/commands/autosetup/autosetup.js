@@ -13,7 +13,7 @@ const {
 } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('autosetup')
 		.setDescription('⚙️ Automatically setup certain features')
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)

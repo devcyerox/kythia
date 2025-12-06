@@ -31,7 +31,7 @@ function getChangeEmoji(percent) {
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('view')
 			.setDescription('📈 View real-time crypto prices from the global market.')

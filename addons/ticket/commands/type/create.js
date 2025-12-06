@@ -19,7 +19,7 @@ const {
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('create')
 			.setDescription('Creates a new ticket type (interactive setup)'),

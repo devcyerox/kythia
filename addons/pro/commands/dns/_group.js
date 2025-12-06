@@ -7,7 +7,7 @@
  */
 module.exports = {
 	subcommand: true,
-	data: (subcommandGroup) =>
+	slashCommand: (subcommandGroup) =>
 		subcommandGroup
 			.setName('dns')
 			.setDescription('Kelola DNS record untuk subdomain Pro-mu.'),

@@ -8,7 +8,7 @@
 const { SlashCommandBuilder, InteractionContextType } = require('discord.js');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('invites')
 		.setDescription('🔗 Manage invites and rewards')
 		.setContexts(InteractionContextType.Guild),

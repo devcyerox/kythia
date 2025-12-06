@@ -7,7 +7,7 @@
  */
 module.exports = {
 	subcommand: true,
-	data: (subcommandGroup) =>
+	slashCommand: (subcommandGroup) =>
 		subcommandGroup
 			.setName('type')
 			.setDescription('Manage ticket types (e.g., "Report", "Ask")'),

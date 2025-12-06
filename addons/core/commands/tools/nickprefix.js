@@ -13,7 +13,7 @@ const {
 const { rolePrefix, roleUnprefix } = require('../../helpers');
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('nickprefix')
 		.setDescription('📛 Adds or removes a prefix from member nicknames.')
 		.addSubcommand((sub) =>

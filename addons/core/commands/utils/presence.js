@@ -24,7 +24,7 @@ const ACTIVITY_TYPE_OPTIONS = Object.entries(ActivityType)
 	.map(([k, _v]) => ({ name: k, value: k }));
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('presence')
 		.setDescription('🔄 Change bot presence')
 		.addStringOption((opt) =>

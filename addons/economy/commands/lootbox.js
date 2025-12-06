@@ -13,7 +13,7 @@ const { toBigIntSafe } = require('../helpers/bigint');
 module.exports = {
 	subcommand: true,
 	aliases: ['lootbox'],
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('lootbox')
 			.setDescription('🎁 Open a lootbox to get a random reward.'),

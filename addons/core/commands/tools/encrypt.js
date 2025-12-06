@@ -14,7 +14,7 @@ const IV_LENGTH = 16;
 const _AUTH_TAG_LENGTH = 16;
 
 module.exports = {
-	data: new SlashCommandBuilder()
+	slashCommand: new SlashCommandBuilder()
 		.setName('encrypt')
 		.setDescription('🔒 Encrypt a text with a secret key (two-way encryption).')
 		.addStringOption((option) =>

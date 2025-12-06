@@ -10,7 +10,7 @@ const { toBigIntSafe } = require('../../helpers/bigint');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('cancel')
 			.setDescription('Cancel an open order.')

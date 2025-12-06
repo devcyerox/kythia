@@ -38,7 +38,7 @@ function getRandomSymbol() {
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('slots')
 			.setDescription(

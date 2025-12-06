@@ -20,7 +20,7 @@ const { createTicketTranscript } = require('../helpers');
 
 module.exports = {
 	subcommand: true,
-	data: (subcommand) =>
+	slashCommand: (subcommand) =>
 		subcommand
 			.setName('transcript')
 			.setDescription('Get the transcript of the ticket.'),
