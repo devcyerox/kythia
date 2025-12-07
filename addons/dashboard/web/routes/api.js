@@ -11,7 +11,7 @@ const { ChannelType, MessageFlags, EmbedBuilder } = require('discord.js');
 const parseDiscordMarkdown = require('../helpers/parser');
 const KythiaVoter = require('@coreModels/KythiaVoter');
 const KythiaUser = require('@coreModels/KythiaUser');
-const convertColor = require('kythia-core').utils.color;
+const { convertColor } = require('kythia-core').utils;
 const logger = require('@coreHelpers/logger');
 const client = require('kythia-core').KythiaClient;
 

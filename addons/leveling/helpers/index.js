@@ -7,6 +7,7 @@
  */
 
 const { createCanvas, loadImage } = require('canvas');
+const path = require('node:path');
 const axios = require('axios');
 
 const {

@@ -22,14 +22,14 @@ const {
 	WebhookClient,
 } = require('discord.js');
 const { automodSystem } = require('../helpers/automod');
-
+const Sentry = require('@sentry/node');
 const moment = require('moment');
 
 module.exports = async (bot, message) => {
 	const client = bot.client;
 	const container = client.container;
 	const { logger, helpers, t, models, kythiaConfig } = container;
-	const { UserAFK, StickyMessage } = models;
+	const { UserAFK, StickyMessage, KythiaVoter } = models;
 	const { isOwner } = helpers.discord;
 	const { formatDuration } = helpers.time;
 	const { convertColor } = helpers.color;

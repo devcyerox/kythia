@@ -79,7 +79,7 @@ const {
 } = require('@coreHelpers/time');
 
 // ===== 3. Load Additional Utilities =====
-const convertColor = require('kythia-core').utils.color; // Color conversion utility
+const { convertColor } = require('kythia-core').utils;
 
 // ===== 4. Setup Sequelize ORM Instance for Relational Database Access =====
 // Create a Sequelize instance, provided with config and logger for flex diagnostics

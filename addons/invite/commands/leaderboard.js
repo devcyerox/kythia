@@ -146,11 +146,16 @@ module.exports = {
 		await interaction.deferReply();
 
 		const allInviters = await Invite.getAllCache({
-			where: { guildId },
+			where: { guildId: guildId },
 			order: [['invites', 'DESC']],
 			limit: MAX_USERS,
 			cacheTags: [`Invite:leaderboard:${guildId}`],
 		});
+		// const allInviters = await Invite.findAll({
+		// 	where: { guildId: guildId },
+		// 	order: [['invites', 'DESC']],
+		// 	limit: MAX_USERS,
+		// });
 
 		const totalUsers = allInviters.length;
 		let currentPage = 1;

@@ -61,6 +61,9 @@ module.exports = async (bot, member) => {
 			inviterStats.leaves = (inviterStats.leaves || 0) + 1;
 
 			// 🔥 PENTING: Gunakan saveAndUpdateCache
+			inviterStats.changed('invites', true);
+			inviterStats.changed('fake', true);
+
 			await inviterStats.saveAndUpdateCache();
 
 			logger.info(

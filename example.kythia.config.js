@@ -58,15 +58,18 @@ function loadKythiaConfig() {
 			// Discord application client secret (keep this secret!)
 			clientSecret: process.env.DISCORD_BOT_CLIENT_SECRET,
 
-			/* Total shards
+			/* 
+			 * Total shards
 			 * shard is system to distribute the bot to multiple servers
 			 * you can set it to 'auto' to let discord decide the best number of shards
 			 * or you can set it to a specific number of shards
+			 * 
+			 * [!] not yet effective, under development
 			 */
 			totalShards: 'auto',
 
 			// guild id for main server
-			mainGuildId: '',
+			mainGuildId: '1375167975606452396',
 			// guild id for dev server
 			devGuildId: '',
 
@@ -80,7 +83,7 @@ function loadKythiaConfig() {
 			// Activity type (e.g., 'Playing', 'Watching', 'Listening', 'Custom')
 			activityType: 'Playing',
 			// Activity text shown in Discord
-			activity: 'Minecraft with kenndeclouv',
+			activity: 'join support https://dsc.gg/kythia',
 
 			// Global cooldown in seconds
 			globalCommandCooldown: 5,
@@ -227,6 +230,7 @@ function loadKythiaConfig() {
 				checkInterval: 20,
 			},
 			globalchat: {
+				// ! WARN
 				// this feature is kythia's internal only
 				// collaborate with TronixDev https://dsc.gg/trnx
 				enabled: false,
@@ -241,9 +245,6 @@ function loadKythiaConfig() {
 			leveling: {
 				active: true,
 				backgroundUrl: 'https://placehold.co/800x250.png',
-			},
-			minecraft: {
-				active: false,
 			},
 			/** -------------------------------------------------------------------
 			 * MUSIC ADDON (Using Lavalink)
@@ -291,18 +292,7 @@ function loadKythiaConfig() {
 					// Spotify API client secret
 					clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 				},
-				audd: {
-					// Audd.io API key for lyrics feature
-					// get yours at: https://audd.io/
-					apiKey: process.env.AUDD_API_KEY,
-				},
 				artworkUrlStyle: 'banner', // thumbnail, banner
-			},
-			nsfw: {
-				active: true,
-			},
-			nuke: {
-				active: true,
 			},
 			pet: {
 				active: true,
@@ -310,6 +300,7 @@ function loadKythiaConfig() {
 				gachaCooldown: 3600, // 1 hours
 			},
 			pro: {
+				active: false,
 				cloudflare: {
 					/**
 					 * API Token created from the Cloudflare dashboard.
@@ -332,13 +323,7 @@ function loadKythiaConfig() {
 				},
 				maxSubdomains: 5,
 			},
-			pterodactyl: {
-				active: true,
-			},
 			server: {
-				active: true,
-			},
-			store: {
 				active: true,
 			},
 			streak: {
@@ -347,13 +332,11 @@ function loadKythiaConfig() {
 			suggestion: {
 				active: true,
 			},
-			testimony: {
-				active: true,
-			},
 			ticket: {
 				active: true,
 			},
 			quest: {
+				// ! WARN
 				// host your own quest api
 				// see my repo https://github.com/kenndeclouv/kythia-quest-api
 				// ! IMPORTANT NOTE: the quest api need user token to work
@@ -444,6 +427,7 @@ function loadKythiaConfig() {
 		 * ------------------------------------------------------------------- */
 		emojis: {
 			// music emojis
+			// can use regular emoji like ▶️ ⏯️
 			musicPlayPause: '<:name:id>',
 			musicPlay: '<:name:id>',
 			musicPause: '<:name:id>',

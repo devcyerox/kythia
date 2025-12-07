@@ -55,7 +55,7 @@ module.exports = {
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	ownerOnly: true,
 
-	async execute(interaction) {
+	async execute(interaction, container) {
 		await interaction.deferReply();
 
 		const subcommandGroup = interaction.options.getSubcommandGroup();
@@ -63,16 +63,19 @@ module.exports = {
 
 		if (subcommandGroup === 'team') {
 			if (subcommand === 'add') {
-				await this.handleAdd(interaction);
+				await this.handleAdd(interaction, container);
 			} else if (subcommand === 'delete') {
-				await this.handleDelete(interaction);
+				await this.handleDelete(interaction, container);
 			} else if (subcommand === 'list') {
-				await this.handleList(interaction);
+				await this.handleList(interaction, container);
 			}
 		}
 	},
 
-	async handleAdd(interaction) {
+	async handleAdd(interaction, container) {
+		const { models, logger } = container;
+		const { KythiaTeam } = models;
+
 		const user = interaction.options.getUser('user');
 		const name = interaction.options.getString('name') || null;
 
@@ -113,7 +116,10 @@ module.exports = {
 		}
 	},
 
-	async handleDelete(interaction) {
+	async handleDelete(interaction, container) {
+		const { models, logger } = container;
+		const { KythiaTeam } = models;
+
 		const user = interaction.options.getUser('user');
 
 		try {
@@ -149,7 +155,10 @@ module.exports = {
 		}
 	},
 
-	async handleList(interaction) {
+	async handleList(interaction, container) {
+		const { models, logger } = container;
+		const { KythiaTeam } = models;
+
 		try {
 			const teamMembers = await KythiaTeam.getAllCache();
 

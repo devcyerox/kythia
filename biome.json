@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.3.6/schema.json",
+	"$schema": "https://biomejs.dev/schemas/latest/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -7,17 +7,16 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": [
-			"**",
-			"!!**/dist",
-			"!!**/vendor",
-			"!!**/node_modules",
-			"!!**/addons/dashboard/web/public"
-		]
+		"includes": ["**", "!!**/addons/dashboard/web/public"]
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single"
+		}
 	},
 	"linter": {
 		"enabled": true,
@@ -25,23 +24,26 @@
 			"recommended": true,
 			"correctness": {
 				"noUnusedVariables": "warn",
-				"noUndeclaredVariables": "error"
+				"noUndeclaredVariables": "error",
+				"noConstAssign": "error",
+				"noUnreachable": "error"
 			},
 			"suspicious": {
 				"noConsole": "warn",
-				"noDoubleEquals": "error"
+				"noDoubleEquals": "error",
+				"noAsyncPromiseExecutor": "error",
+				"noVar": "error",
+				"useAwait": "warn"
 			},
 			"style": {
-				"useConst": "warn"
+				"useConst": "warn",
+				"useTemplate": "warn",
+				"noYodaExpression": "warn"
 			},
 			"complexity": {
-				"noThisInStatic": "off"
+				"noThisInStatic": "off",
+				"useArrowFunction": "warn"
 			}
-		}
-	},
-	"javascript": {
-		"formatter": {
-			"quoteStyle": "single"
 		}
 	},
 	"assist": {

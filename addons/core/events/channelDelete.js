@@ -7,6 +7,7 @@
  */
 
 const { AuditLogEvent, EmbedBuilder, ChannelType } = require('discord.js');
+const Sentry = require('@sentry/node');
 
 /**
  * Handle anti-nuke system for channel deletion spam.

@@ -13,6 +13,7 @@ const {
 	TextInputStyle,
 	MessageFlags,
 	ChannelType,
+	ChannelSelectMenuBuilder,
 } = require('discord.js');
 
 module.exports = {

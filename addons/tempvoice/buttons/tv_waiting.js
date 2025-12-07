@@ -13,7 +13,7 @@ const {
 
 module.exports = {
 	execute: async (interaction, container) => {
-		const { models, client, t, helpers } = container;
+		const { models, client, t, helpers, logger } = container;
 		const { simpleContainer } = helpers.discord;
 		const { TempVoiceChannel } = models;
 

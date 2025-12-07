@@ -332,7 +332,7 @@ class GiveawayManager {
 					color: giveaway.color,
 					roleId: giveaway.roleId,
 					winnerList: winnerMentions,
-					description: description,
+					description: giveaway.description,
 				});
 
 				await message.edit({ components: uiComponents });

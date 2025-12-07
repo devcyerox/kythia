@@ -12,7 +12,7 @@ const {
 	SeparatorBuilder,
 } = require('discord.js');
 const Marriage = require('../database/models/Marriage');
-const convertColor = require('kythia-core').utils.color;
+const { convertColor } = require('kythia-core').utils;
 
 module.exports = {
 	execute: async (interaction) => {

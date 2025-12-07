@@ -49,12 +49,12 @@ const embedFooter = async (source) => {
  * @param {import('discord.js').VoiceChannel|import('discord.js').BaseVoiceChannel} channel - Voice-capable channel.
  * @param {string} status - Status text to display.
  */
-async function setVoiceChannelStatus(interaction, channel, status) {
-	const { kythiaConfig } = interaction.client.container;
-	const botToken = kythiaConfig.bot.token;
+async function setVoiceChannelStatus(channel, status) {
 	if (!channel || !channel.isVoiceBased()) {
 		return;
 	}
+	const config = channel.client.container.kythiaConfig;
+	const botToken = config.bot.token;
 
 	try {
 		await axios.put(

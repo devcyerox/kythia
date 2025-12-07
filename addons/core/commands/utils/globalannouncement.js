@@ -141,6 +141,9 @@ module.exports = {
 	 * @param {object} payload - The message payload to send.
 	 */
 	async sendToAllGuilds(interaction, payload) {
+		const container = interaction.container;
+		const { models, logger } = container;
+		const { ServerSetting } = models;
 		await interaction.editReply({
 			content: '⏳ Starting to send the announcement to all servers...',
 			ephemeral: true,

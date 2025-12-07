@@ -21,18 +21,28 @@ module.exports = async (bot, member) => {
 	const { simpleContainer } = helpers.discord;
 	const { convertColor } = helpers.color;
 
+	if (!Invite) logger.error('[DEBUG] ❌ Model Invite UNDEFINED inside event!');
+	else logger.info('[DEBUG] ✅ Model Invite loaded.');
+
 	let inviteChannelId = null;
 	let setting;
 	try {
 		setting = await ServerSetting.getCache({ guildId: guild.id });
 		inviteChannelId = setting?.inviteChannelId;
+
+		logger.info(
+			`[DEBUG] Settings loaded: invitesOn=${setting?.invitesOn}, Channel=${inviteChannelId}`,
+		);
 	} catch (e) {
 		logger.error(
 			`[INVITE TRACKER] Error fetching server setting: ${e.message}`,
 		);
 	}
 
-	if (!setting?.inviteChannelId || !setting?.invitesOn) return;
+	if (!setting?.inviteChannelId || !setting?.invitesOn) {
+		logger.warn(`[DEBUG] 🛑 Invite tracking skipped (Disabled or No Channel)`);
+		return;
+	}
 
 	const me = guild.members.me || (await guild.members.fetchMe());
 	if (!me.permissions.has(PermissionsBitField.Flags.ManageGuild)) {
@@ -43,6 +53,10 @@ module.exports = async (bot, member) => {
 
 	const cacheBefore = getGuildInviteCache(guild.id);
 
+	logger.info(
+		`[DEBUG] Cache Before Size: ${cacheBefore ? cacheBefore.size : 'NULL'}`,
+	);
+
 	let inviterId = null;
 	let inviterUser = null;
 	let inviteType = 'unknown';
@@ -50,6 +64,8 @@ module.exports = async (bot, member) => {
 
 	try {
 		const invitesNow = await guild.invites.fetch();
+
+		logger.info(`[DEBUG] Fetched ${invitesNow.size} invites from Discord.`);
 
 		for (const invite of invitesNow.values()) {
 			const before = cacheBefore.get(invite.code);
@@ -60,6 +76,10 @@ module.exports = async (bot, member) => {
 				inviterUser = invite.inviter || null;
 				inviteType = 'invite';
 				inviteCode = invite.code;
+
+				logger.info(
+					`[DEBUG] 🎯 MATCH FOUND! Inviter: ${inviterId}, Code: ${inviteCode}`,
+				);
 				break;
 			}
 		}
@@ -78,6 +98,10 @@ module.exports = async (bot, member) => {
 			inviteType = member.user.bot ? 'oauth' : 'unknown';
 		}
 
+		logger.info(
+			`[DEBUG] Final Decision -> InviterID: ${inviterId}, Type: ${inviteType}`,
+		);
+
 		const accountAgeDays =
 			(Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24);
 		let isFake = false;
@@ -85,36 +109,51 @@ module.exports = async (bot, member) => {
 		if (inviterId) {
 			isFake = accountAgeDays < FAKE_ACCOUNT_AGE_DAYS;
 
-			const [inviteData] = await Invite.findOrCreateWithCache({
-				where: { guildId: guild.id, userId: inviterId },
-				defaults: {
-					guildId: guild.id,
-					userId: inviterId,
-					invites: 0,
-					fake: 0,
-					leaves: 0,
-				},
-			});
-
-			if (isFake) {
-				inviteData.fake = (inviteData.fake || 0) + 1;
-			} else {
-				inviteData.invites = (inviteData.invites || 0) + 1;
-			}
-
-			await inviteData.saveAndUpdateCache();
-
-			await InviteHistory.create({
-				guildId: guild.id,
-				inviterId: inviterId,
-				memberId: member.id,
-				status: 'active',
-				isFake: isFake,
-			});
-
 			logger.info(
-				`[INVITE] ${member.user.tag} joined (${isFake ? 'FAKE' : 'REAL'}), invited by ${inviterId}`,
+				`[DEBUG] 💾 Attempting DB Operation for Inviter: ${inviterId}...`,
 			);
+
+			try {
+				const [inviteData, created] = await Invite.findOrCreateWithCache({
+					where: { guildId: guild.id, userId: inviterId },
+					defaults: {
+						guildId: guild.id,
+						userId: inviterId,
+					},
+				});
+
+				logger.info(
+					`[DEBUG] ✅ DB Result: isNew=${created}, Current Invites=${inviteData?.invites}`,
+				);
+
+				if (isFake) {
+					inviteData.fake = (inviteData.fake || 0) + 1;
+				} else {
+					inviteData.invites = (inviteData.invites || 0) + 1;
+				}
+
+				if (inviteData.changed && typeof inviteData.changed === 'function') {
+					inviteData.changed('invites', true);
+					inviteData.changed('fake', true);
+				}
+
+				await inviteData.saveAndUpdateCache();
+
+				logger.info(`[DEBUG] ✅ Data Saved & Cache Updated`);
+
+				await InviteHistory.create({
+					guildId: guild.id,
+					inviterId: inviterId,
+					memberId: member.id,
+					status: 'active',
+					isFake: isFake,
+				});
+				logger.info(`[DEBUG] ✅ History Created`);
+			} catch (dbErr) {
+				logger.error(`[DEBUG] ❌ DB CRASH:`, dbErr);
+			}
+		} else {
+			logger.warn(`[DEBUG] ⚠️ No Inviter ID found, skipping DB operations.`);
 		}
 
 		if (inviteChannelId) {
@@ -218,5 +257,6 @@ module.exports = async (bot, member) => {
 		logger.error(`[INVITE] Error guildMemberAdd:`, err);
 	} finally {
 		await refreshGuildInvites(guild);
+		logger.info(`[DEBUG] 🔄 Invite Cache Refreshed.`);
 	}
 };
