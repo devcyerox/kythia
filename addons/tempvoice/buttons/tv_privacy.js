@@ -15,9 +15,10 @@ const {
 
 module.exports = {
 	execute: async (interaction, container) => {
-		const { client, models, t, helpers } = container;
+		const { client, models, t, helpers, logger } = container;
 		const { TempVoiceChannel } = models;
 		const { convertColor } = helpers.color;
+		const { simpleContainer } = helpers.discord;
 
 		const activeChannel = await TempVoiceChannel.getCache({
 			ownerId: interaction.user.id,
@@ -30,9 +31,25 @@ module.exports = {
 			});
 		}
 		const channelId = activeChannel.channelId;
-		const channel = await client.channels
-			.fetch(channelId, { force: true })
-			.catch(() => null);
+		let channel;
+		try {
+			channel = await client.channels.fetch(channelId, { force: true });
+		} catch (error) {
+			logger.error(
+				`[TempVoice] CRITICAL: Failed to fetch channel ${channelId} for rename. Error:`,
+				error,
+			);
+
+			return interaction.reply({
+				components: await simpleContainer(
+					interaction,
+					await t(interaction, 'tempvoice.common.channel_not_found'),
+					{ color: 'Red' },
+				),
+				flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
+			});
+		}
+
 		if (!channel) {
 			return interaction.reply({
 				content: await t(interaction, 'tempvoice.privacy.channel_not_found'),

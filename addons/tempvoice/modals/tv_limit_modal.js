@@ -5,10 +5,14 @@
  * @assistant chaa & graa
  * @version 0.10.1-beta
  */
+
+const { MessageFlags } = require('discord.js');
+
 module.exports = {
 	execute: async (interaction, container) => {
-		const { models, t, client } = container;
+		const { models, t, client, logger, helpers } = container;
 		const { TempVoiceChannel } = models;
+		const { simpleContainer } = helpers.discord;
 		const newLimitStr = interaction.fields.getTextInputValue('user_limit');
 		const newLimit = parseInt(newLimitStr, 10);
 		const channelId = interaction.customId.split(':')[1];
@@ -40,9 +44,24 @@ module.exports = {
 			});
 		}
 
-		const channel = await client.channels
-			.fetch(channelId, { force: true })
-			.catch(() => null);
+		let channel;
+		try {
+			channel = await client.channels.fetch(channelId, { force: true });
+		} catch (error) {
+			logger.error(
+				`[TempVoice] CRITICAL: Failed to fetch channel ${channelId} for rename. Error:`,
+				error,
+			);
+
+			return interaction.reply({
+				components: await simpleContainer(
+					interaction,
+					await t(interaction, 'tempvoice.common.channel_not_found'),
+					{ color: 'Red' },
+				),
+				flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
+			});
+		}
 		if (!channel) {
 			return interaction.reply({
 				content: await t(

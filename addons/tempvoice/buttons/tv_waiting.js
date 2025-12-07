@@ -35,9 +35,26 @@ module.exports = {
 			});
 		}
 
-		const mainChannel = await client.channels
-			.fetch(activeChannel.channelId, { force: true })
-			.catch(() => null);
+		const channelId = activeChannel.channelId;
+		let mainChannel;
+		try {
+			mainChannel = await client.channels.fetch(channelId, { force: true });
+		} catch (error) {
+			logger.error(
+				`[TempVoice] CRITICAL: Failed to fetch channel ${channelId} for rename. Error:`,
+				error,
+			);
+
+			return interaction.reply({
+				components: await simpleContainer(
+					interaction,
+					await t(interaction, 'tempvoice.common.channel_not_found'),
+					{ color: 'Red' },
+				),
+				flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,
+			});
+		}
+
 		if (!mainChannel)
 			return interaction.reply({
 				components: await simpleContainer(

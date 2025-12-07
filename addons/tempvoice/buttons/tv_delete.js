@@ -16,7 +16,7 @@ const {
 
 module.exports = {
 	execute: async (interaction, container) => {
-		const { models, client, t, helpers } = container;
+		const { models, client, t, helpers, logger } = container;
 		const { TempVoiceChannel } = models;
 		const { simpleContainer } = helpers.discord;
 
@@ -38,15 +38,19 @@ module.exports = {
 		}
 
 		const channelId = activeChannel.channelId;
-		const channel = await client.channels
-			.fetch(channelId, { force: true })
-			.catch(() => null);
+		let channel;
+		try {
+			channel = await client.channels.fetch(channelId, { force: true });
+		} catch (error) {
+			logger.error(
+				`[TempVoice] CRITICAL: Failed to fetch channel ${channelId} for rename. Error:`,
+				error,
+			);
 
-		if (!channel) {
 			return interaction.reply({
 				components: await simpleContainer(
 					interaction,
-					await t(interaction, 'tempvoice.tv_delete.not_found'),
+					await t(interaction, 'tempvoice.common.channel_not_found'),
 					{ color: 'Red' },
 				),
 				flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2,

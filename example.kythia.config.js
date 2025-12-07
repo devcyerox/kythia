@@ -58,12 +58,12 @@ function loadKythiaConfig() {
 			// Discord application client secret (keep this secret!)
 			clientSecret: process.env.DISCORD_BOT_CLIENT_SECRET,
 
-			/* 
+			/*
 			 * Total shards
 			 * shard is system to distribute the bot to multiple servers
 			 * you can set it to 'auto' to let discord decide the best number of shards
 			 * or you can set it to a specific number of shards
-			 * 
+			 *
 			 * [!] not yet effective, under development
 			 */
 			totalShards: 'auto',
