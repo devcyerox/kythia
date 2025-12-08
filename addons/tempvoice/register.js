@@ -9,8 +9,7 @@
 const tv_rename = require('./buttons/tv_rename');
 const tv_limit = require('./buttons/tv_limit');
 const tv_privacy = require('./buttons/tv_privacy');
-// const tv_waiting = require('./buttons/tv_waiting');
-// const tv_chat = require('./buttons/tv_chat');
+
 const tv_trust = require('./buttons/tv_trust');
 const tv_block = require('./buttons/tv_block');
 const tv_unblock = require('./buttons/tv_unblock');
@@ -29,8 +28,12 @@ const tv_waiting_deny = require('./buttons/tv_waiting_deny');
 
 const tv_stage = require('./buttons/tv_stage');
 
+const tv_fix_config = require('./buttons/tv_fix_config');
+
 const tv_rename_modal = require('./modals/tv_rename_modal');
 const tv_limit_modal = require('./modals/tv_limit_modal');
+
+const tv_fix_config_modal = require('./modals/tv_fix_config');
 
 const tv_kick_menu = require('./select_menus/tv_kick_menu');
 const tv_privacy_menu = require('./select_menus/tv_privacy_menu');
@@ -46,40 +49,67 @@ module.exports = {
 	async initialize(bot) {
 		const summary = [];
 
-		bot.registerButtonHandler('tv_rename', tv_rename.execute);
-		bot.registerButtonHandler('tv_limit', tv_limit.execute);
-		bot.registerButtonHandler('tv_privacy', tv_privacy.execute);
-		bot.registerButtonHandler('tv_trust', tv_trust.execute);
-		bot.registerButtonHandler('tv_block', tv_block.execute);
-		bot.registerButtonHandler('tv_unblock', tv_unblock.execute);
-		bot.registerButtonHandler('tv_untrust', tv_untrust.execute);
-		bot.registerButtonHandler('tv_kick', tv_kick.execute);
-		bot.registerButtonHandler('tv_region', tv_region.execute);
-		bot.registerButtonHandler('tv_claim', tv_claim.execute);
-		bot.registerButtonHandler('tv_delete', tv_delete.execute);
-		bot.registerButtonHandler('tv_transfer', tv_transfer.execute);
-		bot.registerButtonHandler('tv_invite', tv_invite.execute);
-		bot.registerButtonHandler('tv_waiting', tv_waiting.execute);
-		bot.registerButtonHandler('tv_waiting_allow', tv_waiting_allow.execute);
-		bot.registerButtonHandler('tv_waiting_deny', tv_waiting_deny.execute);
-		bot.registerButtonHandler('tv_stage', tv_stage.execute);
+		await bot.registerButtonHandler('tv_rename', tv_rename.execute);
+		await bot.registerButtonHandler('tv_limit', tv_limit.execute);
+		await bot.registerButtonHandler('tv_privacy', tv_privacy.execute);
+		await bot.registerButtonHandler('tv_trust', tv_trust.execute);
+		await bot.registerButtonHandler('tv_block', tv_block.execute);
+		await bot.registerButtonHandler('tv_unblock', tv_unblock.execute);
+		await bot.registerButtonHandler('tv_untrust', tv_untrust.execute);
+		await bot.registerButtonHandler('tv_kick', tv_kick.execute);
+		await bot.registerButtonHandler('tv_region', tv_region.execute);
+		await bot.registerButtonHandler('tv_claim', tv_claim.execute);
+		await bot.registerButtonHandler('tv_delete', tv_delete.execute);
+		await bot.registerButtonHandler('tv_transfer', tv_transfer.execute);
+		await bot.registerButtonHandler('tv_invite', tv_invite.execute);
+		await bot.registerButtonHandler('tv_waiting', tv_waiting.execute);
+		await bot.registerButtonHandler(
+			'tv_waiting_allow',
+			tv_waiting_allow.execute,
+		);
+		await bot.registerButtonHandler('tv_waiting_deny', tv_waiting_deny.execute);
+		await bot.registerButtonHandler('tv_stage', tv_stage.execute);
+
+		await bot.registerButtonHandler('tv_fix_config', tv_fix_config.execute);
 
 		summary.push(' └─ ✅ TempVoice Buttons registered.');
 
-		bot.registerModalHandler('tv_rename_modal', tv_rename_modal.execute);
-		bot.registerModalHandler('tv_limit_modal', tv_limit_modal.execute);
+		await bot.registerModalHandler('tv_rename_modal', tv_rename_modal.execute);
+		await bot.registerModalHandler('tv_limit_modal', tv_limit_modal.execute);
+		await bot.registerModalHandler(
+			'tv_fix_config_modal',
+			tv_fix_config_modal.execute,
+		);
 
 		summary.push(' └─ ✅ TempVoice Modals registered.');
 
-		bot.registerSelectMenuHandler('tv_kick_menu', tv_kick_menu.execute);
-		bot.registerSelectMenuHandler('tv_privacy_menu', tv_privacy_menu.execute);
-		bot.registerSelectMenuHandler('tv_trust_menu', tv_trust_menu.execute);
-		bot.registerSelectMenuHandler('tv_block_menu', tv_block_menu.execute);
-		bot.registerSelectMenuHandler('tv_unblock_menu', tv_unblock_menu.execute);
-		bot.registerSelectMenuHandler('tv_untrust_menu', tv_untrust_menu.execute);
-		bot.registerSelectMenuHandler('tv_transfer_menu', tv_transfer_menu.execute);
-		bot.registerSelectMenuHandler('tv_region_menu', tv_region_menu.execute);
-		bot.registerSelectMenuHandler('tv_invite_menu', tv_invite_menu.execute);
+		await bot.registerSelectMenuHandler('tv_kick_menu', tv_kick_menu.execute);
+		await bot.registerSelectMenuHandler(
+			'tv_privacy_menu',
+			tv_privacy_menu.execute,
+		);
+		await bot.registerSelectMenuHandler('tv_trust_menu', tv_trust_menu.execute);
+		await bot.registerSelectMenuHandler('tv_block_menu', tv_block_menu.execute);
+		await bot.registerSelectMenuHandler(
+			'tv_unblock_menu',
+			tv_unblock_menu.execute,
+		);
+		await bot.registerSelectMenuHandler(
+			'tv_untrust_menu',
+			tv_untrust_menu.execute,
+		);
+		await bot.registerSelectMenuHandler(
+			'tv_transfer_menu',
+			tv_transfer_menu.execute,
+		);
+		await bot.registerSelectMenuHandler(
+			'tv_region_menu',
+			tv_region_menu.execute,
+		);
+		await bot.registerSelectMenuHandler(
+			'tv_invite_menu',
+			tv_invite_menu.execute,
+		);
 
 		summary.push(' └─ ✅ TempVoice Select Menus registered.');
 

@@ -274,13 +274,13 @@ module.exports = {
 					subcommand
 						.setName('import')
 						.setDescription(
-							`Import Playlist from ${kythia.bot.name} playlist code or external services like Spotify.`,
+							`Import Playlist from Kythia playlist code or external services like Spotify.`,
 						)
 						.addStringOption((option) =>
 							option
 								.setName('code')
 								.setDescription(
-									`${kythia.bot.name} playlist code or Spotify URL to import.`,
+									`Kythia playlist code or Spotify URL to import.`,
 								)
 								.setRequired(true),
 						),
@@ -288,13 +288,11 @@ module.exports = {
 				.addSubcommand((subcommand) =>
 					subcommand
 						.setName('share')
-						.setDescription(`Share ${kythia.bot.name} playlist with others.`)
+						.setDescription(`Share Kythia playlist with others.`)
 						.addStringOption((option) =>
 							option
 								.setName('name')
-								.setDescription(
-									`The name of the ${kythia.bot.name} playlist to share.`,
-								)
+								.setDescription(`The name of the Kythia playlist to share.`)
 								.setRequired(true)
 								.setAutocomplete(true),
 						),
@@ -403,7 +401,7 @@ module.exports = {
 	 * @param {import('discord.js').Client} client
 	 */
 	async autocomplete(interaction, container) {
-		const { client, logger, models } = container;
+		const { client, logger, models, kythiaConfig } = container;
 		const { Favorite, Playlist } = models;
 		const focusedOption = interaction.options.getFocused(true);
 		const focusedValue = focusedOption.value;
@@ -476,7 +474,7 @@ module.exports = {
 			}
 
 			try {
-				const source = kythia.addons.music.defaultPlatform || 'ytsearch';
+				const source = kythiaConfig.addons.music.defaultPlatform || 'ytsearch';
 				const res = await client.poru.resolve({
 					query: focusedValue,
 					source: source,
@@ -491,7 +489,7 @@ module.exports = {
 					return interaction.respond([]);
 				}
 				const choices = res.tracks
-					.slice(0, kythia.addons.music.autocompleteLimit)
+					.slice(0, kythiaConfig.addons.music.autocompleteLimit)
 					.map((choice) => ({
 						name: `🎵 ${choice.info.title.length > 80 ? `${choice.info.title.slice(0, 77)}…` : choice.info.title} [${formatTrackDuration(choice.info.length)}]`,
 						value: choice.info.uri,
