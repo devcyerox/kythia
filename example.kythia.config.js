@@ -196,16 +196,16 @@ function loadKythiaConfig() {
 				hackCooldown: 3600, // 1 hour
 			},
 			/** -------------------------------------------------------------------
-			 * DASHBOARD ADDON
+			 * API ADDON
+			 * this addon is used for dashboard
+			 * see dashboard on https://github.com/kenndeclouv/kythia-dashboard
 			 * ------------------------------------------------------------------- */
-			dashboard: {
+			api: {
 				active: true,
-				// Dashboard base URL (for local dev, usually http://localhost:3000)
-				url: process.env.DASHBOARD_URL || 'http://localhost:3000',
 				// Dashboard port (default: 3000)
-				port: process.env.DASHBOARD_PORT || 3000,
+				port: process.env.API_PORT || 3000,
 				// Session secret for dashboard authentication (keep this secret!)
-				sessionSecret: process.env.DASHBOARD_SESSION_SECRET,
+				secret: process.env.API_SECRET,
 			},
 			fun: {
 				active: true,

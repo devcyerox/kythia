@@ -197,7 +197,7 @@ If you enabled the dashboard in `kythia.config.js`, you **MUST** configure the R
     * If on VPS (IP): `http://YOUR_VPS_IP:3000/auth/discord/callback`
     * If using Domain: `https://yourdomain.com/auth/discord/callback`
 5.  **Save Changes**.
-6.  Make sure this URL matches exactly with `DASHBOARD_URL` in your `.env` file (minus the `/auth...` part).
+6.  Make sure this URL matches exactly with `API_URL` in your `.env` file (minus the `/auth...` part).
 
 ---
 
