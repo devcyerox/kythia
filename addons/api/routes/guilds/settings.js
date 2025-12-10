@@ -26,13 +26,17 @@ app.patch('/:guildId', async (c) => {
 	const container = client.container;
 	const { logger } = container;
 	const { ServerSetting } = container.models;
+	const guildName = client.guilds.fetch(guildId)?.name;
 
 	const body = await c.req.json();
 
 	try {
 		let settings = await ServerSetting.getCache({ where: { guildId } });
 		if (!settings) {
-			settings = await ServerSetting.create({ guildId });
+			settings = await ServerSetting.create({
+				guildId: guildId,
+				guildName: guildName ?? 'unknown',
+			});
 		}
 
 		const attributes = ServerSetting.getAttributes();

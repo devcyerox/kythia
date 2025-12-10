@@ -28,6 +28,11 @@ async function buildInterface(interaction) {
 	const { kythiaConfig, helpers, t } = container;
 	const { convertColor } = helpers.color;
 
+	const accentColor = convertColor(kythiaConfig.bot.color, {
+		from: 'hex',
+		to: 'decimal',
+	});
+
 	const bannerUrl = kythiaConfig?.settings?.tempvoiceBannerImage;
 
 	const header = new TextDisplayBuilder().setContent(
@@ -48,27 +53,27 @@ async function buildInterface(interaction) {
 			.setCustomId('tv_rename')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.rename'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('⌨️'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.rename || '⌨️'),
 		new ButtonBuilder()
 			.setCustomId('tv_limit')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.limit'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('👥'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.limit || '👥'),
 		new ButtonBuilder()
 			.setCustomId('tv_privacy')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.privacy'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🛡️'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.privacy || '🛡️'),
 		new ButtonBuilder()
 			.setCustomId('tv_waiting')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.waiting'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('⏲️'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.waiting || '⏲️'),
 		new ButtonBuilder()
 			.setCustomId('tv_stage')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.stage'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🎙️'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.stage || '🎙️'),
 	);
 
 	const row2_static = new ActionRowBuilder().addComponents(
@@ -76,27 +81,27 @@ async function buildInterface(interaction) {
 			.setCustomId('tv_trust')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.trust'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🤝'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.trust || '🤝'),
 		new ButtonBuilder()
 			.setCustomId('tv_untrust')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.untrust'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('✂️'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.untrust || '✂️'),
 		new ButtonBuilder()
 			.setCustomId('tv_invite')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.invite'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('📞'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.invite || '📞'),
 		new ButtonBuilder()
 			.setCustomId('tv_kick')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.kick'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('👢'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.kick || '👢'),
 		new ButtonBuilder()
 			.setCustomId('tv_region')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.region'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🌐'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.region || '🌐'),
 	);
 
 	const row3_static = new ActionRowBuilder().addComponents(
@@ -104,27 +109,27 @@ async function buildInterface(interaction) {
 			.setCustomId('tv_block')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.block'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🚫'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.block || '🚫'),
 		new ButtonBuilder()
 			.setCustomId('tv_unblock')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.unblock'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🟢'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.unblock || '🟢'),
 		new ButtonBuilder()
 			.setCustomId('tv_claim')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.claim'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('👑'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.claim || '👑'),
 		new ButtonBuilder()
 			.setCustomId('tv_transfer')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.transfer'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🔁'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.transfer || '🔁'),
 		new ButtonBuilder()
 			.setCustomId('tv_delete')
 			.setLabel(await t(interaction, 'tempvoice.interface.buttons.delete'))
 			.setStyle(ButtonStyle.Secondary)
-			.setEmoji('🗑️'),
+			.setEmoji(kythiaConfig.emojis?.tempvoice?.delete || '🗑️'),
 	);
 
 	const footer = new TextDisplayBuilder().setContent(
@@ -134,9 +139,7 @@ async function buildInterface(interaction) {
 	);
 
 	const containerComponent = new ContainerBuilder()
-		.setAccentColor(
-			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
-		)
+		.setAccentColor(accentColor)
 		.addTextDisplayComponents(header)
 		.addSeparatorComponents(divider)
 		.addMediaGalleryComponents(banner)

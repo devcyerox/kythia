@@ -1145,12 +1145,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_autoplay')
 				[
-					typeof kythia.emojis.musicAutoplay !== 'undefined'
+					typeof kythia.emojis.music.autoplay !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicAutoplay !== 'undefined'
-						? kythia.emojis.musicAutoplay
+					typeof kythia.emojis.music.autoplay !== 'undefined'
+						? kythia.emojis.music.autoplay
 						: 'Autoplay',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1158,12 +1158,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_back')
 				[
-					typeof kythia.emojis.musicBack !== 'undefined'
+					typeof kythia.emojis.music.back !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicBack !== 'undefined'
-						? kythia.emojis.musicBack
+					typeof kythia.emojis.music.back !== 'undefined'
+						? kythia.emojis.music.back
 						: 'Back',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1171,16 +1171,16 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_pause_resume')
 				[
-					typeof kythia.emojis.musicPlay !== 'undefined' &&
-					typeof kythia.emojis.musicPause !== 'undefined'
+					typeof kythia.emojis.music.play !== 'undefined' &&
+					typeof kythia.emojis.music.pause !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicPlay !== 'undefined' &&
-						typeof kythia.emojis.musicPause !== 'undefined'
+					typeof kythia.emojis.music.play !== 'undefined' &&
+						typeof kythia.emojis.music.pause !== 'undefined'
 						? isPaused
-							? kythia.emojis.musicPlay
-							: kythia.emojis.musicPause
+							? kythia.emojis.music.play
+							: kythia.emojis.music.pause
 						: isPaused
 							? 'Play'
 							: 'Pause',
@@ -1190,12 +1190,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_skip')
 				[
-					typeof kythia.emojis.musicSkip !== 'undefined'
+					typeof kythia.emojis.music.skip !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicSkip !== 'undefined'
-						? kythia.emojis.musicSkip
+					typeof kythia.emojis.music.skip !== 'undefined'
+						? kythia.emojis.music.skip
 						: 'Skip',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1203,12 +1203,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_loop')
 				[
-					typeof kythia.emojis.musicLoop !== 'undefined'
+					typeof kythia.emojis.music.loop !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicLoop !== 'undefined'
-						? kythia.emojis.musicLoop
+					typeof kythia.emojis.music.loop !== 'undefined'
+						? kythia.emojis.music.loop
 						: 'Loop',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1222,12 +1222,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_lyrics')
 				[
-					typeof kythia.emojis.musicLyrics !== 'undefined'
+					typeof kythia.emojis.music.lyrics !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicLyrics !== 'undefined'
-						? kythia.emojis.musicLyrics
+					typeof kythia.emojis.music.lyrics !== 'undefined'
+						? kythia.emojis.music.lyrics
 						: 'Lyrics',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1235,12 +1235,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_queue')
 				[
-					typeof kythia.emojis.musicQueue !== 'undefined'
+					typeof kythia.emojis.music.queue !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicQueue !== 'undefined'
-						? kythia.emojis.musicQueue
+					typeof kythia.emojis.music.queue !== 'undefined'
+						? kythia.emojis.music.queue
 						: 'Queue',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1248,12 +1248,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_stop')
 				[
-					typeof kythia.emojis.musicStop !== 'undefined'
+					typeof kythia.emojis.music.stop !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicStop !== 'undefined'
-						? kythia.emojis.musicStop
+					typeof kythia.emojis.music.stop !== 'undefined'
+						? kythia.emojis.music.stop
 						: 'Stop',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1261,12 +1261,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_shuffle')
 				[
-					typeof kythia.emojis.musicShuffle !== 'undefined'
+					typeof kythia.emojis.music.shuffle !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicShuffle !== 'undefined'
-						? kythia.emojis.musicShuffle
+					typeof kythia.emojis.music.shuffle !== 'undefined'
+						? kythia.emojis.music.shuffle
 						: 'Shuffle',
 				)
 				.setStyle(ButtonStyle.Secondary)
@@ -1274,12 +1274,12 @@ class MusicManager {
 			new ButtonBuilder()
 				.setCustomId('music_favorite_add')
 				[
-					typeof kythia.emojis.musicFavorite !== 'undefined'
+					typeof kythia.emojis.music.favorite !== 'undefined'
 						? 'setEmoji'
 						: 'setLabel'
 				](
-					typeof kythia.emojis.musicFavorite !== 'undefined'
-						? kythia.emojis.musicFavorite
+					typeof kythia.emojis.music.favorite !== 'undefined'
+						? kythia.emojis.music.favorite
 						: 'Favorite',
 				)
 				.setStyle(ButtonStyle.Secondary)

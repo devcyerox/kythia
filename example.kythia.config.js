@@ -428,19 +428,41 @@ function loadKythiaConfig() {
 		emojis: {
 			// music emojis
 			// can use regular emoji like ▶️ ⏯️
-			musicPlayPause: '<:name:id>',
-			musicPlay: '<:name:id>',
-			musicPause: '<:name:id>',
-			musicSkip: '<:name:id>',
-			musicStop: '<:name:id>',
-			musicLoop: '<:name:id>',
-			musicAutoplay: '<:name:id>',
-			musicLyrics: '<:name:id>',
-			musicQueue: '<:name:id>',
-			musicShuffle: '<:name:id>',
-			musicFilter: '<:name:id>',
-			musicFavorite: '<:name:id>',
-			musicBack: '<:name:id>',
+			// or custom emoji like <:name:id>
+			music: {
+				playPause: '⏯️',
+				play: '▶️',
+				pause: '⏸️',
+				skip: '⏭️',
+				stop: '⏹️',
+				loop: '🔁',
+				autoplay: '🎶',
+				lyrics: '📝',
+				queue: '📜',
+				shuffle: '🔀',
+				filter: '🎚️',
+				favorite: '❤️',
+				back: '⏮️',
+			},
+
+			// tempvoice emojis
+			tempvoice: {
+				rename: '⌨️',
+				limit: '👥',
+				privacy: '🛡️',
+				waiting: '⏲️',
+				stage: '🎙️',
+				trust: '🤝',
+				untrust: '✂️',
+				invite: '📞',
+				kick: '👢',
+				region: '🌐',
+				block: '🚫',
+				unblock: '🟢',
+				claim: '👑',
+				transfer: '🔁',
+				delete: '🗑️',
+			},
 		},
 	};
 }
