@@ -68,6 +68,13 @@ app.get('/:id', async (c) => {
 		settings,
 		channels,
 		roles,
+
+		botUser: {
+			username: client.user.username,
+			avatar: client.user.displayAvatarURL(),
+			id: client.user.id,
+			discriminator: client.user.discriminator,
+		},
 	});
 });
 

@@ -29,7 +29,7 @@ module.exports = async (bot, message) => {
 	const client = bot.client;
 	const container = client.container;
 	const { logger, helpers, t, models, kythiaConfig } = container;
-	const { UserAFK, StickyMessage, KythiaVoter } = models;
+	const { UserAFK, StickyMessage, KythiaVoter, ServerSetting } = models;
 	const { isOwner } = helpers.discord;
 	const { formatDuration } = helpers.time;
 	const { convertColor } = helpers.color;
@@ -37,9 +37,20 @@ module.exports = async (bot, message) => {
 	// Only wrap the core logic; do not wrap imports or object declarations
 	try {
 		const contentLower = message.content.toLowerCase();
-		const matchedPrefix = kythiaConfig.bot.prefixes.find((prefix) =>
+		const serverSetting = message.guild
+			? await ServerSetting.getCache({ guildId: message.guild.id })
+			: null;
+		const customPrefix = serverSetting?.prefix;
+
+		const allPrefixes = [...kythiaConfig.bot.prefixes];
+		if (customPrefix) {
+			allPrefixes.push(customPrefix);
+		}
+
+		const matchedPrefix = allPrefixes.find((prefix) =>
 			contentLower.startsWith(prefix.toLowerCase()),
 		);
+
 		if (matchedPrefix) {
 			if (message.author?.bot) return;
 

@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### [0.10.1-beta](https://github.com/kythia/kythia/compare/v0.9.12-beta...v0.10.1-beta) (2025-12-03)
 
 
-### ⚠ BREAKING CHANGES
+### ⚠️ BREAKING CHANGES
 
 * Database schema is now managed strictly via migrations.
 

@@ -16,7 +16,7 @@ const fs = require('node:fs');
 
 function buildCategoryMap() {
 	const categoryMap = {};
-	const rootAddonsDir = path.join(__dirname, '..', '..', '..');
+	const rootAddonsDir = path.join(__dirname, '..', '..');
 	const addonDirs = fs
 		.readdirSync(rootAddonsDir, { withFileTypes: true })
 		.filter((dirent) => dirent.isDirectory());

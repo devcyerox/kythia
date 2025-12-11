@@ -13,6 +13,7 @@ module.exports = {
 			guildId: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
 			guildName: { type: DataTypes.STRING, allowNull: true },
 			lang: { type: DataTypes.STRING, defaultValue: 'en' },
+			prefix: { type: DataTypes.STRING, allowNull: true },
 
 			// AUTOMOD
 			whitelist: { type: DataTypes.JSON, defaultValue: [] },
@@ -280,6 +281,11 @@ module.exports = {
 
 			boostLogChannelId: { type: DataTypes.STRING, allowNull: true },
 			boostLogMessage: { type: DataTypes.TEXT, allowNull: true },
+
+			botName: { type: DataTypes.STRING, allowNull: true },
+			botAvatarUrl: { type: DataTypes.STRING, allowNull: true },
+			botBannerUrl: { type: DataTypes.STRING, allowNull: true },
+			botBio: { type: DataTypes.TEXT, allowNull: true },
 		});
 	},
 
