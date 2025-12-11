@@ -6,7 +6,6 @@
  * @version 0.10.1-beta
  */
 
-// const { DataTypes } = require("sequelize");
 // koneksi sequelize
 const { KythiaModel } = require('kythia-core');
 

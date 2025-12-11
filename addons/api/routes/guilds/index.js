@@ -29,6 +29,7 @@ app.get('/:id', async (c) => {
 	const { models } = container;
 	const { ServerSetting } = models;
 	const guildId = c.req.param('id');
+	const dataParam = c.req.query('data');
 
 	const guild = client.guilds.cache.get(guildId);
 
@@ -59,12 +60,13 @@ app.get('/:id', async (c) => {
 		managed: r.managed,
 	}));
 
+	const responseGuild =
+		dataParam === 'all'
+			? guild
+			: { id: guild.id, name: guild.name, icon: guild.iconURL() };
+
 	return c.json({
-		guild: {
-			id: guild.id,
-			name: guild.name,
-			icon: guild.iconURL(),
-		},
+		guild: responseGuild,
 		settings,
 		channels,
 		roles,

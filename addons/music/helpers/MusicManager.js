@@ -149,6 +149,8 @@ class MusicManager {
 			player._247 = false;
 			player._latestSuggestionRow = null;
 			player.disconnectTimeout = null;
+
+			this.broadcastUpdate(player, 'playerCreate');
 		});
 
 		poru.on('nodeConnect', (node) =>
@@ -257,6 +259,8 @@ class MusicManager {
 
 			// Call UI update (with first drawing=true)
 			await this.updateNowPlayingUI(player, { recommendations, track });
+
+			this.broadcastUpdate(player, 'trackStart');
 		});
 
 		/**
@@ -541,6 +545,16 @@ class MusicManager {
 			if (this.guildStates.has(player.guildId) && !player._247) {
 				this.guildStates.delete(player.guildId);
 			}
+
+			const io = this.container.io;
+			if (io) {
+				io.to(player.guildId).emit('player_update', {
+					event: 'playerDestroy',
+					guildId: player.guildId,
+					status: 'idle',
+					track: null,
+				});
+			}
 		});
 	}
 
@@ -655,6 +669,10 @@ class MusicManager {
 		const players = this.client.poru.players.values();
 		for (const player of players) {
 			try {
+				if (player.isPlaying && !player.isPaused) {
+					this.broadcastUpdate(player, 'ticker');
+				}
+
 				if (
 					!player ||
 					player.destroyed ||
@@ -1285,6 +1303,53 @@ class MusicManager {
 				.setStyle(ButtonStyle.Secondary)
 				.setDisabled(disabled),
 		);
+	}
+
+	/**
+	 * 📡 Broadcast update ke WebSocket Dashboard
+	 */
+	broadcastUpdate(player, eventType = 'update') {
+		const io = this.container.io;
+		if (!io || !player) return;
+
+		// Susun payload data yang "bersih" buat dashboard
+		// Jangan kirim object player mentah, nanti circular error
+		const payload = {
+			event: eventType,
+			guildId: player.guildId,
+			status: player.isPaused
+				? 'paused'
+				: player.isPlaying
+					? 'playing'
+					: 'idle',
+			volume: player.volume,
+			position: player.position,
+			isLoop: {
+				track: player.trackRepeat,
+				queue: player.queueRepeat,
+			},
+			track: player.currentTrack
+				? {
+						title: player.currentTrack.info.title,
+						author: player.currentTrack.info.author,
+						uri: player.currentTrack.info.uri,
+						artworkUrl:
+							player.currentTrack.info.artworkUrl ||
+							player.currentTrack.info.image,
+						duration: player.currentTrack.info.length,
+						requester: player.currentTrack.info.requester?.username,
+					}
+				: null,
+			queue: player.queue.slice(0, 10).map((t) => ({
+				// Kirim 10 antrian teratas aja
+				title: t.info.title,
+				uri: t.info.uri,
+				duration: t.info.length,
+			})),
+		};
+
+		// Kirim ke room guild tersebut
+		io.to(player.guildId).emit('player_update', payload);
 	}
 }
 

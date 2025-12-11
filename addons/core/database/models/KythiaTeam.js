@@ -6,8 +6,6 @@
  * @version 0.10.1-beta
  */
 
-// const { DataTypes } = require("sequelize");
-
 const { KythiaModel } = require('kythia-core');
 
 class KythiaTeam extends KythiaModel {

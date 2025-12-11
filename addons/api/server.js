@@ -12,6 +12,7 @@ const { cors } = require('hono/cors');
 const { logger: honoLogger } = require('hono/logger');
 const fs = require('node:fs');
 const path = require('node:path');
+const { Server } = require('socket.io');
 
 module.exports = (bot) => {
 	const client = bot.client;
@@ -87,7 +88,7 @@ module.exports = (bot) => {
 					app.route(routePath, routeModule);
 					logger.info(`   └─ 🛤️  Route loaded: ${routePath} -> ${file}`);
 				} catch (err) {
-					logger.error(`   └─ ❌ Error loading route ${file}:`, err.message);
+					logger.error(`  └─ ❌ Error loading route ${file}:`, err);
 				}
 			}
 		});
@@ -101,6 +102,26 @@ module.exports = (bot) => {
 	const server = serve({
 		fetch: app.fetch,
 		port: Number(PORT),
+	});
+
+	const io = new Server(server, {
+		cors: {
+			origin: '*',
+			methods: ['GET', 'POST'],
+		},
+	});
+
+	container.io = io;
+
+	io.on('connection', (socket) => {
+		logger.info(`🔌 Dashboard connected: ${socket.id}`);
+
+		// Event kalau dashboard minta join room specific guild
+		// Jadi dashboard cuma dengerin update dari guild yang dia buka
+		socket.on('join_guild', (guildId) => {
+			socket.join(guildId);
+			logger.info(`🔌 Socket ${socket.id} joined guild room: ${guildId}`);
+		});
 	});
 
 	return server;

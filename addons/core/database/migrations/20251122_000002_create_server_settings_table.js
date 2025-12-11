@@ -55,10 +55,70 @@ module.exports = {
 			boostLogOn: { type: DataTypes.BOOLEAN, defaultValue: false },
 
 			// LEVELING
-			levelingChannelId: { type: DataTypes.STRING },
-			levelingCooldown: { type: DataTypes.INTEGER, defaultValue: 300 },
-			levelingXp: { type: DataTypes.INTEGER, defaultValue: 60 },
-			roleRewards: { type: DataTypes.JSON, defaultValue: [] },
+			// 1. XP Formula & Curve
+			levelingCurve: {
+				type: DataTypes.ENUM('linear', 'exponential', 'constant'),
+				defaultValue: 'linear',
+			},
+			levelingMultiplier: { type: DataTypes.FLOAT, defaultValue: 1.0 }, // Bisa koma (misal 1.5x)
+			levelingMaxLevel: { type: DataTypes.INTEGER, allowNull: true }, // Null = Unlimited
+
+			// 2. Message XP Config
+			messageXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+			messageXpMode: {
+				type: DataTypes.ENUM('random', 'per_word', 'fixed'),
+				defaultValue: 'random',
+			},
+			messageXpMin: { type: DataTypes.INTEGER, defaultValue: 15 },
+			messageXpMax: { type: DataTypes.INTEGER, defaultValue: 25 },
+			messageXpCooldown: { type: DataTypes.INTEGER, defaultValue: 60 }, // Detik
+
+			// 3. Voice XP Config
+			voiceXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+			voiceXpMin: { type: DataTypes.INTEGER, defaultValue: 15 },
+			voiceXpMax: { type: DataTypes.INTEGER, defaultValue: 40 },
+			voiceXpCooldown: { type: DataTypes.INTEGER, defaultValue: 180 }, // Detik (biasanya lebih lama)
+			voiceMinMembers: { type: DataTypes.INTEGER, defaultValue: 2 }, // Minimal ada 2 orang biar dapet XP
+			voiceAntiAfk: { type: DataTypes.BOOLEAN, defaultValue: true }, // Gak dapet XP kalau deafen/mute
+
+			// 4. Reaction XP (Fitur Baru)
+			reactionXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+			reactionXpAward: {
+				type: DataTypes.ENUM('none', 'both', 'author', 'reactor'),
+				defaultValue: 'both',
+			},
+			reactionXpMin: { type: DataTypes.INTEGER, defaultValue: 1 },
+			reactionXpMax: { type: DataTypes.INTEGER, defaultValue: 5 },
+			reactionXpCooldown: { type: DataTypes.INTEGER, defaultValue: 10 },
+
+			// 5. Level Up Message
+			levelingChannelId: { type: DataTypes.STRING, allowNull: true }, // Null = Current Channel
+			levelingMessage: {
+				type: DataTypes.TEXT,
+				defaultValue: 'GG {user.mention}, you reached level **{user.level}**!',
+			},
+			levelingImageEnabled: { type: DataTypes.BOOLEAN, defaultValue: true }, // Kirim gambar rank card pas naik level?
+
+			// 6. Role Rewards & Boosters
+			roleRewards: { type: DataTypes.JSON, defaultValue: [] }, // [{level: 5, roleId: '123'}]
+			roleRewardStack: { type: DataTypes.BOOLEAN, defaultValue: false }, // Hapus role lama kalau naik level?
+
+			xpBoosters: { type: DataTypes.JSON, defaultValue: [] }, // [{roleId: '123', multiplier: 2.0}]
+			channelBoosters: { type: DataTypes.JSON, defaultValue: [] }, // [{channelId: '123', multiplier: 1.5}]
+			stackBoosters: { type: DataTypes.BOOLEAN, defaultValue: true }, // Gabungin semua booster?
+
+			// 7. Restrictions (No XP)
+			noXpChannels: { type: DataTypes.JSON, defaultValue: [] }, // Array Channel ID
+			noXpRoles: { type: DataTypes.JSON, defaultValue: [] }, // Array Role ID
+
+			// 8. Advanced / Misc
+			threadXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+			forumXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+			textInVoiceXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+			slashCommandXpEnabled: { type: DataTypes.BOOLEAN, defaultValue: true },
+
+			// Auto Reset (Kalau member leave)
+			autoResetXp: { type: DataTypes.BOOLEAN, defaultValue: false },
 
 			// WELCOMER GLOBAL
 			welcomeInChannelId: { type: DataTypes.STRING, allowNull: true },

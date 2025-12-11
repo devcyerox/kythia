@@ -729,7 +729,8 @@ class MusicHandlers {
 	 */
 	async handleBack(interaction, player, guildStates) {
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-
+		const container = interaction.client.container;
+		const { logger } = container;
 		try {
 			const guildId = interaction.guildId;
 			const guildState = guildStates.get(guildId);
@@ -774,7 +775,7 @@ class MusicHandlers {
 
 			return interaction.editReply({ embeds: [embed] });
 		} catch (error) {
-			console.error('[HandleBack] Error:', error);
+			logger.error('[HandleBack] Error:', error);
 
 			return interaction.editReply({
 				content: '❌ An error occurred while trying to go back.',
@@ -1704,15 +1705,13 @@ class MusicHandlers {
 	}
 
 	async _handlePlaylistList(interaction) {
-		const _client = interaction.client;
 		const userId = interaction.user.id;
 
 		const playlists = await this.Playlist.getAllCache({
 			where: { userId: userId },
 			order: [['name', 'ASC']],
-			// cacheTags: [`Playlist:byUser:${userId}`],
+			cacheTags: [`Playlist:byUser:${userId}`],
 		});
-		console.log(playlists);
 
 		if (!playlists || playlists.length === 0) {
 			const embed = new EmbedBuilder()
