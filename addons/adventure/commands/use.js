@@ -58,7 +58,9 @@ module.exports = {
 		const selectMenu = new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder()
 				.setCustomId('use_item_select')
-				.setPlaceholder(t(interaction, 'adventure.inventory.select.item.placeholder'))
+				.setPlaceholder(
+					t(interaction, 'adventure.inventory.select.item.placeholder'),
+				)
 				.addOptions(options),
 		);
 
@@ -111,14 +113,21 @@ module.exports = {
 						itemName,
 					});
 
-					resultMessage = t(interaction, 'adventure.inventory.use.potion.success', {
-						amount: actualHeal,
-					});
+					resultMessage = t(
+						interaction,
+						'adventure.inventory.use.potion.success',
+						{
+							amount: actualHeal,
+						},
+					);
 					break;
 				}
 
 				case '🍶 Revival':
-					resultMessage = t(interaction, 'adventure.inventory.use.revival.success');
+					resultMessage = t(
+						interaction,
+						'adventure.inventory.use.revival.success',
+					);
 					break;
 
 				default:
