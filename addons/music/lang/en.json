@@ -1,0 +1,374 @@
+{
+	"music": {
+		"manager": {
+			"field": "**Requested by:** \n{user}",
+			"skipped": "⏭️ Skipped the current track.",
+			"stopped": "⏹️ Stopped music and cleared the queue.",
+			"enabled": "enabled (All loop modes disabled)",
+			"disabled": "disabled",
+			"status": "🔄 Autoplay **{status}**."
+		},
+		"helpers": {
+			"handlers": {
+				"queue": {
+					"nowplaying": "## 📜 Music Queue\n**Now Playing:**\n [{nowTitle}]({nowUrl}) `{nowDuration}`\n\n**Queue:**\n",
+					"footer": "-# Page {page} of {totalPages} • Total {totalTracks} tracks in queue"
+				},
+				"music": {
+					"lyrics": {
+						"music": {
+							"not": {
+								"found": "❌ No song is currently playing."
+							}
+						},
+						"lyrics": {
+							"not": {
+								"found": "❌ Lyrics not found for the song."
+							}
+						},
+						"error": "❌ An error occurred while fetching lyrics."
+					},
+					"configured": "❌ Spotify integration is not configured by the bot owner. Please contact the developer.",
+					"failed": "❌ An error occurred while processing your music request.",
+					"results": "❌ No results found for your query.",
+					"playlist": {
+						"desc": {
+							"spotify": "## <:spotify:1418793905792487527> Spotify Playlist\n**Name:** {name}\n**({count} tracks)**",
+							"text": "## 🎵 Playlist {name}\n ({count} tracks) "
+						},
+						"save": {
+							"limit": {
+								"desc": "❌ You have reached the playlist limit. Please delete some playlists to save more. or you can upgrade to premium to save more playlists.",
+								"title": "## ❌ Playlist limit reached."
+							},
+							"empty": {
+								"queue": "❌ The queue is empty, cannot save!"
+							},
+							"duplicate": "❌ Playlist with name \"{name}\" already exists.",
+							"success": "✅ Playlist \"{name}\" with {count} songs has been saved successfully!"
+						},
+						"load": {
+							"not": {
+								"found": "❌ Playlist \"{name}\" not found."
+							},
+							"empty": "❌ Playlist \"{name}\" is empty.",
+							"success": "▶️ Loading {count} songs from playlist \"{name}\"..."
+						},
+						"list": {
+							"empty": "❌ You don't have any playlists yet.",
+							"title": "## 🎶 Your Playlist"
+						},
+						"delete": {
+							"not": {
+								"found": "❌ Playlist \"{name}\" not found."
+							},
+							"success": "🗑️ Playlist \"{name}\" has been successfully deleted."
+						},
+						"append": {
+							"no": {
+								"player": "❌ No music is currently playing."
+							},
+							"success": {
+								"v2": "✅ Successfully added **{count}** songs from playlist **{name}** to the queue."
+							}
+						},
+						"remove": {
+							"track": {
+								"not": {
+									"found": "❌ Playlist \"{name}\" not found."
+								},
+								"empty": "❌ Playlist \"{name}\" is empty.",
+								"invalid": {
+									"position": "❌ Invalid song position."
+								},
+								"success": "🗑️ Song at position {position} has been successfully removed from playlist \"{name}\"."
+							}
+						},
+						"rename": {
+							"not": {
+								"found": "❌ Playlist \"{name}\" not found."
+							},
+							"duplicate": "❌ Playlist with name \"{name}\" already exists.",
+							"success": "✏️ Playlist \"{oldName}\" has been successfully renamed to \"{newName}\"."
+						},
+						"track": {
+							"list": {
+								"not": {
+									"found": "❌ Playlist \"{name}\" not found."
+								},
+								"empty": "❌ Playlist \"{name}\" is empty.",
+								"title": "## 🎶 Songs in {name}"
+							},
+							"add": {
+								"duplicate": "❌ Track **{track}** already exists in playlist \"{name}\".",
+								"success": "✅ Successfully added **{track}** to playlist \"{name}\".",
+								"error": "❌ Failed to add track to playlist."
+							}
+						}
+					},
+					"added": {
+						"to": {
+							"queue": "✅ **Added to queue:** [{title}]({url})"
+						}
+					},
+					"paused": "⏸️ The music is already paused.",
+					"playing": {
+						"desc": "❌ Nothing is currently playing.",
+						"previous": "⏮️ Playing the previous track: **{title}**."
+					},
+					"resume": "❌ An error occurred while resuming the track.",
+					"skip": "❌ An error occurred while skipping the track.",
+					"skipped": "⏭️ Skipped the current track.",
+					"stopped": "⏹️ Stopped music and cleared the queue.",
+					"more": "No more tracks in the queue.",
+					"empty": "❌ The queue is empty.",
+					"nowplaying": {
+						"error": "❌ An error occurred while showing the now playing panel.",
+						"text": "## 🎵 Now Playing\n Duration: `{duration}`\n Author: `{author}`"
+					},
+					"track": "🔁 Loop track enabled.",
+					"queue": "🔁 Queue repeat enabled.",
+					"off": "❌ Loop disabled.",
+					"autoplay": {
+						"enabled": {
+							"message": "🔄 Autoplay enabled. Loop modes have been disabled."
+						},
+						"disabled": {
+							"message": "🔄 Autoplay disabled."
+						},
+						"status": {
+							"desc": "🔄 Autoplay **{status}**."
+						}
+					},
+					"set": "🔊 Volume set to **{level}**.",
+					"enough": "❌ Not enough tracks in the queue to shuffle.",
+					"shuffled": "🔀 Queue shuffled.",
+					"no": {
+						"previous": {
+							"track": "❌ No previous track to play."
+						}
+					},
+					"filter": {
+						"reset": "🎧 All filters have been reset.",
+						"applied": "🎧 Applied filter: **{preset}**.",
+						"not": {
+							"available": "🎧 Filter '{preset}' is not available."
+						}
+					},
+					"position": "❌ The source and destination positions are the same.",
+					"removed": "🗑️ Removed **[{title}]({url})** from position {position}.",
+					"positions": "❌ Invalid positions. The queue has {size} tracks.",
+					"found": "❌ Could not find the track to move.",
+					"moved": "🔀 Moved **[{title}]({url})** from position {from} to {to}.",
+					"clear": "🗑️ Queue Cleared",
+					"seeked": "⏩ Seeked to {time} seconds.",
+					"play": {
+						"no": {
+							"results": "❌ No results found for your query."
+						}
+					}
+				},
+				"filter": {
+					"title": "## 🎧 Audio Filter\nChoose an audio filter below:"
+				},
+				"manager": {
+					"paused": "⏸️ Music paused.",
+					"resumed": "▶️ Music resumed.",
+					"reply": "⏯️ Music **{state}**."
+				},
+				"playlist": {
+					"share": {
+						"not": {
+							"found": {
+								"title": "❌ Playlist not found.",
+								"desc": "Playlist with name **{name}** not found."
+							}
+						},
+						"title": "## 📤 Playlist Share: {name}",
+						"desc": "Here is the share code for your playlist. Give this code to your friends so they can import it!",
+						"code": {
+							"label": "Share Code"
+						}
+					},
+					"import": {
+						"invalid": {
+							"title": "## ❌ Invalid playlist.",
+							"desc": "The playlist you provided is invalid or corrupted. Make sure you copy the entire code correctly."
+						},
+						"success": {
+							"title": "## ✅ Successfully imported playlist.",
+							"desc": "Successfully imported **{count}** songs from playlist **{name}**.",
+							"text": "✅ Successfully imported **{count}** **{source}** songs from playlist **{name}**."
+						},
+						"error": {
+							"title": "## ❌ Failed to import playlist.",
+							"desc": "Failed to import playlist."
+						},
+						"failed": "❌ Failed to import playlist. Please make sure the URL is valid and public.",
+						"duplicate": {
+							"prompt": "❌ Playlist with name **{name}** already exists. What do you want to do?"
+						},
+						"btn": {
+							"overwrite": "Overwrite",
+							"copy": "Make Copy",
+							"cancel": "Cancel"
+						},
+						"overwrite": {
+							"success": "✅ Successfully imported **{count}** **{source}** songs from playlist **{name}** with overwrite."
+						},
+						"copy": {
+							"success": "✅ Successfully imported **{count}** **{source}** songs from playlist **{name}** with copy."
+						},
+						"cancelled": "👌 Import playlist cancelled.",
+						"timeout": "🕒 Time's up. Import playlist cancelled."
+					}
+				},
+				"favorite": {
+					"play": {
+						"empty": "❤️ You don't have any favorite songs to play. Use the ♡ button on a playing song to add one!",
+						"success": "✅ Now playing **{count}** songs from your favorites."
+					},
+					"list": {
+						"empty": "❤️ You haven't added any favorite songs yet.",
+						"title": "## 💖 Your Favorite Songs"
+					},
+					"add": {
+						"no": {
+							"track": "❌ No song is currently playing to add to favorites."
+						},
+						"duplicate": "⚠️ **{title}** is already in your favorites.",
+						"success": "❤️ Added **{title}** to your favorites."
+					},
+					"remove": {
+						"invalid": {
+							"name": "❌ Invalid name. Please provide a name of your favorite song."
+						},
+						"success": "🗑️ Successfully removed **{title}** from your favorites."
+					}
+				},
+				"247": {
+					"enabled": "✅ 24/7 mode enabled.",
+					"disabled": "⏹️ 24/7 mode disabled.",
+					"player": {
+						"notfound": "❌ Unable to find a music player for this server."
+					}
+				},
+				"radio": {
+					"load_failed": "❌ Failed to load radio stream. Please try another station (stream might be offline).",
+					"no_results": "❌ No radio stations found for **{query}**.",
+					"select_desc": "Found multiple results for **{query}**. Please select a station below within 30 seconds.",
+					"timeout": "❌ Selection timed out. Please use the command again.",
+					"live_title": "## 🔴 LIVE RADIO STARTED"
+				}
+			},
+			"musicManager": {
+				"manager": {
+					"now": {
+						"ended": "## 🎵 Music Ended\n[{title}]({url})\n"
+					},
+					"channel": "**Artist/Channel:** \n{author}",
+					"requested": {
+						"by": "**Requested by**\n{user}"
+					},
+					"simple": "⚠️ You must be in a voice channel to use this command!",
+					"playing": "## 🎵 Now Playing... \n[{title}]({url}) \n\n",
+					"by": "By {author}",
+					"placeholder": "🎵 See recommended tracks",
+					"required": "⚠️ You must be in a voice channel to use music commands!",
+					"searching": "🔄 Searching for a recommendation to play next...",
+					"recommendation": "❌ No recommendation found. The queue will end.",
+					"played": "🎶 All tracks in the queue have been played.",
+					"failed": "❌ An error occurred while autoplaying the track.",
+					"ended": "⚠️ Music session has ended.",
+					"track": "❌ An error occurred while adding the track.",
+					"queue": "✅ **Added to queue:** [{title}]({url})",
+					"no": {
+						"listener": "❌ There is no one listening in the voice channel. exiting now..."
+					},
+					"idleDisconnect": "❌ No activity in the voice channel for {seconds} seconds. Disconnecting..."
+				},
+				"music": {
+					"permission": {
+						"denied": "❌ You don't have permission right now! play your own track or play."
+					}
+				}
+			}
+		},
+		"playlist": {
+			"import": {
+				"unsupported": {
+					"source": "❌ Source playlist not supported."
+				},
+				"code": {
+					"success": "✅ Successfully imported **{count}** songs and saved as playlist **{name}**."
+				},
+				"invalid": {
+					"code": "❌ The code you provided is invalid or corrupted. Make sure you copy the entire code correctly."
+				}
+			},
+			"export": {
+				"title": "📤 Playlist Export: {name}",
+				"desc": "Here is the export code for your playlist. Give this code to your friends so they can import it!"
+			}
+		},
+		"music": {
+			"error": {
+				"handler": "❌ An error occurred while handle your music request for this command. Please try again later."
+			},
+			"subcommand": {
+				"not": {
+					"found": "❌ Unknown music subcommand."
+				}
+			},
+			"player": {
+				"not": {
+					"found": "❌ No music player is active in this server."
+				}
+			},
+			"voice": {
+				"channel": {
+					"not": {
+						"found": "❌ You must be in a voice channel to use this command!"
+					},
+					"required": "❌ You must be in a voice channel to use this command!"
+				}
+			},
+			"required": "⚠️ You must be in the same voice channel as the bot to use this command!",
+			"desc": "## 🎶 Music Queue\n**Now Playing:** [{nowTitle}]({nowUrl})\n\n**Queue:**\n{queueList}",
+			"loop": "🔁 Loop queue enabled.",
+			"autoplay": "❌ An error occurred while toggling autoplay.",
+			"volume": "❌ An error occurred while setting the volume.",
+			"shuffle": "❌ An error occurred while shuffling the queue.",
+			"back": "❌ An error occurred while playing the previous track.",
+			"remove": "❌ An error occurred while removing the track.",
+			"move": "❌ An error occurred while moving the track.",
+			"filter": {
+				"generic": {
+					"error": "❌ An error occurred while applying the filter."
+				}
+			},
+			"playlist": {
+				"save": {
+					"error": "❌ Failed to save playlist."
+				},
+				"list": {
+					"success": "## 🎶 Your playlist list:\n{list}"
+				},
+				"append": {
+					"empty": {
+						"queue": "❌ The queue is empty, cannot add!"
+					},
+					"not": {
+						"found": "❌ Playlist \"{name}\" not found."
+					},
+					"success": "✅ Successfully added {count} songs to playlist \"{name}\"."
+				},
+				"track": {
+					"list": {
+						"success": "## 🎶 Songs in playlist \"{name}\":\n{tracks}"
+					}
+				}
+			}
+		}
+	}
+}

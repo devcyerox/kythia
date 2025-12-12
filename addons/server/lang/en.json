@@ -1,0 +1,94 @@
+{
+	"server": {
+		"server": {
+			"progress": {
+				"title": "⚙️ Server Autobuild Progress",
+				"step": "Step {step} of {totalSteps}",
+				"creating": {
+					"roles": "Creating roles...",
+					"categories": "Creating categories...",
+					"channels": "Creating channels in category **{category}**..."
+				}
+			},
+			"command": {
+				"no": {
+					"guild": "This command can only be used in a server."
+				}
+			},
+			"autobuild": {
+				"template": {
+					"not": {
+						"found": "Template not found: `{key}`"
+					}
+				},
+				"progress": {
+					"start": "⏳ Starting server autobuild process..."
+				},
+				"success": {
+					"title": "✅ Server autobuild completed for **{name}**!",
+					"desc": "Mode: `{mode}`\nLocale: `{locale}`\nVoice: `{voice}`\nStaff: `{staff}`\nRoles created: `{roleCreated}` (skipped: `{roleSkipped}`)\nCategories created: `{catCreated}` (skipped: `{catSkipped}`)\nChannels created: `{chCreated}` (skipped: `{chSkipped}`)\nFailed: `{failed}`"
+				},
+				"failed": "❌ Server autobuild failed!\nError: {error}"
+			},
+			"backup": {
+				"no": {
+					"guild": "This command can only be used in a server."
+				},
+				"progress": {
+					"start": "⏳ Collecting server data...",
+					"settings": "✅ Server settings collected...",
+					"roles": "✅ Roles data collected...",
+					"channels": "✅ Channels data collected...",
+					"emojis": "✅ Emojis & stickers data collected...",
+					"soundboard": "✅ Soundboard data collected..."
+				},
+				"dm": {
+					"content": "Here is your backup for **{name}**!",
+					"failed": "❌ Failed to send backup to your DM. Please enable DMs from server members."
+				},
+				"success": "✅ Server backup completed and sent to your DM!",
+				"failed": "❌ Server backup failed."
+			},
+			"restore": {
+				"progress": {
+					"start": "⏳ Server restore in progress..."
+				},
+				"file": {
+					"invalid": "❌ Invalid backup file. Please upload a valid .json backup file."
+				},
+				"data": {
+					"invalid": "❌ Invalid backup data."
+				},
+				"clearing": "🧹 Clearing all channels, roles, emojis, and stickers...",
+				"settings": "⚙️ Restoring server settings...",
+				"roles": {
+					"text": "👥 Restoring roles...",
+					"progress": "👥 Restoring roles... ({current}/{total})"
+				},
+				"channels": {
+					"text": "📁 Restoring channels...",
+					"progress": "📁 Restoring channels... ({current}/{total})"
+				},
+				"categories": {
+					"progress": "📁 Restoring categories... ({current}/{total})"
+				},
+				"assets": "🎨 Restoring emojis, stickers, and soundboard...",
+				"success": "✅ Server restore completed for **{name}**!",
+				"failed": "❌ Server restore failed."
+			},
+			"reset": {
+				"no": {
+					"guild": "This command can only be used in a server."
+				},
+				"progress": {
+					"start": "⏳ Deleting channels, roles, emojis, and stickers...",
+					"channels": "⏳ Deleting channels... ({current}/{total})",
+					"roles": "⏳ Deleting roles... ({current}/{total})",
+					"emojis": "⏳ Deleting emojis... ({current}/{total})",
+					"stickers": "⏳ Deleting stickers... ({current}/{total})"
+				},
+				"success": "✅ Server reset completed successfully!"
+			}
+		}
+	}
+}

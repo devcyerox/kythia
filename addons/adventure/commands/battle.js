@@ -90,7 +90,7 @@ module.exports = {
 					.setStyle(ButtonStyle.Primary),
 				new ButtonBuilder()
 					.setCustomId('adventure_use_item')
-					.setLabel(await t(interaction, 'inventory.use.item.button'))
+					.setLabel(await t(interaction, 'adventure.inventory.use.item.button'))
 					.setStyle(ButtonStyle.Secondary)
 					.setEmoji('🔮'),
 			);

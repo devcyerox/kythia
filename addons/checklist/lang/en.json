@@ -1,0 +1,122 @@
+{
+	"checklist": {
+		"unknown": {
+			"subcommand": {
+				"title": "Unknown Subcommand",
+				"desc": "The subcommand you used is not recognized."
+			}
+		},
+		"error": {
+			"title": "❌ Checklist Command Error",
+			"desc": "An error occurred while executing this command. Please try again."
+		},
+		"scope": {
+			"personal": "Personal",
+			"server": "Server"
+		},
+		"remove": {
+			"select": {
+				"placeholder": "Select to remove"
+			}
+		},
+		"status": {
+			"done": "✅ Completed",
+			"undone": "⬜ Not Completed"
+		},
+		"server": {
+			"toggle": {
+				"invalid": {
+					"index": {
+						"title": "❌ Invalid Item Number",
+						"desc": "Please check the item number you want to select."
+					}
+				},
+				"empty": {
+					"title": "❌ {scope} Checklist is Empty"
+				},
+				"toggle": {
+					"empty": {
+						"desc": "There are no items to toggle."
+					},
+					"success": {
+						"title": "🔄 Checklist Item Status Changed ({scope})"
+					}
+				},
+				"item": {
+					"field": "Item"
+				},
+				"status": {
+					"field": "Status"
+				}
+			},
+			"remove": {
+				"remove": {
+					"empty": {
+						"desc": "There are no items to remove."
+					},
+					"success": {
+						"title": "🗑️ Item Removed from {scope} Checklist",
+						"desc": "**Item:**\n> `{item}`"
+					}
+				},
+				"item": {
+					"field": "Item"
+				},
+				"status": {
+					"field": "Status"
+				},
+				"removed": {
+					"field": "Removed"
+				}
+			},
+			"list": {
+				"list": {
+					"empty": {
+						"desc": "There are no items in this checklist yet."
+					},
+					"title": "📋 {scope} Checklist",
+					"field": {
+						"title": {
+							"multi": "Item List ({index})",
+							"single": "Item List"
+						}
+					}
+				}
+			},
+			"clear": {
+				"already": {
+					"empty": {
+						"title": "❌ {scope} Checklist Already Empty"
+					}
+				},
+				"clear": {
+					"empty": {
+						"desc": "There are no items to clear."
+					},
+					"success": {
+						"title": "🧹 {scope} Checklist Cleared",
+						"desc": "All items have been removed from this checklist."
+					}
+				}
+			},
+			"add": {
+				"invalid": {
+					"item": {
+						"title": "## ❌ Invalid Item",
+						"desc": "item not valid, please double check"
+					}
+				},
+				"full": {
+					"title": "## ❌ Checklist full",
+					"desc": "remove another item first"
+				},
+				"add": {
+					"success": {
+						"title": "✅ Item Added to {scope} Checklist",
+						"desc": "**Item:**\n> `{item}`"
+					}
+				}
+			}
+		}
+	}
+}

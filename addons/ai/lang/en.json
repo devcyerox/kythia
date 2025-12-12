@@ -1,0 +1,66 @@
+{
+	"ai": {
+		"events": {
+			"messageCreate": {
+				"memory": {
+					"added": "Okay, I'll remember that! ^-^",
+					"duplicate": "I already know that! 😉",
+					"empty": "What fact should I remember? >,<",
+					"token": {
+						"limit": "Sorry, the AI token limit has been reached for this minute. I need a short break, please try again in a minute! 😥"
+					},
+					"api": {
+						"key": {
+							"not": {
+								"set": "❌ The AI configuration has not been set by the developer."
+							}
+						}
+					}
+				},
+				"command": {
+					"not": {
+						"found": "Oops, the AI asked me to run a command I don't recognize. >,<"
+					},
+					"error": "Oops, something went wrong when I tried to run the command. >,<"
+				},
+				"error": "Oops, I'm feeling dizzy right now. Please try again later! ><",
+				"filter": {
+					"blocked": "Sorry, I can't do that.",
+					"everyone": {
+						"here": "Sorry i cant do that"
+					},
+					"mention": "Hey, what do you want to say? >,<"
+				},
+				"mention": "Hey, what do you want to say? >,<"
+			}
+		},
+		"translate": {
+			"limit": "Sorry, the AI token limit has been reached for this minute. I need a short break, please try again in a minute! 😥",
+			"set": "❌ The AI configuration has not been set by the developer.",
+			"success": "## 🌐 Translated\n### Language: `{lang}`\n### Input: ```{text}```\n### Translated: ```{translated}```",
+			"error": "❌ An error occurred while translating the text. Please try again later! ><",
+			"no": {
+				"result": "❌ No translation result."
+			}
+		},
+		"ai": {
+			"manage": {
+				"already": {
+					"enabled": "🤖 AI is already enabled in this channel! You can start chatting with the AI here."
+				},
+				"enable": {
+					"success": "✅ AI has been enabled in this channel! Feel free to start chatting with the AI 🎉"
+				},
+				"not": {
+					"enabled": "❌ AI is not enabled in this channel. Nothing to disable."
+				},
+				"disable": {
+					"success": "🛑 AI has been disabled in this channel. See you again!"
+				},
+				"unknown": {
+					"subcommand": "❌ Unknown subcommand. Use `/ai enable` or `/ai disable`."
+				}
+			}
+		}
+	}
+}

@@ -145,7 +145,7 @@ module.exports = {
 				iconURL: interaction.user.displayAvatarURL(),
 			})
 			.setDescription(
-				`${await t(interaction, 'eco.work.result.title.outcome')}\n*${scenarioDesc}*${levelUpText}`,
+				`${await t(interaction, 'economy.work.result.title.outcome')}\n*${scenarioDesc}*${levelUpText}`,
 			)
 			.addFields(
 				{

@@ -1,0 +1,908 @@
+{
+	"economy": {
+		"jobs": {
+			"barista": {
+				"name": "Barista",
+				"scenarios": {
+					"s1": "You crafted a perfect latte art and received a big tip!",
+					"s2": "Today's shift went smoothly, you served many customers.",
+					"s3": "Oops! You accidentally spilled coffee on a customer, your pay was cut for compensation."
+				}
+			},
+			"courier": {
+				"name": "Package Courier",
+				"scenarios": {
+					"s1": "All packages delivered on time and you got a 5-star rating!",
+					"s2": "Today's delivery route was busy, but you managed everything.",
+					"s3": "You went to the wrong address and had to turn back, wasting fuel."
+				}
+			},
+			"cashier": {
+				"name": "Minimarket Cashier",
+				"scenarios": {
+					"s1": "You found extra change and returned it, your boss is happy!",
+					"s2": "It was crowded today, but you served customers efficiently.",
+					"s3": "A customer got angry, making you stressed and less productive."
+				}
+			},
+			"parking_attendant": {
+				"name": "Parking Attendant",
+				"scenarios": {
+					"s1": "You helped a lady park and got an extra tip!",
+					"s2": "It was hot today, but you stayed enthusiastic on the job.",
+					"s3": "A motorcycle went missing, you had to pay part of the loss."
+				}
+			},
+			"programmer": {
+				"name": "Programmer",
+				"scenarios": {
+					"s1": "You fixed a critical bug just before the deadline. The client is very happy!",
+					"s2": "Today's work was routine maintenance and code refactoring.",
+					"s3": "Your code caused a memory leak. You had to work overtime without pay to fix it."
+				}
+			},
+			"graphic_designer": {
+				"name": "Graphic Designer",
+				"scenarios": {
+					"s1": "Your logo design won a competition! You got a big bonus.",
+					"s2": "You spent the day making assets for a client's social media.",
+					"s3": "Client kept asking for revisions until you got dizzy. Very exhausting."
+				}
+			},
+			"social_media_admin": {
+				"name": "Social Media Admin",
+				"scenarios": {
+					"s1": "Your post went viral and the client's followers skyrocketed!",
+					"s2": "You scheduled posts and replied to comments as usual.",
+					"s3": "The client's account got hacked, you had to work extra."
+				}
+			},
+			"freelance_writer": {
+				"name": "Freelance Writer",
+				"scenarios": {
+					"s1": "Your article was published in a major media, you got a royalty bonus!",
+					"s2": "You wrote several articles as ordered.",
+					"s3": "Your writing needed lots of revisions, your pay was cut."
+				}
+			},
+			"influencer": {
+				"name": "Influencer",
+				"scenarios": {
+					"s1": "Your endorsement trended, you got a new contract!",
+					"s2": "You uploaded daily content and got standard engagement.",
+					"s3": "Your content was criticized by netizens, the brand delayed payment."
+				}
+			},
+			"ojek_driver": {
+				"name": "Online Ojek Driver",
+				"scenarios": {
+					"s1": "You got lots of orders and a 5-star rating!",
+					"s2": "Today's orders went smoothly.",
+					"s3": "You got a troublesome passenger, your rating dropped a bit."
+				}
+			},
+			"online_seller": {
+				"name": "Online Seller",
+				"scenarios": {
+					"s1": "Your goods sold out, you got a bonus from the marketplace!",
+					"s2": "Sales were stable as usual.",
+					"s3": "A buyer complained, you got a bad rating."
+				}
+			},
+			"photographer": {
+				"name": "Photographer",
+				"scenarios": {
+					"s1": "Your photo was used by a famous magazine, you got royalties!",
+					"s2": "You got a product photo job today.",
+					"s3": "Your smartphone camera malfunctioned, photo results were subpar."
+				}
+			},
+			"project_manager": {
+				"name": "Project Manager",
+				"scenarios": {
+					"s1": "Your project finished ahead of schedule, the client gave a big bonus!",
+					"s2": "Meetings and coordination went smoothly.",
+					"s3": "A team member suddenly resigned, the project was slightly delayed."
+				}
+			},
+			"entrepreneur": {
+				"name": "Entrepreneur",
+				"scenarios": {
+					"s1": "Your business went viral on social media, sales soared!",
+					"s2": "Business ran steadily, no major issues.",
+					"s3": "A big customer complaint forced you to give a discount."
+				}
+			},
+			"it_consultant": {
+				"name": "IT Consultant",
+				"scenarios": {
+					"s1": "Your solution saved a client's system from hackers!",
+					"s2": "You provided routine consulting to clients.",
+					"s3": "Client was dissatisfied with your advice, your fee was cut."
+				}
+			},
+			"private_driver": {
+				"name": "Private Driver",
+				"scenarios": {
+					"s1": "You drove your boss to an important meeting on time, got a big tip!",
+					"s2": "The trip went smoothly without obstacles.",
+					"s3": "Stuck in a traffic jam, your boss was a bit disappointed."
+				}
+			},
+			"ceo_startup": {
+				"name": "Startup CEO",
+				"scenarios": {
+					"s1": "Your startup was acquired by a big company, you became an instant billionaire!",
+					"s2": "Business grew rapidly, investors are happy.",
+					"s3": "Investors delayed funding, cashflow was a bit disrupted."
+				}
+			},
+			"property_investor": {
+				"name": "Property Investor",
+				"scenarios": {
+					"s1": "Your property project succeeded, big profit from sales!",
+					"s2": "Property rentals went smoothly.",
+					"s3": "A tenant ran away, you lost this month's rent."
+				}
+			},
+			"company_director": {
+				"name": "Company Director",
+				"scenarios": {
+					"s1": "Your company won a big tender, revenue soared!",
+					"s2": "Company operations ran normally.",
+					"s3": "A sudden audit, you had to pay a fine."
+				}
+			},
+			"philanthropist": {
+				"name": "Philanthropist",
+				"scenarios": {
+					"s1": "Your donation went viral, many were inspired and you received an award!",
+					"s2": "You regularly helped social foundations.",
+					"s3": "There was a report of fund misuse, your reputation dropped a bit."
+				}
+			}
+		},
+		"shop": {
+			"desc": "## 🛒 {bot}'s Shop - {category}\nWelcome! See the available items.\n> Your kythia coin: **🪙 {cash}**",
+			"footer": "Page {page} of {totalPages}",
+			"empty": {
+				"title": "Empty!",
+				"desc": "There are no items available in this category."
+			},
+			"category": {
+				"all": "All Items",
+				"utility": "Utility",
+				"robbing": "Robbing",
+				"pet": "Pet",
+				"merriage": "Merriage"
+			},
+			"select": {
+				"category": {
+					"placeholder": "Select Category..."
+				}
+			},
+			"buy": {
+				"placeholder": "Buy an item from this page...",
+				"success": {
+					"desc": "## Purchase Successful\n✅ You have successfully purchased **{item}** for 🪙 {price}!"
+				}
+			},
+			"item": {
+				"price": "🪙 {price}",
+				"not": {
+					"found": {
+						"desc": "## Item Not Found\n❌ The item was not found."
+					}
+				}
+			},
+			"nav": {
+				"first": "⏪ First",
+				"prev": "◀️ Back",
+				"next": "Next ▶️",
+				"last": "Last ⏩"
+			},
+			"not": {
+				"your": {
+					"interaction": {
+						"desc": "## Not Your Interaction\nYou cannot use this interaction!"
+					}
+				},
+				"enough": {
+					"money": {
+						"desc": "## Not Enough Money\n❌ You don't have enough money to buy **{item}**!"
+					}
+				}
+			},
+			"items": {
+				"laptop_tech": {
+					"name": "Laptop",
+					"description": "Unlocks access to Tier 2 jobs like Programmer and Designer."
+				},
+				"smartphone_tech": {
+					"name": "Smartphone",
+					"description": "Unlocks access to Tier 3 jobs like Influencer and Online Driver."
+				},
+				"pcdesktop_tech": {
+					"name": "PC Desktop",
+					"description": "Unlocks access to Tier 4 jobs, requires high computing power!"
+				},
+				"car_vehicle": {
+					"name": "Car",
+					"description": "Unlocks access to Tier 4 jobs that require high mobility."
+				},
+				"house_property": {
+					"name": "Luxury House",
+					"description": "Unlocks access to Tier 5 jobs, show off your social status!"
+				},
+				"company_property": {
+					"name": "Company",
+					"description": "Unlocks access to the highest jobs in Tier 5!"
+				},
+				"poison_item": {
+					"name": "Poison",
+					"description": "Use to increase your chance of successful robbery."
+				},
+				"guard_item": {
+					"name": "Guard",
+					"description": "Protects your money from robbers for 1 hour."
+				},
+				"petfood_item": {
+					"name": "Pet Food",
+					"description": "Feed your pet to increase its happiness."
+				},
+				"marriage_ring": {
+					"name": "Marriage Ring",
+					"description": "A special ring to propose marriage and form a bond with another user."
+				}
+			}
+		},
+		"leaderboard": {
+			"title": "## 🏆 Global Economy Leaderboard\n**Page {page} of {totalPages}**",
+			"empty": "No users found in the economy system yet.",
+			"entry": "### {medal} **{username}**\n> 💰 Total Wealth: **🪙 {wealth}**\n> 🪙 Coin: ** {coin}** | 🏦 Bank: **🪙 {bank}**",
+			"footer": "Total Users: {totalUsers}",
+			"nav": {
+				"first": "⏪ First",
+				"prev": "◀️ Back",
+				"next": "Next ▶️",
+				"last": "Last ⏩"
+			},
+			"not": {
+				"your": {
+					"interaction": "You cannot use this interaction!"
+				}
+			}
+		},
+		"work": {
+			"result": {
+				"title": {
+					"outcome": "### 💰 Work Result"
+				}
+			},
+			"work": {
+				"cooldown": {
+					"title": "Tired!",
+					"desc": "🕒 You are exhausted! Try working again in **{time}**."
+				},
+				"no": {
+					"job": {
+						"title": "No Jobs Available",
+						"desc": "❌ It seems there are no jobs available for you at the moment."
+					}
+				},
+				"levelup": {
+					"text": "**✨ Your work experience increased! Career Level: {level}**"
+				},
+				"result": {
+					"author": "You worked as {job} {emoji}"
+				},
+				"basepay": {
+					"field": "Base Pay"
+				},
+				"bonus": {
+					"field": "Bonus/Penalty ({modifier}x)"
+				},
+				"total": {
+					"field": "Total Received"
+				}
+			}
+		},
+		"withdraw": {
+			"no": {
+				"account": {
+					"desc": "## 🚫 No Account Found\nYou don't have an account yet. Use `/eco account create` to create one."
+				}
+			},
+			"withdraw": {
+				"not": {
+					"enough": {
+						"bank": "❌ You do not have enough money in your bank to withdraw!"
+					}
+				},
+				"success": "## 💵 Withdraw Result\n{user} has withdrawn **{amount} money** from the bank.",
+				"error": "❌ | An error occurred while executing this command. Please try again."
+			}
+		},
+		"transfer": {
+			"transfer": {
+				"not": {
+					"enough": {
+						"bank": {
+							"text": "❌ | You do not have enough money in your bank to transfer.",
+							"fee": "❌ | You do not have enough money in your bank to cover the transfer fee ({fee} money)."
+						}
+					}
+				},
+				"target": {
+					"no": {
+						"account": "❌ | The target user does not have an account. Ask them to use `/eco account create`."
+					}
+				},
+				"self": "❌ | You cannot transfer money to yourself.",
+				"confirm": "## 💵 Transfer Confirmation\nYou are about to transfer **{amount} money** to **{target}** with a fee of **{fee} money**. Do you want to continue?",
+				"btn": {
+					"confirm": "Confirm",
+					"cancel": "Cancel"
+				},
+				"success": "## 💵 Transfer Successful\nYou have successfully transferred **{amount} money** to **{target}** with a fee of **{fee} money**!",
+				"received": "## 💵 You Received a Transfer\nYou received **{amount} money** to your bank from **{from}**!",
+				"cancelled": "❌ | Transfer has been cancelled.",
+				"timeout": "⌛ | Time's up. Transfer has been cancelled.",
+				"error": "❌ | An error occurred while executing this command. Please try again."
+			}
+		},
+		"slots": {
+			"slots": {
+				"not": {
+					"enough": {
+						"cash": "❌ | You don't have enough kythia coins! You need {bet}, but only have {cash}."
+					}
+				},
+				"spinning": {
+					"title": "🎰 Spinning the Wheels",
+					"desc": "The slot machine is spinning... Good luck!"
+				},
+				"author": "{username}'s Slot Game",
+				"bet": {
+					"field": "Bet"
+				},
+				"win": {
+					"field": "Winnings"
+				},
+				"cash": {
+					"field": "Current Kythia Coins"
+				},
+				"lose": {
+					"title": "💔 ZONK! YOU WERE UNLUCKY 💔"
+				},
+				"jackpot": {
+					"title": "🎉🎉🎉 JACKPOT!!! 🎉🎉🎉"
+				},
+				"bigwin": {
+					"title": "🔥 BIG WIN! 🔥"
+				},
+				"lucky": {
+					"title": "🤑 Just a Bit Lucky! 🤑"
+				}
+			}
+		},
+		"rob": {
+			"rob": {
+				"cannot": {
+					"rob": {
+						"self": "❌ You cannot rob yourself!"
+					}
+				},
+				"target": {
+					"no": {
+						"account": {
+							"desc": "❌ The target user does not have an account yet."
+						}
+					},
+					"not": {
+						"enough": {
+							"money": "❌ The target does not have enough money!"
+						}
+					}
+				},
+				"cooldown": "🕒 | You can rob again in **{time}**!",
+				"success": {
+					"text": "## 💵 Robbery Result\nYou successfully robbed **{amount} kythia coin** from **{target}**!",
+					"dm": "## 💵 Robbery Result\n**{robber}** robbed **{amount} kythia coin** from you!"
+				},
+				"user": {
+					"not": {
+						"enough": {
+							"money": {
+								"fail": "❌ You do not have enough money to pay the penalty if the robbery fails!"
+							}
+						}
+					}
+				},
+				"fail": {
+					"text": "## 💵 Robbery Result\nYou failed to rob **{target}** and paid them **{penalty}** as a penalty. {guard} {poison}",
+					"penalty": {
+						"all": "all your kythia coin"
+					},
+					"guard": {
+						"text": "Because the target had a guard.",
+						"dm": "Because you had a guard."
+					},
+					"poison": {
+						"text": "Because the target had poison.",
+						"dm": "Because you had poison."
+					},
+					"dm": "## 💵 Robbery Result\n**{robber}** tried to rob **{amount} kythia coin** from you but failed and paid you **{penalty} kythia coin** as a penalty. {guard} {poison}"
+				}
+			}
+		},
+		"profile": {
+			"profile": {
+				"title": "🗃️ Profile",
+				"user": {
+					"line": "> **{username}** <@{userId}>"
+				},
+				"tag": {
+					"id": {
+						"line": "> 🏷️ **Tag:** `{tag}`   |   🆔 **ID:** `{id}`"
+					}
+				},
+				"created": {
+					"line": "> 📅 **Account Created:** {created}"
+				},
+				"joined": {
+					"line": "> 👥 **Joined Server:** {joined}",
+					"unknown": "Unknown"
+				},
+				"bot": {
+					"status": {
+						"line": "> 🤖 **Bot?:** `{isBot}`   |   🟢 **Status:** `{status}`"
+					},
+					"yes": "Yes",
+					"no": "No"
+				},
+				"status": {
+					"unknown": "Unknown"
+				},
+				"level": {
+					"xp": {
+						"title": "🏆 Level & XP",
+						"line": "> ⭐ **Level:** `{level}`   |   🧪 **XP:** `{xp} / {nextLevelXp}`"
+					}
+				},
+				"finance": {
+					"title": "💰 Finances"
+				},
+				"bank": {
+					"line": "> 🏦 **Kythia Bank:** \n> `{bank}` {bankType}"
+				},
+				"cash": {
+					"line": "> 🪙 **Kythia Coin:** \n> `{cash}`"
+				}
+			}
+		},
+		"lootbox": {
+			"lootbox": {
+				"cooldown": "🕒 | You can open another lootbox in **{time}**!",
+				"title": "🎁 Lootbox Result",
+				"success": "You opened a lootbox and received **{amount} kythia coin**!"
+			}
+		},
+		"inventory": {
+			"inventory": {
+				"empty": "Your inventory is empty.",
+				"title": "## 🎒 Your Inventory\nItems you own:",
+				"item": {
+					"field": {
+						"name": "● {itemName} ({count})",
+						"value": "You have this item {count} time(s)."
+					}
+				}
+			}
+		},
+		"hack": {
+			"hack": {
+				"cooldown": "🕒 | You can hack another user in **{time}**!",
+				"user": {
+					"or": {
+						"target": {
+							"not": {
+								"found": "❌ | User or target not found in the system."
+							}
+						}
+					},
+					"no": {
+						"bank": "❌ | You do not have enough money in your bank to hack."
+					}
+				},
+				"self": "❌ | You cannot hack yourself!",
+				"target": {
+					"no": {
+						"bank": "❌ | The target has no money in their bank to hack."
+					}
+				},
+				"in": {
+					"progress": "## 💵 Hacking in Progress...\n{user} is hacking {target}... with a success chance of **{chance}%**"
+				},
+				"success": {
+					"text": "## 💵 Hack Successful!\n🎉 | You successfully hacked **{target}** and took all their bank money!",
+					"dm": "## 💵 You were hacked!\n**{hacker}** has hacked you and stole **{amount}** from your bank!"
+				},
+				"failure": "## 💵 Hack Failed!\nYou failed to hack **{target}** and lost **{penalty}** money from your bank."
+			}
+		},
+		"give": {
+			"give": {
+				"invalid": {
+					"amount": "❌ The amount to give must be greater than 0."
+				},
+				"self": "❌ You cannot give kythia coin to yourself.",
+				"no": {
+					"target": {
+						"account": "❌ The target user does not have an account."
+					}
+				},
+				"not": {
+					"enough": {
+						"cash": "❌ You do not have enough kythia coin to give that amount."
+					}
+				},
+				"success": "## 💵 Give Result\nYou gave **{amount} kythia coin** to **{target}**!",
+				"confirm": "## 💵 Give Confirmation\nAre you sure you want to give **{amount}** kythia coin to **{target}**? This action cannot be undone.",
+				"btn": {
+					"confirm": "Confirm",
+					"cancel": "Cancel"
+				},
+				"cancelled": "❌ The give operation was cancelled.",
+				"timeout": "⌛ Timed out. You did not respond in time.",
+				"received": "## 🪙 You Received a Coin\nYou have received **{amount}** kythia coin from **{from}**!"
+			}
+		},
+		"deposit": {
+			"deposit": {
+				"amount": {
+					"required": "❌ You must specify an amount to deposit."
+				},
+				"invalid": {
+					"amount": "❌ The deposit amount must be greater than 0."
+				},
+				"not": {
+					"enough": {
+						"cash": "❌ You do not have enough kythia coin to deposit that amount."
+					}
+				},
+				"zero": {
+					"cash": "❌ You have no kythia coin to deposit."
+				},
+				"success": "## 💵 Deposit Successful\nYou have deposited **{amount} kythia coin** into your bank!",
+				"max": {
+					"balance": "You have exceed bank max balance, your bank max balance is {max}"
+				}
+			}
+		},
+		"daily": {
+			"daily": {
+				"cooldown": "🕒 | You can collect your daily kythia coin in **{time}**!",
+				"success": "## 💵 Daily Coin Collected\nYou have collected your daily kythia coin of **{amount} kythia coin**!"
+			}
+		},
+		"coinflip": {
+			"coinflip": {
+				"not": {
+					"enough": {
+						"cash": "You do not have enough kythia coin to place that bet."
+					}
+				},
+				"win": "## 🪙 Coin Flip Result\n**{flip}**! You won and received **{amount} kythia coin**!",
+				"lose": "## 🪙 Coin Flip Result\n**{flip}**! You lost **{amount} kythia coin**."
+			}
+		},
+		"cash": {
+			"cash": {
+				"balance": "## 💵 Coin Balance\n**{username}**, you have **{cash}** kythia coin!"
+			}
+		},
+		"beg": {
+			"beg": {
+				"cooldown": "🕒 | You can beg for money again in **{time}**!",
+				"success": "## Begging Result\nYou begged and received **{amount} money**!"
+			}
+		},
+		"bank": {
+			"bank": {
+				"balance": {
+					"desc": "## 💵 Bank Balance\n**{username}**, you have **{cash} kythia coin** and **{bank} in {bankType} bank**, total **{total} money**."
+				},
+				"stats": {
+					"title": "🏦 Bank Statistics"
+				},
+				"pros": "Pros",
+				"cons": "Cons"
+			},
+			"stat": {
+				"income": {
+					"bonus": "💸 Income Bonus"
+				},
+				"interest": {
+					"rate": "📈 Interest Rate"
+				},
+				"transfer": {
+					"fee": "🔄 Transfer Fee"
+				},
+				"withdraw": {
+					"fee": "💸 Withdraw Fee"
+				},
+				"rob": {
+					"bonus": "🗡️ Robbery Bonus",
+					"penalty": "🛡️ Robbery Penalty"
+				},
+				"max": {
+					"balance": "💰 Max Bank Balance"
+				}
+			},
+			"max": {
+				"balance": {
+					"unlimited": "Unlimited"
+				}
+			},
+			"rob": {
+				"penalty": {
+					"times": "{times}x penalty if robbed"
+				}
+			},
+			"pro": {
+				"income": {
+					"bonus": "Increased active income"
+				},
+				"interest": {
+					"high": "High interest rate"
+				},
+				"transfer": {
+					"zero": "No transfer fees",
+					"low": "Reduced transfer fees"
+				},
+				"rob": {
+					"bonus": "Extra gain from robbing"
+				},
+				"max": {
+					"unlimited": "Unlimited max balance"
+				}
+			},
+			"con": {
+				"income": {
+					"penalty": "Decreased active income"
+				},
+				"transfer": {
+					"high": "High transfer fees"
+				},
+				"rob": {
+					"penalty": "Reduced profit from robbing"
+				}
+			}
+		},
+		"account": {
+			"edit": {
+				"account": {
+					"edit": {
+						"success": {
+							"desc": "## 🎉 Account Edited\nBank type has been changed to: **{bankType}**"
+						},
+						"error": {
+							"desc": "## ❌ Error Editing Account\nAn error occurred while editing your account. Please try again."
+						}
+					}
+				}
+			},
+			"create": {
+				"account": {
+					"create": {
+						"already": {
+							"desc": "## 🚫 Account Already Exists\nYou already have an account."
+						},
+						"success": {
+							"desc": "## 🎉 Account Created\nYour account has been created with bank type: **{bankType}**"
+						}
+					}
+				}
+			}
+		},
+		"market": {
+			"sell": {
+				"insufficient": {
+					"asset": {
+						"title": "❌ Insufficient Assets",
+						"desc": "You do not own enough **{asset}** to sell that amount."
+					}
+				},
+				"asset": {
+					"not": {
+						"found": {
+							"title": "❌ Asset Not Found",
+							"desc": "Asset data not found or market information currently unavailable."
+						}
+					}
+				},
+				"success": {
+					"title": "✅ Asset Sold!",
+					"desc": "You have successfully sold **{quantity} {asset}** for **🪙 {amount}**.\n\n> Avg. Buy Price: `${avgBuyPrice}`\n> Sell Price: `${sellPrice}`\n> P/L on this sale: `{pnlEmoji} {pnlSign}${pnl}`"
+				},
+				"error": {
+					"title": "❌ Sale Error",
+					"desc": "An error occurred while processing your sale. Please try again."
+				}
+			},
+			"view": {
+				"asset": {
+					"not": {
+						"found": {
+							"title": "❌ Asset Not Found",
+							"desc": "Asset `{asset}` not found."
+						}
+					}
+				},
+				"chart": {
+					"title": "📈 7-Day Chart for {asset}"
+				},
+				"price": {
+					"label": "Price (USD)"
+				},
+				"24h": {
+					"change": {
+						"label": "24H Change"
+					},
+					"vol": {
+						"label": "24h Volume"
+					}
+				},
+				"all": {
+					"title": "🌐 Kythia Global Market - Real-Time Prices"
+				},
+				"error": {
+					"title": "❌ Error",
+					"desc": "An unexpected error occurred."
+				},
+				"market": {
+					"cap": {
+						"label": "Market Cap"
+					}
+				},
+				"circulating": {
+					"supply": {
+						"label": "Circulating Supply"
+					}
+				},
+				"open": {
+					"orders": {
+						"label": "Your Open Orders"
+					}
+				}
+			},
+			"buy": {
+				"insufficient": {
+					"funds": {
+						"title": "❌ Insufficient Funds",
+						"desc": "You don't have enough KythiaCoin to make this purchase. You need 🪙 {amount}."
+					}
+				},
+				"asset": {
+					"not": {
+						"found": {
+							"title": "❌ Asset Not Found",
+							"desc": "The asset was not found or market data is currently unavailable."
+						}
+					}
+				},
+				"success": {
+					"title": "✅ Purchase Successful!",
+					"desc": "You have successfully purchased **{quantity} {asset}** for **🪙 {amount}**."
+				},
+				"error": {
+					"title": "❌ Transaction Error",
+					"desc": "An error occurred while processing your transaction. Please try again."
+				}
+			},
+			"portfolio": {
+				"title": "Your Portfolio, {username}",
+				"empty": {
+					"title": "Your Asset Portfolio is Empty",
+					"desc": "You don't own any assets yet. Use /eco market buy to purchase assets from the global market!"
+				},
+				"data": {
+					"unavailable": "Market data for this asset is currently unavailable. (Holding: {quantity})"
+				},
+				"field": {
+					"quantity": "Quantity",
+					"avg": {
+						"buy": {
+							"price": "Avg. Buy Price"
+						}
+					},
+					"current": {
+						"price": "Current Price"
+					},
+					"price": {
+						"24h": {
+							"ago": "Price 24H Ago"
+						}
+					},
+					"24h": {
+						"change": "24H Change"
+					},
+					"invested": "Invested",
+					"market": {
+						"value": "Market Value"
+					},
+					"pl": "P/L"
+				},
+				"summary": {
+					"total": {
+						"invested": "Total Invested",
+						"pl": "Total Profit/Loss"
+					},
+					"market": {
+						"value": "Market Value"
+					},
+					"unrealized": {
+						"gains": "Unrealized Gains",
+						"losses": "Unrealized Losses"
+					}
+				}
+			},
+			"limit": {
+				"buy": {
+					"success": {
+						"title": "Limit Buy Order Placed",
+						"desc": "Successfully placed a limit buy order for **{quantity} {asset}** at **${price}** per asset."
+					}
+				},
+				"sell": {
+					"success": {
+						"title": "Limit Sell Order Placed",
+						"desc": "Successfully placed a limit sell order for **{quantity} {asset}** at **${price}** per asset."
+					}
+				}
+			},
+			"stoploss": {
+				"sell": {
+					"success": {
+						"title": "Stop-Loss Order Placed",
+						"desc": "Successfully placed a stop-loss order to sell **{quantity} {asset}** if the price drops to **${price}** per asset."
+					}
+				}
+			},
+			"order": {
+				"error": {
+					"title": "❌ Order Error",
+					"desc": "An unexpected error occurred while placing your order."
+				}
+			},
+			"history": {
+				"title": "Transaction History for {username}",
+				"empty": {
+					"title": "Transaction History",
+					"desc": "Your transaction history is empty."
+				},
+				"error": {
+					"title": "❌ Error",
+					"desc": "An unexpected error occurred while fetching your transaction history."
+				}
+			},
+			"cancel": {
+				"not": {
+					"found": {
+						"title": "❌ Order Not Found",
+						"desc": "Could not find an open order with that ID belonging to you."
+					}
+				},
+				"success": {
+					"title": "✅ Order Cancelled",
+					"desc": "Successfully cancelled order **{orderId}**."
+				},
+				"error": {
+					"title": "❌ Error",
+					"desc": "An unexpected error occurred while cancelling your order."
+				}
+			}
+		}
+	}
+}

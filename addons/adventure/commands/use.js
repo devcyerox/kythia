@@ -43,7 +43,7 @@ module.exports = {
 
 		if (inventory.length === 0) {
 			return interaction.reply({
-				content: await t(interaction, 'inventory.no.usable.items'),
+				content: await t(interaction, 'adventure.inventory.no.usable.items'),
 				ephemeral: true,
 			});
 		}
@@ -58,13 +58,13 @@ module.exports = {
 		const selectMenu = new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder()
 				.setCustomId('use_item_select')
-				.setPlaceholder(t(interaction, 'inventory.select.item.placeholder'))
+				.setPlaceholder(t(interaction, 'adventure.inventory.select.item.placeholder'))
 				.addOptions(options),
 		);
 
 		const embed = new EmbedBuilder()
-			.setTitle(t(interaction, 'inventory.use.title'))
-			.setDescription(t(interaction, 'inventory.use.desc'))
+			.setTitle(t(interaction, 'adventure.inventory.use.title'))
+			.setDescription(t(interaction, 'adventure.inventory.use.desc'))
 			.setColor('#2ecc71');
 
 		await interaction.reply({
@@ -87,7 +87,7 @@ module.exports = {
 
 			if (!item) {
 				return response.update({
-					content: t(interaction, 'inventory.item.not.found'),
+					content: t(interaction, 'adventure.inventory.item.not.found'),
 					embeds: [],
 					components: [],
 				});
@@ -111,18 +111,18 @@ module.exports = {
 						itemName,
 					});
 
-					resultMessage = t(interaction, 'inventory.use.potion.success', {
+					resultMessage = t(interaction, 'adventure.inventory.use.potion.success', {
 						amount: actualHeal,
 					});
 					break;
 				}
 
 				case '🍶 Revival':
-					resultMessage = t(interaction, 'inventory.use.revival.success');
+					resultMessage = t(interaction, 'adventure.inventory.use.revival.success');
 					break;
 
 				default:
-					resultMessage = t(interaction, 'inventory.cannot.use.item');
+					resultMessage = t(interaction, 'adventure.inventory.cannot.use.item');
 			}
 
 			await response.update({
@@ -133,7 +133,7 @@ module.exports = {
 		} catch (_error) {
 			if (!interaction.replied) {
 				await interaction.editReply({
-					content: t(interaction, 'inventory.selection.timeout'),
+					content: t(interaction, 'adventure.inventory.selection.timeout'),
 					embeds: [],
 					components: [],
 				});

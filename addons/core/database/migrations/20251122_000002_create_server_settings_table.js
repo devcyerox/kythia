@@ -333,7 +333,7 @@ module.exports = {
 
 			// STREAK
 			streakRoleRewards: { type: DataTypes.JSON, defaultValue: [] },
-			streakEmoji: { type: DataTypes.STRING, defaultValue: '🔥' },
+			streakEmoji: { type: DataTypes.STRING, allowNull: true },
 			streakMinimum: { type: DataTypes.INTEGER, defaultValue: 3 },
 
 			announcementChannelId: { type: DataTypes.STRING, allowNull: true },

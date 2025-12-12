@@ -1,0 +1,62 @@
+{
+	"invite": {
+		"command": {
+			"add": {
+				"success": "Added {amount} invites to {user}. Now {total}."
+			},
+			"remove": {
+				"success": "Removed {amount} invites from {user}. Now {total}."
+			}
+		},
+		"events": {
+			"guildMemberAdd": {
+				"tracker": {
+					"title": "Invite Tracker",
+					"account": {
+						"age": "Account age: **{days} days**"
+					},
+					"type": {
+						"fake": "fake",
+						"real": "real"
+					},
+					"joined": {
+						"by": "{user} ({username}) joined using an invite from {inviter} ({inviterTag})\nType: **{inviteType}**",
+						"vanity": "{user} ({username}) joined using a **vanity invite** (`{code}`)",
+						"oauth": "{user} ({username}) joined using **OAuth (bot invite)**",
+						"unknown": "{user} ({username}) joined (unknown invite source)"
+					},
+					"code": "Invite code: `{code}`",
+					"error": {
+						"title": "Invite Tracker Error",
+						"desc": "An error occurred while processing the invite tracker. Please contact the server admin if this persists."
+					}
+				}
+			},
+			"guildMemberRemove": {
+				"tracker": {
+					"title": "Member Left",
+					"left": "{user} ({username}) left. Invited by {inviter}",
+					"unknown": "{user} ({username}) left. (Inviter unknown or history missing)"
+				}
+			}
+		},
+		"invite": {
+			"command": {
+				"title": "Invites",
+				"user": {
+					"stats": "{user} has {invites} invites (fake: {fake}, leaves: {leaves})."
+				},
+				"no": {
+					"permission": "You need the ManageGuild permission."
+				},
+				"leaderboard": {
+					"line": "#{rank} {user} — {invites}",
+					"empty": "No data yet."
+				},
+				"reset": {
+					"success": "All invite data has been reset."
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,100 @@
+{
+	"streak": {
+		"streak": {
+			"claim": {
+				"already": {
+					"title": "👋 You have already claimed today!",
+					"desc": "Your streak is safe! You can claim again tomorrow.\n\n{emoji} **Current Streak:** {streak} days"
+				},
+				"freeze": {
+					"used": "Your streak was saved by a **Streak Freeze**! ❄️\nRemaining Streak Freezes: **{streakFreezes}**\n\nYour streak continues! Congrats! 🎉"
+				},
+				"new": {
+					"streak": "You started a new streak today! Keep it up! 💪"
+				},
+				"continue": "Your streak continues! Congrats! 🎉",
+				"reward": "🎁 **You received a role reward:** {roles}",
+				"success": {
+					"title": "✅ Daily Streak Claimed!"
+				},
+				"footer": "Keep your streak going!"
+			},
+			"field": {
+				"current": "{emoji} Current Streak",
+				"highest": "🏆 Highest Record",
+				"freeze": "❄️ Streak Freeze"
+			},
+			"unit": {
+				"day": "days"
+			},
+			"me": {
+				"status": {
+					"claimed": "✅ Already claimed today!",
+					"not": {
+						"claimed": "❌ Not claimed today!"
+					}
+				},
+				"title": "📊 {username}'s Streak Status"
+			},
+			"footer": {
+				"requested": {
+					"by": "Requested by {username}"
+				}
+			},
+			"leaderboard": {
+				"title": "🏆 Top Streak Leaderboard",
+				"empty": "No one has started a streak in this server yet. Be the first with `/streak claim`!",
+				"unknown": {
+					"user": "User (ID: {id}...)"
+				},
+				"entry": "{medal} {username} — {emoji} {current} days (Max: {highest}) ❄️{freeze}",
+				"footer": "Streak data in server {server}"
+			},
+			"reset": {
+				"title": "🔄 Streak Reset",
+				"already": {
+					"zero": "Your streak is already 0. No need to reset."
+				},
+				"success": "Your streak has been reset to 0. Start again tomorrow!"
+			},
+			"stats": {
+				"topuser": {
+					"text": "{username} ({highest} days)",
+					"unknown": "User ID: {id}... ({highest} days)",
+					"field": "👑 **Top User:** {topUser}"
+				},
+				"title": "📈 Server Streak Statistics",
+				"server": "**Server:** {server}",
+				"last": {
+					"claim": "📅 **Last Claimed:** {lastClaim}"
+				},
+				"total": {
+					"freeze": "❄️ **Total Streak Freezes:** {totalFreeze}"
+				},
+				"field": {
+					"total": "👤Total Users Recorded",
+					"active": "{emoji} Active Streak Users",
+					"avg": "📈 Average Streak",
+					"max": "⚡ Highest Record"
+				},
+				"footer": "Streak statistics in server {server}"
+			},
+			"user": {
+				"title": {
+					"text": "📊 User Streak",
+					"user": "📊 {username}'s Streak Status"
+				},
+				"not": {
+					"found": {
+						"title": "User Not Found",
+						"desc": "❌ User not found."
+					}
+				}
+			},
+			"error": {
+				"title": "❌ Error",
+				"generic": "An error occurred while executing this command."
+			}
+		}
+	}
+}

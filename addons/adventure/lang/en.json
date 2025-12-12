@@ -1,0 +1,180 @@
+
+{
+	"adventure": {
+		"battle": {
+			"continue": {
+				"button": "Continue Adventure"
+			},
+			"revive": "## 😇 You Revived!\nYou were revived by 🍶 Revival and your HP is restored to **{hp}**.\nYou're ready to fight again!",
+			"lose": "## 💀 You Lost!\nYou were defeated by the monster! But you rise again with **{hp} HP**.",
+			"levelup": "## 🎉 Level Up!\nYou reached level **{level}**!\nYour stats increased! 💪\nYour HP is restored to **{hp}**.",
+			"win": "## 🎉 You Won!\nYou defeated **{monster}**!\nYou earned **{gold} gold** and **{xp} XP**!",
+			"round": "## ⚔️ Adventure Battle!\n**{user}** attacks **{monster}**, dealing **{playerDamage}** damage!\n**{monster}** strikes back, dealing **{monsterDamage}** damage!",
+			"hp": {
+				"you": "💖 Your HP",
+				"monster": "👹 {monster}'s HP"
+			}
+		},
+		"inventory": {
+			"empty": "## 🔍 Your inventory is empty!\nYou can collect items here!",
+			"list": "## 🎒 {username}'s Inventory\nHere are the contents of your inventory:\n\n{items}",
+			"use": {
+				"title": "🔮 Use Item",
+				"desc": "Select an item to use from your inventory.",
+				"potion": {
+					"success": "💚 You used a Health Potion and restored **{amount} HP**!"
+				},
+				"revival": {
+					"success": "💖 You're now protected by a Revival Potion! It will automatically revive you if you're defeated."
+				},
+				"item": {
+					"button": "Use Item"
+				}
+			},
+			"select": {
+				"item": {
+					"placeholder": "Select an item to use..."
+				}
+			},
+			"no": {
+				"usable": {
+					"items": "❌ You don't have any usable items in your inventory."
+				}
+			},
+			"item": {
+				"not": {
+					"found": "❌ Item not found in your inventory."
+				}
+			},
+			"cannot": {
+				"use": {
+					"item": "❌ You can't use this item right now."
+				}
+			},
+			"selection": {
+				"timeout": "⏱️ You took too long to select an item."
+			}
+		},
+		"recall": {
+			"recalled": "## 🏠 Recall\nYou are recall and back to the city!\nYour HP is full!"
+		},
+		"shop": {
+			"welcome": "## 🛒 Adventure Shop\nWelcome to the adventure shop!\nChoose an item to buy from the menu below.",
+			"gold": {
+				"footer": "🪙 Your gold: {gold}"
+			},
+			"item": {
+				"not": {
+					"found": "❌ The selected item could not be found."
+				}
+			},
+			"select": {
+				"placeholder": "Choose an item to buy",
+				"option": {
+					"desc": "Price: {price} gold"
+				},
+				"category": "Select a category...",
+				"item": {
+					"placeholder": "Select an item to purchase..."
+				}
+			},
+			"not": {
+				"enough": {
+					"gold": "## 🪙 Not Enough Gold!\nYou need **{price} gold** to buy {item}, but you only have **{gold} gold**."
+				}
+			},
+			"confirm": {
+				"purchase": "## 🛒 Purchase Confirmation\nYou are about to buy **{item}** for **{price} gold**.\n\nContinue with the purchase?",
+				"button": "✅ Confirm"
+			},
+			"cancel": {
+				"button": "❌ Cancel"
+			},
+			"purchase": {
+				"success": "## ✅ Purchase Successful!\nYou have successfully bought **{item}** for **{price} gold**.",
+				"cancelled": "## ❌ Purchase Cancelled\nYou cancelled the purchase of {item}."
+			},
+			"timeout": "## ⏱️ Timed Out\nYou took too long to choose an item. Use `/adventure shop` again to open the shop.",
+			"desc": "## 🏰 {bot}'s Adventure Shop - {category}\nWelcome to the adventure shop! Here you can buy items to aid you on your journey.\n> Your gold: **🪙 {gold}**",
+			"footer": "Page {page} of {totalPages}",
+			"empty": {
+				"title": "No Items Available",
+				"desc": "There are no items available in this category at the moment."
+			},
+			"category": {
+				"equipment": "⚔️ Equipment",
+				"consumables": "🧪 Consumables"
+			},
+			"items": {
+				"shield": {
+					"name": "Wooden Shield",
+					"desc": "A basic wooden shield that provides +5 defense."
+				},
+				"sword": {
+					"name": "Iron Sword",
+					"desc": "A sharp iron sword that provides +7 attack."
+				},
+				"armor": {
+					"name": "Leather Armor",
+					"desc": "Light leather armor that provides +10 defense and +20 health."
+				},
+				"revival": {
+					"name": "Revival Potion",
+					"desc": "Brings you back to life with 50% health when defeated."
+				},
+				"health": {
+					"potion": {
+						"name": "Health Potion",
+						"desc": "Restores 50 health points when used."
+					}
+				}
+			}
+		},
+		"start": {
+			"already": {
+				"have": "You already have an adventure character!\nUse `/adventure stats` to view your status."
+			},
+			"success": {
+				"title": "✨ Character Created Successfully!",
+				"desc": "Your character has been created! You are ready to start your adventure! 🎉\n\nUse `/adventure battle` to start fighting or `/adventure stats` to view your status."
+			},
+			"choose": {
+				"char": {
+					"title": "🧭 Choose Your Path",
+					"desc": "Select a character below. Each has unique strengths and bonuses!",
+					"stats": "**Character Bonuses**\n• Strength: {str}\n• Defense: {def}\n• Max HP%: {hp}\n• XP%: {xp}\n• Gold%: {gold}"
+				}
+			},
+			"select": {
+				"placeholder": "Select your character..."
+			},
+			"confirm": {
+				"button": "✅ Confirm Character"
+			},
+			"selected": {
+				"char": "Chosen Character"
+			},
+			"timeout": "⏱️ Time's up! Please run `/adventure start` again to choose a character."
+		},
+		"stats": {
+			"embed": {
+				"desc": "## 🌟 {username}'s Character Stats"
+			},
+			"level": "🆙 Level",
+			"hp": "💖 HP",
+			"gold": "💰 Gold",
+			"strength": "⚔️ Strength",
+			"defense": "🛡️ Defense",
+			"xp": {
+				"progress": {
+					"text": "✨ XP Progress",
+					"value": "{xp} / {xpForNextLevel}\n{progressBar}"
+				}
+			},
+			"character": "🎭 Character"
+		},
+		"no": {
+			"character": "❌ You don't have a character yet! Use `/adventure start` first!"
+		}
+	}
+}

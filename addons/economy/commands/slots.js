@@ -100,7 +100,7 @@ module.exports = {
 		const reels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
 		const [r1, r2, r3] = reels;
 
-		let resultKey = 'eco.slots.lose.title';
+		let resultKey = 'economy.slots.lose.title';
 		let resultColor = 'Red';
 		let winnings = 0;
 		let payoutMultiplier = 0;
@@ -108,7 +108,7 @@ module.exports = {
 		if (r1.emoji === r2.emoji && r2.emoji === r3.emoji) {
 			payoutMultiplier = r1.payout.three;
 			winnings = Math.floor(bet * payoutMultiplier);
-			resultKey = 'eco.slots.jackpot.title';
+			resultKey = 'economy.slots.jackpot.title';
 			resultColor = 'Gold';
 		} else if (
 			r1.emoji === r2.emoji ||
@@ -121,12 +121,12 @@ module.exports = {
 			else pairSymbol = r2;
 			payoutMultiplier = pairSymbol.payout.two;
 			winnings = Math.floor(bet * payoutMultiplier);
-			resultKey = 'eco.slots.bigwin.title';
+			resultKey = 'economy.slots.bigwin.title';
 			resultColor = 'Green';
 		} else if (reels.some((r) => r.emoji === '💰')) {
 			winnings = bet;
 			payoutMultiplier = 1;
-			resultKey = 'eco.slots.lucky.title';
+			resultKey = 'economy.slots.lucky.title';
 			resultColor = 'Blue';
 		}
 

@@ -1,0 +1,40 @@
+{
+	"image": {
+		"add": {
+			"invalid": {
+				"type": {
+					"desc": "## ❌ Image Upload Failed!\nPlease upload a valid image file (image/* only)."
+				}
+			},
+			"success": {
+				"desc": "## ✅ Image Saved!\nYour image has been saved successfully!\nURL: {url}"
+			}
+		},
+		"delete": {
+			"not": {
+				"found": {
+					"desc": "## ❌ Image Not Found!\nThe image code could not be found or you do not have permission to delete it."
+				}
+			},
+			"error": {
+				"desc": "## ❌ Error Deleting Image!\nAn error occurred while trying to delete the image. Please try again later."
+			},
+			"success": {
+				"desc": "## ✅ Image Deleted!\nThe image has been deleted successfully."
+			}
+		},
+		"commands": {
+			"list": {
+				"empty": "You have not uploaded any images yet.",
+				"title": {
+					"text": "## 📷 **Your Uploaded Images**\nHere are all the images you've uploaded:",
+					"empty": "## 📷 **Your Uploaded Images (cont'd)**"
+				},
+				"item": "**Code:** `{code}`\n[View Image]({url})",
+				"footer": {
+					"help": "Use the filenames above with the image commands to show or delete your uploaded images."
+				}
+			}
+		}
+	}
+}
