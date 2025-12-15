@@ -22,12 +22,14 @@ async function fetchQuestsFromAny(urls, logger) {
 	for (const url of urls) {
 		const controller = new AbortController();
 		const timeoutId = setTimeout(() => {
-			logger.warn(`[QuestNotifier] API timeout (5s) for ${url}. Aborting...`);
+			logger.warn(
+				`⏰ [QuestNotifier] API timeout (5s) for ${url}. Aborting...`,
+			);
 			controller.abort();
 		}, TIMEOUT_MS);
 
 		try {
-			logger.info(`[QuestNotifier] Trying quest API: ${url}`);
+			logger.info(`⏰ [QuestNotifier] Trying quest API: ${url}`);
 
 			const response = await fetch(url, {
 				signal: controller.signal,
@@ -37,20 +39,22 @@ async function fetchQuestsFromAny(urls, logger) {
 
 			if (!response.ok) {
 				logger.warn(
-					`[QuestNotifier] API fetch failed with status ${response.status} for ${url}`,
+					`⏰ [QuestNotifier] API fetch failed with status ${response.status} for ${url}`,
 				);
 				continue;
 			}
 
 			const apiQuests = await response.json();
-			logger.info(`[QuestNotifier] Got quest data from: ${url}`);
+			logger.info(`⏰ [QuestNotifier] Got quest data from: ${url}`);
 			return apiQuests;
 		} catch (e) {
 			clearTimeout(timeoutId);
 
 			if (e.name === 'AbortError') {
 			} else {
-				logger.warn(`[QuestNotifier] Error fetching from ${url}: ${e.message}`);
+				logger.warn(
+					`⏰ [QuestNotifier] Error fetching from ${url}: ${e.message}`,
+				);
 			}
 		}
 	}
@@ -61,7 +65,7 @@ async function fetchQuestsFromAny(urls, logger) {
 async function checkQuests(container) {
 	const { models, logger, client, kythiaConfig } = container;
 	const { QuestConfig, QuestGuildLog } = models;
-	logger.info('[QuestNotifier] Running cron job...');
+	logger.info('⏰ [QuestNotifier] Running cron job...');
 
 	const apiUrlsConfig = kythiaConfig.addons.quest.apiUrls || '';
 
@@ -71,7 +75,7 @@ async function checkQuests(container) {
 		.filter((v) => v.length > 0);
 
 	if (apiUrls.length === 0) {
-		logger.error('[QuestNotifier] No API URLs configured!');
+		logger.error('⏰ [QuestNotifier] No API URLs configured!');
 		return;
 	}
 
@@ -80,7 +84,7 @@ async function checkQuests(container) {
 
 		if (!apiQuests) {
 			logger.error(
-				'[QuestNotifier] All API quest endpoints failed. No quests retrieved.',
+				'⏰ [QuestNotifier] All API quest endpoints failed. No quests retrieved.',
 			);
 			return;
 		}
@@ -99,13 +103,13 @@ async function checkQuests(container) {
 		});
 
 		if (validQuests.length === 0) {
-			logger.info('[QuestNotifier] No new quests found.');
+			logger.info('⏰ [QuestNotifier] No new quests found.');
 			return;
 		}
 
 		const allGuildConfigs = await QuestConfig.getAllCache();
 		if (allGuildConfigs.length === 0) {
-			logger.info('[QuestNotifier] No guilds have set up the notifier.');
+			logger.info('⏰ [QuestNotifier] No guilds have set up the notifier.');
 			return;
 		}
 
@@ -118,7 +122,7 @@ async function checkQuests(container) {
 					.catch(() => null);
 				if (!channel) {
 					logger.warn(
-						`[QuestNotifier] Channel ${config.channelId} not found for guild ${config.guildId}. Skipping.`,
+						`⏰ [QuestNotifier] Channel ${config.channelId} not found for guild ${config.guildId}. Skipping.`,
 					);
 					continue;
 				}
@@ -139,7 +143,7 @@ async function checkQuests(container) {
 				if (questsToSend.length === 0) continue;
 
 				logger.info(
-					`[QuestNotifier] Sending ${questsToSend.length} new quest(s) to guild ${config.guildId}...`,
+					`⏰ [QuestNotifier] Sending ${questsToSend.length} new quest(s) to guild ${config.guildId}...`,
 				);
 
 				for (const quest of questsToSend) {
@@ -159,23 +163,24 @@ async function checkQuests(container) {
 				}
 			} catch (guildError) {
 				logger.error(
-					`[QuestNotifier] Failed to process guild ${config.guildId}: ${guildError.message}`,
+					`⏰ [QuestNotifier] Failed to process guild ${config.guildId}: ${guildError.message}`,
 				);
 			}
 		}
-		logger.info('[QuestNotifier] Cron job finished.');
+		logger.info('⏰ [QuestNotifier] Cron job finished.');
 	} catch (error) {
-		logger.error(`[QuestNotifier] CRON JOB FAILED: ${error.message}`);
+		logger.error(`⏰ [QuestNotifier] CRON JOB FAILED: ${error.message}`);
 	}
 }
 
 function initializeQuestScheduler(bot) {
 	const container = bot.client.container;
-	const { logger } = container;
+	const { logger, kythiaConfig } = container;
+	const scheduler = kythiaConfig.addons.quest.scheduler || '*/30 * * * *';
 
-	cron.schedule('*/30 * * * *', () => checkQuests(container));
+	cron.schedule(scheduler, () => checkQuests(container));
 
-	logger.info('⏰ [QuestNotifier] Cron job scheduled (every 30 minutes).');
+	logger.info(`⏰ [QuestNotifier] Cron job scheduled (${scheduler}).`);
 
 	checkQuests(container);
 }

@@ -10,6 +10,7 @@ const MONSTERS = [
 	// Level 1-2 (increased HP and strength)
 	{
 		name: 'Wild Dog',
+		nameKey: 'adventure.monsters.wild_dog',
 		hp: 42,
 		strength: 12,
 		goldDrop: 16,
@@ -19,6 +20,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Rat',
+		nameKey: 'adventure.monsters.rat',
 		hp: 30,
 		strength: 7,
 		goldDrop: 10,
@@ -28,6 +30,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Bat',
+		nameKey: 'adventure.monsters.bat',
 		hp: 28,
 		strength: 6,
 		goldDrop: 9,
@@ -37,6 +40,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Slime',
+		nameKey: 'adventure.monsters.slime',
 		hp: 25,
 		strength: 5,
 		goldDrop: 7,
@@ -46,6 +50,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Goblin',
+		nameKey: 'adventure.monsters.goblin',
 		hp: 38,
 		strength: 10,
 		goldDrop: 14,
@@ -57,6 +62,7 @@ const MONSTERS = [
 	// Level 3-4 (increased HP and strength)
 	{
 		name: 'Orc',
+		nameKey: 'adventure.monsters.orc',
 		hp: 160,
 		strength: 25,
 		goldDrop: 40,
@@ -66,6 +72,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Giant Spider',
+		nameKey: 'adventure.monsters.giant_spider',
 		hp: 140,
 		strength: 22,
 		goldDrop: 35,
@@ -75,6 +82,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Skeleton',
+		nameKey: 'adventure.monsters.skeleton',
 		hp: 120,
 		strength: 20,
 		goldDrop: 32,
@@ -84,6 +92,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Zombie',
+		nameKey: 'adventure.monsters.zombie',
 		hp: 150,
 		strength: 24,
 		goldDrop: 38,
@@ -93,6 +102,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Bandit',
+		nameKey: 'adventure.monsters.bandit',
 		hp: 130,
 		strength: 27,
 		goldDrop: 45,
@@ -104,6 +114,7 @@ const MONSTERS = [
 	// Level 5-6 (increased HP and strength)
 	{
 		name: 'Wyvern',
+		nameKey: 'adventure.monsters.wyvern',
 		hp: 400,
 		strength: 70,
 		goldDrop: 110,
@@ -113,6 +124,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Vampire',
+		nameKey: 'adventure.monsters.vampire',
 		hp: 220,
 		strength: 45,
 		goldDrop: 60,
@@ -122,6 +134,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Troll',
+		nameKey: 'adventure.monsters.troll',
 		hp: 320,
 		strength: 55,
 		goldDrop: 90,
@@ -131,6 +144,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Werewolf',
+		nameKey: 'adventure.monsters.werewolf',
 		hp: 260,
 		strength: 50,
 		goldDrop: 80,
@@ -140,6 +154,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Dark Mage',
+		nameKey: 'adventure.monsters.dark_mage',
 		hp: 200,
 		strength: 65,
 		goldDrop: 100,
@@ -151,6 +166,7 @@ const MONSTERS = [
 	// Level 7-8 (increased HP and strength)
 	{
 		name: 'Behemoth',
+		nameKey: 'adventure.monsters.behemoth',
 		hp: 700,
 		strength: 120,
 		goldDrop: 250,
@@ -160,6 +176,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Phoenix',
+		nameKey: 'adventure.monsters.phoenix',
 		hp: 600,
 		strength: 110,
 		goldDrop: 230,
@@ -169,6 +186,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Hydra',
+		nameKey: 'adventure.monsters.hydra',
 		hp: 550,
 		strength: 105,
 		goldDrop: 220,
@@ -178,6 +196,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Lich King',
+		nameKey: 'adventure.monsters.lich_king',
 		hp: 520,
 		strength: 130,
 		goldDrop: 270,
@@ -187,6 +206,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Ancient Golem',
+		nameKey: 'adventure.monsters.ancient_golem',
 		hp: 650,
 		strength: 120,
 		goldDrop: 240,
@@ -198,6 +218,7 @@ const MONSTERS = [
 	// Level 9-10+ (increased HP and strength)
 	{
 		name: 'Dragon',
+		nameKey: 'adventure.monsters.dragon',
 		hp: 900,
 		strength: 170,
 		goldDrop: 350,
@@ -207,6 +228,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Demon Lord',
+		nameKey: 'adventure.monsters.demon_lord',
 		hp: 1100,
 		strength: 210,
 		goldDrop: 420,
@@ -216,6 +238,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Celestial Serpent',
+		nameKey: 'adventure.monsters.celestial_serpent',
 		hp: 1000,
 		strength: 190,
 		goldDrop: 390,
@@ -225,6 +248,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Shadow Reaper',
+		nameKey: 'adventure.monsters.shadow_reaper',
 		hp: 880,
 		strength: 180,
 		goldDrop: 360,
@@ -234,6 +258,7 @@ const MONSTERS = [
 	},
 	{
 		name: 'Titan',
+		nameKey: 'adventure.monsters.titan',
 		hp: 1400,
 		strength: 240,
 		goldDrop: 500,

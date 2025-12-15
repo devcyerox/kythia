@@ -6,13 +6,17 @@
  * @version 0.10.1-beta
  */
 const {
-	EmbedBuilder,
-	ButtonBuilder,
 	ButtonStyle,
+	MessageFlags,
+	ButtonBuilder,
 	ActionRowBuilder,
+	ContainerBuilder,
+	SeparatorBuilder,
+	TextDisplayBuilder,
+	SeparatorSpacingSize,
 } = require('discord.js');
-const { getRandomMonster } = require('../helpers/monster');
 const characters = require('../helpers/characters');
+const { getRandomMonster } = require('../helpers/monster');
 
 module.exports = {
 	subcommand: true,
@@ -27,20 +31,26 @@ module.exports = {
 				ja: '⚔️ ダンジョンでモンスターと戦おう！',
 			}),
 	async execute(interaction, container) {
-		// Dependency
 		const { t, models, kythiaConfig, helpers } = container;
 		const { UserAdventure, InventoryAdventure } = models;
-		const { embedFooter } = helpers.discord;
+		const { createContainer } = helpers.discord;
+		const { convertColor } = helpers.color;
 
 		await interaction.deferReply();
 		const user = await UserAdventure.getCache({ userId: interaction.user.id });
 		const userId = interaction.user.id;
+
 		if (!user) {
-			const embed = new EmbedBuilder()
-				.setColor('Red')
-				.setDescription(await t(interaction, 'adventure.no.character'))
-				.setFooter(await embedFooter(interaction));
-			return interaction.editReply({ embeds: [embed] });
+			const msg = await t(interaction, 'adventure.no.character');
+
+			const components = await createContainer(interaction, {
+				description: msg,
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 
 		const generateHpBar = (currentHp, maxHp, barLength = 20) => {
@@ -49,11 +59,16 @@ module.exports = {
 			return `[${'█'.repeat(filledLength)}${'░'.repeat(barLength - filledLength)}] ${currentHp} HP`;
 		};
 
-		const handleBattleRound = async (interaction, user, items) => {
-			const sword = items.find((item) => item?.itemName === '⚔️ Sword');
-			const shield = items.find((item) => item?.itemName === '🛡️ Shield');
-			const armor = items.find((item) => item?.itemName === '🥋 Armor');
-			const revival = items.find((item) => item?.itemName === '🍶 Revival');
+		const handleBattleRound = async (
+			interaction,
+			user,
+			items,
+			showButtons = true,
+		) => {
+			const sword = items.find((item) => item?.itemName === 'sword');
+			const shield = items.find((item) => item?.itemName === 'shield');
+			const armor = items.find((item) => item?.itemName === 'armor');
+			const revival = items.find((item) => item?.itemName === 'revival');
 
 			const userStrength = user.strength + (sword ? 10 : 0);
 			const userDefense = user.defense + (shield ? 10 : 0) + (armor ? 15 : 0);
@@ -79,10 +94,6 @@ module.exports = {
 			user.monsterHp = Math.max(0, user.monsterHp - playerDamage);
 			await user.saveAndUpdateCache();
 
-			const embed = new EmbedBuilder().setThumbnail(
-				interaction.user.displayAvatarURL({ dynamic: true }),
-			);
-
 			const battleButtons = new ActionRowBuilder().addComponents(
 				new ButtonBuilder()
 					.setCustomId('adventure_continue')
@@ -98,7 +109,7 @@ module.exports = {
 			const usableItems = await InventoryAdventure.findAll({
 				where: {
 					userId: interaction.user.id,
-					itemName: ['🍶 Health Potion', '🍶 Revival'],
+					itemName: ['health_potion', 'revival'],
 				},
 				raw: true,
 			});
@@ -107,13 +118,6 @@ module.exports = {
 				battleButtons.components[1].setDisabled(true);
 			}
 
-			const continueButton = new ActionRowBuilder().addComponents(
-				new ButtonBuilder()
-					.setCustomId('adventure_continue')
-					.setLabel(await t(interaction, 'adventure.battle.continue.button'))
-					.setStyle(ButtonStyle.Primary),
-			);
-
 			if (user.hp <= 0) {
 				if (revival) {
 					user.hp = user.maxHp;
@@ -121,21 +125,31 @@ module.exports = {
 					await revival.destroy();
 					await InventoryAdventure.clearCache({
 						userId: user.userId,
-						itemName: '🍶 Revival',
+						itemName: 'revival',
 					});
-					return {
-						embeds: [
-							embed
-								.setDescription(
-									await t(interaction, 'adventure.battle.revive', {
-										hp: user.hp,
-									}),
-								)
-								.setColor(kythiaConfig.bot.color)
-								.setFooter(await embedFooter(interaction)),
-						],
+
+					const msg = await t(interaction, 'adventure.battle.revive', {
+						hp: user.hp,
+					});
+
+					const continueButton = new ActionRowBuilder().addComponents(
+						new ButtonBuilder()
+							.setCustomId('adventure_continue')
+							.setLabel(
+								await t(interaction, 'adventure.battle.continue.button'),
+							)
+							.setStyle(ButtonStyle.Primary),
+					);
+
+					const containerMsg = await createContainer(interaction, {
+						description: msg,
 						components: [continueButton],
+					});
+
+					return {
+						components: containerMsg,
 						end: false,
+						isRevive: true,
 					};
 				}
 
@@ -146,18 +160,18 @@ module.exports = {
 				user.monsterGoldDrop = 0;
 				user.monsterXpDrop = 0;
 				await user.saveAndUpdateCache();
+
+				const msg = await t(interaction, 'adventure.battle.lose', {
+					hp: user.hp,
+				});
+
+				const containerMsg = await createContainer(interaction, {
+					description: msg,
+					color: 'Red',
+				});
+
 				return {
-					embeds: [
-						embed
-							.setDescription(
-								await t(interaction, 'adventure.battle.lose', {
-									hp: user.hp,
-								}),
-							)
-							.setColor('Red')
-							.setFooter(await embedFooter(interaction)),
-					],
-					components: [continueButton],
+					components: containerMsg,
 					end: true,
 				};
 			}
@@ -202,71 +216,96 @@ module.exports = {
 				await user.saveAndUpdateCache();
 
 				if (levelUp) {
+					const msg = await t(interaction, 'adventure.battle.levelup', {
+						level: user.level,
+						hp: user.hp,
+						maxHp: user.maxHp,
+					});
+
+					const containerMsg = await createContainer(interaction, {
+						description: msg,
+						color: 'Gold',
+					});
+
 					return {
-						embeds: [
-							embed
-								.setDescription(
-									await t(interaction, 'adventure.battle.levelup', {
-										level: user.level,
-										hp: user.hp,
-										maxHp: user.maxHp,
-									}),
-								)
-								.setColor(kythiaConfig.bot.color)
-								.setFooter(await embedFooter(interaction)),
-						],
-						components: [continueButton],
+						components: containerMsg,
 						end: true,
 					};
 				}
 
+				const msg = await t(interaction, 'adventure.battle.win', {
+					monster: monsterName,
+					gold: goldEarned,
+					xp: xpEarned,
+				});
+
+				const containerMsg = await createContainer(interaction, {
+					description: msg,
+				});
+
 				return {
-					embeds: [
-						embed
-							.setDescription(
-								await t(interaction, 'adventure.battle.win', {
-									monster: monsterName,
-									gold: goldEarned,
-									xp: xpEarned,
-								}),
-							)
-							.setColor(kythiaConfig.bot.color)
-							.setFooter(await embedFooter(interaction)),
-					],
-					components: [continueButton],
+					components: containerMsg,
 					end: true,
 				};
 			}
 
+			const battleContainer = new ContainerBuilder()
+				.setAccentColor(
+					convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
+				)
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(
+						await t(interaction, 'adventure.battle.round', {
+							user: interaction.user.username,
+							monster: user.monsterName,
+							playerDamage,
+							monsterDamage,
+						}),
+					),
+				)
+				.addSeparatorComponents(
+					new SeparatorBuilder()
+						.setSpacing(SeparatorSpacingSize.Small)
+						.setDivider(true),
+				)
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(
+						`**${await t(interaction, 'adventure.battle.hp.you')}**\n${generateHpBar(user.hp, user.maxHp)}`,
+					),
+				)
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(
+						`**${await t(interaction, 'adventure.battle.hp.monster', {
+							monster: user.monsterName,
+						})}**\n${generateHpBar(user.monsterHp, monsterMaxHp)}`,
+					),
+				)
+				.addSeparatorComponents(
+					new SeparatorBuilder()
+						.setSpacing(SeparatorSpacingSize.Small)
+						.setDivider(true),
+				);
+
+			if (showButtons) {
+				battleContainer.addActionRowComponents(battleButtons);
+			}
+
+			battleContainer
+				.addSeparatorComponents(
+					new SeparatorBuilder()
+						.setSpacing(SeparatorSpacingSize.Small)
+						.setDivider(true),
+				)
+				.addTextDisplayComponents(
+					new TextDisplayBuilder().setContent(
+						await t(interaction, 'common.container.footer', {
+							username: interaction.client.user.username,
+						}),
+					),
+				);
+
 			return {
-				embeds: [
-					embed
-						.setDescription(
-							await t(interaction, 'adventure.battle.round', {
-								user: interaction.user.username,
-								monster: user.monsterName,
-								playerDamage,
-								monsterDamage,
-							}),
-						)
-						.setColor(kythiaConfig.bot.color)
-						.addFields(
-							{
-								name: await t(interaction, 'adventure.battle.hp.you'),
-								value: generateHpBar(user.hp, user.maxHp),
-								inline: false,
-							},
-							{
-								name: await t(interaction, 'adventure.battle.hp.monster', {
-									monster: user.monsterName,
-								}),
-								value: generateHpBar(user.monsterHp, monsterMaxHp),
-								inline: false,
-							},
-						)
-						.setFooter(await embedFooter(interaction)),
-				],
-				components: [battleButtons],
+				components: [battleContainer],
 				end: false,
 			};
 		};
@@ -282,17 +321,17 @@ module.exports = {
 		}
 
 		const items = await InventoryAdventure.getCache([
-			{ userId: userId, itemName: '⚔️ Sword' },
-			{ userId: userId, itemName: '🛡️ Shield' },
-			{ userId: userId, itemName: '🥋 Armor' },
-			{ userId: userId, itemName: '🍶 Revival' },
+			{ userId: userId, itemName: 'sword' },
+			{ userId: userId, itemName: 'shield' },
+			{ userId: userId, itemName: 'armor' },
+			{ userId: userId, itemName: 'revival' },
 		]);
 
-		const result = await handleBattleRound(interaction, user, items);
+		const result = await handleBattleRound(interaction, user, items, true);
 
 		const reply = await interaction.editReply({
-			embeds: result.embeds,
 			components: result.components,
+			flags: MessageFlags.IsComponentsV2,
 			fetchReply: true,
 		});
 
@@ -300,6 +339,7 @@ module.exports = {
 
 		const filter = (i) =>
 			i.customId === 'adventure_continue' && i.user.id === interaction.user.id;
+
 		const collector = reply.createMessageComponentCollector({
 			filter,
 			time: 60_000,
@@ -307,25 +347,18 @@ module.exports = {
 
 		collector.on('collect', async (i) => {
 			await i.deferUpdate();
+			const nextResult = await handleBattleRound(i, user, items, true);
 
-			const nextResult = await handleBattleRound(i, user, items);
-
-			if (
-				nextResult.embeds[0].description?.includes(
-					await t(interaction, 'adventure.battle.revive'),
-				)
-			) {
+			if (nextResult.isRevive) {
 				const revivalIndex = items.findIndex(
-					(item) => item?.itemName === '🍶 Revival',
+					(item) => item?.itemName === 'revival',
 				);
-				if (revivalIndex > -1) {
-					items.splice(revivalIndex, 1);
-				}
+				if (revivalIndex > -1) items.splice(revivalIndex, 1);
 			}
 
 			await interaction.editReply({
-				embeds: nextResult.embeds,
-				components: nextResult.end ? [] : nextResult.components,
+				components: nextResult.components,
+				flags: MessageFlags.IsComponentsV2,
 			});
 
 			if (nextResult.end) collector.stop('battle_end');
@@ -333,15 +366,15 @@ module.exports = {
 
 		collector.on('end', async (_, reason) => {
 			if (reason !== 'battle_end') {
-				const disabledRow = new ActionRowBuilder().addComponents(
-					new ButtonBuilder()
-						.setCustomId('adventure_continue')
-						.setLabel(await t(interaction, 'adventure.battle.continue.button'))
-						.setStyle(ButtonStyle.Primary)
-						.setDisabled(true),
+				const timeoutResult = await handleBattleRound(
+					interaction,
+					user,
+					items,
+					false,
 				);
 				await interaction.editReply({
-					components: [disabledRow],
+					components: timeoutResult.components,
+					flags: MessageFlags.IsComponentsV2,
 				});
 			}
 		});

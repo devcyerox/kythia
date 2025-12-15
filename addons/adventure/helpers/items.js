@@ -124,7 +124,7 @@ function getLocalizedItemName(item) {
  */
 function getLocalizedItemDesc(item) {
 	if (item.descKey) {
-		return 'No description.';
+		return 'adventure.items.no_desc';
 	}
 	return '';
 }

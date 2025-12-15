@@ -5,7 +5,7 @@
  * @assistant chaa & graa
  * @version 0.10.1-beta
  */
-const { EmbedBuilder } = require('discord.js');
+const { MessageFlags } = require('discord.js');
 
 module.exports = {
 	subcommand: true,
@@ -20,33 +20,38 @@ module.exports = {
 				ja: '🏙️ 街へ戻ろう！',
 			}),
 	async execute(interaction, container) {
-		// Dependency
 		const { t, models, kythiaConfig, helpers } = container;
 		const { UserAdventure } = models;
-		const { embedFooter } = helpers.discord;
+		const { simpleContainer } = helpers.discord;
 
 		await interaction.deferReply();
 		const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
 		if (!user) {
-			const embed = new EmbedBuilder()
-				.setColor('Red')
-				.setDescription(await t(interaction, 'adventure.no.character'));
-			return interaction.editReply({ embeds: [embed] });
+			const msg = await t(interaction, 'adventure.no.character');
+			const components = await simpleContainer(interaction, msg, {
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 
-		user.hp = Math.floor(100 * (1 + user.level * 0.1));
+		user.hp = user.maxHp;
 		user.monsterName = null;
 		user.monsterHp = 0;
 		user.monsterStrength = 0;
 		user.monsterGoldDrop = 0;
 		user.monsterXpDrop = 0;
 		await user.saveAndUpdateCache();
-		const embed = new EmbedBuilder()
-			.setDescription(await t(interaction, 'adventure.recall.recalled'))
-			.setColor(kythiaConfig.bot.color)
-			.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-			.setFooter(await embedFooter(interaction));
-		return interaction.editReply({ embeds: [embed] });
+		const msg = await t(interaction, 'adventure.recall.recalled');
+		const components = await simpleContainer(interaction, msg, {
+			color: kythiaConfig.bot.color,
+		});
+		return interaction.editReply({
+			components,
+			flags: MessageFlags.IsComponentsV2,
+		});
 	},
 };

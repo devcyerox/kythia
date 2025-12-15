@@ -336,13 +336,14 @@ function loadKythiaConfig() {
 				active: true,
 			},
 			quest: {
-				// ! WARN
+				// ! WARNING
 				// host your own quest api
 				// see my repo https://github.com/kenndeclouv/kythia-quest-api
 				// ! IMPORTANT NOTE: the quest api need user token to work
 				// and using user token is violation of discord's terms of service
 				// so it's dangerously to use it
 				active: true,
+				scheduler: '*/30 * * * *', // cron scheduler
 				apiUrls: 'http://.../quests,http://...', // seperate with comma
 			},
 		},

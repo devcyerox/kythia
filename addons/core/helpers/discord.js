@@ -10,6 +10,8 @@ const {
 	TextDisplayBuilder,
 	SeparatorBuilder,
 	SeparatorSpacingSize,
+	MediaGalleryBuilder,
+	MediaGalleryItemBuilder,
 } = require('discord.js');
 
 const axios = require('axios');
@@ -22,18 +24,16 @@ const axios = require('axios');
  */
 const embedFooter = async (source) => {
 	const { logger, t } = source.client.container;
-	// Attempt to resolve client for Interaction, Message, and GuildMember
+
 	const client = source.client;
 
-	// Failsafe when client is not available
 	if (!client) {
 		logger.warn('❌ Cant find client in embedFooter');
-		return { text: 'Kythia' }; // Fallback
+		return { text: 'Kythia' };
 	}
 
 	const botUser = client.user;
 
-	// Choose translation context: prefer guild if available (for preferredLocale)
 	const translationContext = source.guild || source;
 
 	return {
@@ -75,17 +75,32 @@ async function setVoiceChannelStatus(channel, status) {
  * @returns {Promise<object>} - Discord reply obj ({ components, flags })
  */
 async function simpleContainer(interaction, content, options = {}) {
-	const { kythiaConfig, helpers, t } = interaction.client.container;
+	const { kythiaConfig, helpers, t, logger } = interaction.client.container;
 	const { convertColor } = helpers.color;
 	const { color } = options;
 
-	// Get accent color
-	const accentColor = color
-		? convertColor(color, { from: 'discord', to: 'decimal' }) ||
-			convertColor(color, { from: 'hex', to: 'decimal' })
-		: convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' });
+	const defaultAccent = convertColor(kythiaConfig.bot.color, {
+		from: 'hex',
+		to: 'decimal',
+	});
 
-	// Build container
+	let accentColor = defaultAccent;
+
+	if (color) {
+		const isHex = /^#?([0-9A-Fa-f]{6})$/.test(color);
+
+		if (isHex) {
+			accentColor = convertColor(color, { from: 'hex', to: 'decimal' });
+		} else {
+			try {
+				accentColor = convertColor(color, { from: 'discord', to: 'decimal' });
+			} catch (err) {
+				accentColor = defaultAccent;
+				logger.error(err);
+			}
+		}
+	}
+
 	const replyContainer = new ContainerBuilder()
 		.setAccentColor(accentColor)
 		.addTextDisplayComponents(new TextDisplayBuilder().setContent(content))
@@ -103,6 +118,110 @@ async function simpleContainer(interaction, content, options = {}) {
 		);
 
 	return [replyContainer];
+}
+
+async function createContainer(interaction, options = {}) {
+	const { kythiaConfig, helpers, t, logger } = interaction.client.container;
+	const { convertColor } = helpers.color;
+
+	const {
+		color,
+		title,
+		description,
+		media,
+		components,
+		footer = true,
+	} = options;
+
+	const defaultAccent = convertColor(kythiaConfig.bot.color, {
+		from: 'hex',
+		to: 'decimal',
+	});
+
+	let accentColor = defaultAccent;
+
+	if (color) {
+		const isHex = /^#?([0-9A-Fa-f]{6})$/.test(color);
+
+		if (isHex) {
+			accentColor = convertColor(color, { from: 'hex', to: 'decimal' });
+		} else {
+			try {
+				accentColor = convertColor(color, { from: 'discord', to: 'decimal' });
+			} catch (err) {
+				accentColor = defaultAccent;
+				logger.error(err);
+			}
+		}
+	}
+	const container = new ContainerBuilder().setAccentColor(accentColor);
+
+	if (title) {
+		container.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(`## ${title}`),
+		);
+
+		container.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(false),
+		);
+	}
+
+	if (description) {
+		container.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(description),
+		);
+	}
+
+	if (media && media.length > 0) {
+		container.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		);
+
+		const gallery = new MediaGalleryBuilder();
+		media.forEach((url) => {
+			gallery.addItems([new MediaGalleryItemBuilder().setURL(url)]);
+		});
+		container.addMediaGalleryComponents(gallery);
+	}
+
+	if (components && components.length > 0) {
+		container.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		);
+
+		components.forEach((row) => {
+			container.addActionRowComponents(row);
+		});
+	}
+
+	if (footer) {
+		container.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		);
+
+		let footerContent;
+		if (typeof footer === 'string') {
+			footerContent = footer;
+		} else {
+			footerContent = await t(interaction, 'common.container.footer', {
+				username: interaction.client.user.username,
+			});
+		}
+
+		container.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(footerContent),
+		);
+	}
+
+	return [container];
 }
 
 async function getChannelSafe(guild, channelId) {
@@ -144,6 +263,7 @@ module.exports = {
 	embedFooter,
 	setVoiceChannelStatus,
 	simpleContainer,
+	createContainer,
 	getChannelSafe,
 	getTextChannelSafe,
 	getMemberSafe,

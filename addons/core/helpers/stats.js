@@ -206,10 +206,6 @@ async function resolvePlaceholders(container, str, data, locale) {
 	return result;
 }
 
-/**
- * Update server stats channels for all guilds/settings.
- * (Fungsi ini udah 100% bener dari kodemu tadi, gak aku ubah)
- */
 async function updateStats(client, activeSettings) {
 	const container = client.container;
 	const { logger, helpers } = container;

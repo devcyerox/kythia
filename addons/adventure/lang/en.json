@@ -15,6 +15,7 @@
 			}
 		},
 		"inventory": {
+			"title": "🎒 {username}'s Inventory",
 			"empty": "## 🔍 Your inventory is empty!\nYou can collect items here!",
 			"list": "## 🎒 {username}'s Inventory\nHere are the contents of your inventory:\n\n{items}",
 			"use": {
@@ -52,7 +53,8 @@
 			},
 			"selection": {
 				"timeout": "⏱️ You took too long to select an item."
-			}
+			},
+			"footer": "Page {page} / {totalPages}, Total items: {totalItems}"
 		},
 		"recall": {
 			"recalled": "## 🏠 Recall\nYou are recall and back to the city!\nYour HP is full!"
@@ -131,7 +133,7 @@
 		},
 		"start": {
 			"already": {
-				"have": "You already have an adventure character!\nUse `/adventure stats` to view your status."
+				"have": "You already have an adventure character!\nUse `/adventure profile` to view your status."
 			},
 			"success": {
 				"title": "✨ Character Created Successfully!",
@@ -153,7 +155,8 @@
 			"selected": {
 				"char": "Chosen Character"
 			},
-			"timeout": "⏱️ Time's up! Please run `/adventure start` again to choose a character."
+			"timeout": "⏱️ Time's up! Please run `/adventure start` again to choose a character.",
+			"invalid_char": "Invalid character selection. Please try again."
 		},
 		"stats": {
 			"embed": {
@@ -174,6 +177,68 @@
 		},
 		"no": {
 			"character": "❌ You don't have a character yet! Use `/adventure start` first!"
+		},
+		"items": {
+			"no_desc": "No description."
+		},
+		"characters": {
+			"shadow_blade": {
+				"name": "Elara",
+				"desc": "Glass cannon assassin. High damage, low defense."
+			},
+			"iron_guardian": {
+				"name": "Kaelen",
+				"desc": "Immovable sentinel. High defense and survivability."
+			},
+			"stormcaller": {
+				"name": "Lyra",
+				"desc": "Elemental adept. Balanced power with extra experience."
+			},
+			"gilded_ranger": {
+				"name": "Arion",
+				"desc": "Treasure seeker. Earns extra gold from victories."
+			},
+			"aurora_monk": {
+				"name": "Sora",
+				"desc": "Disciplined fighter. Extra HP and steady growth."
+			}
+		},
+		"monsters": {
+			"wild_dog": "Wild Dog",
+			"rat": "Rat",
+			"bat": "Bat",
+			"slime": "Slime",
+			"goblin": "Goblin",
+			"orc": "Orc",
+			"giant_spider": "Giant Spider",
+			"skeleton": "Skeleton",
+			"zombie": "Zombie",
+			"bandit": "Bandit",
+			"wyvern": "Wyvern",
+			"vampire": "Vampire",
+			"troll": "Troll",
+			"werewolf": "Werewolf",
+			"dark_mage": "Dark Mage",
+			"behemoth": "Behemoth",
+			"phoenix": "Phoenix",
+			"hydra": "Hydra",
+			"lich_king": "Lich King",
+			"ancient_golem": "Ancient Golem",
+			"dragon": "Dragon",
+			"demon_lord": "Demon Lord",
+			"celestial_serpent": "Celestial Serpent",
+			"shadow_reaper": "Shadow Reaper",
+			"titan": "Titan"
+		},
+		"use": {
+			"hp": {
+				"full": "Your HP is already full!"
+			},
+			"revival": {
+				"message": "You are still alive! Keep this for when you really need it."
+			},
+			"success": "✅ Used!",
+			"cancelled": "❌ Cancelled"
 		}
 	}
 }

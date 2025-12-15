@@ -29,7 +29,6 @@
 				"noUnreachable": "error"
 			},
 			"suspicious": {
-				"noConsole": "warn",
 				"noDoubleEquals": "error",
 				"noAsyncPromiseExecutor": "error",
 				"noVar": "error",

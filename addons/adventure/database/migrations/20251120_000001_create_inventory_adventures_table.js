@@ -28,12 +28,7 @@ module.exports = {
 				defaultValue: 1,
 				allowNull: false,
 			},
-			// Timestamps (createdAt/updatedAt) TIDAK DIBUAT
-			// karena di original code 'timestamps: false'
 		});
-
-		// 🔥 Optional Best Practice:
-		// User gak boleh punya item yang sama di row berbeda (harus di-stack quantity-nya)
 		await queryInterface.addIndex(
 			'inventory_adventures',
 			['userId', 'itemName'],

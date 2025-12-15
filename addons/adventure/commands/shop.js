@@ -7,30 +7,27 @@
  */
 
 const {
-	ActionRowBuilder,
-	StringSelectMenuBuilder,
-	ButtonBuilder,
 	ButtonStyle,
-	ContainerBuilder,
-	TextDisplayBuilder,
-	SeparatorBuilder,
-	SeparatorSpacingSize,
-	EmbedBuilder,
 	MessageFlags,
+	ButtonBuilder,
+	ActionRowBuilder,
+	ContainerBuilder,
+	SeparatorBuilder,
+	TextDisplayBuilder,
+	SeparatorSpacingSize,
+	StringSelectMenuBuilder,
 } = require('discord.js');
 
 const itemsDataFile = require('../helpers/items');
 const shopData = itemsDataFile.items;
 const allItems = Object.values(shopData).flat();
 
-// Human-friendly number display for gold
 function safeLocaleString(value, fallback = '0') {
 	return typeof value === 'number' && Number.isFinite(value)
 		? value.toLocaleString()
 		: fallback;
 }
 
-// UI container with header, paged items, and gold display
 async function generateShopContainer(
 	interaction,
 	user,
@@ -128,7 +125,6 @@ async function generateShopContainer(
 	};
 }
 
-// Generate dropdowns/buttons for shop UI
 async function generateShopComponentRows(
 	interaction,
 	page,
@@ -206,7 +202,6 @@ async function generateShopComponentRows(
 	return rows;
 }
 
-// Get list of buyable items in a category and page for display
 function getItemsInCategory(category, page = 1, itemsPerPage = 5) {
 	const items =
 		category === 'all'
@@ -250,20 +245,22 @@ module.exports = {
 			),
 
 	async execute(interaction, container) {
-		// Dependency
 		const { t, models, helpers, logger } = container;
 		const { UserAdventure, InventoryAdventure } = models;
-		const { embedFooter } = helpers.discord;
+		const { simpleContainer } = helpers.discord;
 
 		await interaction.deferReply();
 		const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
 		if (!user) {
-			const embed = new EmbedBuilder()
-				.setColor('Red')
-				.setDescription(await t(interaction, 'adventure.no.character'))
-				.setFooter(await embedFooter(interaction));
-			return interaction.editReply({ embeds: [embed] });
+			const msg = await t(interaction, 'adventure.no.character');
+			const components = await simpleContainer(interaction, msg, {
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 
 		const category = interaction.options.getString('category') || 'equipment';
@@ -341,11 +338,10 @@ module.exports = {
 							});
 						}
 
-						// Deduct gold and add inventory
 						userForUpdate.gold -= item.price;
 						await InventoryAdventure.create({
 							userId: userForUpdate.userId,
-							itemName: item.nameKey,
+							itemName: item.id,
 						});
 
 						await i.followUp({

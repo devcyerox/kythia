@@ -18,7 +18,7 @@ module.exports = {
 			userId: {
 				type: DataTypes.STRING,
 				allowNull: false,
-				unique: true, // Satu user cuma boleh punya 1 profile adventure
+				unique: true,
 			},
 			level: { type: DataTypes.INTEGER, defaultValue: 1 },
 			xp: { type: DataTypes.INTEGER, defaultValue: 0 },
@@ -29,7 +29,6 @@ module.exports = {
 			defense: { type: DataTypes.INTEGER, defaultValue: 5 },
 			characterId: { type: DataTypes.STRING, allowNull: true },
 
-			// Monster Session Data
 			monsterName: { type: DataTypes.STRING, allowNull: true },
 			monsterHp: { type: DataTypes.INTEGER, defaultValue: 0 },
 			monsterStrength: { type: DataTypes.INTEGER, defaultValue: 0 },

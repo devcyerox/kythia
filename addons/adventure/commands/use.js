@@ -7,9 +7,9 @@
  */
 
 const {
-	EmbedBuilder,
 	ActionRowBuilder,
 	StringSelectMenuBuilder,
+	MessageFlags,
 } = require('discord.js');
 const { getItem } = require('../helpers/items');
 
@@ -19,134 +19,164 @@ module.exports = {
 		subcommand.setName('use').setDescription('Use an item from your inventory'),
 
 	async execute(interaction, container) {
-		// Dependency
-		const { t, models, helpers } = container;
+		const { t, models, helpers, kythiaConfig } = container;
 		const { UserAdventure, InventoryAdventure } = models;
-		const { embedFooter } = helpers.discord;
+		const { createContainer } = helpers.discord;
+
+		await interaction.deferReply();
 		const user = await UserAdventure.getCache({ userId: interaction.user.id });
 
 		if (!user) {
-			const embed = new EmbedBuilder()
-				.setColor('Red')
-				.setDescription(await t(interaction, 'adventure.no.character'))
-				.setFooter(await embedFooter(interaction));
-			return interaction.editReply({ embeds: [embed] });
-		}
-
-		const inventory = await InventoryAdventure.findAll({
-			where: {
-				userId: interaction.user.id,
-				itemName: ['🍶 Health Potion', '🍶 Revival'],
-			},
-			raw: true,
-		});
-
-		if (inventory.length === 0) {
-			return interaction.reply({
-				content: await t(interaction, 'adventure.inventory.no.usable.items'),
-				ephemeral: true,
+			const msg = await t(interaction, 'adventure.no.character');
+			const components = await createContainer(interaction, {
+				description: msg,
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
 			});
 		}
 
-		const options = inventory.map((item) => ({
-			label: item.itemName,
-			description: getItem(item.itemName)?.description || 'No description',
-			value: item.itemName,
-			emoji: item.itemName.split(' ')[0],
+		const rawInventory = await InventoryAdventure.findAll({
+			where: { userId: interaction.user.id },
+			raw: false,
+		});
+
+		const usableItemsMap = {};
+
+		for (const dbItem of rawInventory) {
+			const itemDef = getItem(dbItem.itemName);
+
+			if (itemDef && itemDef.type === 'consumable') {
+				if (!usableItemsMap[dbItem.itemName]) {
+					usableItemsMap[dbItem.itemName] = {
+						count: 0,
+						def: itemDef,
+						dbId: dbItem.id,
+					};
+				}
+				usableItemsMap[dbItem.itemName].count++;
+			}
+		}
+
+		const usableOptions = Object.values(usableItemsMap).map(async (data) => ({
+			label: `${data.def.nameKey ? await t(interaction, data.def.nameKey) : data.def.id} (x${data.count})`,
+			description:
+				(await t(interaction, data.def.descKey)) || 'Consumable Item',
+			value: data.def.id,
+			emoji: data.def.emoji,
 		}));
+
+		if (usableOptions.length === 0) {
+			const msg = await t(interaction, 'adventure.inventory.no.usable.items');
+			const components = await createContainer(interaction, {
+				description: msg,
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
+		}
 
 		const selectMenu = new ActionRowBuilder().addComponents(
 			new StringSelectMenuBuilder()
 				.setCustomId('use_item_select')
 				.setPlaceholder(
-					t(interaction, 'adventure.inventory.select.item.placeholder'),
+					await t(interaction, 'adventure.inventory.select.item.placeholder'),
 				)
-				.addOptions(options),
+				.addOptions(usableOptions),
 		);
 
-		const embed = new EmbedBuilder()
-			.setTitle(t(interaction, 'adventure.inventory.use.title'))
-			.setDescription(t(interaction, 'adventure.inventory.use.desc'))
-			.setColor('#2ecc71');
-
-		await interaction.reply({
-			embeds: [embed],
+		const initialContainer = await createContainer(interaction, {
+			title: await t(interaction, 'adventure.inventory.use.title'),
+			description: await t(interaction, 'adventure.inventory.use.desc'),
+			color: kythiaConfig.bot.color,
 			components: [selectMenu],
-			ephemeral: true,
+		});
+
+		const reply = await interaction.editReply({
+			components: initialContainer,
+			flags: MessageFlags.IsComponentsV2,
 		});
 
 		const filter = (i) =>
 			i.customId === 'use_item_select' && i.user.id === interaction.user.id;
 
 		try {
-			const response = await interaction.channel.awaitMessageComponent({
+			const selection = await reply.awaitMessageComponent({
 				filter,
 				time: 60000,
 			});
+			const selectedItemId = selection.values[0];
 
-			const itemName = response.values[0];
-			const item = getItem(itemName);
+			let resultMsg = '';
+			let success = false;
 
-			if (!item) {
-				return response.update({
-					content: t(interaction, 'adventure.inventory.item.not.found'),
-					embeds: [],
-					components: [],
-				});
-			}
+			const freshUser = await UserAdventure.getCache({
+				userId: interaction.user.id,
+			});
 
-			let resultMessage = '';
+			switch (selectedItemId) {
+				case 'health_potion': {
+					if (freshUser.hp >= freshUser.maxHp) {
+						resultMsg = await t(interaction, 'adventure.use.hp.full');
+					} else {
+						const healAmount = 50;
+						const oldHp = freshUser.hp;
+						freshUser.hp = Math.min(freshUser.hp + healAmount, freshUser.maxHp);
+						await freshUser.saveAndUpdateCache();
 
-			switch (itemName) {
-				case '🍶 Health Potion': {
-					const healAmount = 50;
-					const newHp = Math.min(user.hp + healAmount, user.maxHp);
-					const actualHeal = newHp - user.hp;
-					user.hp = newHp;
-					await user.saveAndUpdateCache();
-
-					await InventoryAdventure.decrement('quantity', {
-						where: { userId: interaction.user.id, itemName },
-					});
-					await InventoryAdventure.clearCache({
-						userId: interaction.user.id,
-						itemName,
-					});
-
-					resultMessage = t(
-						interaction,
-						'adventure.inventory.use.potion.success',
-						{
-							amount: actualHeal,
-						},
-					);
+						resultMsg = await t(
+							interaction,
+							'adventure.inventory.use.potion.success',
+							{
+								amount: freshUser.hp - oldHp,
+							},
+						);
+						success = true;
+					}
 					break;
 				}
-
-				case '🍶 Revival':
-					resultMessage = t(
-						interaction,
-						'adventure.inventory.use.revival.success',
-					);
+				case 'revival': {
+					resultMsg = await t(interaction, 'adventure.use.revival.message');
 					break;
-
+				}
 				default:
-					resultMessage = t(interaction, 'adventure.inventory.cannot.use.item');
+					resultMsg = await t(
+						interaction,
+						'adventure.inventory.cannot.use.item',
+					);
 			}
 
-			await response.update({
-				content: resultMessage,
-				embeds: [],
-				components: [],
-			});
-		} catch (_error) {
-			if (!interaction.replied) {
-				await interaction.editReply({
-					content: t(interaction, 'adventure.inventory.selection.timeout'),
-					embeds: [],
-					components: [],
+			if (success) {
+				const itemToDelete = await InventoryAdventure.findOne({
+					where: {
+						userId: interaction.user.id,
+						itemName: selectedItemId,
+					},
 				});
+
+				if (itemToDelete) {
+					await itemToDelete.destroy();
+
+					await InventoryAdventure.clearCache({ userId: interaction.user.id });
+				}
 			}
-		}
+
+			const resultContainer = await createContainer(interaction, {
+				title: success
+					? await t(interaction, 'adventure.use.success')
+					: await t(interaction, 'adventure.use.cancelled'),
+				description: resultMsg,
+				color: success ? 'Green' : 'Red',
+			});
+
+			await selection.update({
+				components: resultContainer,
+				flags: MessageFlags.IsComponentsV2,
+			});
+		} catch (_e) {}
 	},
 };

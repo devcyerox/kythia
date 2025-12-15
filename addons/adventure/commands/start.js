@@ -5,7 +5,15 @@
  * @assistant chaa & graa
  * @version 0.10.1-beta
  */
-const { EmbedBuilder } = require('discord.js');
+const {
+	MessageFlags,
+	ContainerBuilder,
+	TextDisplayBuilder,
+	SeparatorBuilder,
+	SeparatorSpacingSize,
+	MediaGalleryBuilder,
+	MediaGalleryItemBuilder,
+} = require('discord.js');
 const characters = require('../helpers/characters');
 
 module.exports = {
@@ -35,11 +43,11 @@ module.exports = {
 			);
 	},
 	async execute(interaction) {
-		// Dependency
 		const container = interaction.client.container;
 		const { t, models, kythiaConfig, helpers } = container;
 		const { UserAdventure } = models;
-		const { embedFooter } = helpers.discord;
+		const { createContainer } = helpers.discord;
+		const { convertColor } = helpers.color;
 
 		await interaction.deferReply();
 
@@ -48,21 +56,31 @@ module.exports = {
 		});
 
 		if (existing) {
-			const alreadyEmbed = new EmbedBuilder()
-				.setColor(kythiaConfig.bot.color)
-				.setDescription(await t(interaction, 'adventure.start.already.have'))
-				.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-				.setFooter(await embedFooter(interaction));
-			return interaction.editReply({ embeds: [alreadyEmbed] });
+			const msg = await t(interaction, 'adventure.start.already.have');
+
+			const components = await createContainer(interaction, {
+				description: msg,
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 
 		const charId = interaction.options.getString('character');
 		const selected = characters.getChar(charId);
+
 		if (!selected) {
-			const embed = new EmbedBuilder()
-				.setColor('Red')
-				.setDescription('Invalid character selection. Please try again.');
-			return interaction.editReply({ embeds: [embed] });
+			const msg = await t(interaction, 'adventure.start.invalid_char');
+			const components = await createContainer(interaction, {
+				description: msg,
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
 		}
 
 		const level = 1;
@@ -100,21 +118,82 @@ module.exports = {
 			},
 		);
 
-		const embed = new EmbedBuilder()
-			.setColor(kythiaConfig.bot.color)
-			.setTitle(await t(interaction, 'adventure.start.success.title'))
-			.setDescription(
-				[
-					await t(interaction, 'adventure.start.success.desc'),
-					'',
-					`**${await t(interaction, 'adventure.start.selected.char')}**`,
-					`${selected.emoji} ${selected.name}`,
-					selected.description,
-					charStatsString,
-				].join('\n'),
-			)
-			.setThumbnail(interaction.user.displayAvatarURL({ dynamic: true }))
-			.setFooter(await embedFooter(interaction));
-		return interaction.editReply({ embeds: [embed] });
+		const colorInput = kythiaConfig.bot.color;
+		const defaultAccent = convertColor(colorInput, {
+			from: 'hex',
+			to: 'decimal',
+		});
+		let accentColor = defaultAccent;
+
+		const isHex = /^#?([0-9A-Fa-f]{6})$/.test(colorInput);
+		if (isHex) {
+			accentColor = convertColor(colorInput, { from: 'hex', to: 'decimal' });
+		} else {
+			try {
+				accentColor = convertColor(colorInput, {
+					from: 'discord',
+					to: 'decimal',
+				});
+			} catch (_e) {
+				accentColor = defaultAccent;
+			}
+		}
+
+		const startContainer = new ContainerBuilder().setAccentColor(accentColor);
+
+		startContainer.addMediaGalleryComponents(
+			new MediaGalleryBuilder().addItems([
+				new MediaGalleryItemBuilder().setURL(
+					interaction.user.displayAvatarURL({ dynamic: true, size: 512 }),
+				),
+			]),
+		);
+
+		startContainer.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(
+				`## ${await t(interaction, 'adventure.start.success.title')}\n${await t(interaction, 'adventure.start.success.desc')}`,
+			),
+		);
+
+		startContainer.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		);
+
+		startContainer.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(
+				`**${await t(interaction, 'adventure.start.selected.char')}**\n${selected.emoji} **${await t(interaction, selected.nameKey)}**\n*${await t(interaction, selected.descKey)}*`,
+			),
+		);
+
+		startContainer.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		);
+
+		startContainer.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(charStatsString),
+		);
+
+		startContainer.addSeparatorComponents(
+			new SeparatorBuilder()
+				.setSpacing(SeparatorSpacingSize.Small)
+				.setDivider(true),
+		);
+
+		startContainer.addTextDisplayComponents(
+			new TextDisplayBuilder().setContent(
+				await t(interaction, 'common.container.footer', {
+					username: interaction.client.user.username,
+				}),
+			),
+		);
+
+		return interaction.editReply({
+			components: [startContainer],
+			flags: MessageFlags.IsComponentsV2,
+		});
 	},
 };
