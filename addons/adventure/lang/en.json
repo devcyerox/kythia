@@ -20,10 +20,7 @@
 			"use": {
 				"title": "🔮 Use Item",
 				"desc": "Select an item to use from your inventory.",
-				"potion": {
-					"success": "💚 You used a Health Potion and restored **{amount} HP**!"
-				},
-				"revival": {},
+
 				"item": {
 					"button": "Use Item"
 				}
@@ -360,10 +357,6 @@
 				"revival": {
 					"name": "Revival Potion",
 					"desc": "Brings you back to life with 50% health when defeated."
-				},
-				"phoenix_down": {
-					"name": "Phoenix Down",
-					"desc": "A feather from a phoenix. Revives and heals."
 				}
 			}
 		},
@@ -391,18 +384,18 @@
 			"embed": {
 				"desc": "## 🌟 {username}'s Character Stats"
 			},
-			"level": "🆙 Level",
-			"hp": "💖 HP",
-			"gold": "💰 Gold",
-			"strength": "⚔️ Strength",
-			"defense": "🛡️ Defense",
+			"level": "`🆙` Level",
+			"hp": "`💖` HP",
+			"gold": "`💰` Gold",
+			"strength": "`⚔️` Strength",
+			"defense": "`🛡️` Defense",
 			"xp": {
 				"progress": {
-					"text": "✨ XP Progress",
+					"text": "`✨` XP Progress",
 					"value": "{xp} / {xpForNextLevel}\n{progressBar}"
 				}
 			},
-			"character": "🎭 Character"
+			"character": "`🎭` Character"
 		},
 		"no": {
 			"character": "❌ You don't have a character yet! Use `/adventure start` first!"
@@ -469,13 +462,11 @@
 				"full": "Your HP is already full!"
 			},
 			"revive": {
-				"message": "You are still alive! Keep this for when you really need it.",
 				"failed": {
 					"alive": "You are not dead!"
 				}
 			},
 			"success": {
-				"title": "✅ Used!",
 				"heal": "Used {item} and recovered {amount} HP!",
 				"revive": "Used {item}! You have been revived!"
 			},

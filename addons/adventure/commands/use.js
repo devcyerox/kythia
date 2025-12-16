@@ -7,9 +7,9 @@
  */
 
 const {
+	MessageFlags,
 	ActionRowBuilder,
 	StringSelectMenuBuilder,
-	MessageFlags,
 } = require('discord.js');
 
 const { getItemById } = require('../helpers/items');

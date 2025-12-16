@@ -792,18 +792,6 @@ const items = {
 			effect: 'revive',
 			uses: 1,
 		},
-		{
-			id: 'phoenix_down',
-			emoji: '🪶',
-			nameKey: 'adventure.shop.items.phoenix_down.name',
-			descKey: 'adventure.shop.items.phoenix_down.desc',
-			price: 500,
-			buyable: true,
-			sellPrice: 250,
-			type: 'consumable',
-			effect: 'revive_heal',
-			uses: 1,
-		},
 	],
 };
 /**

@@ -125,12 +125,12 @@ module.exports = {
 					new ActionRowBuilder().addComponents(
 						new ButtonBuilder()
 							.setCustomId('inv_prev')
-							.setLabel('◀️')
+							.setLabel(await t(interaction, 'common.previous'))
 							.setStyle(ButtonStyle.Secondary)
 							.setDisabled(currentPage === 1),
 						new ButtonBuilder()
 							.setCustomId('inv_next')
-							.setLabel('▶️')
+							.setLabel(await t(interaction, 'common.next'))
 							.setStyle(ButtonStyle.Secondary)
 							.setDisabled(currentPage === totalPages),
 					),

@@ -8,10 +8,10 @@
 const {
 	MessageFlags,
 	ContainerBuilder,
-	TextDisplayBuilder,
 	SeparatorBuilder,
-	SeparatorSpacingSize,
+	TextDisplayBuilder,
 	MediaGalleryBuilder,
+	SeparatorSpacingSize,
 	MediaGalleryItemBuilder,
 } = require('discord.js');
 const characters = require('../helpers/characters');
