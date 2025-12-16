@@ -58,8 +58,7 @@
 			"no_channel_id": "Error: Channel ID not found in interaction.",
 			"not_owner": "❌ You are not the owner of this channel!",
 			"channel_not_found": "❌ Channel not found! (It might be deleted or a cache error)",
-			"fail": "❌ An error occurred! (Please check bot permissions)",
-			"no_active_channel": "You do not have an active tempvoice channel!"
+			"fail": "❌ An error occurred! (Please check bot permissions)"
 		},
 		"setup": {
 			"auto_category_name": "Kythia TempVoice",
@@ -79,7 +78,6 @@
 		},
 		"tv_delete": {
 			"no_active": "You do not have any active TempVoice channel!",
-			"not_found": "Your channel could not be found!",
 			"confirm": "⚠️ **Delete Confirmation**\nAre you sure you want to delete your TempVoice channel?",
 			"delete_btn": "DELETE",
 			"cancel_btn": "CANCEL",

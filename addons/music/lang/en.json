@@ -1,15 +1,13 @@
 {
 	"music": {
-		"manager": {
-			"field": "**Requested by:** \n{user}",
-			"skipped": "⏭️ Skipped the current track.",
-			"stopped": "⏹️ Stopped music and cleared the queue.",
-			"enabled": "enabled (All loop modes disabled)",
-			"disabled": "disabled",
-			"status": "🔄 Autoplay **{status}**."
-		},
+		"manager": {},
 		"helpers": {
 			"handlers": {
+				"247": {
+					"enabled": "✅ 24/7 mode enabled.",
+					"disabled": "⏹️ 24/7 mode disabled.",
+					"player": {}
+				},
 				"queue": {
 					"nowplaying": "## 📜 Music Queue\n**Now Playing:**\n [{nowTitle}]({nowUrl}) `{nowDuration}`\n\n**Queue:**\n",
 					"footer": "-# Page {page} of {totalPages} • Total {totalTracks} tracks in queue"
@@ -25,8 +23,7 @@
 							"not": {
 								"found": "❌ Lyrics not found for the song."
 							}
-						},
-						"error": "❌ An error occurred while fetching lyrics."
+						}
 					},
 					"configured": "❌ Spotify integration is not configured by the bot owner. Please contact the developer.",
 					"failed": "❌ An error occurred while processing your music request.",
@@ -246,13 +243,6 @@
 						"success": "🗑️ Successfully removed **{title}** from your favorites."
 					}
 				},
-				"247": {
-					"enabled": "✅ 24/7 mode enabled.",
-					"disabled": "⏹️ 24/7 mode disabled.",
-					"player": {
-						"notfound": "❌ Unable to find a music player for this server."
-					}
-				},
 				"radio": {
 					"load_failed": "❌ Failed to load radio stream. Please try another station (stream might be offline).",
 					"no_results": "❌ No radio stations found for **{query}**.",
@@ -296,25 +286,14 @@
 		},
 		"playlist": {
 			"import": {
-				"unsupported": {
-					"source": "❌ Source playlist not supported."
-				},
-				"code": {
-					"success": "✅ Successfully imported **{count}** songs and saved as playlist **{name}**."
-				},
-				"invalid": {
-					"code": "❌ The code you provided is invalid or corrupted. Make sure you copy the entire code correctly."
-				}
+				"unsupported": {},
+				"code": {},
+				"invalid": {}
 			},
-			"export": {
-				"title": "📤 Playlist Export: {name}",
-				"desc": "Here is the export code for your playlist. Give this code to your friends so they can import it!"
-			}
+			"export": {}
 		},
 		"music": {
-			"error": {
-				"handler": "❌ An error occurred while handle your music request for this command. Please try again later."
-			},
+			"error": {},
 			"subcommand": {
 				"not": {
 					"found": "❌ Unknown music subcommand."
@@ -329,44 +308,22 @@
 				"channel": {
 					"not": {
 						"found": "❌ You must be in a voice channel to use this command!"
-					},
-					"required": "❌ You must be in a voice channel to use this command!"
+					}
 				}
 			},
 			"required": "⚠️ You must be in the same voice channel as the bot to use this command!",
-			"desc": "## 🎶 Music Queue\n**Now Playing:** [{nowTitle}]({nowUrl})\n\n**Queue:**\n{queueList}",
-			"loop": "🔁 Loop queue enabled.",
-			"autoplay": "❌ An error occurred while toggling autoplay.",
-			"volume": "❌ An error occurred while setting the volume.",
-			"shuffle": "❌ An error occurred while shuffling the queue.",
-			"back": "❌ An error occurred while playing the previous track.",
-			"remove": "❌ An error occurred while removing the track.",
-			"move": "❌ An error occurred while moving the track.",
 			"filter": {
-				"generic": {
-					"error": "❌ An error occurred while applying the filter."
-				}
+				"generic": {}
 			},
 			"playlist": {
-				"save": {
-					"error": "❌ Failed to save playlist."
-				},
-				"list": {
-					"success": "## 🎶 Your playlist list:\n{list}"
-				},
+				"save": {},
+				"list": {},
 				"append": {
-					"empty": {
-						"queue": "❌ The queue is empty, cannot add!"
-					},
-					"not": {
-						"found": "❌ Playlist \"{name}\" not found."
-					},
-					"success": "✅ Successfully added {count} songs to playlist \"{name}\"."
+					"empty": {},
+					"not": {}
 				},
 				"track": {
-					"list": {
-						"success": "## 🎶 Songs in playlist \"{name}\":\n{tracks}"
-					}
+					"list": {}
 				}
 			}
 		}

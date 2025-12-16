@@ -53,15 +53,12 @@
 						"next": "Document ›"
 					}
 				},
-				"embed": {
-					"image": "❌ An error occurred while getting the help embed image."
-				},
+				"embed": {},
 				"category": {
 					"desc": "All help commands in {category} Command From Core command"
 				}
 			},
 			"ping": {
-				"fetching": "🏓 Pinging...",
 				"loading": "`⌛` Pinging Database, Cache & Lavalink...",
 				"embed": {
 					"title": "## 🏓 Pong!"
@@ -91,8 +88,6 @@
 				"success": "✅ Presence changed to: `{type} {activity}` (status: {status}) 😋",
 				"error": "❌ An error occurred while changing the presence. Please try again later.",
 				"invalid": {
-					"status": "❌ Invalid status! Valid statuses are: `online`, `idle`, `dnd`, `invisible`.",
-					"type": "❌ Invalid type! Valid types are: `{validTypes}`.",
 					"url": "❌ Invalid URL. Please provide a valid URL. https://www.twitch.tv or https://www.youtube.com"
 				}
 			},
@@ -190,7 +185,6 @@
 					"description": "Description",
 					"owner": "Owner",
 					"created": "Created",
-					"members": "Members",
 					"roles": "Roles",
 					"emojis": "Emojis",
 					"stickers": "Stickers",
@@ -260,15 +254,7 @@
 						"channels": "Welcome Channels"
 					}
 				},
-				"members": {
-					"total": "Total: **{count}**",
-					"humans": "Humans: **{count}**",
-					"bots": "Bots: **{count}**",
-					"online": "Online: **{count}**",
-					"idle": "Idle: **{count}**",
-					"dnd": "DND: **{count}**",
-					"offline": "Offline: **{count}**"
-				},
+				"members": {},
 				"roles": {
 					"total": "Total: **{count}**"
 				},
@@ -288,23 +274,13 @@
 				}
 			},
 			"spam": {
-				"too": {
-					"long": "❌ | Your message is too long! Maximum allowed is {max} characters.",
-					"many": "❌ | Too many messages requested! The maximum is {max}.",
-					"fast": "❌ | The delay is too short! Minimum allowed is {min} ms."
-				},
-				"no": {
-					"permission": "❌ | I don't have permission to send messages in this channel."
-				},
-				"start": "🚀 Spamming {jumlah} messages with a delay of {delay} ms...",
-				"done": "✅ Done! Sent {sent} messages."
+				"too": {},
+				"no": {}
 			},
 			"stats": {
-				"fetching": "Fetching statistics...",
 				"embed": {
 					"desc": "## 📊 **{username} Statistics**\n\n> **Uptime:** `{uptime}`\n> **Memory Usage:** `{memory} MB`\n> **Servers:** `{guilds}`   |   **Users:** `{users}`\n> **Kythia Version:** `{kythiaVersion}`\n> **Kythia Core:** `{kythiaCoreVersion}`\n> **Commit hash:** `{githubCommit}`\n\n### `⚙️` **Technology**\n> {runtime}  |   **discord.js:** `v{djs}`\n> **CPU:** `{cpu}`\n\n### `📶` **Connection**\n> **Bot Latency:** `{botLatency}ms`   |   **API Latency:** `{apiLatency}ms`\n\n### `🗄️` **Cache**\n{cacheStatus}\n> **Hits:** `{cacheHits}`   |   **Misses:** `{cacheMisses}`\n\n### `👑` **Owner**\n> `{owner}`"
-				},
-				"error": "❌ An error occurred while fetching statistics. Please try again later."
+				}
 			},
 			"userinfo": {
 				"user": {
@@ -318,30 +294,19 @@
 				},
 				"field": {
 					"username": "Username",
-					"tag": "Tag",
 					"userid": "User ID",
 					"created": "Account Created",
 					"joined": {
 						"text": "Joined Server",
 						"unknown": "Unknown join date"
 					},
-					"bot": "Bot?",
-					"status": "Status",
 					"roles": "Roles"
 				},
 				"value": {
-					"yes": "Yes",
 					"no": {
-						"text": "No",
 						"roles": "None"
 					},
-					"status": {
-						"online": "Online",
-						"idle": "Idle",
-						"dnd": "Do Not Disturb",
-						"invisible": "Invisible",
-						"unknown": "Unknown"
-					}
+					"status": {}
 				}
 			},
 			"afk": {
@@ -566,10 +531,7 @@
 			},
 			"tiktok": {
 				"default_title": "TikTok Video",
-				"embed": {
-					"title": "TikTok Video",
-					"desc": "**{title}**"
-				},
+				"embed": {},
 				"error": {
 					"invalid": {
 						"url": {
@@ -701,51 +663,14 @@
 					}
 				},
 				"feature": {
-					"anti": {
-						"invites": "invite link detection",
-						"links": "link detection",
-						"spam": "spam detection",
-						"badwords": "badword detection"
-					},
-					"server": {
-						"stats": "server stats"
-					},
-					"economy": "economy",
-					"giveaway": "giveaway",
-					"invites": "invites",
-					"suggestion": "suggestion",
-					"ticket": "ticket",
-					"pet": "pet",
-					"clan": "clan",
-					"adventure": "adventure",
-					"leveling": "leveling",
-					"welcome": {
-						"in": "welcome in",
-						"out": "welcome out"
-					},
-					"nsfw": "nsfw content",
-					"checklist": "checklist",
-					"minecraft": {
-						"stats": "minecraft stats"
-					},
-					"testimony": "testimony",
-					"music": "music",
-					"streak": "streak",
-					"toggle": "Feature {feature} has been {status}.",
+					"anti": {},
+					"server": {},
+					"welcome": {},
+					"minecraft": {},
 					"enabled": "✅ The **{feature}** feature has been **enabled**.",
 					"disabled": "✅ The **{feature}** feature has been **disabled**."
 				},
-				"cooldown": {
-					"daily": "daily",
-					"beg": "beg",
-					"lootbox": "lootbox",
-					"work": "work",
-					"rob": "rob",
-					"hack": "hack",
-					"pet": "pet",
-					"gacha": "gacha",
-					"set": "Cooldown for {feature} has been set to `{cooldown}` seconds."
-				},
+				"cooldown": {},
 				"command": {
 					"not": {
 						"found": "❌ Command not found."
@@ -892,13 +817,8 @@
 					}
 				},
 				"clan": {
-					"category": {
-						"invalid": "❌ The selected channel must be a category.",
-						"set": "✅ Clan category set to {category}."
-					},
-					"forum": {
-						"set": "✅ Clan forum set to {forum}."
-					}
+					"category": {},
+					"forum": {}
 				},
 				"raw": {
 					"field": {
@@ -1053,14 +973,11 @@
 					"in": {
 						"progress": "🗑️ Deleting all messages... This may take a while."
 					}
-				},
-				"done": "✅ Done!"
+				}
 			},
 			"kick": {
 				"no": {
-					"permission": {
-						"kick": "You do not have permission to kick members."
-					}
+					"permission": {}
 				},
 				"default": {
 					"reason": "Member was kicked by command."
@@ -1272,66 +1189,33 @@
 			"embed": {
 				"role": {
 					"button": {
-						"format": {
-							"error": "❌ Button format is invalid! Use: `Label|RoleID|Style`"
-						},
-						"style": {
-							"error": "❌ Invalid style! Choices: {styles}"
-						}
+						"format": {},
+						"style": {}
 					},
-					"not": {
-						"found": "❌ Role {roleId} not found!"
-					},
-					"too": {
-						"high": "❌ Role {roleName} is higher than my highest role!"
-					}
+					"not": {},
+					"too": {}
 				},
 				"db": {
-					"save": {
-						"error": "❌ Failed to save embed to database!"
-					},
+					"save": {},
 					"button": {
-						"save": {
-							"error": "❌ Failed to save buttons to database!"
-						}
+						"save": {}
 					}
 				},
-				"send": {
-					"error": "❌ Failed to send embed to channel!"
-				},
-				"sent": {
-					"success": "✅ Embed has been sent to {channel}!"
-				},
+				"send": {},
+				"sent": {},
 				"button": {
-					"link": {
-						"invalid": "❌ Button link is invalid! Make sure to use a valid URL (must start with http:// or https://)"
-					},
-					"format": {
-						"error": "❌ Button format is invalid! Use: `Label|Link`"
-					}
+					"link": {},
+					"format": {}
 				},
 				"field": {
-					"format": {
-						"error": "❌ Field format is invalid! Use: `Title|Value`, separated by ~~"
-					}
+					"format": {}
 				},
 				"delete": {
-					"no": {
-						"id": "❌ Please provide the embed ID to delete."
-					},
-					"not": {
-						"found": "❌ Embed with ID `{messageId}` not found in the database."
-					},
-					"db": {
-						"error": "❌ Failed to delete embed data from database!"
-					},
-					"success": "✅ Embed with ID `{messageId}` has been deleted{deletedMessage}.",
+					"no": {},
+					"not": {},
+					"db": {},
 					"dm": {
-						"success": "✅ Embed with ID `{messageId}` has been deleted (message in DM deleted).",
-						"not": {
-							"found": "❌ Could not find a message with ID `{messageId}` in this DM."
-						},
-						"error": "❌ Failed to delete embed message in DM!"
+						"not": {}
 					}
 				}
 			}
@@ -1434,9 +1318,7 @@
 							"webhook": {
 								"desc": "## **❌ {bot}** OUT FROM SERVER\n**{bot}** has left the server:\n• Server Name: **{guild}**\n• Server ID: `{guildId}`\n• Server Owner: <@{ownerId}> ({ownerId})\n• Member Count: {memberCount}\n• Server Created At: {createdAt}"
 							},
-							"no": {
-								"invite": "No Invite Link"
-							}
+							"no": {}
 						}
 					}
 				}
@@ -1463,11 +1345,7 @@
 				"events": {
 					"channel": {
 						"delete": {
-							"log": "**Channel `{channel}` has been deleted by {user}**",
-							"id": {
-								"field": "Channel ID"
-							},
-							"footer": "User ID: {userId}",
+							"id": {},
 							"antinuke": {
 								"reason": "🚨 Anti-nuke: Channel deletion spam",
 								"kick": {
@@ -1482,11 +1360,7 @@
 				"events": {
 					"channel": {
 						"create": {
-							"log": "**New channel `{channel}` has been created by {user}**",
-							"id": {
-								"field": "Channel ID"
-							},
-							"footer": "User ID: {userId}",
+							"id": {},
 							"antinuke": {
 								"reason": "🚨 Anti-nuke: Channel creation spam",
 								"kick": {
@@ -1544,9 +1418,6 @@
 					"log": {
 						"description": "## 🚨 Automod Log\n**User:** <@{userId}> (`{userTag}` | `{userId}`)\n**Channel:** <#{channelId}> (`{channelName}`)\n**Reason:** {reason}\n\n**Message:**```{originalContent}```",
 						"field": {
-							"userid": "User ID",
-							"username": "Username",
-							"channelid": "Channel ID",
 							"sentat": "Message Sent At"
 						}
 					}
@@ -1554,14 +1425,10 @@
 			},
 			"index": {
 				"member": {
-					"not": {
-						"manageable": "Member cannot be managed: {name}"
-					}
+					"not": {}
 				},
 				"failed": {
-					"nick": {
-						"update": "❌ Failed to update nickname for {tag}: {error}"
-					}
+					"nick": {}
 				}
 			},
 			"automod": {

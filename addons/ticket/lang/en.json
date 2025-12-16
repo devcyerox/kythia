@@ -17,7 +17,6 @@
 			"transcript_channel_missing_cmd": "## ❌ Error\nTranscript channel ({channelId}) not found.",
 			"transcript_failed": "## ❌ Error\nFailed to create transcript.",
 			"close_failed": "## ❌ Error\nFailed to close the ticket.",
-			"unknown_subcommand": "## ❌ Error\nUnknown utility subcommand.",
 			"generic": "## ❌ Error\nAn error occurred while handling the command.",
 			"missing_config_id": "## ❌ Error\nTicket configuration ID not found.",
 			"invalid_config": "## ❌ Error\nThis ticket configuration is no longer valid.",

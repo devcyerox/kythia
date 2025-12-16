@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.1-beta
+ * @version 0.10.3-beta
  */
 
 const {
@@ -11,7 +11,8 @@ const {
 	StringSelectMenuBuilder,
 	MessageFlags,
 } = require('discord.js');
-const { getItem } = require('../helpers/items');
+
+const { getItemById } = require('../helpers/items');
 
 module.exports = {
 	subcommand: true,
@@ -46,7 +47,7 @@ module.exports = {
 		const usableItemsMap = {};
 
 		for (const dbItem of rawInventory) {
-			const itemDef = getItem(dbItem.itemName);
+			const itemDef = getItemById(dbItem.itemName);
 
 			if (itemDef && itemDef.type === 'consumable') {
 				if (!usableItemsMap[dbItem.itemName]) {
@@ -68,7 +69,9 @@ module.exports = {
 			emoji: data.def.emoji,
 		}));
 
-		if (usableOptions.length === 0) {
+		const resolvedOptions = await Promise.all(usableOptions);
+
+		if (resolvedOptions.length === 0) {
 			const msg = await t(interaction, 'adventure.inventory.no.usable.items');
 			const components = await createContainer(interaction, {
 				description: msg,
@@ -86,7 +89,7 @@ module.exports = {
 				.setPlaceholder(
 					await t(interaction, 'adventure.inventory.select.item.placeholder'),
 				)
-				.addOptions(usableOptions),
+				.addOptions(resolvedOptions),
 		);
 
 		const initialContainer = await createContainer(interaction, {
@@ -109,45 +112,67 @@ module.exports = {
 				filter,
 				time: 60000,
 			});
+
 			const selectedItemId = selection.values[0];
 
 			let resultMsg = '';
 			let success = false;
 
+			const targetItem = getItemById(selectedItemId);
+
 			const freshUser = await UserAdventure.getCache({
 				userId: interaction.user.id,
 			});
 
-			switch (selectedItemId) {
-				case 'health_potion': {
+			if (!targetItem) {
+				resultMsg = await t(interaction, 'adventure.item.not.found');
+			} else {
+				if (targetItem.effect === 'heal') {
 					if (freshUser.hp >= freshUser.maxHp) {
 						resultMsg = await t(interaction, 'adventure.use.hp.full');
 					} else {
-						const healAmount = 50;
+						const healAmount = targetItem.amount || 0;
 						const oldHp = freshUser.hp;
+
 						freshUser.hp = Math.min(freshUser.hp + healAmount, freshUser.maxHp);
 						await freshUser.saveAndUpdateCache();
 
-						resultMsg = await t(
-							interaction,
-							'adventure.inventory.use.potion.success',
-							{
-								amount: freshUser.hp - oldHp,
-							},
-						);
+						const healed = freshUser.hp - oldHp;
+						const itemName = targetItem.nameKey
+							? await t(interaction, targetItem.nameKey)
+							: targetItem.id;
+
+						resultMsg = await t(interaction, 'adventure.use.success.heal', {
+							item: `${targetItem.emoji} ${itemName}`,
+							amount: healed,
+						});
 						success = true;
 					}
-					break;
-				}
-				case 'revival': {
-					resultMsg = await t(interaction, 'adventure.use.revival.message');
-					break;
-				}
-				default:
+				} else if (targetItem.effect === 'revive') {
+					if (freshUser.hp > 0) {
+						resultMsg = await t(
+							interaction,
+							'adventure.use.revive.failed.alive',
+						);
+					} else {
+						freshUser.hp = Math.floor(freshUser.maxHp * 0.5);
+						await freshUser.saveAndUpdateCache();
+
+						const itemName = targetItem.nameKey
+							? await t(interaction, targetItem.nameKey)
+							: targetItem.id;
+
+						resultMsg = await t(interaction, 'adventure.use.success.revive', {
+							item: `${targetItem.emoji} ${itemName}`,
+						});
+						success = true;
+					}
+				} else {
 					resultMsg = await t(
 						interaction,
 						'adventure.inventory.cannot.use.item',
 					);
+				}
 			}
 
 			if (success) {
@@ -160,7 +185,6 @@ module.exports = {
 
 				if (itemToDelete) {
 					await itemToDelete.destroy();
-
 					await InventoryAdventure.clearCache({ userId: interaction.user.id });
 				}
 			}
@@ -177,6 +201,8 @@ module.exports = {
 				components: resultContainer,
 				flags: MessageFlags.IsComponentsV2,
 			});
-		} catch (_e) {}
+		} catch (e) {
+			console.error(e);
+		}
 	},
 };

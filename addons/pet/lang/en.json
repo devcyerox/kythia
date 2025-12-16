@@ -7,7 +7,6 @@
 			},
 			"success": {
 				"title": "Pet Adopted!",
-				"text": "{icon} **{name}** ({rarity}) with bonus type {bonusType} and bonus value {bonusValue}",
 				"simple": "Congratulations! You successfully adopted a {icon} **{name}** ({rarity})!"
 			}
 		},
@@ -33,8 +32,7 @@
 			"success": {
 				"title": "Pet Fed!",
 				"desc": "{icon} **{name}** ({rarity}) has been fed."
-			},
-			"footer": "Your pet's hunger is now {hunger}/100"
+			}
 		},
 		"play": {
 			"no": {
@@ -50,8 +48,7 @@
 			"success": {
 				"title": "Played With Pet!",
 				"desc": "{icon} **{name}** ({rarity}) played with you."
-			},
-			"footer": "Your pet's happiness is now {happiness}/100"
+			}
 		},
 		"info": {
 			"no": {
@@ -65,7 +62,6 @@
 				"desc": "💀 Your pet is dead! You can adopt a new pet with `/pet adopt`."
 			},
 			"title": "Your Pet Info",
-			"footer": "System gives {bonusType} +{bonusValue} every 15 minutes",
 			"desc": "{icon} {name} ({rarity}) named **{petName}**, bonus type {bonusType} with value **{bonusValue}**, happiness **{happiness}**, hunger **{hunger}**, pet level **{level}**"
 		},
 		"use": {
@@ -86,8 +82,7 @@
 			"success": {
 				"title": "Pet Used!",
 				"desc": "{icon} **{name}** ({rarity}), you got bonus {bonusType} +{bonusValue}"
-			},
-			"footer": "Your pet is now level {level}"
+			}
 		},
 		"gacha": {
 			"no": {
@@ -103,8 +98,7 @@
 			"success": {
 				"title": "Pet Exchanged!",
 				"desc": "{icon} **{name}** ({rarity}) with level {level}"
-			},
-			"footer": "Your pet is now level {level}"
+			}
 		},
 		"sell": {
 			"no": {
@@ -121,15 +115,13 @@
 		"leaderboard": {
 			"title": "## 🏆 Pet Leaderboard",
 			"entry": "{index}. {username} ({userId}) {icon} {rarity} {name}, level {level}",
-			"empty": "❌ There are no pets on the leaderboard.",
-			"footer": "System"
+			"empty": "❌ There are no pets on the leaderboard."
 		},
 		"editname": {
 			"success": {
 				"title": "Pet Name Changed!",
 				"desc": "{icon} **{name}** ({rarity}) is now named {petName}"
-			},
-			"footer": "Your pet's name is now {petName}"
+			}
 		},
 		"admin": {
 			"list": {
@@ -140,7 +132,6 @@
 					},
 					"title": "Pet List",
 					"desc": "This Discord system has pets you can adopt and play with. The available pets are:",
-					"footer": "The system gives a bonus every 15 minutes",
 					"field": "**Rarity**: {rarity}\n**Bonus**: {bonusType} +{bonusValue}"
 				}
 			},

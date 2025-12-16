@@ -11,9 +11,7 @@
 					},
 					"api": {
 						"key": {
-							"not": {
-								"set": "❌ The AI configuration has not been set by the developer."
-							}
+							"not": {}
 						}
 					}
 				},
@@ -26,17 +24,13 @@
 				"error": "Oops, I'm feeling dizzy right now. Please try again later! ><",
 				"filter": {
 					"blocked": "Sorry, I can't do that.",
-					"everyone": {
-						"here": "Sorry i cant do that"
-					},
-					"mention": "Hey, what do you want to say? >,<"
+					"everyone": {}
 				},
 				"mention": "Hey, what do you want to say? >,<"
 			}
 		},
 		"translate": {
 			"limit": "Sorry, the AI token limit has been reached for this minute. I need a short break, please try again in a minute! 😥",
-			"set": "❌ The AI configuration has not been set by the developer.",
 			"success": "## 🌐 Translated\n### Language: `{lang}`\n### Input: ```{text}```\n### Translated: ```{translated}```",
 			"error": "❌ An error occurred while translating the text. Please try again later! ><",
 			"no": {

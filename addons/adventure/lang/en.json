@@ -17,16 +17,13 @@
 		"inventory": {
 			"title": "🎒 {username}'s Inventory",
 			"empty": "## 🔍 Your inventory is empty!\nYou can collect items here!",
-			"list": "## 🎒 {username}'s Inventory\nHere are the contents of your inventory:\n\n{items}",
 			"use": {
 				"title": "🔮 Use Item",
 				"desc": "Select an item to use from your inventory.",
 				"potion": {
 					"success": "💚 You used a Health Potion and restored **{amount} HP**!"
 				},
-				"revival": {
-					"success": "💖 You're now protected by a Revival Potion! It will automatically revive you if you're defeated."
-				},
+				"revival": {},
 				"item": {
 					"button": "Use Item"
 				}
@@ -42,35 +39,27 @@
 				}
 			},
 			"item": {
-				"not": {
-					"found": "❌ Item not found in your inventory."
-				}
+				"not": {}
 			},
 			"cannot": {
 				"use": {
 					"item": "❌ You can't use this item right now."
 				}
 			},
-			"selection": {
-				"timeout": "⏱️ You took too long to select an item."
-			},
+			"selection": {},
 			"footer": "Page {page} / {totalPages}, Total items: {totalItems}"
 		},
 		"recall": {
 			"recalled": "## 🏠 Recall\nYou are recall and back to the city!\nYour HP is full!"
 		},
 		"shop": {
-			"welcome": "## 🛒 Adventure Shop\nWelcome to the adventure shop!\nChoose an item to buy from the menu below.",
-			"gold": {
-				"footer": "🪙 Your gold: {gold}"
-			},
+			"gold": {},
 			"item": {
 				"not": {
 					"found": "❌ The selected item could not be found."
 				}
 			},
 			"select": {
-				"placeholder": "Choose an item to buy",
 				"option": {
 					"desc": "Price: {price} gold"
 				},
@@ -84,18 +73,11 @@
 					"gold": "## 🪙 Not Enough Gold!\nYou need **{price} gold** to buy {item}, but you only have **{gold} gold**."
 				}
 			},
-			"confirm": {
-				"purchase": "## 🛒 Purchase Confirmation\nYou are about to buy **{item}** for **{price} gold**.\n\nContinue with the purchase?",
-				"button": "✅ Confirm"
-			},
-			"cancel": {
-				"button": "❌ Cancel"
-			},
+			"confirm": {},
+			"cancel": {},
 			"purchase": {
-				"success": "## ✅ Purchase Successful!\nYou have successfully bought **{item}** for **{price} gold**.",
-				"cancelled": "## ❌ Purchase Cancelled\nYou cancelled the purchase of {item}."
+				"success": "## ✅ Purchase Successful!\nYou have successfully bought **{item}** for **{price} gold**."
 			},
-			"timeout": "## ⏱️ Timed Out\nYou took too long to choose an item. Use `/adventure shop` again to open the shop.",
 			"desc": "## 🏰 {bot}'s Adventure Shop - {category}\nWelcome to the adventure shop! Here you can buy items to aid you on your journey.\n> Your gold: **🪙 {gold}**",
 			"footer": "Page {page} of {totalPages}",
 			"empty": {
@@ -107,27 +89,281 @@
 				"consumables": "🧪 Consumables"
 			},
 			"items": {
-				"shield": {
-					"name": "Wooden Shield",
-					"desc": "A basic wooden shield that provides +5 defense."
+				"stick": {
+					"name": "Stick",
+					"desc": "A simple stick found in the woods. Better than nothing?"
 				},
-				"sword": {
+				"rock": {
+					"name": "Rock",
+					"desc": "A hard rock. Good for throwing."
+				},
+				"dagger": {
+					"name": "Dagger",
+					"desc": "A small but sharp blade. Quick and deadly."
+				},
+				"wooden_club": {
+					"name": "Wooden Club",
+					"desc": "A heavy piece of wood. Hits hard."
+				},
+				"slingshot": {
+					"name": "Slingshot",
+					"desc": "Shoots small stones. Good for ranged attacks."
+				},
+				"short_sword": {
+					"name": "Short Sword",
+					"desc": "A standard sword for beginners."
+				},
+				"training_sword": {
+					"name": "Training Sword",
+					"desc": "A dull sword used for practice."
+				},
+				"bronze_sword": {
+					"name": "Bronze Sword",
+					"desc": "A sword made of bronze. Stronger than wood."
+				},
+				"bronze_axe": {
+					"name": "Bronze Axe",
+					"desc": "A heavy axe made of bronze."
+				},
+				"iron_sword": {
 					"name": "Iron Sword",
-					"desc": "A sharp iron sword that provides +7 attack."
+					"desc": "A sharp iron sword. A reliable weapon."
 				},
-				"armor": {
+				"iron_mace": {
+					"name": "Iron Mace",
+					"desc": "A spiked iron mace. Crushes armor."
+				},
+				"spear": {
+					"name": "Spear",
+					"desc": "A long weapon with a sharp tip. Keeps enemies at bay."
+				},
+				"battle_axe": {
+					"name": "Battle Axe",
+					"desc": "A large double-headed axe. devastating power."
+				},
+				"long_sword": {
+					"name": "Long Sword",
+					"desc": "A long blade with excellent reach."
+				},
+				"crossbow": {
+					"name": "Crossbow",
+					"desc": "Powerful ranged weapon with high accuracy."
+				},
+				"steel_sword": {
+					"name": "Steel Sword",
+					"desc": "A finely crafted steel sword. Very sharp."
+				},
+				"steel_halberd": {
+					"name": "Steel Halberd",
+					"desc": "A versatile polearm made of steel."
+				},
+				"war_hammer": {
+					"name": "War Hammer",
+					"desc": "A massive hammer designed to crush skulls."
+				},
+				"katana": {
+					"name": "Katana",
+					"desc": "A curved blade from a distant land. Extremely sharp."
+				},
+				"great_sword": {
+					"name": "Great Sword",
+					"desc": "A gigantic sword that requires immense strength."
+				},
+				"obsidian_blade": {
+					"name": "Obsidian Blade",
+					"desc": "A sword with a blade as black as night. incredibly sharp."
+				},
+				"obsidian_scythe": {
+					"name": "Obsidian Scythe",
+					"desc": "A reaper's tool made of obsidian."
+				},
+				"mithril_blade": {
+					"name": "Mithril Blade",
+					"desc": "A legendary blade made of mithril. Light and indestructible."
+				},
+				"mithril_bow": {
+					"name": "Mithril Bow",
+					"desc": "A bow reinforced with mithril. Shoots with incredible force."
+				},
+				"crystal_sword": {
+					"name": "Crystal Sword",
+					"desc": "A sword forged from magical crystal."
+				},
+				"crystal_wand": {
+					"name": "Crystal Wand",
+					"desc": "A wand pulsing with magical energy."
+				},
+				"demon_blade": {
+					"name": "Demon Blade",
+					"desc": "A cursed blade that thirsts for blood."
+				},
+				"dragon_slayer": {
+					"name": "Dragon Slayer",
+					"desc": "A massive sword said to be able to kill dragons."
+				},
+				"excalibur": {
+					"name": "Excalibur",
+					"desc": "The legendary sword of kings."
+				},
+				"void_staff": {
+					"name": "Void Staff",
+					"desc": "A staff that channels the power of the void."
+				},
+				"god_killer": {
+					"name": "God Killer",
+					"desc": "A weapon capable of slaying gods."
+				},
+				"leather_cap": {
+					"name": "Leather Cap",
+					"desc": "A simple cap made of leather."
+				},
+				"bronze_helm": {
+					"name": "Bronze Helm",
+					"desc": "A sturdy helmet made of bronze."
+				},
+				"copper_helm": {
+					"name": "Copper Helm",
+					"desc": "A shiny helmet made of copper."
+				},
+				"iron_helm": {
+					"name": "Iron Helm",
+					"desc": "A strong helmet that protects the head."
+				},
+				"steel_helm": {
+					"name": "Steel Helm",
+					"desc": "A heavy helmet offering excellent protection."
+				},
+				"obsidian_helm": {
+					"name": "Obsidian Helm",
+					"desc": "A dark helmet forged from obsidian."
+				},
+				"mithril_helm": {
+					"name": "Mithril Helm",
+					"desc": "A lightweight yet impenetrable helmet."
+				},
+				"dragon_helm": {
+					"name": "Dragon Helm",
+					"desc": "A helmet crafted from dragon scales."
+				},
+				"cloth_tunic": {
+					"name": "Cloth Tunic",
+					"desc": "Simple clothing. Offers minimal protection."
+				},
+				"leather_armor": {
 					"name": "Leather Armor",
-					"desc": "Light leather armor that provides +10 defense and +20 health."
+					"desc": "Armor made of hardened leather."
+				},
+				"bronze_armor": {
+					"name": "Bronze Armor",
+					"desc": "Plated armor made of bronze."
+				},
+				"chainmail": {
+					"name": "Chainmail",
+					"desc": "Armor made of interlocking metal rings."
+				},
+				"iron_armor": {
+					"name": "Iron Armor",
+					"desc": "Heavy plate armor made of iron."
+				},
+				"steel_armor": {
+					"name": "Steel Armor",
+					"desc": "Superior plate armor made of steel."
+				},
+				"obsidian_armor": {
+					"name": "Obsidian Armor",
+					"desc": "Dark armor that absorbs impacts."
+				},
+				"mithril_armor": {
+					"name": "Mithril Armor",
+					"desc": "Legendary armor that is light as a feather."
+				},
+				"crystal_armor": {
+					"name": "Crystal Armor",
+					"desc": "Shimmering armor infused with magic."
+				},
+				"dragon_armor": {
+					"name": "Dragon Armor",
+					"desc": "Armor forged from the scales of an ancient dragon."
+				},
+				"wooden_shield": {
+					"name": "Wooden Shield",
+					"desc": "A basic shield made of wood."
+				},
+				"buckler": {
+					"name": "Buckler",
+					"desc": "A small shield for parrying attacks."
+				},
+				"bronze_shield": {
+					"name": "Bronze Shield",
+					"desc": "A round shield made of bronze."
+				},
+				"iron_shield": {
+					"name": "Iron Shield",
+					"desc": "A sturdy shield made of iron."
+				},
+				"steel_shield": {
+					"name": "Steel Shield",
+					"desc": "A heavy shield that blocks most attacks."
+				},
+				"tower_shield": {
+					"name": "Tower Shield",
+					"desc": "A massive shield that covers the whole body."
+				},
+				"obsidian_shield": {
+					"name": "Obsidian Shield",
+					"desc": "A black shield that is incredibly hard."
+				},
+				"mithril_shield": {
+					"name": "Mithril Shield",
+					"desc": "An indestructible shield made of mithril."
+				},
+				"aegis": {
+					"name": "Aegis",
+					"desc": "The legendary shield of the gods."
+				},
+				"apple": {
+					"name": "Apple",
+					"desc": "A fresh red apple. Restores a small amount of health."
+				},
+				"bandage": {
+					"name": "Bandage",
+					"desc": "A cloth bandage to bind wounds."
+				},
+				"bread": {
+					"name": "Bread",
+					"desc": "A loaf of fresh bread. Filling and healing."
+				},
+				"small_health_potion": {
+					"name": "Small Health Potion",
+					"desc": "A small vial of healing liquid."
+				},
+				"health_potion": {
+					"name": "Health Potion",
+					"desc": "Restores 50 health points when used."
+				},
+				"great_health_potion": {
+					"name": "Great Health Potion",
+					"desc": "A potent potion that heals significant wounds."
+				},
+				"super_potion": {
+					"name": "Super Potion",
+					"desc": "A highly concentrated healing potion."
+				},
+				"hyper_potion": {
+					"name": "Hyper Potion",
+					"desc": "An advanced potion that heals almost any injury."
+				},
+				"max_potion": {
+					"name": "Max Potion",
+					"desc": "Fully restores your health."
 				},
 				"revival": {
 					"name": "Revival Potion",
 					"desc": "Brings you back to life with 50% health when defeated."
 				},
-				"health": {
-					"potion": {
-						"name": "Health Potion",
-						"desc": "Restores 50 health points when used."
-					}
+				"phoenix_down": {
+					"name": "Phoenix Down",
+					"desc": "A feather from a phoenix. Revives and heals."
 				}
 			}
 		},
@@ -141,21 +377,14 @@
 			},
 			"choose": {
 				"char": {
-					"title": "🧭 Choose Your Path",
-					"desc": "Select a character below. Each has unique strengths and bonuses!",
 					"stats": "**Character Bonuses**\n• Strength: {str}\n• Defense: {def}\n• Max HP%: {hp}\n• XP%: {xp}\n• Gold%: {gold}"
 				}
 			},
-			"select": {
-				"placeholder": "Select your character..."
-			},
-			"confirm": {
-				"button": "✅ Confirm Character"
-			},
+			"select": {},
+			"confirm": {},
 			"selected": {
 				"char": "Chosen Character"
 			},
-			"timeout": "⏱️ Time's up! Please run `/adventure start` again to choose a character.",
 			"invalid_char": "Invalid character selection. Please try again."
 		},
 		"stats": {
@@ -180,6 +409,11 @@
 		},
 		"items": {
 			"no_desc": "No description."
+		},
+		"item": {
+			"not": {
+				"found": "Item definition not found."
+			}
 		},
 		"characters": {
 			"shadow_blade": {
@@ -234,10 +468,17 @@
 			"hp": {
 				"full": "Your HP is already full!"
 			},
-			"revival": {
-				"message": "You are still alive! Keep this for when you really need it."
+			"revive": {
+				"message": "You are still alive! Keep this for when you really need it.",
+				"failed": {
+					"alive": "You are not dead!"
+				}
 			},
-			"success": "✅ Used!",
+			"success": {
+				"title": "✅ Used!",
+				"heal": "Used {item} and recovered {amount} HP!",
+				"revive": "Used {item}! You have been revived!"
+			},
 			"cancelled": "❌ Cancelled"
 		}
 	}

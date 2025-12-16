@@ -81,7 +81,6 @@
 			},
 			"user": {
 				"title": {
-					"text": "📊 User Streak",
 					"user": "📊 {username}'s Streak Status"
 				},
 				"not": {
@@ -91,10 +90,7 @@
 					}
 				}
 			},
-			"error": {
-				"title": "❌ Error",
-				"generic": "An error occurred while executing this command."
-			}
+			"error": {}
 		}
 	}
 }

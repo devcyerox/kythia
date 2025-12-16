@@ -3,7 +3,6 @@
 		"error": {
 			"fatal": {
 				"title": "## ❌ Fatal Error",
-				"desc": "A fatal error occurred while trying to create the giveaway. Check the console log.",
 				"join": "❌ A fatal error occurred while joining."
 			}
 		},

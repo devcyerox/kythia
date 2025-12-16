@@ -134,8 +134,7 @@
 				"bully": "{user} wants to bully someone! 😈"
 			},
 			"errors": {
-				"invalid_action": "❌ That's not a valid action! Use one of: ${VALID_ACTIONS.join(', ')}",
-				"api_error": "❌ Oops! Something went wrong while fetching the {action} gif. Please try again later!"
+				"invalid_action": "❌ That's not a valid action! Use one of: ${VALID_ACTIONS.join(', ')}"
 			}
 		},
 		"8ball": {
@@ -164,7 +163,6 @@
 			}
 		},
 		"guessnumber": {
-			"title": "🎯 Guess the Number!",
 			"desc": "I'm thinking of a number between **1 - {maxNumber}** 😋\nType your guess in the chat!",
 			"hint": "Just type your number in the chat! 😋",
 			"mode": {
@@ -175,7 +173,6 @@
 			},
 			"dm": {
 				"sent": {
-					"title": "Game Sent to DM!",
 					"desc": "Check your DM for the game! 😋"
 				}
 			},
@@ -186,12 +183,7 @@
 				"desc": "## ⏰ Time's Up 😭\nTime's up! 😋\nThe answer was **{number}**"
 			},
 			"feedback": {
-				"almost": {
-					"low": "📈🔥 So close! Just a bit higher 😋",
-					"high": "📉🔥 So close! Just a bit lower 😋"
-				},
-				"low": "📈 Too low, try again! 😋",
-				"high": "📉 Too high, try again! 😋"
+				"almost": {}
 			}
 		},
 		"tictactoe": {
@@ -249,9 +241,7 @@
 				"married": "❌ One or both of you are already married or have a pending proposal!"
 			},
 			"not": {
-				"enough": {
-					"money": "You need {cost} coins to propose marriage!"
-				},
+				"enough": {},
 				"married": "❌ You're not currently married!",
 				"your": {
 					"proposal": "This isn't your marriage proposal to accept!"
@@ -269,9 +259,7 @@
 			"reject": {
 				"button": "Reject"
 			},
-			"no": {
-				"pending": "You don't have any pending marriage proposals from this user."
-			},
+			"no": {},
 			"congrats": {
 				"title": "💕 Congratulations!",
 				"description": "{user1} and {user2} are now married! May your love last forever! 💖"
@@ -304,15 +292,7 @@
 					"label": "YOU"
 				}
 			},
-			"help": {
-				"title": "💍 Marriage System Help",
-				"description": "Here are all the marriage commands you can use:",
-				"propose": "Propose to another user",
-				"accept": "Accept a marriage proposal",
-				"divorce": "End your current marriage",
-				"kiss": "Kiss your partner",
-				"profile": "View your marriage profile"
-			},
+			"help": {},
 			"divorce": {
 				"partner": {
 					"confirm": "💔 Your partner {partnerName} has requested a divorce in {serverName}. You must also confirm the divorce by using the `/marry divorce` command."

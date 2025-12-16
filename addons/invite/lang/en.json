@@ -26,10 +26,7 @@
 						"unknown": "{user} ({username}) joined (unknown invite source)"
 					},
 					"code": "Invite code: `{code}`",
-					"error": {
-						"title": "Invite Tracker Error",
-						"desc": "An error occurred while processing the invite tracker. Please contact the server admin if this persists."
-					}
+					"error": {}
 				}
 			},
 			"guildMemberRemove": {

@@ -49,14 +49,7 @@
 			"help": {
 				"title": "## DNS Record Type Reference",
 				"description": "Here are the supported DNS record types, required fields, and examples.\n\nUse `/pro dns set` to create or update records.",
-				"labels": {
-					"description": "Description:",
-					"required_value": "Required Value:",
-					"value": "Value:",
-					"name": "Name:",
-					"priority": "Priority:",
-					"example": "Example:"
-				},
+				"labels": {},
 				"types": [
 					{
 						"name": "A (IP Address Record)",

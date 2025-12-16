@@ -152,29 +152,6 @@ async function generateShopComponentRows(
 	);
 	rows.push(categoryRow);
 
-	const navButtons = [];
-	if (page > 1) {
-		navButtons.push(
-			new ButtonBuilder()
-				.setCustomId('adventure_shop_page_prev')
-				.setLabel(await t(interaction, 'common.previous'))
-				.setStyle(ButtonStyle.Secondary),
-		);
-	}
-
-	if (page < totalPages) {
-		navButtons.push(
-			new ButtonBuilder()
-				.setCustomId('adventure_shop_page_next')
-				.setLabel(await t(interaction, 'common.next'))
-				.setStyle(ButtonStyle.Primary),
-		);
-	}
-
-	if (navButtons.length > 0) {
-		rows.push(new ActionRowBuilder().addComponents(navButtons));
-	}
-
 	if (pageItems.length > 0) {
 		const itemOptions = await Promise.all(
 			pageItems.map(async (item) => ({
@@ -197,6 +174,29 @@ async function generateShopComponentRows(
 					.addOptions(itemOptions),
 			),
 		);
+	}
+
+	const navButtons = [];
+	if (page > 1) {
+		navButtons.push(
+			new ButtonBuilder()
+				.setCustomId('adventure_shop_page_prev')
+				.setLabel(await t(interaction, 'common.previous'))
+				.setStyle(ButtonStyle.Secondary),
+		);
+	}
+
+	if (page < totalPages) {
+		navButtons.push(
+			new ButtonBuilder()
+				.setCustomId('adventure_shop_page_next')
+				.setLabel(await t(interaction, 'common.next'))
+				.setStyle(ButtonStyle.Primary),
+		);
+	}
+
+	if (navButtons.length > 0) {
+		rows.push(new ActionRowBuilder().addComponents(navButtons));
 	}
 
 	return rows;
@@ -318,38 +318,61 @@ module.exports = {
 
 						if (!item) {
 							return i.followUp({
-								content: await t(interaction, 'adventure.shop.item.not.found'),
-								ephemeral: true,
+								components: await simpleContainer(
+									interaction,
+									await t(interaction, 'adventure.shop.item.not.found'),
+									{
+										color: 'Red',
+									},
+								),
+								flags: MessageFlags.IsComponentsV2,
 							});
 						}
 
 						if (userForUpdate.gold < item.price) {
 							return i.followUp({
-								content: await t(
+								components: await simpleContainer(
 									interaction,
-									'adventure.shop.not.enough.gold',
-									{
+									await t(interaction, 'adventure.shop.not.enough.gold', {
 										price: item.price,
 										gold: userForUpdate.gold,
 										item: await t(interaction, item.nameKey),
-									},
+									}),
 								),
-								ephemeral: true,
+								flags: MessageFlags.IsComponentsV2,
 							});
 						}
 
 						userForUpdate.gold -= item.price;
-						await InventoryAdventure.create({
-							userId: userForUpdate.userId,
-							itemName: item.id,
+						await userForUpdate.save();
+
+						const existingItem = await InventoryAdventure.findOne({
+							where: {
+								userId: userForUpdate.userId,
+								itemName: item.id,
+							},
 						});
 
+						if (existingItem) {
+							existingItem.quantity += 1;
+							await existingItem.save();
+						} else {
+							await InventoryAdventure.create({
+								userId: userForUpdate.userId,
+								itemName: item.id,
+								quantity: 1,
+							});
+						}
+
 						await i.followUp({
-							content: await t(interaction, 'adventure.shop.purchase.success', {
-								item: await t(interaction, item.nameKey),
-								price: item.price,
-							}),
-							ephemeral: true,
+							components: await simpleContainer(
+								interaction,
+								await t(interaction, 'adventure.shop.purchase.success', {
+									item: await t(interaction, item.nameKey),
+									price: item.price,
+								}),
+							),
+							flags: MessageFlags.IsComponentsV2,
 						});
 
 						userForUpdate = await UserAdventure.getCache({

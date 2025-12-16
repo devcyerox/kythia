@@ -250,10 +250,7 @@
 					"name": "Pet Food",
 					"description": "Feed your pet to increase its happiness."
 				},
-				"marriage_ring": {
-					"name": "Marriage Ring",
-					"description": "A special ring to propose marriage and form a bond with another user."
-				}
+				"marriage_ring": {}
 			}
 		},
 		"leaderboard": {
@@ -372,18 +369,10 @@
 				"cash": {
 					"field": "Current Kythia Coins"
 				},
-				"lose": {
-					"title": "💔 ZONK! YOU WERE UNLUCKY 💔"
-				},
-				"jackpot": {
-					"title": "🎉🎉🎉 JACKPOT!!! 🎉🎉🎉"
-				},
-				"bigwin": {
-					"title": "🔥 BIG WIN! 🔥"
-				},
-				"lucky": {
-					"title": "🤑 Just a Bit Lucky! 🤑"
-				}
+				"lose": {},
+				"jackpot": {},
+				"bigwin": {},
+				"lucky": {}
 			}
 		},
 		"rob": {
@@ -443,32 +432,16 @@
 					"line": "> **{username}** <@{userId}>"
 				},
 				"tag": {
-					"id": {
-						"line": "> 🏷️ **Tag:** `{tag}`   |   🆔 **ID:** `{id}`"
-					}
+					"id": {}
 				},
-				"created": {
-					"line": "> 📅 **Account Created:** {created}"
-				},
-				"joined": {
-					"line": "> 👥 **Joined Server:** {joined}",
-					"unknown": "Unknown"
-				},
+				"created": {},
+				"joined": {},
 				"bot": {
-					"status": {
-						"line": "> 🤖 **Bot?:** `{isBot}`   |   🟢 **Status:** `{status}`"
-					},
-					"yes": "Yes",
-					"no": "No"
+					"status": {}
 				},
-				"status": {
-					"unknown": "Unknown"
-				},
+				"status": {},
 				"level": {
-					"xp": {
-						"title": "🏆 Level & XP",
-						"line": "> ⭐ **Level:** `{level}`   |   🧪 **XP:** `{xp} / {nextLevelXp}`"
-					}
+					"xp": {}
 				},
 				"finance": {
 					"title": "💰 Finances"
@@ -658,7 +631,6 @@
 					"high": "High interest rate"
 				},
 				"transfer": {
-					"zero": "No transfer fees",
 					"low": "Reduced transfer fees"
 				},
 				"rob": {
@@ -750,26 +722,17 @@
 					"change": {
 						"label": "24H Change"
 					},
-					"vol": {
-						"label": "24h Volume"
-					}
+					"vol": {}
 				},
 				"all": {
 					"title": "🌐 Kythia Global Market - Real-Time Prices"
 				},
-				"error": {
-					"title": "❌ Error",
-					"desc": "An unexpected error occurred."
-				},
+				"error": {},
 				"market": {
-					"cap": {
-						"label": "Market Cap"
-					}
+					"cap": {}
 				},
 				"circulating": {
-					"supply": {
-						"label": "Circulating Supply"
-					}
+					"supply": {}
 				},
 				"open": {
 					"orders": {

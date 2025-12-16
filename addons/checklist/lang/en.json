@@ -1,23 +1,15 @@
 {
 	"checklist": {
 		"unknown": {
-			"subcommand": {
-				"title": "Unknown Subcommand",
-				"desc": "The subcommand you used is not recognized."
-			}
+			"subcommand": {}
 		},
-		"error": {
-			"title": "❌ Checklist Command Error",
-			"desc": "An error occurred while executing this command. Please try again."
-		},
+		"error": {},
 		"scope": {
 			"personal": "Personal",
 			"server": "Server"
 		},
 		"remove": {
-			"select": {
-				"placeholder": "Select to remove"
-			}
+			"select": {}
 		},
 		"status": {
 			"done": "✅ Completed",
@@ -59,15 +51,9 @@
 						"desc": "**Item:**\n> `{item}`"
 					}
 				},
-				"item": {
-					"field": "Item"
-				},
-				"status": {
-					"field": "Status"
-				},
-				"removed": {
-					"field": "Removed"
-				}
+				"item": {},
+				"status": {},
+				"removed": {}
 			},
 			"list": {
 				"list": {
