@@ -1,29 +1,17 @@
 {
 	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2020",
+		"checkJs": false,
+		"strict": true,
 		"baseUrl": ".",
 		"paths": {
-			"@src/*": ["src/*"],
 			"@addons/*": ["addons/*"],
-			"@utils/*": ["src/utils/*"],
 			"@coreHelpers/*": ["addons/core/helpers/*"],
 			"@coreModels/*": ["addons/core/database/models/*"],
-			"@coreDatabase/*": ["addons/core/database/*"],
-			"@srcDatabase/*": ["src/database/*"]
+			"@coreDatabase/*": ["addons/core/database/*"]
 		}
 	},
-	"exclude": [
-		"node_modules",
-		"**/node_modules",
-		"**/vendor",
-		".git",
-		"dist",
-		"temp",
-		"docs",
-		"scripts",
-		"package-lock.json",
-		"bun.lock",
-		"storage",
-		"logs",
-		".yalc"
-	]
+	"exclude": ["node_modules", "**/node_modules", "**/vendor", ".git"],
+	"include": ["types/**.d.ts", "src/**/*", "addons/**/*", "types"]
 }

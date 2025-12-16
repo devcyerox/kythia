@@ -139,3 +139,6 @@ storage/
 .yalc/
 yalc.lock
 *.sqlite
+
+.vscode/
+.fuse_hidden*

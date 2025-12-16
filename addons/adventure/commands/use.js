@@ -19,6 +19,10 @@ module.exports = {
 	slashCommand: (subcommand) =>
 		subcommand.setName('use').setDescription('Use an item from your inventory'),
 
+	/**
+	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
+	 * @param {KythiaDI.Container} container
+	 */
 	async execute(interaction, container) {
 		const { t, models, helpers, kythiaConfig } = container;
 		const { UserAdventure, InventoryAdventure } = models;

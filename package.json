@@ -13,10 +13,11 @@
 		"start:bun": "bun index.js --deploy",
 		"dev": "bun --watch index.js",
 		"format": "biome format --write .",
-		"fix": "biome check --write ."
+		"fix": "biome check --write .",
+		"prepare": "husky"
 	},
 	"lint-staged": {
-		"*.ts": [
+		"*.{js,ts,json,md}": [
 			"bun format"
 		]
 	},
@@ -38,7 +39,6 @@
 		"luxon": "^3.7.2",
 		"marked": "^4.3.0",
 		"module-alias": "^2.2.3",
-		"moment": "^2.30.1",
 		"mysql2": "^3.15.3",
 		"node-cron": "^4.2.1",
 		"node-fetch": "^2.7.0",
@@ -58,33 +58,29 @@
 		"@babel/parser": "^7.28.5",
 		"@babel/traverse": "^7.28.5",
 		"@biomejs/biome": "^2.3.6",
+		"@commitlint/cli": "^20.2.0",
+		"@commitlint/config-conventional": "^20.2.0",
 		"glob": "^11.0.3",
+		"husky": "^9.1.7",
 		"lint-staged": "^16.2.7"
 	},
 	"_moduleAliases": {
-		"@src": "src",
 		"@addons": "addons",
-		"@utils": "src/utils",
 		"@coreHelpers": "addons/core/helpers",
 		"@coreModels": "addons/core/database/models",
-		"@coreDatabase": "addons/core/database",
-		"@srcDatabase": "src/database"
+		"@coreDatabase": "addons/core/database"
 	},
 	"jest": {
 		"moduleNameMapper": {
-			"^@src/(.*)$": "<rootDir>/src/$1",
 			"^@addons/(.*)$": "<rootDir>/addons/$1",
-			"^@utils/(.*)$": "<rootDir>/src/utils/$1",
 			"^@coreHelpers/(.*)$": "<rootDir>/addons/core/helpers/$1",
 			"^@coreModels/(.*)$": "<rootDir>/addons/core/database/models/$1",
-			"^@coreDatabase/(.*)$": "<rootDir>/addons/core/database/$1",
-			"^@srcDatabase/(.*)$": "<rootDir>/src/database/$1"
+			"^@coreDatabase/(.*)$": "<rootDir>/addons/core/database/$1"
 		}
 	},
 	"keywords": [
-		"discord",
-		"bot",
 		"kythia",
+		"kenndeclouv",
 		"music",
 		"music bot",
 		"discord bot",
