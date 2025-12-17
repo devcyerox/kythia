@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0-beta](https://github.com/kythia/kythia/compare/v0.10.1-beta...v0.11.0-beta) (2025-12-17)
+
+
+### 🔨 Fixed
+
+* improve tempvoice channel fetching error handling with logging and ephemeral user feedback. ([56873ec](https://github.com/kythia/kythia/commit/56873ecf5c63f08bb98709c2fbb1770960786a3f))
+* **invite:** prevent invite count reset on existing records ([84942cf](https://github.com/kythia/kythia/commit/84942cfdac8712498ff001731fedbb9d68724fc0))
+
+
+### 🔧 Changed
+
+* **adventure:** code standardization step 1 ([2451b0c](https://github.com/kythia/kythia/commit/2451b0c292968f395bde15ee722e6cd66899a57b))
+* **adventure:** code standardization step 2, final ([7995d43](https://github.com/kythia/kythia/commit/7995d433f87f72914f9f60ef0132d9008dcb7ab0))
+* fixing guarded in all models ([c40df69](https://github.com/kythia/kythia/commit/c40df69741f3e320067ba2e87e76402f760c77e2))
+* improve BigInt handling in economy commands and update Discord message flags for components. ([04000ec](https://github.com/kythia/kythia/commit/04000ec3e84e93edceeba76b02705325a0952e79))
+* Introduce `toBigIntSafe` helper and apply it across economy commands for robust BigInt handling. ([870bb99](https://github.com/kythia/kythia/commit/870bb9909b57e58cc419a05a773ac3695d3e0bed))
+* Remove verbose descriptions and messages from English language files. ([7cebaa7](https://github.com/kythia/kythia/commit/7cebaa71c65c24856630eae95592714015697f6e))
+* Replace dashboard web application with a new API addon. ([30a4166](https://github.com/kythia/kythia/commit/30a4166c5d2902c2861dd7df3bafed245da44623))
+* Update Discord permission flags, enhance server setting retrieval with creation, and streamline command configurations. ([a9f9cbf](https://github.com/kythia/kythia/commit/a9f9cbf15de85362d3567d67bdcec645474f0c28))
+
+
+### ✨ Added
+
+* Add `ManageGuild` permission requirement to the ticket command. ([855fff7](https://github.com/kythia/kythia/commit/855fff77a5f18b33b493f058b0e3dc3ff3f56ded))
+* Add localization for multiple addons and update core settings, economy, and adventure features. ([50c818d](https://github.com/kythia/kythia/commit/50c818ddb2bb1009c4e93d23119ff20578de2544))
+* Add localization for multiple addons and update core settings, economy, and adventure features. ([b4ccfec](https://github.com/kythia/kythia/commit/b4ccfec356a425c73726d3c765adbf25bf7b5f8b))
+* Add nickprefix command, update database schemas, and refine various bot commands, events, and dashboard assets. ([2b11d8a](https://github.com/kythia/kythia/commit/2b11d8a29eeea7fd0db9ebc9bbfc2670cd0dae4b))
+* Add TempVoice sync command to clean up channels and provide a UI for fixing missing configuration. ([14c39f1](https://github.com/kythia/kythia/commit/14c39f141136263625f6ed1febd1bc31bea32b73))
+* Centralize access to `kythiaConfig`, `t`, `embedFooter`, and `logger` via `client.container` across server commands and core events. ([edb059a](https://github.com/kythia/kythia/commit/edb059a96b999a3bacc55d9b815ca2e9ecabdc0b))
+* destructure `helpers` and `getChannelSafe` from the container ([71ae4fa](https://github.com/kythia/kythia/commit/71ae4fabccd0c45de4927d468cf4db7a6c0e9117))
+* Implement AI bot reply for empty mentions and remove unused donate localization strings. ([203090b](https://github.com/kythia/kythia/commit/203090b07d74349759e07e50bbfd37a945873bb1))
+* Implement server-specific bot branding and custom prefixes, adding a new API route for guild branding and extending server settings. ([b13f3e6](https://github.com/kythia/kythia/commit/b13f3e6b709b8a7eaabd3fe0999b169475b54355))
+* introduce configurable emojis for TempVoice and Music, refactor guild API routes, and enhance server settings creation with nullable guild names. ([8eea2b9](https://github.com/kythia/kythia/commit/8eea2b9dc70c0ef4f6be1dc8847226817281abff))
+* **music api:** Implement WebSocket-based music player state broadcasting and introduce a comprehensive leveling system with detailed configuration options. ([4e5e4d8](https://github.com/kythia/kythia/commit/4e5e4d83319268b7beb7ad4ebd9f5cdc46b490b9))
+* update kythia-core, add sqlite3, and refine example configurations for environment variables and addons. ([d820128](https://github.com/kythia/kythia/commit/d820128134ba2897a4443f12f7d1eb6d1cfc23d7))
+* Update various commands, helpers, and language strings across all addons for improved functionality and consistency. ([802b25e](https://github.com/kythia/kythia/commit/802b25e19ae41c737a7dc7a1f58de8f9d1297a79))
+
 ### [0.10.1-beta](https://github.com/kythia/kythia/compare/v0.9.12-beta...v0.10.1-beta) (2025-12-03)
 
 
