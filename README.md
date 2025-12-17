@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://kythia.my.id">
+  <a href="https://kythia.me">
     <img src="./addons/dashboard/web/public/assets/img/logo/logo.png" alt="Kythia Logo" height="150" style="border-radius: 10px;">
   </a>
 </p>
@@ -212,7 +212,7 @@ Here are a few commands to get you started:
 *   `/serverinfo`: Displays information about the server.
 *   `/userinfo`: Displays information about a user.
 
-For a full list of commands and their detailed usage, please see the [Command Documentation](https://kythia.my.id/commands).
+For a full list of commands and their detailed usage, please see the [Command Documentation](https://kythia.me/commands).
 
 ---
 
@@ -314,6 +314,8 @@ Contributions to Kythia are managed by the internal development team. If you are
 ## 📜 License
 
 This project is licensed under the CC BY-NC 4.0 License. See the [LICENSE](LICENSE) file for details.
+Copyright © 2025 Kythia Labs - All rights reserved.
+For commercial use, please contact us at [kenndeclouv@gmail.com](mailto:kenndeclouv@gmail.com).
 
 ---
 
@@ -321,6 +323,6 @@ This project is licensed under the CC BY-NC 4.0 License. See the [LICENSE](LICEN
 
 Need help or want to connect with other Kythia users? Join our community!
 
-*   **🌐 Website:** [kythia.my.id](https://kythia.my.id)
+*   **🌐 Website:** [kythia.me](https://kythia.me)
 *   **💬 Discord Server:** [dsc.gg/kythia](https://dsc.gg/kythia)
-*   **📧 Email:** [me@kenn.my.id](mailto:me@kenn.my.id)
+*   **📧 Email:** [kenndeclouv@gmail.com](mailto:kenndeclouv@gmail.com)

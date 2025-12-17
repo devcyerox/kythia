@@ -26,6 +26,20 @@ function loadKythiaConfig() {
 		env: 'local',
 		// Bot version
 		version: require('./package.json').version,
+		// Bot license key
+		licenseKey: process.env.LICENSE_KEY,
+		// Bot legal settings
+		// Read more at https://kythia.me/tos
+		// SET ALL TO TRUE IF YOU ACCEPT THE TERMS OF SERVICE
+		// IF NOT THE BOT WILL NOT WORK
+		legal: {
+			// Accept Terms of Service
+			acceptTOS: false,
+			// acceptTOS: true,
+			// Data Collection
+			dataCollection: false,
+			// dataCollection: true,
+		},
 		// Bot owner
 		owner: {
 			// Discord User ID of the bot owner (for owner-only commands)
@@ -239,7 +253,7 @@ function loadKythiaConfig() {
 				// this feature is kythia's internal only
 				// collaborate with TronixDev https://dsc.gg/trnx
 				enabled: false,
-				apiUrl: process.env.GLOBAL_CHAT_API_URL || 'http://localhost:2000',
+				apiUrl: process.env.GLOBAL_CHAT_API_URL,
 				healthCheckSchedule: '*/30 * * * *',
 				healthCheckDelay: 1000,
 				apiKey: process.env.GLOBAL_CHAT_API_KEY,
@@ -305,7 +319,7 @@ function loadKythiaConfig() {
 				gachaCooldown: 3600, // 1 hours
 			},
 			pro: {
-				active: false,
+				active: false, // activate if u have setup the cloudflare api
 				cloudflare: {
 					/**
 					 * API Token created from the Cloudflare dashboard.
@@ -347,7 +361,7 @@ function loadKythiaConfig() {
 				// ! IMPORTANT NOTE: the quest api need user token to work
 				// and using user token is violation of discord's terms of service
 				// so it's dangerously to use it
-				active: true,
+				active: false, // activate if u have setup the quest api
 				scheduler: '*/30 * * * *', // cron scheduler
 				apiUrls: 'http://.../quests,http://...', // seperate with comma
 			},
