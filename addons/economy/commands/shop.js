@@ -3,7 +3,7 @@
  * @type: Command
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa
- * @version 0.10.1-beta
+ * @version 0.11.0-beta
  */
 const {
 	ActionRowBuilder,

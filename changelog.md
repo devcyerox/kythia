@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [0.11.0-beta](https://github.com/kythia/kythia/compare/v0.10.1-beta...v0.11.0-beta) (2025-12-17)
 
+### ⚠️ BREAKING CHANGES
+
+* Dashboard is now seperated from the bot.
 
 ### 🔨 Fixed
 
