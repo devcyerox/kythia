@@ -8,482 +8,381 @@
 
 /**
  * Membuat objek interaction palsu dari sebuah Message.
- * VERSI PALING SEMPURNA: State management reply/defer/followUp/edit/delete, argumen, dan error handling sangat teliti.
+ * Smart Interaction Mocker dengan Parser V2 (Support Subcommand Group)
  * @param {import('discord.js').Message} message - Objek pesan asli.
  * @param {string} commandName - Nama command yang dijalankan.
- * @param {string[]|object} args - Argumen, bisa array (prefix) atau objek (AI).
+ * @param {string} rawArgsString - String argumen mentah.
  * @returns {object} Objek interaction palsu yang sangat kompatibel.
  */
-
 function kythiaInteraction(message, commandName, rawArgsString) {
-	let replied = false,
-		deferred = false,
-		replyMessage = null,
-		deleted = false;
-	let followUpMessages = [];
-	let argsObject = {},
-		subcommand = null,
-		subcommandGroup = null;
+	let replied = false;
+	let deferred = false;
+	let replyMessage = null;
+	const followUpMessages = [];
 
-	const commandDef = message.client?.commands?.get(commandName);
-	const potentialArgs =
-		typeof rawArgsString === 'string' ? rawArgsString.split(/ +/) : [];
-	const plainTextArgs = [];
+	const argsPattern = /([^\s"]+|"[^"]*")+/g;
+	const rawTokens =
+		rawArgsString.match(argsPattern)?.map((t) => t.replace(/^"|"$/g, '')) || [];
 
-	for (const arg of potentialArgs) {
+	const client = message.client;
+	const targetCommand = client.commands.get(commandName);
+
+	let resolvedGroup = null;
+	let resolvedSubcommand = null;
+	const resolvedOptions = [];
+	const remainingArgs = [...rawTokens];
+
+	if (remainingArgs.length > 0 && targetCommand) {
+		const potentialGroup = remainingArgs[0].toLowerCase();
+
+		const slashData = targetCommand.slashCommand || targetCommand.data;
+		const groupOption = slashData?.options?.find(
+			(opt) =>
+				opt.name === potentialGroup &&
+				(opt.type === 2 ||
+					opt.constructor.name === 'SlashCommandSubcommandGroupBuilder'),
+		);
+
+		if (groupOption) {
+			resolvedGroup = potentialGroup;
+			remainingArgs.shift();
+		}
+	}
+
+	if (remainingArgs.length > 0) {
+		const potentialSub = remainingArgs[0].toLowerCase();
+
+		const slashData = targetCommand?.slashCommand || targetCommand?.data;
+		const hasSubcommands = slashData?.options?.some(
+			(opt) =>
+				opt.type === 1 ||
+				opt.constructor.name === 'SlashCommandSubcommandBuilder',
+		);
+
+		if (resolvedGroup || hasSubcommands) {
+			resolvedSubcommand = potentialSub;
+			remainingArgs.shift();
+		}
+	}
+
+	let finalSchema = targetCommand?.slashCommand || targetCommand?.data;
+
+	if (resolvedGroup) {
+		finalSchema = finalSchema.options.find((o) => o.name === resolvedGroup);
+	}
+	if (resolvedSubcommand) {
+		const optionsSource = resolvedGroup
+			? finalSchema.options
+			: targetCommand?.slashCommand?.options || targetCommand?.data?.options;
+		finalSchema = optionsSource?.find((o) => o.name === resolvedSubcommand);
+	}
+
+	const availableOptions =
+		finalSchema?.options?.filter(
+			(opt) =>
+				opt.type !== 1 &&
+				opt.type !== 2 &&
+				opt.constructor.name !== 'SlashCommandSubcommandBuilder' &&
+				opt.constructor.name !== 'SlashCommandSubcommandGroupBuilder',
+		) || [];
+
+	const optionsMap = new Map();
+	let positionalIndex = 0;
+
+	function guessType(val) {
+		if (!Number.isNaN(Number(val))) return 3;
+		if (val === 'true' || val === 'false') return 5;
+
+		return 3;
+	}
+
+	remainingArgs.forEach((arg) => {
 		if (arg.includes(':')) {
-			const [key, ...valueParts] = arg.split(':');
-			argsObject[key.toLowerCase()] = valueParts.join(':').trim();
-		} else if (arg.trim() !== '') {
-			plainTextArgs.push(arg);
+			const [key, ...valParts] = arg.split(':');
+			const val = valParts.join(':');
+			resolvedOptions.push({
+				name: key.toLowerCase(),
+				value: val,
+				type: guessType(val),
+			});
+			optionsMap.set(key.toLowerCase(), val);
+		} else if (positionalIndex < availableOptions.length) {
+			const targetOption = availableOptions[positionalIndex];
+
+			resolvedOptions.push({
+				name: targetOption.name.toLowerCase(),
+				value: arg,
+				type: targetOption.type || guessType(arg),
+			});
+			optionsMap.set(targetOption.name.toLowerCase(), arg);
+
+			positionalIndex++;
 		}
-	}
+	});
 
-	if (plainTextArgs.length > 0) {
-		const firstArg = plainTextArgs[0].toLowerCase();
-
-		if (plainTextArgs.length >= 2) {
-			const testKey = `${commandName} ${firstArg} ${plainTextArgs[1].toLowerCase()}`;
-			if (message.client.commands.has(testKey)) {
-				subcommandGroup = plainTextArgs.shift().toLowerCase();
-				subcommand = plainTextArgs.shift().toLowerCase();
-			}
-		}
-
-		if (!subcommand && plainTextArgs.length >= 1) {
-			const testKey = `${commandName} ${firstArg}`;
-			if (message.client.commands.has(testKey)) {
-				subcommand = plainTextArgs.shift().toLowerCase();
-			}
-		}
-
-		if (!subcommand && plainTextArgs.length >= 1) {
-			subcommand = plainTextArgs.shift().toLowerCase();
-		}
-	}
-
-	const remainingPlainText = plainTextArgs.join(' ');
-
-	const finalCommandKeyForDefaultArg =
-		`${commandName} ${subcommandGroup || ''} ${subcommand || ''}`
-			.replace(/ +/g, ' ')
-			.trim();
-	const commandForDefaultArg =
-		message.client?.commands?.get(finalCommandKeyForDefaultArg) || commandDef;
-
-	if (commandForDefaultArg?.defaultArgument && remainingPlainText) {
-		argsObject[commandForDefaultArg.defaultArgument] = remainingPlainText;
-	}
-
-	function normalizeReplyOptions(options) {
-		if (typeof options === 'string') return { content: options };
-		if (typeof options === 'object' && options !== null) return { ...options };
-		return { content: '' };
-	}
-
-	async function safeDelete(msg) {
-		if (!msg) return;
-		try {
-			if (!msg.deleted) await msg.delete();
-		} catch (_e) {}
-	}
-
-	async function safeSend(channel, options) {
-		try {
-			if (!channel || typeof channel.send !== 'function')
-				throw new Error('Invalid channel');
-			return await channel.send(options);
-		} catch (_e) {
-			try {
-				if (message.author && typeof message.author.send === 'function') {
-					return await message.author.send(options);
-				}
-			} catch (_e2) {
-				return null;
-			}
-		}
-	}
-
-	function resolveUser(val) {
-		try {
-			if (!val) return message.mentions?.users?.first?.() || null;
-			const userId = String(val).replace(/[<@!>]/g, '');
-			return (
-				message.client.users.cache.get(userId) ||
-				message.mentions?.users?.get?.(userId) ||
-				null
-			);
-		} catch (_e) {
-			return null;
-		}
-	}
-	function resolveMember(val) {
-		try {
-			const user = resolveUser(val);
-			return user ? message.guild?.members?.resolve(user) : null;
-		} catch (_e) {
-			return null;
-		}
-	}
-	function resolveChannel(val) {
-		try {
-			if (!val) return message.mentions?.channels?.first?.() || null;
-			const channelId = String(val).replace(/[<#>]/g, '');
-			return (
-				message.client.channels.cache.get(channelId) ||
-				message.mentions?.channels?.get?.(channelId) ||
-				null
-			);
-		} catch (_e) {
-			return null;
-		}
-	}
-	function resolveRole(val) {
-		try {
-			if (!val || !message.guild)
-				return message.mentions?.roles?.first?.() || null;
-			const roleId = String(val).replace(/[<@&>]/g, '');
-			return (
-				message.guild.roles.cache.get(roleId) ||
-				message.mentions?.roles?.get?.(roleId) ||
-				null
-			);
-		} catch (_e) {
-			return null;
-		}
-	}
+	const resolveUser = (val) => {
+		if (!val) return null;
+		const id = val.replace(/[<@!>]/g, '');
+		return message.client.users.cache.get(id) || null;
+	};
+	const resolveMember = (val) => {
+		const user = resolveUser(val);
+		return user ? message.guild?.members.cache.get(user.id) || null : null;
+	};
+	const resolveChannel = (val) => {
+		if (!val) return null;
+		const id = val.replace(/[<#>]/g, '');
+		return message.guild?.channels.cache.get(id) || null;
+	};
+	const resolveRole = (val) => {
+		if (!val) return null;
+		const id = val.replace(/[<@&>]/g, '');
+		return message.guild?.roles.cache.get(id) || null;
+	};
 
 	const fakeInteraction = {
-		commandName: commandName,
+		type: 2,
+		id: message.id,
+		applicationId: message.client.application?.id,
+		channelId: message.channel.id,
+		guildId: message.guild?.id,
 		user: message.author,
 		member: message.member,
 		guild: message.guild,
 		channel: message.channel,
 		client: message.client,
-		isFake: true,
+		commandName: commandName,
+		commandType: 1,
+		commandId: '0',
+		locale: message.guild?.preferredLocale || 'en-US',
+		guildLocale: message.guild?.preferredLocale || 'en-US',
 		createdTimestamp: message.createdTimestamp,
-		id: message.id,
-		applicationId: message.client?.application?.id || null,
-		type: 2,
-		locale: message.locale || 'id',
-
-		get replied() {
-			return replied;
+		get createdAt() {
+			return new Date(this.createdTimestamp);
 		},
+
 		get deferred() {
 			return deferred;
 		},
-		get deleted() {
-			return deleted;
+		get replied() {
+			return replied;
+		},
+		set deferred(v) {
+			deferred = v;
+		},
+		set replied(v) {
+			replied = v;
 		},
 
-		set replied(val) {
-			replied = !!val;
-		},
-		set deferred(val) {
-			deferred = !!val;
-		},
-		set deleted(val) {
-			deleted = !!val;
-		},
-
-		deferReply: async (options = {}) => {
-			if (deleted)
-				throw new Error('Interaction already deleted, cannot deferReply.');
-			if (replied) {
-				throw new Error(
-					'Interaction already replied, cannot deferReply again.',
-				);
-			}
-			if (deferred) {
-				return replyMessage;
-			}
+		deferReply: async (opts) => {
+			if (replied || deferred) throw new Error('Already replied/deferred');
 			deferred = true;
-			fakeInteraction.deferred = true;
-			try {
-				replyMessage = await safeSend(message.channel, {
-					content: '⏳ ...',
-					...options,
-				});
-			} catch (_e) {
-				replyMessage = null;
-			}
+			replyMessage = await message.channel
+				.send({ content: '⏳ ...', ...opts })
+				.catch(() => null);
 			return replyMessage;
 		},
+		editReply: async (opts) => {
+			// const content = typeof opts === 'string' ? opts : opts.content;
+			// const embeds = opts.embeds || [];
+			// const components = opts.components || [];
 
-		reply: async (options) => {
-			if (deleted)
-				throw new Error('Interaction already deleted, cannot reply.');
-			options = normalizeReplyOptions(options);
-			if (deferred) {
-				return fakeInteraction.editReply(options);
-			}
-			if (replied) {
-				return fakeInteraction.followUp(options);
+			if (replyMessage && replyMessage.content === '⏳ ...') {
+				await replyMessage.delete().catch(() => {});
+				replyMessage = await message.channel.send(opts).catch(() => null);
+			} else if (replyMessage) {
+				replyMessage = await replyMessage.edit(opts).catch(() => null);
+			} else {
+				replyMessage = await message.channel.send(opts).catch(() => null);
 			}
 			replied = true;
-			fakeInteraction.replied = true;
-			try {
-				replyMessage = await safeSend(message.channel, options);
-			} catch (_e) {
-				replyMessage = null;
-			}
 			return replyMessage;
 		},
-
-		editReply: async (options) => {
-			if (deleted)
-				throw new Error('Interaction already deleted, cannot editReply.');
-			options = normalizeReplyOptions(options);
-			if (!replyMessage) {
-				return fakeInteraction.reply(options);
-			}
-			if (
-				replyMessage.content &&
-				replyMessage.content.trim() === '⏳ ...' &&
-				(!options ||
-					(typeof options === 'object' && options.content !== '⏳ ...'))
-			) {
-				await safeDelete(replyMessage);
-				try {
-					replyMessage = await safeSend(message.channel, options);
-				} catch (_e) {
-					replyMessage = null;
-				}
-				replied = true;
-				deferred = false;
-				fakeInteraction.replied = true;
-				fakeInteraction.deferred = false;
-				return replyMessage;
-			}
-
-			try {
-				if (typeof replyMessage.edit === 'function') {
-					const editedMessage = await replyMessage.edit(options);
-					replied = true;
-					deferred = false;
-					fakeInteraction.replied = true;
-					fakeInteraction.deferred = false;
-					return editedMessage;
-				} else {
-					replyMessage = await safeSend(message.channel, options);
-					replied = true;
-					deferred = false;
-					fakeInteraction.replied = true;
-					fakeInteraction.deferred = false;
-					return replyMessage;
-				}
-			} catch (_e) {
-				try {
-					replyMessage = await safeSend(message.channel, options);
-				} catch (_e2) {
-					replyMessage = null;
-				}
-				replied = true;
-				deferred = false;
-				fakeInteraction.replied = true;
-				fakeInteraction.deferred = false;
-				return replyMessage;
-			}
+		reply: async (opts) => {
+			if (replied || deferred) return fakeInteraction.editReply(opts);
+			replied = true;
+			replyMessage = await message.channel.send(opts).catch(() => null);
+			return replyMessage;
 		},
-
-		followUp: async (options) => {
-			if (deleted)
-				throw new Error('Interaction already deleted, cannot followUp.');
-			if (!replied && !deferred)
-				throw new Error('Cannot followUp before reply/defer.');
-			options = normalizeReplyOptions(options);
-			let msg = null;
-			try {
-				msg = await safeSend(message.channel, options);
-			} catch (_e) {
-				msg = null;
-			}
+		followUp: async (opts) => {
+			const msg = await message.channel.send(opts).catch(() => null);
 			if (msg) followUpMessages.push(msg);
 			return msg;
 		},
-
 		deleteReply: async () => {
-			if (deleted) return;
-			try {
-				await safeDelete(replyMessage);
-			} catch (_e) {}
-			for (const msg of followUpMessages) {
-				try {
-					await safeDelete(msg);
-				} catch (_e) {}
-			}
+			if (replyMessage) await replyMessage.delete().catch(() => {});
 			replyMessage = null;
-			followUpMessages = [];
-			replied = false;
-			deferred = false;
-			deleted = true;
 		},
-
-		fetchReply: () => {
-			if (replyMessage && !replyMessage.deleted) return replyMessage;
-			return null;
+		fetchReply: async () => {
+			return await replyMessage;
 		},
 
 		options: {
-			_getArg: (name) => {
-				try {
-					if (!name) return null;
-					const key = String(name).toLowerCase();
-					if (argsObject[key] !== undefined) return argsObject[key];
+			client: message.client,
+			data: resolvedOptions,
+			resolved: {
+				users: new Map(),
+				members: new Map(),
+				channels: new Map(),
+				roles: new Map(),
+				messages: new Map(),
+				attachments: new Map(),
+			},
+			_group: resolvedGroup,
+			_subcommand: resolvedSubcommand,
+			_hoistedOptions: resolvedOptions,
 
-					for (const k of Object.keys(argsObject)) {
-						if (k.replace(/[-_ ]/g, '') === key.replace(/[-_ ]/g, ''))
-							return argsObject[k];
-					}
-					return null;
-				} catch (_e) {
-					return null;
+			_getTypedOption: (name, required) => {
+				const opt = resolvedOptions.find((o) => o.name === name.toLowerCase());
+				if (!opt && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Option "${name}" is required but was not found.`,
+					);
 				}
+				return opt || null;
 			},
-			getSubcommand: () => subcommand || null,
-			getSubcommandGroup: () => subcommandGroup || null,
-			getString: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					if (val === null || val === undefined) return null;
-					if (typeof val === 'string') return val;
-					if (typeof val === 'number' || typeof val === 'boolean')
-						return String(val);
-					return null;
-				} catch (_e) {
-					return null;
-				}
+
+			get: (name, required) => {
+				return fakeInteraction.options._getTypedOption(name, required);
 			},
-			getInteger: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					if (val === null || val === undefined) return null;
-					const n = parseInt(val, 10);
-					return !Number.isNaN(n) ? n : null;
-				} catch (_e) {
-					return null;
+			getSubcommand: (required) => {
+				if (!resolvedSubcommand && required) {
+					throw new Error(
+						'CommandInteractionOptionResolver: Subcommand is required but was not found.',
+					);
 				}
+				return resolvedSubcommand;
 			},
-			getBoolean: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					if (val === null || val === undefined) return null;
-					if (typeof val === 'boolean') return val;
-					if (typeof val === 'number') return val !== 0;
-					if (typeof val === 'string') {
-						const s = val.trim().toLowerCase();
-						if (['true', 'yes', '1', 'y', 'on'].includes(s)) return true;
-						if (['false', 'no', '0', 'n', 'off'].includes(s)) return false;
-					}
-					return null;
-				} catch (_e) {
-					return null;
+			getSubcommandGroup: (required) => {
+				if (!resolvedGroup && required) {
+					throw new Error(
+						'CommandInteractionOptionResolver: Subcommand group is required but was not found.',
+					);
 				}
+				return resolvedGroup;
 			},
-			getNumber: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					if (val === null || val === undefined) return null;
-					const n = parseFloat(val);
-					return !Number.isNaN(n) ? n : null;
-				} catch (_e) {
-					return null;
+
+			getString: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				if (val === undefined && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: String option "${name}" is required.`,
+					);
 				}
+				return val || null;
 			},
-			getUser: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					return resolveUser(val);
-				} catch (_e) {
-					return null;
+			getBoolean: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				if (val === undefined && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Boolean option "${name}" is required.`,
+					);
 				}
+				if (val === undefined) return null;
+				return val.toLowerCase() === 'true' || val === '1';
+			},
+			getInteger: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				if (val === undefined && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Integer option "${name}" is required.`,
+					);
+				}
+				return val ? parseInt(val, 10) : null;
+			},
+			getNumber: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				if (val === undefined && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Number option "${name}" is required.`,
+					);
+				}
+				return val ? parseFloat(val) : null;
+			},
+			getUser: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				const user = resolveUser(val);
+				if (!user && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: User option "${name}" is required.`,
+					);
+				}
+				return user;
 			},
 			getMember: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					return resolveMember(val);
-				} catch (_e) {
-					return null;
-				}
+				const val = optionsMap.get(name.toLowerCase());
+				return resolveMember(val);
 			},
-			getChannel: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					return resolveChannel(val);
-				} catch (_e) {
-					return null;
-				}
-			},
-			getRole: (name) => {
-				try {
-					const val = fakeInteraction.options._getArg(name);
-					return resolveRole(val);
-				} catch (_e) {
-					return null;
-				}
-			},
-			getAttachment: (name) => {
-				try {
-					if (!message.attachments || message.attachments.size === 0)
-						return null;
-					if (!name) return message.attachments.first();
-
-					const lower = String(name).toLowerCase();
-					return (
-						message.attachments.find((att) =>
-							att.name?.toLowerCase().includes(lower),
-						) || message.attachments.first()
+			getChannel: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				const channel = resolveChannel(val);
+				if (!channel && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Channel option "${name}" is required.`,
 					);
-				} catch (_e) {
-					return null;
 				}
+				return channel;
 			},
-			getMentionable: (name) => {
-				try {
-					const user = fakeInteraction.options.getUser(name);
-					if (user) return user;
-
-					const role = fakeInteraction.options.getRole(name);
-					if (role) return role;
-
-					if (message.mentions?.users?.size > 0)
-						return message.mentions.users.first();
-					if (message.mentions?.roles?.size > 0)
-						return message.mentions.roles.first();
-					return null;
-				} catch (_e) {
-					return null;
+			getRole: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				const role = resolveRole(val);
+				if (!role && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Role option "${name}" is required.`,
+					);
 				}
+				return role;
+			},
+			getAttachment: (name, required) => {
+				const attachment = message.attachments.first() || null;
+				if (!attachment && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Attachment option "${name}" is required.`,
+					);
+				}
+				return attachment;
+			},
+			getMentionable: (name, required) => {
+				const val = optionsMap.get(name.toLowerCase());
+				const mentionable = resolveUser(val) || resolveRole(val);
+				if (!mentionable && required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Mentionable option "${name}" is required.`,
+					);
+				}
+				return mentionable;
+			},
+			getMessage: (name, required) => {
+				if (required) {
+					throw new Error(
+						`CommandInteractionOptionResolver: Message option "${name}" is required but not supported in mock yet.`,
+					);
+				}
+				return null;
+			},
+			getFocused: (getFull) => {
+				return getFull ? { name: '', value: '', type: 3 } : '';
 			},
 		},
 
-		deferUpdate: () => {
-			return;
-		},
 		isCommand: () => true,
-		isRepliable: () => true,
 		isChatInputCommand: () => true,
+		isContextMenuCommand: () => false,
+		isMessageContextMenuCommand: () => false,
+		isUserContextMenuCommand: () => false,
 		isMessageComponent: () => false,
+		isButton: () => false,
+		isStringSelectMenu: () => false,
+		isSelectMenu: () => false,
+		isUserSelectMenu: () => false,
+		isRoleSelectMenu: () => false,
+		isMentionableSelectMenu: () => false,
+		isChannelSelectMenu: () => false,
 		isAutocomplete: () => false,
 		isModalSubmit: () => false,
+		isRepliable: () => true,
 		inGuild: () => !!message.guild,
-		toString: () => `[FakeInteraction/${commandName}]`,
 	};
-
-	for (const key of [
-		'user',
-		'member',
-		'guild',
-		'channel',
-		'client',
-		'createdTimestamp',
-		'id',
-	]) {
-		if (typeof fakeInteraction[key] === 'undefined') {
-			fakeInteraction[key] = null;
-		}
-	}
 
 	return fakeInteraction;
 }
