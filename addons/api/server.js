@@ -21,8 +21,7 @@ module.exports = (bot) => {
 	const kythiaConfig = container.kythiaConfig;
 
 	const PORT = kythiaConfig.addons.api?.port || 3000;
-	const API_SECRET =
-		kythiaConfig.addons.api?.secret || 'kythiaIsTheCutestBotEver';
+	const API_SECRET = kythiaConfig.addons.api?.secret || process.env.API_SECRET;
 
 	const app = new Hono();
 

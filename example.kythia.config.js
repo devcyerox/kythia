@@ -221,7 +221,9 @@ function loadKythiaConfig() {
 			 * ------------------------------------------------------------------- */
 			api: {
 				active: true,
-				// Dashboard port (default: 3000)
+				// API URL
+				url: process.env.API_URL,
+				// API port (default: 3000)
 				port: process.env.API_PORT || 3000,
 				// Session secret for dashboard authentication (keep this secret!)
 				secret: process.env.API_SECRET,
