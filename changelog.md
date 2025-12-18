@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.11.0-beta](https://github.com/kythia/kythia/compare/v0.10.1-beta...v0.11.0-beta) (2025-12-17)
+### [0.11.0-beta](https://github.com/kythia/kythia/compare/v0.10.1-beta...v0.11.0-beta) (2025-12-17)
 
 ### ⚠️ BREAKING CHANGES
 

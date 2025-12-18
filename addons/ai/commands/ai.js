@@ -7,10 +7,10 @@
  */
 
 const {
+	EmbedBuilder,
 	SlashCommandBuilder,
 	PermissionFlagsBits,
 	InteractionContextType,
-	EmbedBuilder,
 } = require('discord.js');
 
 module.exports = {
@@ -29,8 +29,12 @@ module.exports = {
 	isInMainGuild: true,
 	voteLocked: true,
 	guildOnly: true,
+
+	/**
+	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
+	 * @param {KythiaDI.Container} container
+	 */
 	async execute(interaction, container) {
-		// Dependency
 		const { t, models, kythiaConfig, helpers } = container;
 		const { ServerSetting } = models;
 		const { embedFooter } = helpers.discord;

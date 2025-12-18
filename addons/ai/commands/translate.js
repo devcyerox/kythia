@@ -7,10 +7,10 @@
  */
 
 const {
-	SlashCommandBuilder,
-	ContextMenuCommandBuilder,
-	ApplicationCommandType,
 	EmbedBuilder,
+	SlashCommandBuilder,
+	ApplicationCommandType,
+	ContextMenuCommandBuilder,
 } = require('discord.js');
 const { getAndUseNextAvailableToken } = require('../helpers/gemini');
 const { GoogleGenAI } = require('@google/genai');
@@ -38,8 +38,12 @@ module.exports = {
 
 	contextMenuDescription:
 		'🌐 Translate message to another language using Gemini AI.',
+
+	/**
+	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
+	 * @param {KythiaDI.Container} container
+	 */
 	async execute(interaction, container) {
-		// Dependency
 		const { t, kythiaConfig, helpers, logger } = container;
 		const { embedFooter } = helpers.discord;
 

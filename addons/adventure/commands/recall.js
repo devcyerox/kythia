@@ -19,6 +19,10 @@ module.exports = {
 				fr: '🏙️ Retourne en ville !',
 				ja: '🏙️ 街へ戻ろう！',
 			}),
+	/**
+	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
+	 * @param {KythiaDI.Container} container
+	 */
 	async execute(interaction, container) {
 		const { t, models, kythiaConfig, helpers } = container;
 		const { UserAdventure } = models;

@@ -6,8 +6,6 @@
  * @version 0.11.0-beta
  */
 
-// addons/ai/helpers/commandSchema.js
-
 const { ApplicationCommandOptionType } = require('discord.js');
 
 function mapType(type) {

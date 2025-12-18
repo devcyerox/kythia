@@ -6,10 +6,10 @@
  * @version 0.11.0-beta
  */
 
-const { generateCommandSchema } = require('./helpers/commandSchema');
-const { initializeAiTasks } = require('./tasks/dailyGreeter');
+const { generateCommandSchema } = require('./helpers/command-schema');
+const { initializeAiTasks } = require('./tasks/daily-greeter');
+const promptBuilder = require('./helpers/prompt-builder');
 const geminiHelper = require('./helpers/gemini');
-const promptBuilder = require('./helpers/promptBuilder');
 
 module.exports = {
 	async initialize(bot) {

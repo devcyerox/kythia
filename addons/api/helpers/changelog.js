@@ -12,10 +12,10 @@ function parseChangelog(markdownContent) {
 	const changelogs = [];
 
 	const versions = markdownContent.split(
-		/\n(?=###\s(?:\[[^\]]+\]\([^)]+\)|[\w.-]+)\s*\((\d{4}-\d{2}-\d{2})\))/,
+		/\n(?=#{1,3}\s(?:\[[^\]]+\]\([^)]+\)|[\w.-]+)\s*\(\d{4}-\d{2}-\d{2}\))/,
 	);
 
-	const startIndex = versions[0].startsWith('###') ? 0 : 1;
+	const startIndex = /^#{1,3}\s/.test(versions[0]) ? 0 : 1;
 
 	for (let i = startIndex; i < versions.length; i++) {
 		const block = versions[i];
@@ -25,7 +25,7 @@ function parseChangelog(markdownContent) {
 
 		const headerLine = lines
 			.shift()
-			.replace(/^###\s*/, '')
+			.replace(/^#{1,3}\s*/, '')
 			.trim();
 
 		let version, date;

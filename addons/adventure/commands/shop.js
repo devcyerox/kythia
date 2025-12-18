@@ -246,7 +246,7 @@ module.exports = {
 
 	/**
 	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
-	 * @param {import('types/auto-di').KythiaDI.Container} container
+	 * @param {KythiaDI.Container} container
 	 */
 	async execute(interaction, container) {
 		const { t, models, helpers, logger } = container;

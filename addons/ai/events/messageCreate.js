@@ -6,13 +6,18 @@
  * @version 0.11.0-beta
  */
 
-const { buildSystemInstruction } = require('../helpers/promptBuilder');
-const { GoogleGenAI, createPartFromUri } = require('@google/genai');
+const { buildSystemInstruction } = require('../helpers/prompt-builder');
+const {
+	GoogleGenAI,
+	HarmCategory,
+	createPartFromUri,
+	HarmBlockThreshold,
+} = require('@google/genai');
 const { ChannelType } = require('discord.js');
-const fs = require('node:fs').promises;
-const path = require('node:path');
 const { getAndUseNextAvailableToken } = require('../helpers/gemini');
 const kythiaInteraction = require('../../core/helpers/events');
+const fs = require('node:fs').promises;
+const path = require('node:path');
 
 const conversationCache = new Map();
 
@@ -864,6 +869,10 @@ module.exports = async (bot, message) => {
 								parts: [{ text: systemInstruction }],
 							},
 							tools: toolsConfig,
+							safetySettings: Object.values(HarmCategory).map((category) => ({
+								category,
+								threshold: HarmBlockThreshold.BLOCK_NONE,
+							})),
 						},
 					});
 
@@ -965,6 +974,12 @@ module.exports = async (bot, message) => {
 									],
 								},
 							],
+							config: {
+								safetySettings: Object.values(HarmCategory).map((category) => ({
+									category,
+									threshold: HarmBlockThreshold.BLOCK_NONE,
+								})),
+							},
 						});
 
 						let finalReply;
