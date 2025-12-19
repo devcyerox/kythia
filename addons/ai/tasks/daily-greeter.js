@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/ai/tasks/dailyGreeter.js
+ * @namespace: addons/ai/tasks/daily-greeter.js
  * @type: Scheduled Task
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

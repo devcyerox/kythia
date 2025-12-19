@@ -154,7 +154,13 @@ module.exports = {
 		}
 
 		function getMarkdownContent(category) {
-			const filePath = path.join(rootDir, 'docs', 'commands', `${category}.md`);
+			const filePath = path.join(
+				rootDir,
+				'src',
+				'docs',
+				'commands',
+				`${category}.md`,
+			);
 			if (!fs.existsSync(filePath)) return [null];
 			const content = fs.readFileSync(filePath, 'utf-8');
 			return smartSplit(content);
@@ -222,7 +228,7 @@ module.exports = {
 			const { categoryPage, selectedCategory, docPage } = currentState;
 
 			const container = new ContainerBuilder().setAccentColor(
-				convertColor(kythia.bot.color, { from: 'hex', to: 'decimal' }),
+				convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 			);
 
 			if (!selectedCategory) {

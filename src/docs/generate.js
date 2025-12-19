@@ -7,7 +7,7 @@
  */
 
 require('@dotenvx/dotenvx').config({ quiet: true });
-require('../kythia.config.js');
+require('../../kythia.config.js');
 require('module-alias/register');
 
 const fs = require('node:fs');
@@ -19,7 +19,7 @@ const {
 	SlashCommandSubcommandGroupBuilder,
 } = require('discord.js');
 
-const rootAddonsDir = path.join(__dirname, '..', 'addons');
+const rootAddonsDir = path.join(__dirname, '..', '..', 'addons');
 const outputDir = path.join(__dirname, 'commands');
 
 const markdownBuffers = {};

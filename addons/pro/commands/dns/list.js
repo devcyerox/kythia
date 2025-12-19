@@ -59,8 +59,8 @@ module.exports = {
 
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-		const isPremiumDonor = await isPremium(interaction.user.id);
-		const isVoter = await isVoterActive(interaction.user.id);
+		const isPremiumDonor = await isPremium(container, interaction.user.id);
+		const isVoter = await isVoterActive(container, interaction.user.id);
 
 		if (!isPremiumDonor && !isVoter) {
 			const desc = await t(interaction, 'pro.dns.list.not_allowed');

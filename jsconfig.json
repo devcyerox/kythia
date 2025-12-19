@@ -13,5 +13,5 @@
 		}
 	},
 	"exclude": ["node_modules", "**/node_modules", "**/vendor", ".git"],
-	"include": ["types/**.d.ts", "src/**/*", "addons/**/*", "types"]
+	"include": ["src/types/**.d.ts", "src/**/*", "addons/**/*", "src/types"]
 }

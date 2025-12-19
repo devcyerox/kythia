@@ -98,8 +98,8 @@ module.exports = {
 			});
 		}
 
-		const isPremiumDonatur = await isPremium(interaction.user.id);
-		const isVoter = await isVoterActive(interaction.user.id);
+		const isPremiumDonatur = await isPremium(container, interaction.user.id);
+		const isVoter = await isVoterActive(container, interaction.user.id);
 
 		if (!isPremiumDonatur && !isVoter) {
 			const desc = await t(

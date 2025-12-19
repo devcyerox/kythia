@@ -1451,7 +1451,7 @@ class MusicHandlers {
 		const playlistCount = await this.Playlist.countWithCache({
 			where: { userId },
 		});
-		const userIsPremium = await this.isPremium(userId);
+		const userIsPremium = await this.isPremium(this.container, userId);
 
 		if (
 			!this.isOwner(interaction.user.id) &&
@@ -2368,7 +2368,7 @@ class MusicHandlers {
 			const playlistCount = await this.Playlist.countWithCache({
 				userId: userId,
 			});
-			const userIsPremium = await this.isPremium(userId);
+			const userIsPremium = await this.isPremium(this.container, userId);
 			if (
 				!this.isOwner(userId) &&
 				playlistCount >= this.config.addons.music.playlistLimit &&
@@ -2599,7 +2599,7 @@ class MusicHandlers {
 			const playlistCount = await this.Playlist.countWithCache({
 				userId: userId,
 			});
-			const userIsPremium = await this.isPremium(userId);
+			const userIsPremium = await this.isPremium(this.container, userId);
 			if (
 				!this.isOwner(userId) &&
 				playlistCount >= this.config.addons.music.playlistLimit &&

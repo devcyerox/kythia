@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/ai/helpers/commandSchema.js
+ * @namespace: addons/ai/helpers/command-schema.js
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

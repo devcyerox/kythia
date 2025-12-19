@@ -6,10 +6,10 @@
  * @version 0.11.0-beta
  */
 
+const { GoogleGenAI } = require('@google/genai');
 const { Mutex } = require('async-mutex');
 const fs = require('node:fs').promises;
 const path = require('node:path');
-const { GoogleGenAI } = require('@google/genai');
 
 let _logger = console;
 let _aiConfig = {};

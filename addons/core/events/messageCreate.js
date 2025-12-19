@@ -6,7 +6,7 @@
  * @version 0.11.0-beta
  */
 
-const { kythiaInteraction } = require('../helpers/events');
+const { utils } = require('kythia-core');
 const {
 	EmbedBuilder,
 	ChannelType,
@@ -72,7 +72,7 @@ module.exports = async (bot, message) => {
 			if (!baseCommand) return;
 
 			const remainingArgsString = args.join(' ');
-			const fakeInteraction = kythiaInteraction(
+			const fakeInteraction = utils.InteractionFactory.create(
 				message,
 				commandName,
 				remainingArgsString,

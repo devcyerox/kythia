@@ -1,5 +1,5 @@
 /**
- * @namespace: addons/ai/helpers/promptBuilder.js
+ * @namespace: addons/ai/helpers/prompt-builder.js
  * @type: Helper Script
  * @copyright © 2025 kenndeclouv
  * @assistant chaa & graa

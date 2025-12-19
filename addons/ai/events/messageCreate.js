@@ -6,16 +6,16 @@
  * @version 0.11.0-beta
  */
 
-const { buildSystemInstruction } = require('../helpers/prompt-builder');
 const {
 	GoogleGenAI,
 	HarmCategory,
 	createPartFromUri,
 	HarmBlockThreshold,
 } = require('@google/genai');
-const { ChannelType } = require('discord.js');
+const { buildSystemInstruction } = require('../helpers/prompt-builder');
 const { getAndUseNextAvailableToken } = require('../helpers/gemini');
-const kythiaInteraction = require('../../core/helpers/events');
+const { ChannelType } = require('discord.js');
+const { utils } = require('kythia-core');
 const fs = require('node:fs').promises;
 const path = require('node:path');
 
@@ -869,7 +869,12 @@ module.exports = async (bot, message) => {
 								parts: [{ text: systemInstruction }],
 							},
 							tools: toolsConfig,
-							safetySettings: Object.values(HarmCategory).map((category) => ({
+							safetySettings: [
+								HarmCategory.HARM_CATEGORY_HARASSMENT,
+								HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+								HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+								HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+							].map((category) => ({
 								category,
 								threshold: HarmBlockThreshold.BLOCK_NONE,
 							})),
@@ -937,7 +942,7 @@ module.exports = async (bot, message) => {
 						argsFromAi,
 					);
 
-					const fakeInteraction = kythiaInteraction(
+					const fakeInteraction = utils.InteractionFactory.create(
 						message,
 						fullFunctionName,
 						argsFromAi,
@@ -975,7 +980,12 @@ module.exports = async (bot, message) => {
 								},
 							],
 							config: {
-								safetySettings: Object.values(HarmCategory).map((category) => ({
+								safetySettings: [
+									HarmCategory.HARM_CATEGORY_HARASSMENT,
+									HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+									HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+									HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+								].map((category) => ({
 									category,
 									threshold: HarmBlockThreshold.BLOCK_NONE,
 								})),

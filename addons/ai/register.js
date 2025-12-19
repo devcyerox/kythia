@@ -12,16 +12,14 @@ const promptBuilder = require('./helpers/prompt-builder');
 const geminiHelper = require('./helpers/gemini');
 
 module.exports = {
-	async initialize(bot) {
+	initialize(bot) {
 		const logger = bot.container.logger;
 		const isOwner = bot.container.helpers.discord.isOwner;
 		const summery = [];
 
-		// Initialize Gemini Helper
 		geminiHelper.init({ logger, config: bot.container.kythiaConfig });
 		summery.push('   └─ Gemini Helper initialized.');
 
-		// Initialize Prompt Builder
 		promptBuilder.init({ isOwner, config: bot.container.kythiaConfig });
 		summery.push('   └─ Prompt Builder initialized.');
 

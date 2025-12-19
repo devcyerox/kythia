@@ -71,6 +71,9 @@ const {
 	getChannelSafe,
 	getTextChannelSafe,
 	getMemberSafe,
+	isTeam,
+	isPremium,
+	isVoterActive,
 } = require('@coreHelpers/discord'); // Discord helper funcs for permissions/identity
 
 const {
@@ -121,6 +124,9 @@ const dependencies = {
 			getChannelSafe,
 			getTextChannelSafe,
 			getMemberSafe,
+			isTeam,
+			isPremium,
+			isVoterActive,
 		},
 		color: { convertColor },
 		time: { checkCooldown, formatDuration, parseDuration },
@@ -135,6 +141,19 @@ try {
 	 *  - start():        Boots the bot; attaches to Discord, loads addons, connects events, etc.
 	 */
 	const kythiaInstance = new Kythia(dependencies);
+
+	kythiaInstance.container.translator.setLanguageResolver(async (guildId) => {
+		const ServerSetting = kythiaInstance.container.models.ServerSetting;
+
+		if (!ServerSetting) return null;
+
+		try {
+			const setting = await ServerSetting.getCache({ guildId });
+			return setting?.lang || null;
+		} catch (_e) {
+			return null;
+		}
+	});
 
 	kythiaInstance.start();
 } catch (error) {

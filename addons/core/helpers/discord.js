@@ -15,7 +15,8 @@ const {
 } = require('discord.js');
 
 const axios = require('axios');
-
+const { KythiaTeam } = require('../database/models/KythiaTeam');
+const { KythiaUser } = require('../database/models/KythiaUser');
 /**
  * Builds a consistent embed footer with bot username and avatar based on the context.
  * Works for `Interaction`, `Message`, and `GuildMember` sources.
@@ -259,6 +260,43 @@ async function getMemberSafe(guild, userId) {
 	return member || null;
 }
 
+async function isTeam(container, userId) {
+	console.log(container);
+	const { helpers } = container;
+	if (helpers.discord.isOwner(userId)) return true;
+
+	if (!KythiaTeam) return false;
+
+	const teams = await KythiaTeam.getCache({ userId: userId });
+	return !!(teams && teams.length > 0);
+}
+
+async function isPremium(container, userId) {
+	const { helpers } = container;
+	if (helpers.discord.isOwner(userId)) return true;
+
+	if (!KythiaUser) return false;
+
+	const premium = await KythiaUser.getCache({ userId: userId });
+	if (!premium) return false;
+	if (premium.premiumExpiresAt && new Date() > premium.premiumExpiresAt)
+		return false;
+	return premium.isPremium === true;
+}
+
+async function isVoterActive(container, userId) {
+	const { models } = container;
+	const { KythiaUser } = models;
+
+	if (!KythiaUser) return false;
+
+	const user = await KythiaUser.getCache({ userId });
+	if (!user) return false;
+	if (!user.isVoted || !user.voteExpiresAt || new Date() > user.voteExpiresAt)
+		return false;
+	return true;
+}
+
 module.exports = {
 	embedFooter,
 	setVoiceChannelStatus,
@@ -267,4 +305,7 @@ module.exports = {
 	getChannelSafe,
 	getTextChannelSafe,
 	getMemberSafe,
+	isTeam,
+	isPremium,
+	isVoterActive,
 };

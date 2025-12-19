@@ -95,8 +95,8 @@ module.exports = {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const isPremiumDonatur = await isPremium(interaction.user.id);
-		const isVoter = await isVoterActive(interaction.user.id);
+		const isPremiumDonatur = await isPremium(container, interaction.user.id);
+		const isVoter = await isVoterActive(container, interaction.user.id);
 
 		if (!isPremiumDonatur && !isVoter) {
 			const desc = await t(interaction, 'pro.dns.delete.error_notPremium');
