@@ -6,8 +6,8 @@
  * @version 0.11.0-beta
  */
 
-const fs = require('node:fs');
 const path = require('node:path');
+const fs = require('node:fs');
 
 function getAvailableLanguages() {
 	const langDir = path.join(__dirname, '../../core/lang');

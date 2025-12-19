@@ -59,11 +59,6 @@ module.exports = (bot) => {
 
 	const routesDir = path.join(__dirname, 'routes');
 
-	/**
-	 * Fungsi rekursif buat scan folder routes
-	 * @param {string} dirPath - Path folder fisik
-	 * @param {string} urlPrefix - Prefix URL (default /api)
-	 */
 	function loadRoutes(dirPath, urlPrefix = '/api') {
 		if (!fs.existsSync(dirPath)) return;
 
@@ -115,8 +110,6 @@ module.exports = (bot) => {
 	io.on('connection', (socket) => {
 		logger.info(`🔌 Dashboard connected: ${socket.id}`);
 
-		// Event kalau dashboard minta join room specific guild
-		// Jadi dashboard cuma dengerin update dari guild yang dia buka
 		socket.on('join_guild', (guildId) => {
 			socket.join(guildId);
 			logger.info(`🔌 Socket ${socket.id} joined guild room: ${guildId}`);

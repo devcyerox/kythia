@@ -46,7 +46,7 @@ app.get('/:guildId/channels', async (c) => {
 		if (channelsWithoutCategory.length > 0) {
 			result.push({
 				id: 'no-category',
-				name: 'TANPA KATEGORI',
+				name: 'WITHOUT CATEGORY',
 				channels: channelsWithoutCategory,
 			});
 		}
