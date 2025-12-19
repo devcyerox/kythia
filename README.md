@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://kythia.me">
-    <img src="./addons/dashboard/web/public/assets/img/logo/logo.png" alt="Kythia Logo" height="150" style="border-radius: 10px;">
+    <img src="https://files.catbox.moe/alnl1h.png" alt="Kythia Logo" height="150" style="border-radius: 10px;">
   </a>
 </p>
 
@@ -89,6 +89,21 @@ There are many Discord bots out there, but Kythia stands out from the crowd. Her
 *   **✨ Feature-Rich:** With a massive collection of addons, Kythia offers a huge range of features, from advanced moderation to fun games and a full-fledged economy system.
 *   **🔧 Fully Customizable:** Almost every aspect of Kythia can be configured to your liking. From custom welcome messages to fine-tuned automod settings, you're in control.
 *   **🚀 Actively Developed:** Kythia is constantly being improved with new features, bug fixes, and performance enhancements.
+
+---
+
+## ⚖️ Terms of Service & Telemetry
+
+By using Kythia, you agree to our Terms of Service. Please be aware that this bot collects certain telemetry data to ensure stability, performance, and license compliance.
+
+### 📊 Information We Collect
+- **Server Information:** Server ID, name, and member count.
+- **Usage Statistics:** Command usage frequency and performance metrics.
+- **System Information:** Basic system specs (Node.js version, OS) for troubleshooting.
+- **License Data:** HWID and IP address for license verification purposes.
+
+### 🔒 Why We Collect This
+This information is used solely to improve the bot's functionality, monitor for errors, and verify that the bot is running with a valid license. We do not sell your data to third parties.
 
 ---
 
@@ -315,7 +330,9 @@ Contributions to Kythia are managed by the internal development team. If you are
 
 This project is licensed under the CC BY-NC 4.0 License. See the [LICENSE](LICENSE) file for details.
 Copyright © 2025 Kythia Labs - All rights reserved.
-For commercial use, please contact us at [kenndeclouv@gmail.com](mailto:kenndeclouv@gmail.com).
+
+> [!IMPORTANT]
+> **License Required:** Use of this bot requires a valid license from the author. For commercial use or to obtain a license, please contact us at [kenndeclouv@gmail.com](mailto:kenndeclouv@gmail.com).
 
 ---
 
