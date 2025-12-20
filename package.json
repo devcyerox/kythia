@@ -35,7 +35,7 @@
 		"figlet": "^1.9.3",
 		"hono": "^4.10.7",
 		"javascript-obfuscator": "^4.1.1",
-		"kythia-core": "^0.12.4-beta",
+		"kythia-core": "^0.12.5-beta",
 		"luxon": "^3.7.2",
 		"marked": "^4.3.0",
 		"module-alias": "^2.2.3",

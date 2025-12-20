@@ -8,7 +8,7 @@
 
 const { getGuildInviteCache } = require('../helpers');
 
-module.exports = async (_bot, invite) => {
+module.exports = (_bot, invite) => {
 	try {
 		const cache = getGuildInviteCache(invite.guild.id);
 		cache.set(invite.code, {

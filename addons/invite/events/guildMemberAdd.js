@@ -21,26 +21,18 @@ module.exports = async (bot, member) => {
 	const { simpleContainer } = helpers.discord;
 	const { convertColor } = helpers.color;
 
-	if (!Invite) logger.error('[DEBUG] ❌ Model Invite UNDEFINED inside event!');
-	else logger.info('[DEBUG] ✅ Model Invite loaded.');
-
 	let inviteChannelId = null;
 	let setting;
 	try {
 		setting = await ServerSetting.getCache({ guildId: guild.id });
 		inviteChannelId = setting?.inviteChannelId;
-
-		logger.info(
-			`[DEBUG] Settings loaded: invitesOn=${setting?.invitesOn}, Channel=${inviteChannelId}`,
-		);
 	} catch (e) {
-		logger.error(
-			`[INVITE TRACKER] Error fetching server setting: ${e.message}`,
-		);
+		logger.error(`Error fetching server setting: ${e.message}`, {
+			label: 'Invite Tracker',
+		});
 	}
 
-	if (!setting?.inviteChannelId || !setting?.invitesOn) {
-		logger.warn(`[DEBUG] 🛑 Invite tracking skipped (Disabled or No Channel)`);
+	if (!setting?.invitesOn) {
 		return;
 	}
 
@@ -53,10 +45,6 @@ module.exports = async (bot, member) => {
 
 	const cacheBefore = getGuildInviteCache(guild.id);
 
-	logger.info(
-		`[DEBUG] Cache Before Size: ${cacheBefore ? cacheBefore.size : 'NULL'}`,
-	);
-
 	let inviterId = null;
 	let inviterUser = null;
 	let inviteType = 'unknown';
@@ -64,8 +52,6 @@ module.exports = async (bot, member) => {
 
 	try {
 		const invitesNow = await guild.invites.fetch();
-
-		logger.info(`[DEBUG] Fetched ${invitesNow.size} invites from Discord.`);
 
 		for (const invite of invitesNow.values()) {
 			const before = cacheBefore.get(invite.code);
@@ -77,9 +63,6 @@ module.exports = async (bot, member) => {
 				inviteType = 'invite';
 				inviteCode = invite.code;
 
-				logger.info(
-					`[DEBUG] 🎯 MATCH FOUND! Inviter: ${inviterId}, Code: ${inviteCode}`,
-				);
 				break;
 			}
 		}
@@ -98,10 +81,6 @@ module.exports = async (bot, member) => {
 			inviteType = member.user.bot ? 'oauth' : 'unknown';
 		}
 
-		logger.info(
-			`[DEBUG] Final Decision -> InviterID: ${inviterId}, Type: ${inviteType}`,
-		);
-
 		const accountAgeDays =
 			(Date.now() - member.user.createdTimestamp) / (1000 * 60 * 60 * 24);
 		let isFake = false;
@@ -109,22 +88,14 @@ module.exports = async (bot, member) => {
 		if (inviterId) {
 			isFake = accountAgeDays < FAKE_ACCOUNT_AGE_DAYS;
 
-			logger.info(
-				`[DEBUG] 💾 Attempting DB Operation for Inviter: ${inviterId}...`,
-			);
-
 			try {
-				const [inviteData, created] = await Invite.findOrCreateWithCache({
+				const [inviteData] = await Invite.findOrCreateWithCache({
 					where: { guildId: guild.id, userId: inviterId },
 					defaults: {
 						guildId: guild.id,
 						userId: inviterId,
 					},
 				});
-
-				logger.info(
-					`[DEBUG] ✅ DB Result: isNew=${created}, Current Invites=${inviteData?.invites}`,
-				);
 
 				if (isFake) {
 					inviteData.fake = (inviteData.fake || 0) + 1;
@@ -139,8 +110,6 @@ module.exports = async (bot, member) => {
 
 				await inviteData.saveAndUpdateCache();
 
-				logger.info(`[DEBUG] ✅ Data Saved & Cache Updated`);
-
 				await InviteHistory.create({
 					guildId: guild.id,
 					inviterId: inviterId,
@@ -148,12 +117,13 @@ module.exports = async (bot, member) => {
 					status: 'active',
 					isFake: isFake,
 				});
-				logger.info(`[DEBUG] ✅ History Created`);
 			} catch (dbErr) {
-				logger.error(`[DEBUG] ❌ DB CRASH:`, dbErr);
+				logger.error(`DB CRASH: ${dbErr}`, { label: 'Invite Tracker' });
 			}
 		} else {
-			logger.warn(`[DEBUG] ⚠️ No Inviter ID found, skipping DB operations.`);
+			logger.warn(`No Inviter ID found, skipping DB operations.`, {
+				label: 'Invite Tracker',
+			});
 		}
 
 		if (inviteChannelId) {
@@ -249,14 +219,15 @@ module.exports = async (bot, member) => {
 				});
 			} else {
 				logger.warn(
-					`[INVITE] Invite channel ${inviteChannelId} not found in ${guild.name}`,
+					`Invite channel ${inviteChannelId} not found in ${guild.name}`,
+					{ label: 'Invite Tracker' },
 				);
 			}
 		}
 	} catch (err) {
-		logger.error(`[INVITE] Error guildMemberAdd:`, err);
+		logger.error(`Error guildMemberAdd:`, err, { label: 'Invite Tracker' });
 	} finally {
 		await refreshGuildInvites(guild);
-		logger.info(`[DEBUG] 🔄 Invite Cache Refreshed.`);
+		logger.info(`Invite Cache Refreshed.`, { label: 'Invite Tracker' });
 	}
 };

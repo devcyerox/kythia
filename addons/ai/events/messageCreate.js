@@ -476,7 +476,7 @@ module.exports = async (bot, message) => {
 	const CONTEXT_MESSAGES_TO_FETCH = aiConfig.getMessageHistoryLength;
 
 	const client = bot.client;
-	if (message.author?.bot) return;
+	if (message.author?.bot || message.system) return;
 
 	const content =
 		typeof message.content === 'string' ? message.content.trim() : '';

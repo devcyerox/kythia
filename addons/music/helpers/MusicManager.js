@@ -66,7 +66,7 @@ class MusicManager {
 		this.TICKER_INTERVAL = 5000;
 	}
 
-	async init() {
+	init() {
 		this.logger.info('🎵 Initializing Music Manager Service...');
 		// Config Check
 		if (!this.config.addons.music.lavalink.hosts) {
@@ -266,7 +266,7 @@ class MusicManager {
 		/**
 		 * ⏭️ Handles when a track ends (either naturally or by skip/stop).
 		 */
-		poru.on('trackEnd', async (player, track) => {
+		poru.on('trackEnd', (player, track) => {
 			let state = this.guildStates.get(player.guildId);
 
 			if (!state) {

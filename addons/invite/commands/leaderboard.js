@@ -67,6 +67,7 @@ async function generateLeaderboardContainer(
 	const startIndex = (page - 1) * USERS_PER_PAGE;
 	const pageUsers = topUsers.slice(startIndex, startIndex + USERS_PER_PAGE);
 
+	// Build leaderboard text
 	let leaderboardText = '';
 	if (pageUsers.length === 0) {
 		leaderboardText = await t(
@@ -74,19 +75,38 @@ async function generateLeaderboardContainer(
 			'invite.invite.command.leaderboard.empty',
 		);
 	} else {
-		const lines = await Promise.all(
+		const entries = await Promise.all(
 			pageUsers.map(async (row, index) => {
 				const rank = startIndex + index + 1;
-				return await t(interaction, 'invite.invite.command.leaderboard.line', {
-					rank: rank,
-					user: `<@${row.userId}>`,
+				const medal =
+					rank === 1
+						? '🥇'
+						: rank === 2
+							? '🥈'
+							: rank === 3
+								? '🥉'
+								: `**${rank}.**`;
+
+				// Fetch username from Discord
+				let username;
+				try {
+					const discordUser = await interaction.client.users.fetch(row.userId);
+					username = `${discordUser.username} (${row.userId})`;
+				} catch (_error) {
+					username = `Unknown User (${row.userId})`;
+				}
+
+				return await t(interaction, 'invite.invite.command.leaderboard.entry', {
+					medal,
+					username,
 					invites: row.invites || 0,
 				});
 			}),
 		);
-		leaderboardText = lines.join('\n');
+		leaderboardText = entries.join('\n');
 	}
 
+	// Build container, insert navigation buttons inside
 	const navButtons = await buildNavButtons(
 		interaction,
 		page,
@@ -94,14 +114,17 @@ async function generateLeaderboardContainer(
 		navDisabled,
 	);
 
-	const title = await t(interaction, 'invite.invite.command.title');
-
 	const leaderboardContainer = new ContainerBuilder()
 		.setAccentColor(
 			convertColor(kythiaConfig.bot.color, { from: 'hex', to: 'decimal' }),
 		)
 		.addTextDisplayComponents(
-			new TextDisplayBuilder().setContent(`## ${title}`),
+			new TextDisplayBuilder().setContent(
+				await t(interaction, 'invite.invite.command.leaderboard.title', {
+					page,
+					totalPages,
+				}),
+			),
 		)
 		.addSeparatorComponents(
 			new SeparatorBuilder()
@@ -118,9 +141,8 @@ async function generateLeaderboardContainer(
 		)
 		.addTextDisplayComponents(
 			new TextDisplayBuilder().setContent(
-				await t(interaction, 'common.container.footer', {
-					username: interaction.client.user.username,
-					extra: `Total Inviters: ${totalUsers}`,
+				await t(interaction, 'invite.invite.command.leaderboard.footer', {
+					totalUsers,
 				}),
 			),
 		)
@@ -139,7 +161,7 @@ module.exports = {
 			.setDescription('View top inviters leaderboard'),
 
 	async execute(interaction, container) {
-		const { models } = container;
+		const { t, models } = container;
 		const { Invite } = models;
 		const guildId = interaction.guild.id;
 
@@ -151,11 +173,6 @@ module.exports = {
 			limit: MAX_USERS,
 			cacheTags: [`Invite:leaderboard:${guildId}`],
 		});
-		// const allInviters = await Invite.findAll({
-		// 	where: { guildId: guildId },
-		// 	order: [['invites', 'DESC']],
-		// 	limit: MAX_USERS,
-		// });
 
 		const totalUsers = allInviters.length;
 		let currentPage = 1;
@@ -166,13 +183,10 @@ module.exports = {
 				1,
 				[],
 				0,
-				true,
+				/*navDisabled*/ true,
 			);
 			return interaction.editReply({
 				components: [leaderboardContainer],
-				allowedMentions: {
-					parse: [],
-				},
 				flags: MessageFlags.IsComponentsV2,
 			});
 		}
@@ -187,21 +201,22 @@ module.exports = {
 
 		const message = await interaction.editReply({
 			components: [leaderboardContainer],
-			allowedMentions: {
-				parse: [],
-			},
-			fetchReply: true,
 			flags: MessageFlags.IsComponentsV2,
+			fetchReply: true,
 		});
 
 		if (totalPages <= 1) return;
 
-		const collector = message.createMessageComponentCollector({
-			filter: (i) => i.user.id === interaction.user.id,
-			time: 300000,
-		});
+		const collector = message.createMessageComponentCollector({ time: 300000 });
 
 		collector.on('collect', async (i) => {
+			if (i.user.id !== interaction.user.id) {
+				return i.reply({
+					content: await t(i, 'economy.leaderboard.not.your.interaction'),
+					ephemeral: true,
+				});
+			}
+
 			if (i.customId === 'leaderboard_first') {
 				currentPage = 1;
 			} else if (i.customId === 'leaderboard_prev') {
@@ -222,9 +237,7 @@ module.exports = {
 
 			await i.update({
 				components: [newContainer],
-				allowedMentions: {
-					parse: [],
-				},
+				flags: MessageFlags.IsComponentsV2,
 			});
 		});
 
@@ -241,9 +254,7 @@ module.exports = {
 
 				await message.edit({
 					components: [finalContainer],
-					allowedMentions: {
-						parse: [],
-					},
+					flags: MessageFlags.IsComponentsV2,
 				});
 			} catch (_error) {}
 		});

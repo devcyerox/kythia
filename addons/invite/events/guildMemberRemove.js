@@ -12,13 +12,11 @@ module.exports = async (bot, member) => {
 	if (!member || !member.guild) return;
 	const { guild, id: memberId } = member;
 
-	// Setup container utils
 	const container = bot.client.container;
 	const { t, models, helpers, logger } = container;
 	const { Invite, InviteHistory, ServerSetting } = models;
 	const { simpleContainer } = helpers.discord;
 
-	// Cek setting dulu
 	let inviteChannelId = null;
 	try {
 		const setting = await ServerSetting.getCache({ guildId: guild.id });
@@ -26,55 +24,48 @@ module.exports = async (bot, member) => {
 		inviteChannelId = setting.inviteChannelId;
 	} catch (_e) {}
 
-	// 1. Cari siapa yang dulu invite orang ini
 	const history = await InviteHistory.getCache({
 		guildId: guild.id,
 		memberId: memberId,
-		status: 'active', // Cari yang masih active
+		status: 'active',
 	});
 
 	let logMessage = '';
 
 	if (history?.inviterId) {
-		// Tandai history jadi 'left'
 		history.status = 'left';
 		await history.save();
 
-		// 2. Ambil data si pengundang (Inviter)
 		const [inviterStats] = await Invite.findOrCreateWithCache({
 			where: { guildId: guild.id, userId: history.inviterId },
 			defaults: { guildId: guild.id, userId: history.inviterId },
 		});
 
 		if (inviterStats) {
-			// 3. Cek status di history
 			const wasFake = history.isFake;
 
-			// 4. Update Stats Inviter (Kurangi poin)
 			if (wasFake) {
 				inviterStats.fake = Math.max(0, (inviterStats.fake || 0) - 1);
 			} else {
 				inviterStats.invites = Math.max(0, (inviterStats.invites || 0) - 1);
 			}
 
-			// Tambah counter leaves
 			inviterStats.leaves = (inviterStats.leaves || 0) + 1;
 
-			// 🔥 PENTING: Gunakan saveAndUpdateCache
 			inviterStats.changed('invites', true);
 			inviterStats.changed('fake', true);
 
 			await inviterStats.saveAndUpdateCache();
 
 			logger.info(
-				`[INVITE TRACKER] ${member.user.tag} left. Deducted ${wasFake ? 'fake' : 'real'} invite from ${history.inviterId}.`,
+				`${member.user.tag} left. Deducted ${wasFake ? 'fake' : 'real'} invite from ${history.inviterId}.`,
+				{ label: 'Invite Tracker' },
 			);
 
-			// Siapkan pesan log untuk inviter
 			const title = await t(
 				guild,
 				'invite.events.guildMemberRemove.tracker.title',
-			); // Pastikan key ini ada atau pake default
+			);
 			const leftMsg = await t(
 				guild,
 				'invite.events.guildMemberRemove.tracker.left',
@@ -90,9 +81,10 @@ module.exports = async (bot, member) => {
 		}
 	} else {
 		logger.info(
-			`[INVITE TRACKER] ${member.user.tag} left, but no active invite history found.`,
+			`${member.user.tag} left, but no active invite history found.`,
+			{ label: 'Invite Tracker' },
 		);
-		// Pesan log kalau gak nemu inviter (Unknown Leave)
+
 		const title = await t(
 			guild,
 			'invite.events.guildMemberRemove.tracker.title',
@@ -108,28 +100,27 @@ module.exports = async (bot, member) => {
 		logMessage = `## 📤 ${title}\n${leftUnknown}`;
 	}
 
-	// 5. Send Log to Channel
 	if (inviteChannelId && logMessage) {
 		const channel = await guild.channels
 			.fetch(inviteChannelId)
 			.catch(() => null);
 		if (channel?.isTextBased && channel.viewable) {
 			try {
-				const components = await simpleContainer(
-					member,
-					logMessage,
-					{ color: 'Red' }, // Merah karena user leave
-				);
+				const components = await simpleContainer(member, logMessage, {
+					color: 'Red',
+				});
 				await channel.send({ components, flags: MessageFlags.IsComponentsV2 });
 			} catch (error) {
 				logger.error(
-					`[INVITE] Error sending invite log to channel ${inviteChannelId} in ${guild.name}:`,
+					`Error sending invite log to channel ${inviteChannelId} in ${guild.name}:`,
 					error,
+					{ label: 'Invite Tracker' },
 				);
 			}
 		} else {
 			logger.warn(
-				`[INVITE] Invite channel ${inviteChannelId} not found in ${guild.name}`,
+				`Invite channel ${inviteChannelId} not found in ${guild.name}`,
+				{ label: 'Invite Tracker' },
 			);
 		}
 	}

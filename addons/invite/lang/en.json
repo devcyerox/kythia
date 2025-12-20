@@ -47,8 +47,10 @@
 					"permission": "You need the ManageGuild permission."
 				},
 				"leaderboard": {
-					"line": "#{rank} {user} — {invites}",
-					"empty": "No data yet."
+					"title": "## 🏆 Invite Leaderboard\n**Page {page} of {totalPages}**",
+					"empty": "No data yet.",
+					"entry": "### {medal} **{username}**\n> 📨 Total Invites: **{invites}**",
+					"footer": "Total Inviters: {totalUsers}"
 				},
 				"reset": {
 					"success": "All invite data has been reset."
