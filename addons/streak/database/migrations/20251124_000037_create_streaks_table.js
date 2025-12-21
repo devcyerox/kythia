@@ -29,7 +29,7 @@ module.exports = {
 		});
 
 		await queryInterface.addIndex('streaks', ['guildId', 'userId'], {
-			unique: true, // Biasanya streak per user per guild kan unik?
+			unique: true,
 		});
 	},
 	async down(queryInterface) {

@@ -1,0 +1,92 @@
+/**
+ * @namespace: addons/streak/commands/user.js
+ * @type: Command
+ * @copyright © 2025 kenndeclouv
+ * @assistant chaa & graa
+ * @version 0.11.0-beta
+ */
+
+const { getOrCreateStreak, getTodayDateString } = require('../helpers');
+const { MessageFlags } = require('discord.js');
+
+module.exports = {
+	subcommand: true,
+	slashCommand: (subcommand) =>
+		subcommand
+			.setName('user')
+			.setDescription('Lihat streak user lain.')
+			.addUserOption((opt) =>
+				opt
+					.setName('target')
+					.setDescription('User yang ingin dicek streak-nya')
+					.setRequired(false),
+			),
+
+	/**
+	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
+	 * @param {KythiaDI.Container} container
+	 */
+	async execute(interaction, container) {
+		const { t, models, helpers } = container;
+		const { ServerSetting } = models;
+		const { simpleContainer } = helpers.discord;
+
+		const guildId = interaction.guild.id;
+
+		const serverSetting = await ServerSetting.getCache({ guildId });
+		const streakEmoji = serverSetting.streakEmoji || '🔥';
+
+		await interaction.deferReply();
+		const target = interaction.options.getUser('target') || interaction.user;
+
+		if (!target) {
+			const msg = `${await t(interaction, 'streak.streak.user.not.found.title')}\n
+						${await t(interaction, 'streak.streak.user.not.found.desc')}`;
+
+			const components = await simpleContainer(interaction, msg, {
+				color: 'Red',
+			});
+			return interaction.editReply({
+				components,
+				flags: MessageFlags.IsComponentsV2,
+			});
+		}
+
+		const targetId = target.id;
+		const streak = await getOrCreateStreak(container, targetId, guildId);
+		const today = getTodayDateString();
+		const lastClaimDateStr = streak.lastClaimTimestamp
+			? streak.lastClaimTimestamp.toISOString().slice(0, 10)
+			: null;
+		const status =
+			lastClaimDateStr === today
+				? await t(interaction, 'streak.streak.me.status.claimed')
+				: await t(interaction, 'streak.streak.me.status.not.claimed');
+
+		let member;
+		try {
+			member = await interaction.guild.members.fetch(targetId);
+		} catch {
+			member = null;
+		}
+
+		const displayName = member ? member.displayName : target.username;
+
+		const msg = `## ${await t(interaction, 'streak.streak.user.title.user', { username: displayName })}\n${status}\n\n${await t(
+			interaction,
+			'streak.streak.claim.desc',
+			{
+				currentStreak: streak.currentStreak,
+				highestStreak: streak.highestStreak,
+				streakFreezes: streak.streakFreezes ?? 0,
+				emoji: streakEmoji,
+			},
+		)}`;
+
+		const components = await simpleContainer(interaction, msg);
+		return interaction.editReply({
+			components,
+			flags: MessageFlags.IsComponentsV2,
+		});
+	},
+};

@@ -18,7 +18,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * @param {Map} userCache
  * @param {object} interaction - Discord interaction/message for translation context
  */
-async function cleanupUserCache(userCache) {
+function cleanupUserCache(userCache) {
 	if (!userCache || typeof userCache.entries !== 'function') {
 		const warnMsg = '⚠️ User cache is invalid or not iterable.';
 		logger.warn(warnMsg);

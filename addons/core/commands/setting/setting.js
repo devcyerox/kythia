@@ -753,6 +753,12 @@ const command = new SlashCommandBuilder()
 					.addStringOption((opt) =>
 						opt.setName('emoji').setDescription('Emoji').setRequired(true),
 					),
+			)
+			.addSubcommand((sub) =>
+				sub
+					.setName('nickname')
+					.setDescription('🔥 Toggle auto-nickname for streak')
+					.addStringOption(createToggleOption()),
 			),
 	)
 
@@ -2385,6 +2391,17 @@ module.exports = {
 					embed.setDescription(
 						await t(interaction, 'core.setting.setting.streak.emoji.set', {
 							emoji,
+						}),
+					);
+					return interaction.editReply({ embeds: [embed] });
+				}
+				if (sub === 'nickname') {
+					const status = interaction.options.getString('status');
+					serverSetting.streakNickname = status === 'enable';
+					await serverSetting.saveAndUpdateCache('guildId');
+					embed.setDescription(
+						await t(interaction, 'core.setting.setting.streak.nickname.set', {
+							status: status === 'enable' ? 'Enabled' : 'Disabled',
 						}),
 					);
 					return interaction.editReply({ embeds: [embed] });

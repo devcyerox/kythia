@@ -782,6 +782,9 @@
 					},
 					"emoji": {
 						"set": "✅ Streak emoji set to `{emoji}`."
+					},
+					"nickname": {
+						"set": "✅ Streak auto-nickname has been **{status}**."
 					}
 				},
 				"no": {

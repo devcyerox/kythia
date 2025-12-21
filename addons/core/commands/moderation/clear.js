@@ -13,7 +13,6 @@ const {
 	ComponentType,
 	PermissionFlagsBits,
 } = require('discord.js');
-const logger = require('@coreHelpers/logger');
 
 module.exports = {
 	slashCommand: (subcommand) =>
@@ -165,7 +164,8 @@ async function showClearOptions(interaction, t, container) {
 }
 
 // Nuke logic (Clone & Delete)
-async function executeNukeChannel(interaction, btnInteraction, t, _container) {
+async function executeNukeChannel(interaction, btnInteraction, t, container) {
+	const { logger } = container;
 	const progressEmbed = new EmbedBuilder()
 		.setColor('Orange')
 		.setDescription(
@@ -195,12 +195,8 @@ async function executeNukeChannel(interaction, btnInteraction, t, _container) {
 }
 
 // Bulk delete all logic
-async function executeBulkDeleteAll(
-	interaction,
-	btnInteraction,
-	t,
-	_container,
-) {
+async function executeBulkDeleteAll(interaction, btnInteraction, t, container) {
+	const { logger } = container;
 	const progressEmbed = new EmbedBuilder()
 		.setColor('Orange')
 		.setDescription(

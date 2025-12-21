@@ -2,6 +2,7 @@
 	"streak": {
 		"streak": {
 			"claim": {
+				"title": "🔥 Streak Claim",
 				"already": {
 					"title": "👋 You have already claimed today!",
 					"desc": "Your streak is safe! You can claim again tomorrow.\n\n{emoji} **Current Streak:** {streak} days"
@@ -17,15 +18,8 @@
 				"success": {
 					"title": "✅ Daily Streak Claimed!"
 				},
-				"footer": "Keep your streak going!"
-			},
-			"field": {
-				"current": "{emoji} Current Streak",
-				"highest": "🏆 Highest Record",
-				"freeze": "❄️ Streak Freeze"
-			},
-			"unit": {
-				"day": "days"
+				"footer": "Keep your streak going!",
+				"desc": "`🔥` Current Streak\n{currentStreak} days\n`🏆` Highest Record\n{highestStreak} days\n`❄️` Streak Freeze\n{streakFreezes}"
 			},
 			"me": {
 				"status": {
@@ -34,7 +28,7 @@
 						"claimed": "❌ Not claimed today!"
 					}
 				},
-				"title": "📊 {username}'s Streak Status"
+				"title": "🔥 {username}'s Streak Status"
 			},
 			"footer": {
 				"requested": {
@@ -48,7 +42,18 @@
 					"user": "User (ID: {id}...)"
 				},
 				"entry": "{medal} {username} — {emoji} {current} days (Max: {highest}) ❄️{freeze}",
-				"footer": "Streak data in server {server}"
+				"footer": "Streak data in server {server}",
+				"nav": {
+					"first": "⏪ First",
+					"prev": "◀️ Back",
+					"next": "Next ▶️",
+					"last": "Last ⏩"
+				},
+				"not": {
+					"your": {
+						"interaction": "You cannot use this interaction!"
+					}
+				}
 			},
 			"reset": {
 				"title": "🔄 Streak Reset",
@@ -56,28 +61,6 @@
 					"zero": "Your streak is already 0. No need to reset."
 				},
 				"success": "Your streak has been reset to 0. Start again tomorrow!"
-			},
-			"stats": {
-				"topuser": {
-					"text": "{username} ({highest} days)",
-					"unknown": "User ID: {id}... ({highest} days)",
-					"field": "👑 **Top User:** {topUser}"
-				},
-				"title": "📈 Server Streak Statistics",
-				"server": "**Server:** {server}",
-				"last": {
-					"claim": "📅 **Last Claimed:** {lastClaim}"
-				},
-				"total": {
-					"freeze": "❄️ **Total Streak Freezes:** {totalFreeze}"
-				},
-				"field": {
-					"total": "👤Total Users Recorded",
-					"active": "{emoji} Active Streak Users",
-					"avg": "📈 Average Streak",
-					"max": "⚡ Highest Record"
-				},
-				"footer": "Streak statistics in server {server}"
 			},
 			"user": {
 				"title": {

@@ -6,11 +6,10 @@
  * @version 0.11.0-beta
  */
 
-const _logger = require('@coreHelpers/logger');
 const { initializeWebhookHealthCheck } = require('./tasks/webhookHealthCheck');
 
 module.exports = {
-	async initialize(bot) {
+	initialize(bot) {
 		const summery = [];
 		bot.addClientReadyHook(() => {
 			initializeWebhookHealthCheck(bot);

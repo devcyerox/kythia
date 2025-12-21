@@ -9,8 +9,7 @@
 const dotenv = require('@dotenvx/dotenvx').config({ quiet: true });
 const path = require('node:path');
 
-const { loadKythiaConfig } = require('../../../kythia.config.js');
-const logger = require('@coreHelpers/logger');
+const { loadKythiaConfig } = require(`${process.cwd()}/kythia.config.js`);
 
 const envPath = path.resolve(process.cwd(), '.env');
 
@@ -21,8 +20,6 @@ function reloadConfig() {
 	dotenv.config({ path: envPath, override: true });
 
 	global.kythia = loadKythiaConfig();
-
-	logger.info('✅ Configuration from .env has been reloaded and applied.');
 }
 
 module.exports = { reloadConfig };

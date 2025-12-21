@@ -10,6 +10,8 @@ const { ActivityType } = require('discord.js');
 
 function setBotPresence(client) {
 	const { logger, kythiaConfig } = client.container;
+	if (!client.isReady() || client.ws.shards.size === 0) return;
+
 	if (!client.user) {
 		logger.error('❌ client.user is undefined, cannot set presence.');
 		return;
@@ -39,6 +41,6 @@ function setBotPresence(client) {
 	}
 }
 
-module.exports = async (_bot, client) => {
+module.exports = (_bot, client) => {
 	setBotPresence(client);
 };

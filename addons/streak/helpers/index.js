@@ -6,9 +6,8 @@
  * @version 0.11.0-beta
  */
 
-const Streak = require('../database/models/Streak');
-
-async function getOrCreateStreak(userId, guildId) {
+async function getOrCreateStreak(container, userId, guildId) {
+	const { Streak } = container.models;
 	let userStreak = await Streak.getCache({ userId: userId, guildId: guildId });
 	if (!userStreak) {
 		userStreak = await Streak.create({
@@ -29,14 +28,20 @@ async function updateNickname(
 	streakEmoji = '🔥',
 	streakMinimum = 3,
 ) {
-	if (!member.manageable) {
-		console.log(`Bot cant change nickname: ${member.user.username}`);
+	let fetchedMember = member;
+	try {
+		fetchedMember = await member.guild.members.fetch(member.id);
+	} catch (_e) {}
+
+	if (!fetchedMember.manageable) {
+		console.log(`Bot cant change nickname: ${fetchedMember.user.username}`);
 		return;
 	}
 	try {
-		let currentNickname = member.nickname || member.user.username;
+		let currentNickname = fetchedMember.displayName;
 
-		const streakRegex = new RegExp(`^\\[${streakEmoji}\\s\\d+\\]\\s*`);
+		const escapedEmoji = streakEmoji.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		const streakRegex = new RegExp(`\\s${escapedEmoji}\\s\\d+$`);
 		currentNickname = currentNickname.replace(streakRegex, '').trim();
 
 		let newNickname = currentNickname;
@@ -46,11 +51,14 @@ async function updateNickname(
 		if (newNickname.length > 32) {
 			newNickname = newNickname.substring(0, 32);
 		}
-		if (member.displayName !== newNickname) {
-			await member.setNickname(newNickname);
+		if (fetchedMember.displayName !== newNickname) {
+			await fetchedMember.setNickname(newNickname);
 		}
 	} catch (error) {
-		console.error(`Failed to update ${member.user.username} username:`, error);
+		console.error(
+			`Failed to update ${fetchedMember.user.username} username:`,
+			error,
+		);
 	}
 }
 
@@ -64,31 +72,131 @@ function getYesterdayDateString() {
 	return yesterday.toISOString().slice(0, 10);
 }
 
-async function giveStreakRoleReward(member, streakCount, streakRoleReward) {
-	if (!Array.isArray(streakRoleReward) || streakRoleReward.length === 0)
+async function syncStreakRoles(member, streakCount, streakRoleRewards) {
+	if (!Array.isArray(streakRoleRewards) || streakRoleRewards.length === 0)
 		return [];
-	if (!member.manageable) return [];
 
-	const sortedRewards = [...streakRoleReward].sort(
-		(a, b) => a.streak - b.streak,
+	let fetchedMember;
+	try {
+		fetchedMember = await member.guild.members.fetch(member.id);
+	} catch (error) {
+		console.error(`Failed to fetch member ${member.id}:`, error);
+		return [];
+	}
+
+	if (!fetchedMember.manageable) return [];
+
+	const allRewardRoles = [...new Set(streakRoleRewards.map((r) => r.role))];
+
+	const rolesToHave = [
+		...new Set(
+			streakRoleRewards
+				.filter((r) => streakCount >= r.streak)
+				.map((r) => r.role),
+		),
+	];
+
+	const rolesToRemove = allRewardRoles.filter(
+		(roleId) => !rolesToHave.includes(roleId),
 	);
-	const rolesToGive = sortedRewards
-		.filter((r) => streakCount >= r.streak)
-		.map((r) => r.role);
+
+	const currentRoles = fetchedMember.roles.cache;
+	const toAdd = rolesToHave.filter((roleId) => !currentRoles.has(roleId));
+	const toRemove = rolesToRemove.filter((roleId) => currentRoles.has(roleId));
 
 	const rolesGiven = [];
-	for (const roleId of rolesToGive) {
+
+	if (toAdd.length > 0) {
 		try {
-			if (!member.roles.cache.has(roleId)) {
-				await member.roles.add(
-					roleId,
-					`Streak reward: reached ${streakCount} days`,
-				);
-				rolesGiven.push(roleId);
-			}
-		} catch (_e) {}
+			await fetchedMember.roles.add(
+				toAdd,
+				`Streak reward: reached ${streakCount} days`,
+			);
+			rolesGiven.push(...toAdd);
+		} catch (error) {
+			console.error(`Failed to add roles to ${member.id}:`, error);
+		}
 	}
+
+	if (toRemove.length > 0) {
+		try {
+			await fetchedMember.roles.remove(
+				toRemove,
+				`Streak loss/reset: current streak ${streakCount} days`,
+			);
+		} catch (error) {
+			console.error(`Failed to remove roles from ${member.id}:`, error);
+		}
+	}
+
 	return rolesGiven;
+}
+
+async function claimStreak(container, member, settings) {
+	const userId = member.id;
+	const guildId = member.guild.id;
+	const streak = await getOrCreateStreak(container, userId, guildId);
+	const today = getTodayDateString();
+	const yesterday = getYesterdayDateString();
+
+	const lastClaimDateStr = streak.lastClaimTimestamp
+		? streak.lastClaimTimestamp.toISOString().slice(0, 10)
+		: null;
+
+	if (lastClaimDateStr === today) {
+		return { status: 'ALREADY_CLAIMED', streak };
+	}
+
+	let status = 'CONTINUE';
+	if (lastClaimDateStr !== yesterday && streak.currentStreak > 0) {
+		if (streak.streakFreezes > 0) {
+			streak.streakFreezes -= 1;
+			streak.currentStreak += 1;
+			status = 'FREEZE_USED';
+		} else {
+			streak.currentStreak = 1;
+			status = 'RESET';
+		}
+	} else if (lastClaimDateStr === yesterday) {
+		streak.currentStreak += 1;
+		status = 'CONTINUE';
+	} else {
+		streak.currentStreak = 1;
+		status = 'NEW';
+	}
+
+	if (streak.currentStreak > (streak.highestStreak || 0)) {
+		streak.highestStreak = streak.currentStreak;
+	}
+
+	streak.lastClaimTimestamp = new Date(today);
+	await streak.saveAndUpdateCache(['userId', 'guildId']);
+
+	const streakEmoji = settings.streakEmoji || '🔥';
+	const streakMinimum = settings.streakMinimum || 3;
+	const updateStreakNickname = settings.streakNickname || false;
+
+	if (updateStreakNickname) {
+		await updateNickname(
+			member,
+			streak.currentStreak,
+			streakEmoji,
+			streakMinimum,
+		);
+	}
+
+	const rewards = Array.isArray(settings.streakRoleRewards)
+		? settings.streakRoleRewards
+		: [];
+	let rewardRolesGiven = [];
+
+	rewardRolesGiven = await syncStreakRoles(
+		member,
+		streak.currentStreak,
+		rewards,
+	);
+
+	return { status, streak, rewardRolesGiven };
 }
 
 module.exports = {
@@ -96,5 +204,6 @@ module.exports = {
 	updateNickname,
 	getTodayDateString,
 	getYesterdayDateString,
-	giveStreakRoleReward,
+	syncStreakRoles,
+	claimStreak,
 };
